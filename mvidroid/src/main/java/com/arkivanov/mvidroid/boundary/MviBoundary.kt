@@ -130,7 +130,7 @@ abstract class MviBoundary<E : Any>(
      * @param E type of Boundary's UI Events
      */
     class StoreBundle<I : Any, in E : Any>(
-        val store: MviStore<*, I>,
+        val store: MviStore<*, I, *>,
         val eventTransformer: KFunction<E, I?>? = null,
         val labelTransformer: KFunction<Any, I?>? = null,
         val isPersistent: Boolean = false

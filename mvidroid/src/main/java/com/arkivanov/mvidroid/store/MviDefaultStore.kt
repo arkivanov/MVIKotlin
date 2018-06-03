@@ -1,7 +1,7 @@
 package com.arkivanov.mvidroid.store
 
-import com.arkivanov.mvidroid.components.MviIntentToAction
 import com.arkivanov.mvidroid.components.MviBootstrapper
+import com.arkivanov.mvidroid.components.MviIntentToAction
 import com.arkivanov.mvidroid.components.MviReducer
 import com.arkivanov.mvidroid.utils.Disposables
 import com.arkivanov.mvidroid.utils.assertOnMainThread
@@ -20,23 +20,24 @@ import io.reactivex.subjects.PublishSubject
  * @param S type of State
  * @param I type of Intents
  * @param R type of Results
+ * @param L type of Labels
  */
-open class MviDefaultStore<S : Any, in I : Any, out R : Any, A : MviAction<S, R>>(
+open class MviDefaultStore<S : Any, in I : Any, out R : Any, L : Any, A : MviAction<S, R, L>>(
     initialState: S,
     bootstrapper: MviBootstrapper<A>? = null,
     private val intentToAction: MviIntentToAction<I, A>,
     reducer: MviReducer<S, R>
-) : MviStore<S, I> {
+) : MviStore<S, I, L> {
 
     private val stateSubject = BehaviorRelay.createDefault(initialState)
-    private val labelSubject = PublishSubject.create<Any>()
+    private val labelSubject = PublishSubject.create<L>()
     private val disposables = Disposables()
 
     override val state: S
         get() = assertOnMainThread().let { stateSubject.value }
 
     override val states: Observable<S> = stateSubject
-    override val labels: Observable<*> = labelSubject
+    override val labels: Observable<L> = labelSubject
 
     private val getState = ::state
 
@@ -47,7 +48,7 @@ open class MviDefaultStore<S : Any, in I : Any, out R : Any, A : MviAction<S, R>
         }
     }
 
-    private val publish = { label: Any ->
+    private val publish = { label: L ->
         assertOnMainThread()
         labelSubject.onNext(label)
     }

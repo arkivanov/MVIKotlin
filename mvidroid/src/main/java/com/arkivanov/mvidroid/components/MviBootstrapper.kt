@@ -10,7 +10,7 @@ import io.reactivex.disposables.Disposable
  *
  * @param A type of Action
  */
-interface MviBootstrapper<out A : MviAction<*, *>> {
+interface MviBootstrapper<out A : MviAction<*, *, *>> {
 
     /**
      * Bootstraps a Store, invoked by Store always on Main thread

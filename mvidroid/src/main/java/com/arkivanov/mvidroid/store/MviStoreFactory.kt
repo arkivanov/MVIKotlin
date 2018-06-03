@@ -1,8 +1,8 @@
 package com.arkivanov.mvidroid.store
 
 import android.support.annotation.MainThread
-import com.arkivanov.mvidroid.components.MviIntentToAction
 import com.arkivanov.mvidroid.components.MviBootstrapper
+import com.arkivanov.mvidroid.components.MviIntentToAction
 import com.arkivanov.mvidroid.components.MviReducer
 
 /**
@@ -21,14 +21,15 @@ interface MviStoreFactory {
      * @param S type of Store's State
      * @param I type of Store's Intents
      * @param R type of Store's Results
+     * @param L type of Store's Labels
      * @param A type of Store's Actions
      * @return a new instance of Store
      */
     @MainThread
-    operator fun <S : Any, I : Any, R : Any, A : MviAction<S, R>> invoke(
+    operator fun <S : Any, I : Any, R : Any, L : Any, A : MviAction<S, R, L>> invoke(
         initialState: S,
         bootstrapper: MviBootstrapper<A>? = null,
         intentToAction: MviIntentToAction<I, A>,
         reducer: MviReducer<S, R>
-    ): MviStore<S, I>
+    ): MviStore<S, I, L>
 }

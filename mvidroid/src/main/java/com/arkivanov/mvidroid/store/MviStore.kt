@@ -11,7 +11,7 @@ import io.reactivex.disposables.Disposable
  *
  * Implementation example:
  * ```
- * class ExampleStore(storeFactory: MviStoreFactory) : MviStore<ExampleStore.State, ExampleStore.Intent> by storeFactory(
+ * class ExampleStore(storeFactory: MviStoreFactory) : MviStore<State, Intent, Label> by storeFactory(
  *     initialState = State(),
  *     bootstrapper = Bootstrapper,
  *     intentToAction = IntentToAction,
@@ -24,13 +24,17 @@ import io.reactivex.disposables.Disposable
  *         // Your Intents here
  *     }
  *
+ *     sealed class Label {
+ *         // Your Labels here
+ *     }
+ *
  *     private sealed class Result {
  *         // Your Results here
  *     }
  *
- *     private abstract class Action : MviAction<State, Result> {
+ *     private abstract class Action : MviAction<State, Result, Label> {
  *         object ExampleAction : Action() {
- *             override fun invoke(getState: KSupplier<S>, dispatch: KConsumer<R>, publish: KConsumer<Any>): Disposable? {
+ *             override fun invoke(getState: KSupplier<State>, dispatch: KConsumer<Result>, publish: KConsumer<Label>): Disposable? {
  *                 // Process your action here. Return Disposable if you are doing any background work, return null otherwise.
  *                 // You can access current State by using property "state"
  *                 // You can dispatch Results using method "dispatch"
@@ -40,7 +44,7 @@ import io.reactivex.disposables.Disposable
  *         // More Actions here
  *     }
  *
- *     private object Bootstrapper : MviBootstrapper<Intent> {
+ *     private object Bootstrapper : MviBootstrapper<Action> {
  *         override fun invoke(dispatch: KConsumer<Intent>): Disposable? {
  *             // Initialize you store here, e.g. subscribe to data sources
  *         }
@@ -62,8 +66,9 @@ import io.reactivex.disposables.Disposable
  *
  * @param S type of State
  * @param I type of Intent
+ * @param L type of Label
  */
-interface MviStore<S : Any, in I : Any> : KConsumer<I>, Disposable {
+interface MviStore<S : Any, in I : Any, L : Any> : KConsumer<I>, Disposable {
 
     /**
      * Provides access to current state, must be accessed only from Main thread
@@ -77,9 +82,9 @@ interface MviStore<S : Any, in I : Any> : KConsumer<I>, Disposable {
     val states: Observable<S>
 
     /**
-     * Observable of Labels. emissions are performed on Main thread.
+     * Observable of Labels. Emissions are performed on Main thread.
      */
-    val labels: Observable<*>
+    val labels: Observable<L>
 
     /**
      * Sends Intent to Store, must me called only on Main thread

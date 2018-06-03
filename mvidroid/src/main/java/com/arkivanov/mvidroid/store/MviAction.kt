@@ -10,8 +10,9 @@ import io.reactivex.disposables.Disposable
  *
  * @param S type of Store's State
  * @param R type of Store's Results
+ * @param L type of Store's Labels
  */
-interface MviAction<in S : Any, out R : Any> {
+interface MviAction<in S : Any, out R : Any, out L : Any> {
 
     /**
      * Called on Main thread, do your job here
@@ -23,5 +24,5 @@ interface MviAction<in S : Any, out R : Any> {
      * @return Disposable if there are any background operations, null otherwise. This Disposable will be managed by Store.
      */
     @MainThread
-    operator fun invoke(getState: KSupplier<S>, dispatch: KConsumer<R>, publish: KConsumer<Any>): Disposable?
+    operator fun invoke(getState: KSupplier<S>, dispatch: KConsumer<R>, publish: KConsumer<L>): Disposable?
 }

@@ -16,8 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class MviBoundaryTest {
 
-    private val storeLabels = PublishRelay.create<Any>()
-    private val store: MviStore<String, String> = mock {
+    private val storeLabels = PublishRelay.create<String>()
+    private val store: MviStore<String, String, String> = mock {
         on { labels }.thenReturn(storeLabels)
     }
     private val events = PublishRelay.create<String>()

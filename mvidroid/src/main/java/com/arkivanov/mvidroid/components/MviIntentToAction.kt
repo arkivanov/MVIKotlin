@@ -9,7 +9,7 @@ import com.arkivanov.mvidroid.store.MviAction
  * @param I type of Intent
  * @param A type of Action
  */
-interface MviIntentToAction<in I : Any, out A : MviAction<*, *>> {
+interface MviIntentToAction<in I : Any, out A : MviAction<*, *, *>> {
 
     /**
      * Invoked by Store for every Intent, always on Main thread

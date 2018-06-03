@@ -165,14 +165,14 @@ class MviDefaultStoreTest {
 
     private data class State(val data: String? = null)
 
-    private class Action : MviAction<State, String> {
+    private class Action : MviAction<State, String, String> {
         var isInvoked: Boolean = false
         lateinit var getState: KSupplier<State>
         lateinit var dispatch: KConsumer<String>
-        lateinit var publish: KConsumer<Any>
+        lateinit var publish: KConsumer<String>
         val disposable: Disposable = mock()
 
-        override fun invoke(getState: KSupplier<State>, dispatch: KConsumer<String>, publish: KConsumer<Any>): Disposable? {
+        override fun invoke(getState: KSupplier<State>, dispatch: KConsumer<String>, publish: KConsumer<String>): Disposable? {
             isInvoked = true
             this.getState = getState
             this.dispatch = dispatch
