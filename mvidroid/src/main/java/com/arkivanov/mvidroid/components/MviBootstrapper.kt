@@ -2,7 +2,6 @@ package com.arkivanov.mvidroid.components
 
 import android.support.annotation.MainThread
 import com.arkivanov.kfunction.KConsumer
-import com.arkivanov.mvidroid.store.MviAction
 import io.reactivex.disposables.Disposable
 
 /**

@@ -1,4 +1,4 @@
-package com.arkivanov.mvidroid.store
+package com.arkivanov.mvidroid.components
 
 import android.support.annotation.MainThread
 import com.arkivanov.kfunction.KConsumer

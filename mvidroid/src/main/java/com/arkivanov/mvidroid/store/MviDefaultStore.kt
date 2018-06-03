@@ -1,5 +1,6 @@
 package com.arkivanov.mvidroid.store
 
+import com.arkivanov.mvidroid.components.MviAction
 import com.arkivanov.mvidroid.components.MviBootstrapper
 import com.arkivanov.mvidroid.components.MviIntentToAction
 import com.arkivanov.mvidroid.components.MviReducer

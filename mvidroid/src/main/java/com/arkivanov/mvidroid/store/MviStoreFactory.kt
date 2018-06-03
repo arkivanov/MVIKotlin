@@ -1,6 +1,7 @@
 package com.arkivanov.mvidroid.store
 
 import android.support.annotation.MainThread
+import com.arkivanov.mvidroid.components.MviAction
 import com.arkivanov.mvidroid.components.MviBootstrapper
 import com.arkivanov.mvidroid.components.MviIntentToAction
 import com.arkivanov.mvidroid.components.MviReducer

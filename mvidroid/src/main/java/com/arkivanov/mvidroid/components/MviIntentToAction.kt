@@ -1,7 +1,6 @@
 package com.arkivanov.mvidroid.components
 
 import android.support.annotation.MainThread
-import com.arkivanov.mvidroid.store.MviAction
 
 /**
  * Converts Intents to Actions

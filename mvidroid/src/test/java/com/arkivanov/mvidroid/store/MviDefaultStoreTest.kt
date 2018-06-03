@@ -2,6 +2,7 @@ package com.arkivanov.mvidroid.store
 
 import com.arkivanov.kfunction.KConsumer
 import com.arkivanov.kfunction.KSupplier
+import com.arkivanov.mvidroid.components.MviAction
 import com.arkivanov.mvidroid.components.MviIntentToAction
 import com.arkivanov.mvidroid.components.MviBootstrapper
 import com.arkivanov.mvidroid.components.MviReducer
