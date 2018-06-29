@@ -6,91 +6,37 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 
 /**
- * Base interface of Store. Store consumes Intents and produces States. It also can produce Labels as side effects.
- * Use [MviBoundary][com.arkivanov.mvidroid.boundary.MviBoundary] to glue Store with UI.
+ * Base interface of Store. Store is a place for business logic, it consumes Intents and produces States.
+ * It also can produce Labels as side effects. Use [MviComponent][com.arkivanov.mvidroid.component.MviAbstractComponent]
+ * to group your Stores into UI independent components. See [MviDefaultStore] for more information.
  *
- * Implementation example:
- * ```
- * class ExampleStore(storeFactory: MviStoreFactory) : MviStore<State, Intent, Label> by storeFactory(
- *     initialState = State(),
- *     bootstrapper = Bootstrapper,
- *     intentToAction = IntentToAction,
- *     reducer = Reducer
- * ) {
- *
- *     data class State()
- *
- *     sealed class Intent {
- *         // Your Intents here
- *     }
- *
- *     sealed class Label {
- *         // Your Labels here
- *     }
- *
- *     private sealed class Result {
- *         // Your Results here
- *     }
- *
- *     private abstract class Action : MviAction<State, Result, Label> {
- *         object ExampleAction : Action() {
- *             override fun invoke(getState: KSupplier<State>, dispatch: KConsumer<Result>, publish: KConsumer<Label>): Disposable? {
- *                 // Process your action here. Return Disposable if you are doing any background work, return null otherwise.
- *                 // You can access current State by using property "state"
- *                 // You can dispatch Results using method "dispatch"
- *                 // You can publish Labels using method "publish"
- *             }
- *         }
- *         // More Actions here
- *     }
- *
- *     private object Bootstrapper : MviBootstrapper<Action> {
- *         override fun invoke(dispatch: KConsumer<Intent>): Disposable? {
- *             // Initialize you store here, e.g. subscribe to data sources
- *         }
- *     }
- *
- *     private object IntentToAction : MviIntentToAction<Intent, Action> {
- *         override fun invoke(intent: Intent): Action {
- *             // Map provided Intent to Action here
- *         }
- *     }
- *
- *     private object Reducer : MviReducer<State, Result> {
- *         override fun State.invoke(result: Result): State {
- *             // Transform current State into a new State using provided Result
- *         }
- *     }
- * }
- * ```
- *
- * @param S type of State
- * @param I type of Intent
- * @param L type of Label
+ * @param State Type of State. State is a storage of Store's data, typically represented as data object.
+ * @param Intent Type of Intent. Intent is a call to action, it triggers some Action in Store.
+ * @param Label Type of Label. Labels are used for inter-Store communication.
  */
-interface MviStore<S : Any, in I : Any, L : Any> : KConsumer<I>, Disposable {
+interface MviStore<State : Any, in Intent : Any, Label : Any> : KConsumer<Intent>, Disposable {
 
     /**
      * Provides access to current state, must be accessed only from Main thread
      */
     @get:MainThread
-    val state: S
+    val state: State
 
     /**
      * Observable of States. Emissions are performed on Main thread.
      */
-    val states: Observable<S>
+    val states: Observable<State>
 
     /**
      * Observable of Labels. Emissions are performed on Main thread.
      */
-    val labels: Observable<L>
+    val labels: Observable<Label>
 
     /**
      * Sends Intent to Store, must me called only on Main thread
      */
     @MainThread
-    override fun invoke(intent: I)
+    override fun invoke(intent: Intent)
 
     /**
      * Disposes the Store and all its active operations, must be called only on Main thread

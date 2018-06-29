@@ -1,5 +1,6 @@
 package com.arkivanov.mvidroid.store
 
+import android.support.annotation.MainThread
 import com.arkivanov.mvidroid.components.MviAction
 import com.arkivanov.mvidroid.components.MviBootstrapper
 import com.arkivanov.mvidroid.components.MviIntentToAction
@@ -7,51 +8,39 @@ import com.arkivanov.mvidroid.components.MviReducer
 import com.arkivanov.mvidroid.utils.Disposables
 import com.arkivanov.mvidroid.utils.assertOnMainThread
 import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 
-/**
- * Default implementation of Store, see [MviStore] for more information and implementation example.
- * Must be created only on Main thread.
- *
- * @param initialState initial State
- * @param bootstrapper optional Bootstrapper that will initialize the Store, see [MviBootstrapper]
- * @param intentToAction maps Intents to Actions, see [MviAction]
- * @param reducer Reducer that will reduce States based on Results, see [MviReducer]
- * @param S type of State
- * @param I type of Intents
- * @param R type of Results
- * @param L type of Labels
- */
-open class MviDefaultStore<S : Any, in I : Any, out R : Any, L : Any, A : MviAction<S, R, L>>(
-    initialState: S,
-    bootstrapper: MviBootstrapper<A>? = null,
-    private val intentToAction: MviIntentToAction<I, A>,
-    reducer: MviReducer<S, R>
-) : MviStore<S, I, L> {
+internal class MviDefaultStore<State : Any, in Intent : Any, out Result : Any, Label : Any, Action : MviAction<State, Result, Label>>
+@MainThread constructor(
+    initialState: State,
+    bootstrapper: MviBootstrapper<Action>? = null,
+    private val intentToAction: MviIntentToAction<Intent, Action>,
+    reducer: MviReducer<State, Result>
+) : MviStore<State, Intent, Label> {
 
-    private val stateSubject = BehaviorRelay.createDefault(initialState)
-    private val labelSubject = PublishSubject.create<L>()
+    private val stateRelay = BehaviorRelay.createDefault(initialState)
+    private val labelRelay = PublishRelay.create<Label>()
     private val disposables = Disposables()
 
-    override val state: S
-        get() = assertOnMainThread().let { stateSubject.value }
+    override val state: State
+        get() = assertOnMainThread().let { stateRelay.value }
 
-    override val states: Observable<S> = stateSubject
-    override val labels: Observable<L> = labelSubject
+    override val states: Observable<State> = stateRelay
+    override val labels: Observable<Label> = labelRelay
 
     private val getState = ::state
 
-    private val dispatch = { result: R ->
+    private val dispatch = { result: Result ->
         assertOnMainThread()
         with(reducer) {
-            stateSubject.accept(stateSubject.value.reduce(result))
+            stateRelay.accept(stateRelay.value.reduce(result))
         }
     }
 
-    private val publish = { label: L ->
+    private val publish = { label: Label ->
         assertOnMainThread()
-        labelSubject.onNext(label)
+        labelRelay.accept(label)
     }
 
     init {
@@ -59,12 +48,12 @@ open class MviDefaultStore<S : Any, in I : Any, out R : Any, L : Any, A : MviAct
         bootstrapper?.bootstrap(::processAction)?.also(disposables::add)
     }
 
-    final override fun invoke(intent: I) {
+    final override fun invoke(intent: Intent) {
         assertOnMainThread()
         processAction(intentToAction.select(intent))
     }
 
-    private fun processAction(action: A) {
+    private fun processAction(action: Action) {
         action(getState, dispatch, publish)?.also(disposables::add)
     }
 

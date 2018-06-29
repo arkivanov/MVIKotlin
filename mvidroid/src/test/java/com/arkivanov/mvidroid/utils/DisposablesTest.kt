@@ -6,23 +6,20 @@ import io.reactivex.disposables.Disposable
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
 class DisposablesTest {
 
     private val impl = Disposables()
 
     @Test
-    fun `WHEN disposed THEN isDisposed=true`() {
+    fun `isDisposed=true WHEN disposed`() {
         impl.dispose()
 
         assertTrue(impl.isDisposed)
     }
 
     @Test
-    fun `WHEN disposable added THEN contains`() {
+    fun `contains disposable WHEN added`() {
         val disposable: Disposable = mock()
 
         impl.add(disposable)
@@ -31,7 +28,7 @@ class DisposablesTest {
     }
 
     @Test
-    fun `WHEN disposable added AND disposed THEN disposable disposed`() {
+    fun `disposable disposed WHEN disposable added AND disposed`() {
         val disposable: Disposable = mock()
         impl.add(disposable)
 
@@ -41,7 +38,7 @@ class DisposablesTest {
     }
 
     @Test
-    fun `WHEN disposable added AND disposed THEN not contains`() {
+    fun `not contains disposable WHEN disposable added AND disposed`() {
         val disposable: Disposable = mock()
         impl.add(disposable)
 
@@ -51,7 +48,7 @@ class DisposablesTest {
     }
 
     @Test
-    fun `WHEN disposable added AND disposable disposed AND another disposable added THEN not contains first disposable`() {
+    fun `not contains first disposable WHEN disposable added AND disposable disposed AND another disposable added`() {
         val disposable1: Disposable = mock {
             on { isDisposed }.thenReturn(true)
         }

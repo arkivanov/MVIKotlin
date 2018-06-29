@@ -5,19 +5,19 @@ import com.arkivanov.kfunction.KConsumer
 import io.reactivex.disposables.Disposable
 
 /**
- * Used for Store bootstrapping. Subscribe to data sources or do any other initialization.
+ * Used for Store bootstrapping. Subscribe to data sources or do any other initializations.
  *
- * @param A type of Action
+ * @param Action type of Action
  */
-interface MviBootstrapper<out A : MviAction<*, *, *>> {
+interface MviBootstrapper<out Action : MviAction<*, *, *>> {
 
     /**
-     * Bootstraps a Store, invoked by Store always on Main thread
+     * Bootstraps a Store, called by Store always on Main thread
      *
      * @param dispatch a consumer of Actions
      * @return Disposable if there are any background operations, null otherwise.
-     * It will be disposed together with Store.
+     * This Disposable will be managed by Store.
      */
     @MainThread
-    fun bootstrap(dispatch: KConsumer<A>): Disposable?
+    fun bootstrap(dispatch: KConsumer<Action>): Disposable?
 }

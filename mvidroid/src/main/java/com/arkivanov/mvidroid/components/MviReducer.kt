@@ -5,18 +5,18 @@ import android.support.annotation.MainThread
 /**
  * Applies Results to States
  *
- * @param S type of State
- * @param R type of Result
+ * @param State type of State
+ * @param Result type of Result
  */
-interface MviReducer<S : Any, in R : Any> {
+interface MviReducer<State : Any, in Result : Any> {
 
     /**
-     * Invoked by Store for every Result, always on Main thread.
+     * Called by Store for every Result, always on Main thread.
      * This is an extension function of State so current State is available as this.
      *
      * @param result a Result that should be applied to State
      * @return new State with Result applied
      */
     @MainThread
-    fun S.reduce(result: R): S
+    fun State.reduce(result: Result): State
 }

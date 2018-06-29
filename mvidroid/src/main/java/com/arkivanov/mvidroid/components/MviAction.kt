@@ -8,14 +8,14 @@ import io.reactivex.disposables.Disposable
 /**
  * Actions contain business logic of Store
  *
- * @param S type of Store's State
- * @param R type of Store's Results
- * @param L type of Store's Labels
+ * @param State type of Store's State
+ * @param Result type of Store's Results
+ * @param Label type of Store's Labels
  */
-interface MviAction<in S : Any, out R : Any, out L : Any> {
+interface MviAction<in State : Any, out Result : Any, out Label : Any> {
 
     /**
-     * Called on Main thread, do your job here
+     * Do your job here, called on Main thread
      *
      * @param getState provides current state of Store, must by called only on Main thread
      * @param dispatch Synchronously dispatches a Result to Reducer, must by called only on Main thread.
@@ -24,5 +24,5 @@ interface MviAction<in S : Any, out R : Any, out L : Any> {
      * @return Disposable if there are any background operations, null otherwise. This Disposable will be managed by Store.
      */
     @MainThread
-    operator fun invoke(getState: KSupplier<S>, dispatch: KConsumer<R>, publish: KConsumer<L>): Disposable?
+    operator fun invoke(getState: KSupplier<State>, dispatch: KConsumer<Result>, publish: KConsumer<Label>): Disposable?
 }
