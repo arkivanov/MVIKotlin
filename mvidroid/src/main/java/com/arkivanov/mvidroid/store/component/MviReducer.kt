@@ -1,4 +1,4 @@
-package com.arkivanov.mvidroid.components
+package com.arkivanov.mvidroid.store.component
 
 import android.support.annotation.MainThread
 

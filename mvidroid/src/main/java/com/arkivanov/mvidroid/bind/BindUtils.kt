@@ -8,7 +8,7 @@ import com.arkivanov.mvidroid.view.MviView
 import io.reactivex.disposables.Disposable
 
 /**
- * Binds Component with Views. Must be called only from Main thread.
+ * Binds Component with Views. Must be called only on Main thread.
  *
  * @param component a Component to bind to View, see [MviComponent]
  * @param bundles array of View Bundles to bind to Component, see [MviViewBundle]

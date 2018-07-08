@@ -2,105 +2,90 @@ package com.arkivanov.mvidroid.store
 
 import com.arkivanov.kfunction.KConsumer
 import com.arkivanov.kfunction.KSupplier
-import com.arkivanov.mvidroid.components.MviAction
-import com.arkivanov.mvidroid.components.MviBootstrapper
-import com.arkivanov.mvidroid.components.MviIntentToAction
-import com.arkivanov.mvidroid.components.MviReducer
-import com.jakewharton.rxrelay2.ReplayRelay
+import com.arkivanov.mvidroid.store.component.MviBootstrapper
+import com.arkivanov.mvidroid.store.component.MviExecutor
+import com.arkivanov.mvidroid.store.component.MviReducer
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.disposables.Disposable
-import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class MviDefaultStoreTest {
+internal class MviDefaultStoreTest {
 
-    private val bootstrapper: Bootstrapper = Bootstrapper()
-    private val actionSelector = IntentToAction()
-    private val reducer = Reducer()
-    private val action = Action()
-    private val initialState = State()
-    private val store = MviDefaultStore(initialState, bootstrapper, actionSelector, reducer)
-    private val states = ReplayRelay.create<State>()
-    private val labels = ReplayRelay.create<Any>()
+    private var executorHolder = ExecutorHolder()
+    lateinit var store: MviDefaultStore<String, String, String, String, String>
 
     init {
-        store.states.subscribe(states)
-        store.labels.subscribe(labels)
+        createStore()
     }
 
     @Test
-    fun `bootstrapper invoked WHEN store created`() {
-        assertTrue(bootstrapper.isInvoked)
+    fun `executor invoked WHEN bootstrapper dispatched action`() {
+        createStore(
+            bootstrapper = mockBootstrapper { dispatch ->
+                dispatch("action")
+                null
+            }
+        )
+        verify(executorHolder.executor).invoke("action")
     }
 
     @Test
-    fun `action invoked WHEN bootstrapper dispatched action`() {
-        testActionInvoked { bootstrapper.dispatch(action) }
+    fun `disposable returned from bootstrapper disposed WHEN store is disposed`() {
+        val disposable = mock<Disposable>()
+        createStore(bootstrapper = mockBootstrapper { disposable }).dispose()
+        verify(disposable).dispose()
     }
 
     @Test
-    fun `action can read state WHEN bootstrapper dispatched action`() {
-        testActionCanReadState { bootstrapper.dispatch(action) }
+    fun `executor initialized WHEN store created`() {
+        verify(executorHolder.executor).init(any(), any(), any())
     }
 
     @Test
-    fun `state updated WHEN bootstrapper dispatched action AND action dispatched result`() {
-        testStateUpdatedWhenActionDispatchedResult { bootstrapper.dispatch(action) }
+    fun `executor can read store's state`() {
+        assertEquals("state", executorHolder.stateSupplier())
     }
 
     @Test
-    fun `state emitted WHEN bootstrapper dispatched action AND action dispatched result`() {
-        testStateEmittedWhenActionDispatchedResult { bootstrapper.dispatch(action) }
+    fun `state updated WHEN executor dispatched result`() {
+        executorHolder.resultConsumer("result")
+        assertEquals("result", store.state)
     }
 
     @Test
-    fun `label emitted WHEN bootstrapper dispatched action AND action published label`() {
-        testLabelEmittedWhenActionPublishedLabel { bootstrapper.dispatch(action) }
+    fun `state emitted WHEN executor dispatched result`() {
+        lateinit var state: String
+        store.states.subscribe { state = it }
+        executorHolder.resultConsumer("result")
+        assertEquals("result", state)
     }
 
     @Test
-    fun `disposable disposed WHEN bootstrapper dispatched action AND action returned disposable`() {
-        testDisposableDisposedWhenActionReturnedDisposable { bootstrapper.dispatch(action) }
+    fun `label emitted WHEN executor published label`() {
+        lateinit var label: String
+        store.labels.subscribe { label = it }
+        executorHolder.labelConsumer("label")
+        assertEquals("label", label)
     }
 
     @Test
-    fun `disposable disposed WHEN returned from bootstrapper AND store disposed`() {
+    fun `executor invoked WHEN intent send`() {
+        val store = createStore(executorHolder = ExecutorHolder())
+        store("intent")
+        verify(executorHolder.executor).invoke("intent")
+    }
+
+    @Test
+    fun `disposable returned from executor disposed WHEN store is disposed`() {
+        val disposable = mock<Disposable>()
+        createStore(executorHolder = ExecutorHolder { disposable })
+        store("intent")
         store.dispose()
-        verify(bootstrapper.disposable).dispose()
-    }
-
-    @Test
-    fun `action invoked WHEN intent sent`() {
-        testActionInvoked { store("intent") }
-    }
-
-    @Test
-    fun `action can read state WHEN intent sent`() {
-        testActionCanReadState { store("intent") }
-    }
-
-    @Test
-    fun `state updated WHEN intent sent AND action dispatched result`() {
-        testStateUpdatedWhenActionDispatchedResult { store("intent") }
-    }
-
-    @Test
-    fun `state emitted WHEN intent sent AND action dispatched result`() {
-        testStateEmittedWhenActionDispatchedResult { store("intent") }
-    }
-
-    @Test
-    fun `label emitted WHEN intent sent AND action published label`() {
-        testLabelEmittedWhenActionPublishedLabel { store("intent") }
-    }
-
-    @Test
-    fun `disposable disposed WHEN intent sent AND action returned disposable`() {
-        testDisposableDisposedWhenActionReturnedDisposable { store("intent") }
+        verify(disposable).dispose()
     }
 
     @Test
@@ -110,99 +95,64 @@ class MviDefaultStoreTest {
     }
 
     @Test
-    fun `last action read actual state WHEN two intents for label`() {
-        val action1 = Action()
-        val action2 = Action()
-        val action3 = Action()
-        val intentToAction: MviIntentToAction<String, Action> = mock {
-            on { select("intent1") }.thenReturn(action1)
-            on { select("intent2") }.thenReturn(action2)
-            on { select("intent3") }.thenReturn(action3)
-        }
-        val store = MviDefaultStore(State(), null, intentToAction, Reducer())
-        store.labels.subscribe {
-            store("intent2")
-            store("intent3")
-        }
-        store("intent1")
-        action1.publish("label")
-        action2.dispatch("result2")
-        assertEquals("result2", action3.getState().data)
-    }
-
-    private fun testActionInvoked(block: () -> Unit) {
-        block()
-        assertTrue(action.isInvoked)
-    }
-
-    private fun testActionCanReadState(block: () -> Unit) {
-        block()
-        assertSame(initialState, action.getState())
-    }
-
-    private fun testStateUpdatedWhenActionDispatchedResult(block: () -> Unit) {
-        block()
-        action.dispatch("result")
-        assertEquals("result", store.state.data)
-    }
-
-    private fun testStateEmittedWhenActionDispatchedResult(block: () -> Unit) {
-        block()
-        action.dispatch("result")
-        assertArrayEquals(arrayOf(initialState, State("result")), states.values)
-    }
-
-    private fun testLabelEmittedWhenActionPublishedLabel(block: () -> Unit) {
-        block()
-        action.publish("label")
-        assertArrayEquals(arrayOf("label"), labels.values)
-    }
-
-    private fun testDisposableDisposedWhenActionReturnedDisposable(block: () -> Unit) {
-        block()
-        store.dispose()
-        verify(action.disposable).dispose()
-    }
-
-    private data class State(val data: String? = null)
-
-    private class Action : MviAction<State, String, String> {
-        var isInvoked: Boolean = false
-        lateinit var getState: KSupplier<State>
-        lateinit var dispatch: KConsumer<String>
-        lateinit var publish: KConsumer<String>
-        val disposable: Disposable = mock()
-
-        override fun invoke(getState: KSupplier<State>, dispatch: KConsumer<String>, publish: KConsumer<String>): Disposable? {
-            isInvoked = true
-            this.getState = getState
-            this.dispatch = dispatch
-            this.publish = publish
-            return disposable
-        }
-    }
-
-    private class Bootstrapper : MviBootstrapper<Action> {
-        var isInvoked: Boolean = false
-        lateinit var dispatch: KConsumer<Action>
-        val disposable: Disposable = mock()
-
-        override fun bootstrap(dispatch: KConsumer<Action>): Disposable? {
-            isInvoked = true
-            this.dispatch = dispatch
-            return disposable
-        }
-    }
-
-    private inner class IntentToAction : MviIntentToAction<String, Action> {
-        override fun select(intent: String): Action =
-            when (intent) {
-                "intent" -> action
-                else -> throw IllegalStateException("Unsupported intent: $intent")
+    fun `valid state read for last intent WHEN two intents for label`() {
+        lateinit var lastState: String
+        createStore(
+            executorHolder = ExecutorHolder {
+                if (it == "intent2") {
+                    lastState = stateSupplier()
+                }
+                resultConsumer(it)
+                null
             }
+        )
+        store.labels.subscribe {
+            store("intent1")
+            store("intent2")
+        }
+        executorHolder.labelConsumer("label")
+        assertEquals("intent1", lastState)
     }
 
-    private class Reducer : MviReducer<State, String> {
-        override fun State.reduce(result: String): State = State(data = result)
+    private fun createStore(
+        bootstrapper: MviBootstrapper<String>? = null,
+        executorHolder: ExecutorHolder = this.executorHolder
+    ): MviDefaultStore<String, String, String, String, String> {
+        this.executorHolder = executorHolder
+        store = MviDefaultStore(
+            "state",
+            bootstrapper,
+            { it },
+            executorHolder.executor,
+            object : MviReducer<String, String> {
+                override fun String.reduce(result: String): String = result
+            }
+        )
+
+        return store
+    }
+
+    private fun mockBootstrapper(onBootstrap: (dispatch: KConsumer<String>) -> Disposable?): MviBootstrapper<String> =
+        mock {
+            on { bootstrap(any()) }.thenAnswer { onBootstrap(it.getArgument(0)) }
+        }
+
+    private class ExecutorHolder(onInvoke: (ExecutorHolder.(label: String) -> Disposable?) = { _ -> null }) {
+        var isInitialized: Boolean = false
+        lateinit var stateSupplier: KSupplier<String>
+        lateinit var resultConsumer: KConsumer<String>
+        lateinit var labelConsumer: KConsumer<String>
+
+        val executor = mock<MviExecutor<String, String, String, String>> {
+            on { init(any(), any(), any()) }.thenAnswer {
+                isInitialized = true
+                stateSupplier = it.getArgument(0)
+                resultConsumer = it.getArgument(1)
+                labelConsumer = it.getArgument(2)
+                Unit
+            }
+
+            on { invoke(any()) }.thenAnswer { onInvoke(it.getArgument(0)) }
+        }
     }
 }
