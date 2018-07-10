@@ -1,8 +1,6 @@
 package com.arkivanov.mvidroid.store.component
 
 import android.support.annotation.MainThread
-import com.arkivanov.kfunction.KConsumer
-import com.arkivanov.kfunction.KSupplier
 import io.reactivex.disposables.Disposable
 
 /**
@@ -13,9 +11,9 @@ import io.reactivex.disposables.Disposable
 abstract class MviExecutor<State : Any, in Action : Any, Result : Any, Label : Any> @MainThread constructor() {
 
     private var isInitialized: Boolean = false
-    private lateinit var stateSupplier: KSupplier<State>
-    private lateinit var resultConsumer: KConsumer<Result>
-    private lateinit var labelConsumer: KConsumer<Label>
+    private lateinit var stateSupplier: () -> State
+    private lateinit var resultConsumer: (Result) -> Unit
+    private lateinit var labelConsumer: (Label) -> Unit
 
     /**
      * Provides current State of Store, must be accessed only on Main thread
@@ -29,7 +27,7 @@ abstract class MviExecutor<State : Any, in Action : Any, Result : Any, Label : A
      * Called internally by Store
      */
     @MainThread
-    fun init(stateSupplier: KSupplier<State>, resultConsumer: KConsumer<Result>, labelConsumer: KConsumer<Label>) {
+    fun init(stateSupplier: () -> State, resultConsumer: (Result) -> Unit, labelConsumer: (Label) -> Unit) {
         if (isInitialized) {
             throw IllegalStateException("MviExecutor cannot be reused, please make sure that it is not a singleton")
         }

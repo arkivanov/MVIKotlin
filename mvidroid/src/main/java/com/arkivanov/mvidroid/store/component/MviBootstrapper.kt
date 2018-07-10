@@ -1,7 +1,6 @@
 package com.arkivanov.mvidroid.store.component
 
 import android.support.annotation.MainThread
-import com.arkivanov.kfunction.KConsumer
 import io.reactivex.disposables.Disposable
 
 /**
@@ -19,5 +18,5 @@ interface MviBootstrapper<out Action : Any> {
      * This Disposable will be managed by Store.
      */
     @MainThread
-    fun bootstrap(dispatch: KConsumer<Action>): Disposable?
+    fun bootstrap(dispatch: (Action) -> Unit): Disposable?
 }

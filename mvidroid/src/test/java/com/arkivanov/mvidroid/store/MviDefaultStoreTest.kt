@@ -1,7 +1,5 @@
 package com.arkivanov.mvidroid.store
 
-import com.arkivanov.kfunction.KConsumer
-import com.arkivanov.kfunction.KSupplier
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
 import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
@@ -132,16 +130,16 @@ internal class MviDefaultStoreTest {
         return store
     }
 
-    private fun mockBootstrapper(onBootstrap: (dispatch: KConsumer<String>) -> Disposable?): MviBootstrapper<String> =
+    private fun mockBootstrapper(onBootstrap: (dispatch: (String) -> Unit) -> Disposable?): MviBootstrapper<String> =
         mock {
             on { bootstrap(any()) }.thenAnswer { onBootstrap(it.getArgument(0)) }
         }
 
     private class ExecutorHolder(onInvoke: (ExecutorHolder.(label: String) -> Disposable?) = { _ -> null }) {
         var isInitialized: Boolean = false
-        lateinit var stateSupplier: KSupplier<String>
-        lateinit var resultConsumer: KConsumer<String>
-        lateinit var labelConsumer: KConsumer<String>
+        lateinit var stateSupplier: () -> String
+        lateinit var resultConsumer: (String) -> Unit
+        lateinit var labelConsumer: (String) -> Unit
 
         val executor = mock<MviExecutor<String, String, String, String>> {
             on { init(any(), any(), any()) }.thenAnswer {

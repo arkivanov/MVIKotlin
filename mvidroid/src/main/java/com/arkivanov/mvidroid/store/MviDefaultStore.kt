@@ -1,7 +1,6 @@
 package com.arkivanov.mvidroid.store
 
 import android.support.annotation.MainThread
-import com.arkivanov.kfunction.KFunction
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
 import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
@@ -15,7 +14,7 @@ internal class MviDefaultStore<State : Any, in Intent : Any, Action : Any, out R
 @MainThread constructor(
     initialState: State,
     bootstrapper: MviBootstrapper<Action>? = null,
-    private val intentToAction: KFunction<Intent, Action>,
+    private val intentToAction: (Intent) -> Action,
     private val executor: MviExecutor<State, Action, Result, Label>,
     reducer: MviReducer<State, Result>
 ) : MviStore<State, Intent, Label> {

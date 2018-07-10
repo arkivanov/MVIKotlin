@@ -1,7 +1,6 @@
 package com.arkivanov.mvidroid.store.factory
 
 import android.support.annotation.MainThread
-import com.arkivanov.kfunction.KFunction
 import com.arkivanov.mvidroid.store.MviStore
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
 import com.arkivanov.mvidroid.store.component.MviExecutor
@@ -33,7 +32,7 @@ interface MviStoreFactory {
     fun <State : Any, Intent : Any, Action : Any, Result : Any, Label : Any> create(
         initialState: State,
         bootstrapper: MviBootstrapper<Action>? = null,
-        intentToAction: KFunction<Intent, Action>,
+        intentToAction: (Intent) -> Action,
         executor: MviExecutor<State, Action, Result, Label>,
         reducer: MviReducer<State, Result>? = null
     ): MviStore<State, Intent, Label>

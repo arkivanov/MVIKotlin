@@ -1,6 +1,5 @@
 package com.arkivanov.mvidroid.component
 
-import com.arkivanov.kfunction.KFunction
 import com.arkivanov.mvidroid.store.MviStore
 import com.jakewharton.rxrelay2.PublishRelay
 import com.nhaarman.mockito_kotlin.mock
@@ -41,7 +40,7 @@ class MviAbstractComponentTest {
 
     @Test
     fun `intent received by store WHEN event transformer provided AND event published`() {
-        val transformer: KFunction<String, String> = mock {
+        val transformer: (String) -> String = mock {
             on { invoke("event") }.thenReturn("intent")
         }
         TestComponent(eventTransformer = transformer)("event")
@@ -50,7 +49,7 @@ class MviAbstractComponentTest {
 
     @Test
     fun `intent received by store WHEN label transformer provided AND label published`() {
-        val transformer: KFunction<Any, String> = mock {
+        val transformer: (Any) -> String = mock {
             on { invoke("label") }.thenReturn("intent")
         }
         TestComponent(labelTransformer = transformer)
@@ -74,8 +73,8 @@ class MviAbstractComponentTest {
     }
 
     private inner class TestComponent(
-        eventTransformer: KFunction<String, String?>? = null,
-        labelTransformer: KFunction<Any, String?>? = null,
+        eventTransformer: ((String) -> String?)? = null,
+        labelTransformer: ((Any) -> String?)? = null,
         isPersistent: Boolean = false
     ) : MviAbstractComponent<String, String>(listOf(MviStoreBundle(store, eventTransformer, labelTransformer, isPersistent)), labels) {
         override val states: String

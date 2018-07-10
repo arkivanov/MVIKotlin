@@ -24,7 +24,6 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$support_library_version"
     implementation 'android.arch.lifecycle:common-java8:1.1.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api 'com.github.arkivanov:kfunction:1.0.0'
     api 'io.reactivex.rxjava2:rxandroid:2.0.2'
     api 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
     testImplementation 'junit:junit:4.12'

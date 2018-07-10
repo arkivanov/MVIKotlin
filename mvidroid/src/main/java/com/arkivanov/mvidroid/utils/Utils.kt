@@ -1,6 +1,5 @@
 package com.arkivanov.mvidroid.utils
 
-import com.arkivanov.kfunction.KFunction
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -14,5 +13,5 @@ import io.reactivex.ObservableSource
  * @param R output type
  * @return an Observable that emits only non-null items transformed by the specified function from the source ObservableSource
  */
-inline fun <T : Any, R : Any> ObservableSource<out T>.mapNotNull(crossinline mapper: KFunction<T, R?>): Observable<R> =
+inline fun <T : Any, R : Any> ObservableSource<out T>.mapNotNull(crossinline mapper: (T) -> R?): Observable<R> =
     Observable.wrap(this).flatMapMaybe { mapper(it)?.let { Maybe.just(it) } ?: Maybe.empty() }

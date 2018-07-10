@@ -1,6 +1,5 @@
 package com.arkivanov.mvidroid.store.factory
 
-import com.arkivanov.kfunction.KFunction
 import com.arkivanov.mvidroid.store.MviDefaultStore
 import com.arkivanov.mvidroid.store.MviStore
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
@@ -18,9 +17,9 @@ object MviDefaultStoreFactory : MviStoreFactory {
             override fun Nothing.reduce(result: Any): Nothing = this
         }
 
-    private val NO_OP_INTENT_TO_ACTION: KFunction<Nothing, Any> = { throw UnsupportedOperationException("WTF?") }
+    private val NO_OP_INTENT_TO_ACTION: (Nothing) -> Any = { throw UnsupportedOperationException("WTF?") }
 
-    private val BYPASS_INTENT_TO_ACTION: KFunction<Any, Any> = { it }
+    private val BYPASS_INTENT_TO_ACTION: (Any) -> Any = { it }
 
     private val BYPASS_EXECUTOR =
         object : MviExecutor<Any, Any, Any, Any>() {
@@ -34,10 +33,10 @@ object MviDefaultStoreFactory : MviStoreFactory {
     private fun <State : Any, Result : Any> getBypassReducer(): MviReducer<State, Result> = BYPASS_REDUCER as MviReducer<State, Result>
 
     @Suppress("UNCHECKED_CAST")
-    private fun <Action : Any> getNoOpIntentToAction(): KFunction<Nothing, Action> = NO_OP_INTENT_TO_ACTION as KFunction<Nothing, Action>
+    private fun <Action : Any> getNoOpIntentToAction(): (Nothing) -> Action = NO_OP_INTENT_TO_ACTION as (Nothing) -> Action
 
     @Suppress("UNCHECKED_CAST")
-    private fun <Intent : Any> getBypassIntentToAction(): KFunction<Intent, Intent> = BYPASS_INTENT_TO_ACTION as KFunction<Intent, Intent>
+    private fun <Intent : Any> getBypassIntentToAction(): (Intent) -> Intent = BYPASS_INTENT_TO_ACTION as (Intent) -> Intent
 
     @Suppress("UNCHECKED_CAST")
     private fun <State : Any, Intent : Any, Label : Any> getBypassExecutor(): MviExecutor<State, Intent, Intent, Label> =
@@ -46,7 +45,7 @@ object MviDefaultStoreFactory : MviStoreFactory {
     override fun <State : Any, Intent : Any, Action : Any, Result : Any, Label : Any> create(
         initialState: State,
         bootstrapper: MviBootstrapper<Action>?,
-        intentToAction: KFunction<Intent, Action>,
+        intentToAction: (Intent) -> Action,
         executor: MviExecutor<State, Action, Result, Label>,
         reducer: MviReducer<State, Result>?
     ): MviStore<State, Intent, Label> =

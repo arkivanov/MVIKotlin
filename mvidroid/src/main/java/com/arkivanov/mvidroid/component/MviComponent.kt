@@ -1,7 +1,6 @@
 package com.arkivanov.mvidroid.component
 
 import android.support.annotation.MainThread
-import com.arkivanov.kfunction.KConsumer
 import io.reactivex.disposables.Disposable
 
 /**
@@ -15,7 +14,7 @@ import io.reactivex.disposables.Disposable
  * @param UiEvent type of UI Events
  * @param States type of States, typically includes States from all Component's Stores
  */
-interface MviComponent<in UiEvent : Any, out States : Any> : KConsumer<UiEvent>, Disposable {
+interface MviComponent<in UiEvent : Any, out States : Any> : (UiEvent) -> Unit, Disposable {
 
     /**
      * A group of States of Component's Stores. Must be accessed only from Main thread.

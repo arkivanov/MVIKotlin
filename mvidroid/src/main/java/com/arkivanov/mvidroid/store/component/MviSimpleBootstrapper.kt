@@ -1,6 +1,5 @@
 package com.arkivanov.mvidroid.store.component
 
-import com.arkivanov.kfunction.KConsumer
 import io.reactivex.disposables.Disposable
 
 /**
@@ -8,7 +7,7 @@ import io.reactivex.disposables.Disposable
  */
 class MviSimpleBootstrapper<out Action : Any>(private vararg val actions: Action) : MviBootstrapper<Action> {
 
-    override fun bootstrap(dispatch: KConsumer<Action>): Disposable? {
+    override fun bootstrap(dispatch: (Action) -> Unit): Disposable? {
         actions.forEach(dispatch)
         return null
     }

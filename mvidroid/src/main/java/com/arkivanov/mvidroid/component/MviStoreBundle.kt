@@ -1,6 +1,5 @@
 package com.arkivanov.mvidroid.component
 
-import com.arkivanov.kfunction.KFunction
 import com.arkivanov.mvidroid.store.MviStore
 
 /**
@@ -15,7 +14,7 @@ import com.arkivanov.mvidroid.store.MviStore
  */
 class MviStoreBundle<Intent : Any, in UiEvent : Any>(
     val store: MviStore<*, Intent, *>,
-    val uiEventTransformer: KFunction<UiEvent, Intent?>? = null,
-    val labelTransformer: KFunction<Any, Intent?>? = null,
+    val uiEventTransformer: ((UiEvent) -> Intent?)? = null,
+    val labelTransformer: ((Any) -> Intent?)? = null,
     val isPersistent: Boolean = false
 )

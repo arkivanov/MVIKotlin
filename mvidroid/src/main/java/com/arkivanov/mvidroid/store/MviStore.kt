@@ -1,7 +1,6 @@
 package com.arkivanov.mvidroid.store
 
 import android.support.annotation.MainThread
-import com.arkivanov.kfunction.KConsumer
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 
@@ -14,7 +13,7 @@ import io.reactivex.disposables.Disposable
  * @param Intent Type of Intent. Intent is a call to action, it triggers some Action in Store.
  * @param Label Type of Label. Labels are used for inter-Store communication.
  */
-interface MviStore<State : Any, in Intent : Any, Label : Any> : KConsumer<Intent>, Disposable {
+interface MviStore<State : Any, in Intent : Any, Label : Any> : (Intent) -> Unit, Disposable {
 
     /**
      * Provides access to current state, must be accessed only from Main thread
