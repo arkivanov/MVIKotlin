@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleOwner
 import android.support.annotation.MainThread
 import com.arkivanov.mvidroid.component.MviComponent
 import com.arkivanov.mvidroid.view.MviView
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 /**
@@ -22,23 +23,25 @@ fun <UiEvent : Any, States : Any, Component : MviComponent<UiEvent, States>> bin
     component: Component,
     vararg bundles: MviViewBundle<States, *, out UiEvent>
 ): MviLifecycleObserver {
-    val disposables = ArrayList<Disposable>(bundles.size * 2)
+    val onStopDisposables = ArrayList<Disposable>(bundles.size)
+    val onDestroyDisposables = CompositeDisposable()
 
     bundles.forEach {
-        disposables.add(it.view.uiEvents.subscribe { component(it) })
+        onDestroyDisposables.add(it.view.uiEvents.subscribe { component(it) })
     }
 
     return object : MviLifecycleObserver {
         override fun onStart() {
-            bundles.forEach { disposables.add(it.subscribe(component.states)) }
+            bundles.forEach { onStopDisposables.add(it.subscribe(component.states)) }
         }
 
         override fun onStop() {
-            disposables.forEach(Disposable::dispose)
-            disposables.clear()
+            onStopDisposables.forEach(Disposable::dispose)
+            onStopDisposables.clear()
         }
 
         override fun onDestroy() {
+            onDestroyDisposables.dispose()
             component.dispose()
         }
     }

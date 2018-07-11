@@ -1,8 +1,5 @@
 package com.arkivanov.mvidroid.bind
 
-import com.arkivanov.mvidroid.bind.MviViewBundle
-import com.arkivanov.mvidroid.bind.MviViewModelMapper
-import com.arkivanov.mvidroid.bind.bind
 import com.arkivanov.mvidroid.component.MviComponent
 import com.arkivanov.mvidroid.view.MviView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -45,6 +42,14 @@ class BindUtilsTest {
 
     @Test
     fun `component received event WHEN view published`() {
+        uiEventRelay.accept("event")
+        verify(component)("event")
+    }
+
+    @Test
+    fun `component received event WHEN stopped AND view published`() {
+        observer.onStart()
+        observer.onStop()
         uiEventRelay.accept("event")
         verify(component)("event")
     }
