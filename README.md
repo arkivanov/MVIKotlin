@@ -731,3 +731,15 @@ class DataComponentImpl(
 ```
 
 That’s it!
+
+## Sample project
+
+You can find a sample project in the repo, it's a todo list with details view.
+The sample project covers most of the cases:
+- Multiple Stores
+- Multiple screens
+- Components with multiple Stores with different scopes
+- Stores shared between Components
+- Labels
+- View with RecycleView and Adapter 
+- Toothpick for DI
