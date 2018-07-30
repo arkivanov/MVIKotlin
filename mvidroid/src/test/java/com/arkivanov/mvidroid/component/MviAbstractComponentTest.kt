@@ -27,6 +27,13 @@ class MviAbstractComponentTest {
     }
 
     @Test
+    fun `onDisposeAction is called WHEN component is disposed`() {
+        val onDisposeAction = mock<() -> Unit>()
+        TestComponent(onDisposeAction = onDisposeAction).dispose()
+        verify(onDisposeAction)()
+    }
+
+    @Test
     fun `store is disposed WHEN not persistent AND component is disposed`() {
         TestComponent().dispose()
         verify(store).dispose()
@@ -75,8 +82,13 @@ class MviAbstractComponentTest {
     private inner class TestComponent(
         eventTransformer: ((String) -> String?)? = null,
         labelTransformer: ((Any) -> String?)? = null,
-        isPersistent: Boolean = false
-    ) : MviAbstractComponent<String, String>(listOf(MviStoreBundle(store, eventTransformer, labelTransformer, isPersistent)), labels) {
+        isPersistent: Boolean = false,
+        onDisposeAction: (() -> Unit)? = null
+    ) : MviAbstractComponent<String, String>(
+        listOf(MviStoreBundle(store, eventTransformer, labelTransformer, isPersistent)),
+        labels,
+        onDisposeAction
+    ) {
         override val states: String
             get() = throw UnsupportedOperationException()
     }

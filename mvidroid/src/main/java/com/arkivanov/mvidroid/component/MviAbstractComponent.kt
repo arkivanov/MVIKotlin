@@ -16,7 +16,8 @@ import io.reactivex.disposables.CompositeDisposable
  */
 abstract class MviAbstractComponent<in UiEvent : Any, out States : Any> @MainThread constructor(
     private val stores: List<MviStoreBundle<*, UiEvent>>,
-    labels: Relay<Any>? = null
+    labels: Relay<Any>? = null,
+    private val onDisposeAction: (() -> Unit)? = null
 ) : MviComponent<UiEvent, States> {
 
     private val disposables = CompositeDisposable()
@@ -41,6 +42,7 @@ abstract class MviAbstractComponent<in UiEvent : Any, out States : Any> @MainThr
                 it.store.dispose()
             }
         }
+        onDisposeAction?.invoke()
     }
 
     override fun isDisposed(): Boolean {
