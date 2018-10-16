@@ -3,8 +3,8 @@ package com.arkivanov.mvidroid.utils
 import android.support.annotation.VisibleForTesting
 import io.reactivex.disposables.Disposable
 
-internal class Disposables : Disposable {
-    private var disposables: ArrayList<Disposable>? = ArrayList()
+class Disposables : Disposable {
+    private var disposables: MutableList<Disposable>? = ArrayList()
 
     override fun isDisposed(): Boolean = disposables == null
 

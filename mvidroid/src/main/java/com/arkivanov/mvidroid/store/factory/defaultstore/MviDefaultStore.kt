@@ -1,17 +1,16 @@
-package com.arkivanov.mvidroid.store
+package com.arkivanov.mvidroid.store.factory.defaultstore
 
 import android.support.annotation.MainThread
+import com.arkivanov.mvidroid.store.MviStore
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
 import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
 import com.arkivanov.mvidroid.utils.Disposables
 import com.arkivanov.mvidroid.utils.assertOnMainThread
-import com.jakewharton.rxrelay2.BehaviorRelay
-import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 
-internal class MviDefaultStore<State : Any, in Intent : Any, Action : Any, out Result : Any, Label : Any>
-@MainThread constructor(
+internal class MviDefaultStore<State : Any, in Intent : Any, Action : Any, out Result : Any, Label : Any> @MainThread constructor(
     initialState: State,
     bootstrapper: MviBootstrapper<Action>? = null,
     private val intentToAction: (Intent) -> Action,
@@ -19,18 +18,18 @@ internal class MviDefaultStore<State : Any, in Intent : Any, Action : Any, out R
     reducer: MviReducer<State, Result>
 ) : MviStore<State, Intent, Label> {
 
-    private val stateRelay = BehaviorRelay.createDefault(initialState)
-    private val labelRelay = PublishRelay.create<Label>()
-    private val disposables = Disposables()
+    private val statesSubject = BehaviorSubject.createDefault(initialState)
+    private val labelsSubject = BehaviorSubject.create<Label>()
+    override val states: Observable<State> = statesSubject
+    override val labels: Observable<Label> = labelsSubject
 
     override val state: State
         get() {
             assertOnMainThread()
-            return stateRelay.value
+            return statesSubject.value
         }
 
-    override val states: Observable<State> = stateRelay
-    override val labels: Observable<Label> = labelRelay
+    private val disposables = Disposables()
 
     init {
         assertOnMainThread()
@@ -40,12 +39,12 @@ internal class MviDefaultStore<State : Any, in Intent : Any, Action : Any, out R
             {
                 assertOnMainThread()
                 with(reducer) {
-                    stateRelay.accept(stateRelay.value.reduce(it))
+                    statesSubject.onNext(statesSubject.value.reduce(it))
                 }
             },
             {
                 assertOnMainThread()
-                labelRelay.accept(it)
+                labelsSubject.onNext(it)
             }
         )
 
@@ -58,12 +57,14 @@ internal class MviDefaultStore<State : Any, in Intent : Any, Action : Any, out R
     }
 
     private fun executeAction(action: Action) {
-        executor(action)?.let(disposables::add)
+        executor.execute(action)?.let(disposables::add)
     }
 
     override fun dispose() {
         assertOnMainThread()
         disposables.dispose()
+        statesSubject.onComplete()
+        labelsSubject.onComplete()
     }
 
     override fun isDisposed(): Boolean {

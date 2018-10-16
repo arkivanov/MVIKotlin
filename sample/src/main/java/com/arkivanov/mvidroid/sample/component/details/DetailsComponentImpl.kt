@@ -15,7 +15,7 @@ class DetailsComponentImpl @Inject constructor(
     params: DetailsComponentParams,
     todoDetailsStore: TodoDetailsStore,
     todoActionStore: TodoActionStore
-) : MviAbstractComponent<DetailsUiEvent, Observable<TodoDetailsState>>(
+) : MviAbstractComponent<DetailsUiEvent, Observable<TodoDetailsState>, Relay<Any>>(
     stores = listOf(
         MviStoreBundle(
             store = todoDetailsStore,

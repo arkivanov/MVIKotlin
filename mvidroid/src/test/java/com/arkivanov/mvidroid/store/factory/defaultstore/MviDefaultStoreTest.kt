@@ -1,12 +1,13 @@
-package com.arkivanov.mvidroid.store
+package com.arkivanov.mvidroid.store.factory.defaultstore
 
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
-import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
+import com.arkivanov.mvidroid.testutils.TestExecutor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.disposables.Disposable
+import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -14,11 +15,7 @@ import org.junit.Test
 internal class MviDefaultStoreTest {
 
     private var executorHolder = ExecutorHolder()
-    lateinit var store: MviDefaultStore<String, String, String, String, String>
-
-    init {
-        createStore()
-    }
+    private var store = createStore()
 
     @Test
     fun `executor invoked WHEN bootstrapper dispatched action`() {
@@ -28,7 +25,7 @@ internal class MviDefaultStoreTest {
                 null
             }
         )
-        verify(executorHolder.executor).invoke("action")
+        verify(executorHolder.executor).execute("action")
     }
 
     @Test
@@ -74,7 +71,7 @@ internal class MviDefaultStoreTest {
     fun `executor invoked WHEN intent send`() {
         val store = createStore(executorHolder = ExecutorHolder())
         store("intent")
-        verify(executorHolder.executor).invoke("intent")
+        verify(executorHolder.executor).execute("intent")
     }
 
     @Test
@@ -90,6 +87,22 @@ internal class MviDefaultStoreTest {
     fun `isDisposed=true WHEN store disposed`() {
         store.dispose()
         assertTrue(store.isDisposed)
+    }
+
+    @Test
+    fun `states observable completed WHEN store disposed`() {
+        val observer = TestObserver<String>()
+        store.states.subscribe(observer)
+        store.dispose()
+        observer.assertComplete()
+    }
+
+    @Test
+    fun `labels observable completed WHEN store disposed`() {
+        val observer = TestObserver<String>()
+        store.labels.subscribe(observer)
+        store.dispose()
+        observer.assertComplete()
     }
 
     @Test
@@ -131,17 +144,17 @@ internal class MviDefaultStoreTest {
     }
 
     private fun mockBootstrapper(onBootstrap: (dispatch: (String) -> Unit) -> Disposable?): MviBootstrapper<String> =
-        mock {
+        mock { _ ->
             on { bootstrap(any()) }.thenAnswer { onBootstrap(it.getArgument(0)) }
         }
 
-    private class ExecutorHolder(onInvoke: (ExecutorHolder.(label: String) -> Disposable?) = { _ -> null }) {
+    private class ExecutorHolder(onExecute: (ExecutorHolder.(label: String) -> Disposable?) = { null }) {
         var isInitialized: Boolean = false
         lateinit var stateSupplier: () -> String
         lateinit var resultConsumer: (String) -> Unit
         lateinit var labelConsumer: (String) -> Unit
 
-        val executor = mock<MviExecutor<String, String, String, String>> {
+        val executor = mock<TestExecutor> { _ ->
             on { init(any(), any(), any()) }.thenAnswer {
                 isInitialized = true
                 stateSupplier = it.getArgument(0)
@@ -150,7 +163,7 @@ internal class MviDefaultStoreTest {
                 Unit
             }
 
-            on { invoke(any()) }.thenAnswer { onInvoke(it.getArgument(0)) }
+            on { execute(any()) }.thenAnswer { onExecute(it.getArgument(0)) }
         }
     }
 }

@@ -20,10 +20,11 @@ class TodoListStoreProvider @Inject constructor(
 
     override fun get(): TodoListStore =
         object : MviStore<TodoListState, Intent, Nothing> by factory.create(
+            name = "TodoListStore",
             initialState = TodoListState(),
             bootstrapper = MviSimpleBootstrapper(Action.Load),
             intentToAction = Action::ExecuteIntent,
-            executor = Executor(),
+            executorFactory = ::Executor,
             reducer = Reducer
         ), TodoListStore {
         }
@@ -42,7 +43,7 @@ class TodoListStoreProvider @Inject constructor(
     }
 
     private inner class Executor : MviExecutor<TodoListState, Action, Result, Nothing>() {
-        override fun invoke(action: Action): Disposable? =
+        override fun execute(action: Action): Disposable? =
             when (action) {
                 Action.Load ->
                     dataSource

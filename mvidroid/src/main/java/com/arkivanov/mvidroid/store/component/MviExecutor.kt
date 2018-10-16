@@ -41,12 +41,12 @@ abstract class MviExecutor<State : Any, in Action : Any, Result : Any, Label : A
     /**
      * Invoked by Store with Action to execute, always on Main thread.
      *
-     * @param action An Action that should be executed
-     * @return Disposable if there are any background operations, null otherwise.
-     * A returned Disposable will be managed by Store and disposed at the end of life-cycle.
+     * @param action an Action that should be executed
+     * @return disposable if there are any background operations, null otherwise.
+     * A returned disposable will be managed by Store and disposed at the end of life-cycle.
      */
     @MainThread
-    abstract operator fun invoke(action: Action): Disposable?
+    abstract fun execute(action: Action): Disposable?
 
     /**
      * Dispatches Result. Any dispatched Result will be synchronously processed by Store

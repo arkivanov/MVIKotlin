@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.17"
 
@@ -25,4 +25,32 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+def setupSourcesAndDocs(Project project) {
+    configure(project) {
+        apply plugin: 'org.jetbrains.dokka'
+
+        task sourceJar(type: Jar) {
+            from android.sourceSets.main.java.srcDirs
+            classifier = 'sources'
+        }
+
+        task javadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+            outputFormat = 'javadoc'
+            outputDirectory = "${getBuildDir()}/javadoc"
+            classpath += files(android.getBootClasspath().join(File.pathSeparator))
+            classpath += configurations.compile
+        }
+
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            from javadoc.outputDirectory
+            classifier = 'javadoc'
+        }
+
+        artifacts {
+            archives sourceJar
+            archives javadocJar
+        }
+    }
 }

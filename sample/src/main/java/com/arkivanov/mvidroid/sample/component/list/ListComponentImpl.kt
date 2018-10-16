@@ -12,7 +12,7 @@ class ListComponentImpl @Inject constructor(
     @Labels labels: Relay<Any>,
     todoListStore: TodoListStore,
     todoActionStore: TodoActionStore
-) : MviAbstractComponent<ListUiEvent, ListStates>(
+) : MviAbstractComponent<ListUiEvent, ListStates, Relay<Any>>(
     stores = listOf(
         MviStoreBundle(
             store = todoListStore,

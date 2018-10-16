@@ -7,6 +7,7 @@ import com.arkivanov.mvidroid.store.MviStore
 import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
 import com.arkivanov.mvidroid.store.factory.MviStoreFactory
+import com.arkivanov.mvidroid.store.factory.createActionless
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -19,8 +20,9 @@ class TodoActionStoreProvider @Inject constructor(
 
     override fun get(): TodoActionStore =
         object : MviStore<TodoActionState, Intent, Label> by factory.createActionless(
+            name = "TodoActionStore",
             initialState = TodoActionState(),
-            executor = Executor(),
+            executorFactory = ::Executor,
             reducer = Reducer
         ), TodoActionStore {
         }
@@ -31,7 +33,7 @@ class TodoActionStoreProvider @Inject constructor(
     }
 
     private inner class Executor : MviExecutor<TodoActionState, Intent, Result, Label>() {
-        override fun invoke(action: Intent): Disposable? =
+        override fun execute(action: Intent): Disposable? =
             when (action) {
                 is Intent.ItemSelected -> {
                     dispatch(Result.RedirectToDetails(action.id))
