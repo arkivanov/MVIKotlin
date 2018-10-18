@@ -7,16 +7,9 @@ import android.widget.EditText
 import com.arkivanov.mvidroid.sample.R
 import com.arkivanov.mvidroid.sample.component.list.ListUiEvent
 import com.arkivanov.mvidroid.sample.ui.details.DetailsActivity
-import com.arkivanov.mvidroid.sample.ui.plusAssign
-import com.arkivanov.mvidroid.utils.mapNotNull
-import com.arkivanov.mvidroid.view.MviAbstractView
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import com.arkivanov.mvidroid.view.MviBaseView
 
-class ListView(
-    private val activity: Activity
-) : MviAbstractView<ListViewModel, ListUiEvent>() {
+class ListView(activity: Activity) : MviBaseView<ListViewModel, ListUiEvent>() {
 
     private val adapter =
         ListAdapter(
@@ -46,20 +39,14 @@ class ListView(
             dispatch(ListUiEvent.OnAddItem(todoEditText.text.toString()))
             todoEditText.text = null
         }
-    }
 
-    override fun subscribe(models: Observable<ListViewModel>): Disposable =
-        CompositeDisposable().apply {
-            this += models
-                .map(ListViewModel::items)
-                .distinctUntilChanged { a, b -> a === b }
-                .subscribe { adapter.items = it }
+        registerDiffByReference(adapter, ListViewModel::items) { items = it }
 
-            this += models
-                .mapNotNull { it.detailsRedirectItemId }
-                .subscribe {
-                    dispatch(ListUiEvent.OnRedirectedToItemDetails)
-                    activity.startActivity(DetailsActivity.createIntent(activity, it))
-                }
+        registerDiffByEquals(activity, ListViewModel::detailsRedirectItemId) {
+            if (it != null) {
+                dispatch(ListUiEvent.OnRedirectedToItemDetails)
+                startActivity(DetailsActivity.createIntent(this, it))
+            }
         }
+    }
 }

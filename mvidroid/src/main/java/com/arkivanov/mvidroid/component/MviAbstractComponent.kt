@@ -3,8 +3,9 @@ package com.arkivanov.mvidroid.component
 import android.support.annotation.MainThread
 import com.arkivanov.mvidroid.utils.assertOnMainThread
 import com.arkivanov.mvidroid.utils.mapNotNull
-import com.jakewharton.rxrelay2.Relay
+import io.reactivex.ObservableSource
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
 
 /**
  * Abstract implementation of [MviComponent].
@@ -14,18 +15,19 @@ import io.reactivex.disposables.CompositeDisposable
  * * If Labels relay is provided, converts Labels to Stores' Intents and redirects them to appropriate Stores
  * * If Labels relay is provided, redirects Labels from non-persistent Stores to Labels relay
  */
-abstract class MviAbstractComponent<in UiEvent : Any, out States : Any> @MainThread constructor(
+
+abstract class MviAbstractComponent<in UiEvent : Any, out States : Any, Labels> @MainThread constructor(
     private val stores: List<MviStoreBundle<*, UiEvent>>,
-    labels: Relay<Any>? = null,
+    labels: Labels? = null,
     private val onDisposeAction: (() -> Unit)? = null
-) : MviComponent<UiEvent, States> {
+) : MviComponent<UiEvent, States> where Labels : ObservableSource<out Any>, Labels : Consumer<in Any> {
 
     private val disposables = CompositeDisposable()
 
     init {
         assertOnMainThread()
-        labels?.also { relay ->
-            stores.forEach { it.connectLabels(relay) }
+        labels?.also { l ->
+            stores.forEach { it.connectLabels(l) }
         }
     }
 
@@ -51,7 +53,7 @@ abstract class MviAbstractComponent<in UiEvent : Any, out States : Any> @MainThr
         return disposables.isDisposed
     }
 
-    private fun <Intent : Any> MviStoreBundle<Intent, *>.connectLabels(labels: Relay<Any>) {
+    private fun <Intent : Any> MviStoreBundle<Intent, *>.connectLabels(labels: Labels) {
         labelTransformer?.also { transformer ->
             disposables.add(labels.mapNotNull(transformer).subscribe { store(it) })
         }

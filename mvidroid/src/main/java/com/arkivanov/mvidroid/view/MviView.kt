@@ -2,16 +2,15 @@ package com.arkivanov.mvidroid.view
 
 import android.support.annotation.MainThread
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 
 /**
  * Interface of View, accepts View Models and produces UI Events.
- * See [bind][com.arkivanov.mvidroid.bind.bind] to find out how to bind Components to Views.
+ * See [Binder][com.arkivanov.mvidroid.bind.Binder] to find out how to bind Components with Views.
  *
  * @param ViewModel type of View Model, typically a data class
  * @param UiEvent type of UI Events
  */
-interface MviView<ViewModel : Any, UiEvent : Any> {
+interface MviView<in ViewModel : Any, UiEvent : Any> {
 
     /**
      * An observable of View's UI Events, emissions must be performed only on Main thread
@@ -19,12 +18,16 @@ interface MviView<ViewModel : Any, UiEvent : Any> {
     val uiEvents: Observable<UiEvent>
 
     /**
-     * Called when View rendering should be started (typically from onStart() callback).
-     * Implement this method by subscribing to the provided observable, update UI on View Model emissions,
-     * return a disposable so it can be disposed later when View rendering should be stopped (typically from onStop() callback).
+     * Called when a new View Model is available, called on Main thread
      *
-     * @return disposable that will be disposed when View rendering should be stopped
+     * @param model a View Model
      */
     @MainThread
-    fun subscribe(models: Observable<ViewModel>): Disposable
+    fun bind(model: ViewModel)
+
+    /**
+     * Called by [Binder][com.arkivanov.mvidroid.bind.Binder] at the end of View's life-cycle
+     */
+    @MainThread
+    fun onDestroy()
 }

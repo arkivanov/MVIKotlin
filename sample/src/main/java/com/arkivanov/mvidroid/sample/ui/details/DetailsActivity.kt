@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.arkivanov.mvidroid.bind.bind
-import com.arkivanov.mvidroid.bind.using
+import com.arkivanov.mvidroid.bind.Binder
+import com.arkivanov.mvidroid.bind.attachTo
 import com.arkivanov.mvidroid.sample.R
 import com.arkivanov.mvidroid.sample.component.details.DetailsComponent
 
@@ -31,10 +31,11 @@ class DetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_details)
 
         view = DetailsView(this)
-        bind(
-            DetailsComponent.create(intent.getLongExtra(EXTRA_ITEM_ID, 0L)),
-            view using DetailsViewModelMapper
-        )
+
+        Binder(DetailsComponent.create(intent.getLongExtra(EXTRA_ITEM_ID, 0L)))
+            .addView(view, DetailsViewModelMapper)
+            .bind()
+            .attachTo(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

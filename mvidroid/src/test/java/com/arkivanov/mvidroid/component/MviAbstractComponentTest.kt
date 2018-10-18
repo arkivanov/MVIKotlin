@@ -1,22 +1,25 @@
 package com.arkivanov.mvidroid.component
 
 import com.arkivanov.mvidroid.store.MviStore
-import com.jakewharton.rxrelay2.PublishRelay
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import io.reactivex.ObservableSource
+import io.reactivex.Observer
+import io.reactivex.functions.Consumer
 import io.reactivex.observers.TestObserver
+import io.reactivex.subjects.PublishSubject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MviAbstractComponentTest {
 
-    private val storeLabels = PublishRelay.create<String>()
+    private val storeLabels = PublishSubject.create<String>()
     private val store = mock<MviStore<String, String, String>> {
         on { labels }.thenReturn(storeLabels)
     }
-    private val labels = PublishRelay.create<Any>()
+    private val labels = TestLabels()
     private var receivedLabels = TestObserver<Any>().also(labels::subscribe)
 
     @Test
@@ -67,7 +70,7 @@ class MviAbstractComponentTest {
     @Test
     fun `label emitted WHEN store produced label AND store is not persistent`() {
         TestComponent()
-        storeLabels.accept("label")
+        storeLabels.onNext("label")
         assertEquals(1, receivedLabels.valueCount())
         assertEquals("label", receivedLabels.values()[0])
     }
@@ -75,7 +78,7 @@ class MviAbstractComponentTest {
     @Test
     fun `label emitted WHEN store produced label AND store persistent`() {
         TestComponent(isPersistent = true)
-        storeLabels.accept("label")
+        storeLabels.onNext("label")
         assertEquals(0, receivedLabels.valueCount())
     }
 
@@ -84,12 +87,24 @@ class MviAbstractComponentTest {
         labelTransformer: ((Any) -> String?)? = null,
         isPersistent: Boolean = false,
         onDisposeAction: (() -> Unit)? = null
-    ) : MviAbstractComponent<String, String>(
+    ) : MviAbstractComponent<String, String, TestLabels>(
         listOf(MviStoreBundle(store, eventTransformer, labelTransformer, isPersistent)),
         labels,
         onDisposeAction
     ) {
         override val states: String
             get() = throw UnsupportedOperationException()
+    }
+
+    private class TestLabels : ObservableSource<Any>, Consumer<Any> {
+        private val subject = PublishSubject.create<Any>()
+
+        override fun subscribe(observer: Observer<in Any>) {
+            subject.subscribe(observer)
+        }
+
+        override fun accept(value: Any) {
+            subject.onNext(value)
+        }
     }
 }
