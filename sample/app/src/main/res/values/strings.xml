@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">MVIDroid Sample</string>
+    <string name="details">Details</string>
+    <string name="add">Add</string>
+    <string name="add_todo_hint">Write ToDo</string>
+    <string name="completed">Completed</string>
+    <string name="delete">Delete</string>
+    <string name="error_something_went_wrong">Something went wrong :-(</string>
+</resources>

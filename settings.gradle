@@ -1,5 +1,5 @@
 include ':common', ':mvidroid', ':mvidroid-debug'
 
 if (!System.env.JITPACK) {
-    include ':test-utils', ':sample'
+    include ':test-utils', ':sample:app', ':sample:libraries:common', ':sample:libraries:list', ':sample:libraries:details'
 }
