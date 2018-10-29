@@ -34,7 +34,12 @@ Dependency:
 <dependency>
     <groupId>com.github.arkivanov</groupId>
     <artifactId>mvidroid</artifactId>
-    <version>1.0.9</version>
+    <version>1.1.7</version>
+</dependency>
+<dependency>
+    <groupId>com.github.arkivanov</groupId>
+    <artifactId>mvidroid-debug</artifactId>
+    <version>1.1.7</version>
 </dependency>
 ```
 
