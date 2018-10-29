@@ -32,12 +32,12 @@ Respository:
 Dependency:
 ```
 <dependency>
-    <groupId>com.github.arkivanov</groupId>
+    <groupId>com.github.arkivanov.mvidroid</groupId>
     <artifactId>mvidroid</artifactId>
     <version>1.1.7</version>
 </dependency>
 <dependency>
-    <groupId>com.github.arkivanov</groupId>
+    <groupId>com.github.arkivanov.mvidroid</groupId>
     <artifactId>mvidroid-debug</artifactId>
     <version>1.1.7</version>
 </dependency>
