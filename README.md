@@ -14,7 +14,8 @@ allprojects {
 In your module's build.gradle:
 ```
 dependencies {
-    implementation 'com.github.arkivanov:mvidroid:1.0.9'
+    implementation 'com.github.arkivanov.mvidroid:mvidroid:1.1.6'
+    implementation 'com.github.arkivanov.mvidroid:mvidroid-debug:1.1.6'
 }
 ```
 ### Maven:
@@ -46,7 +47,7 @@ MVI (Model-View-Intent) is a design pattern where Model is an active component w
 
 ## What is MVIDroid
 
-MVIDroid is a framework written 100% in Kotlin which brings MVI pattern to Android. It is specially designed and optimized for Android platform, very lightweight and efficient.
+MVIDroid is a framework written 100% in Kotlin which brings MVI pattern to Android. It is specially designed and optimized for Android platform, very lightweight and efficient. Includes powerful debug tools like logging and time travel.
 
 ## Base concepts
 
