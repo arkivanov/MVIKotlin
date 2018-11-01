@@ -8,8 +8,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.TestObserver
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 internal class MviDefaultStoreTest {
@@ -65,6 +64,14 @@ internal class MviDefaultStoreTest {
         store.labels.subscribe { label = it }
         executorHolder.labelConsumer("label")
         assertEquals("label", label)
+    }
+
+    @Test
+    fun `last label not emitted WHEN resubscribed`() {
+        var label: String? = null
+        executorHolder.labelConsumer("label")
+        store.labels.subscribe { label = it }
+        assertNull(label)
     }
 
     @Test

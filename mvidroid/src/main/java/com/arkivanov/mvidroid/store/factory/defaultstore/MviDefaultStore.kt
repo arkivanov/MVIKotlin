@@ -9,6 +9,7 @@ import com.arkivanov.mvidroid.utils.Disposables
 import com.arkivanov.mvidroid.utils.assertOnMainThread
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 
 internal class MviDefaultStore<State : Any, in Intent : Any, Action : Any, out Result : Any, Label : Any> @MainThread constructor(
     initialState: State,
@@ -19,7 +20,7 @@ internal class MviDefaultStore<State : Any, in Intent : Any, Action : Any, out R
 ) : MviStore<State, Intent, Label> {
 
     private val statesSubject = BehaviorSubject.createDefault(initialState)
-    private val labelsSubject = BehaviorSubject.create<Label>()
+    private val labelsSubject = PublishSubject.create<Label>()
     override val states: Observable<State> = statesSubject
     override val labels: Observable<Label> = labelsSubject
 
