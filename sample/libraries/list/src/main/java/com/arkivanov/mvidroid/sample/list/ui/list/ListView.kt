@@ -4,24 +4,24 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.EditText
 import com.arkivanov.mvidroid.sample.list.R
-import com.arkivanov.mvidroid.sample.list.component.ListUiEvent
+import com.arkivanov.mvidroid.sample.list.component.ListEvent
 import com.arkivanov.mvidroid.view.MviBaseView
 
-internal class ListView(root: View) : MviBaseView<ListViewModel, ListUiEvent>() {
+internal class ListView(root: View) : MviBaseView<ListViewModel, ListEvent>() {
 
     private val adapter =
         ListAdapter(
             object : ListAdapter.Listener {
                 override fun onItemClick(id: Long) {
-                    dispatch(ListUiEvent.OnItemSelected(id))
+                    dispatch(ListEvent.OnItemSelected(id))
                 }
 
                 override fun onItemCheckedChanged(id: Long, isChecked: Boolean) {
-                    dispatch(ListUiEvent.OnSetItemCompleted(id, isChecked))
+                    dispatch(ListEvent.OnSetItemCompleted(id, isChecked))
                 }
 
                 override fun onItemDeleteClick(id: Long) {
-                    dispatch(ListUiEvent.OnDeleteItem(id))
+                    dispatch(ListEvent.OnDeleteItem(id))
                 }
             }
         )
@@ -34,7 +34,7 @@ internal class ListView(root: View) : MviBaseView<ListViewModel, ListUiEvent>() 
         }
 
         root.findViewById<View>(R.id.add_button).setOnClickListener {
-            dispatch(ListUiEvent.OnAddItem(todoEditText.text.toString()))
+            dispatch(ListEvent.OnAddItem(todoEditText.text.toString()))
             todoEditText.text = null
         }
 

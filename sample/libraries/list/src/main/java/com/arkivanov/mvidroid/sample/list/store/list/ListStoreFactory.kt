@@ -7,7 +7,7 @@ import com.arkivanov.mvidroid.store.MviStore
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
 import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
-import com.arkivanov.mvidroid.store.factory.MviStoreFactory
+import com.arkivanov.mvidroid.store.MviStoreFactory
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

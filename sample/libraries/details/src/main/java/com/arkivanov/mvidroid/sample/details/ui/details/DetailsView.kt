@@ -2,21 +2,22 @@ package com.arkivanov.mvidroid.sample.details.ui.details
 
 import android.support.v7.widget.Toolbar
 import android.text.Editable
+import android.text.TextUtils
 import android.view.View
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.EditText
 import com.arkivanov.mvidroid.sample.common.utils.SimpleTextWatcher
 import com.arkivanov.mvidroid.sample.details.R
-import com.arkivanov.mvidroid.sample.details.component.DetailsUiEvent
+import com.arkivanov.mvidroid.sample.details.component.DetailsEvent
 import com.arkivanov.mvidroid.view.MviBaseView
 
-internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsUiEvent>() {
+internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEvent>() {
 
     private val textChangedListener =
         object : SimpleTextWatcher {
             override fun afterTextChanged(s: Editable) {
-                dispatch(DetailsUiEvent.OnTextChanged(s.toString()))
+                dispatch(DetailsEvent.OnTextChanged(s.toString()))
             }
         }
 
@@ -26,7 +27,7 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsUi
 
     private val onCheckedChangeListener =
         CompoundButton.OnCheckedChangeListener { _, isChecked ->
-            dispatch(DetailsUiEvent.OnSetCompleted(isChecked))
+            dispatch(DetailsEvent.OnSetCompleted(isChecked))
         }
 
     private val checkBox = root.findViewById<CheckBox>(R.id.check_completed).apply {
@@ -41,7 +42,7 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsUi
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.menu_delete -> {
-                        dispatch(DetailsUiEvent.OnDelete);
+                        dispatch(DetailsEvent.OnDelete);
                         true
                     }
 
@@ -50,11 +51,8 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsUi
             }
         }
 
-        registerDiffByEquals(
-            editText,
-            DetailsViewModel::text
-        ) {
-            if (it != text) {
+        registerDiffByEquals(editText, DetailsViewModel::text) {
+            if (!TextUtils.equals(it, text)) {
                 removeTextChangedListener(textChangedListener)
                 setText(it)
                 addTextChangedListener(textChangedListener)

@@ -19,7 +19,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':common')
+    implementation project(':mvidroid-common')
     implementation project(':mvidroid')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:design:$support_library_version"

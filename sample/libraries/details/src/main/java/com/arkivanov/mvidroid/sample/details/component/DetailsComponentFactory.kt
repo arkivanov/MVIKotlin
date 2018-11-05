@@ -3,7 +3,7 @@ package com.arkivanov.mvidroid.sample.details.component
 import com.arkivanov.mvidroid.sample.common.store.redirect.RedirectStoreFactory
 import com.arkivanov.mvidroid.sample.details.dependency.DetailsDataSource
 import com.arkivanov.mvidroid.sample.details.store.details.DetailsStoreFactory
-import com.arkivanov.mvidroid.store.factory.MviStoreFactory
+import com.arkivanov.mvidroid.store.MviStoreFactory
 import com.jakewharton.rxrelay2.PublishRelay
 
 class DetailsComponentFactory(

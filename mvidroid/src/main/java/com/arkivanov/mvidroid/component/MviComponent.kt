@@ -7,14 +7,14 @@ import io.reactivex.disposables.Disposable
  * Represents a group of Stores.
  *
  * Responsibilities:
- * * Accepts UI Events and redirects them to appropriate Stores.
- * * Provides a group of States of its Stores.
+ * * Transforms Events to Intents and redirects them to appropriate Stores.
+ * * Provides a group of Stores' States
  * * Takes care of disposing of its Stores, only non-persistent Stores are disposed.
  *
- * @param UiEvent type of UI Events
+ * @param Event type of Events
  * @param States type of States, typically includes States from all Component's Stores
  */
-interface MviComponent<in UiEvent : Any, out States : Any> : (UiEvent) -> Unit, Disposable {
+interface MviComponent<in Event : Any, out States : Any> : Disposable {
 
     /**
      * A group of States of Component's Stores. Must be accessed only from Main thread.
@@ -28,7 +28,7 @@ interface MviComponent<in UiEvent : Any, out States : Any> : (UiEvent) -> Unit, 
      * Must be called only on Main thread.
      */
     @MainThread
-    override fun invoke(event: UiEvent)
+    fun accept(event: Event)
 
     /**
      * Disposed Component and all its non-persistent Stores. Must be called only on Main thread.

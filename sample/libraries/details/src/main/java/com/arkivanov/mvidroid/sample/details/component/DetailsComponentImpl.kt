@@ -11,7 +11,7 @@ internal class DetailsComponentImpl(
     labels: Relay<Any>,
     detailsStore: DetailsStore,
     redirectStore: RedirectStore<DetailsRedirect>
-) : MviAbstractComponent<DetailsUiEvent, DetailsStates, Relay<Any>>(
+) : MviAbstractComponent<DetailsEvent, DetailsStates, Relay<Any>>(
     stores = listOf(
         MviStoreBundle(
             store = detailsStore,
@@ -32,20 +32,20 @@ internal class DetailsComponentImpl(
             redirectStates = redirectStore.states
         )
 
-    private object DetailsStoreUiEventTransformer : (DetailsUiEvent) -> DetailsStore.Intent? {
-        override fun invoke(event: DetailsUiEvent): DetailsStore.Intent? =
+    private object DetailsStoreUiEventTransformer : (DetailsEvent) -> DetailsStore.Intent? {
+        override fun invoke(event: DetailsEvent): DetailsStore.Intent? =
             when (event) {
-                is DetailsUiEvent.OnTextChanged -> DetailsStore.Intent.SetText(event.text)
-                is DetailsUiEvent.OnSetCompleted -> DetailsStore.Intent.SetCompleted(event.isCompleted)
-                DetailsUiEvent.OnDelete -> DetailsStore.Intent.Delete
+                is DetailsEvent.OnTextChanged -> DetailsStore.Intent.SetText(event.text)
+                is DetailsEvent.OnSetCompleted -> DetailsStore.Intent.SetCompleted(event.isCompleted)
+                DetailsEvent.OnDelete -> DetailsStore.Intent.Delete
                 else -> null
             }
     }
 
-    private object RedirectStoreUiEventTransformer : (DetailsUiEvent) -> RedirectStore.Intent<DetailsRedirect>? {
-        override fun invoke(event: DetailsUiEvent): RedirectStore.Intent<DetailsRedirect>? =
+    private object RedirectStoreUiEventTransformer : (DetailsEvent) -> RedirectStore.Intent<DetailsRedirect>? {
+        override fun invoke(event: DetailsEvent): RedirectStore.Intent<DetailsRedirect>? =
             when (event) {
-                DetailsUiEvent.OnRedirectHandled -> RedirectStore.Intent(null)
+                DetailsEvent.OnRedirectHandled -> RedirectStore.Intent(null)
                 else -> null
             }
     }

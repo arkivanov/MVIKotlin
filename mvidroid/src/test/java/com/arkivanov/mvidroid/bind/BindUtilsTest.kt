@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -20,7 +21,7 @@ class BindUtilsTest {
     private val uiEventSubject = PublishSubject.create<String>()
     private val viewModels = ArrayList<String>()
     private val view = mock<MviView<String, String>> { _ ->
-        on { uiEvents }.thenReturn(uiEventSubject)
+        on { events }.thenReturn(uiEventSubject)
         on { bind(any()) }.thenAnswer {
             viewModels.add(it.getArgument(0))
             null
@@ -28,25 +29,29 @@ class BindUtilsTest {
     }
 
     private val viewModelSubject = PublishSubject.create<String>()
-    private val viewModelMapper = mock<MviViewModelMapper<String, String>> {
-        on { map("states") }.thenReturn(viewModelSubject)
+    private val viewModelMapper = mock<(String) -> Observable<out String>> {
+        on { invoke("states") }.thenReturn(viewModelSubject)
     }
 
-    private val binder = Binder(component).addView(view, viewModelMapper)
+    private val viewEventMapper = mock<(String) -> String> {
+        on { invoke("view_event") }.thenReturn("component_event")
+    }
+
+    private val binder = MviBinder(component).addViewBundle(MviViewBundle.create(view, viewModelMapper, viewEventMapper))
     private var observer = binder.bind()
 
     @Test
     fun `component received event WHEN view published`() {
-        uiEventSubject.onNext("event")
-        verify(component)("event")
+        uiEventSubject.onNext("view_event")
+        verify(component).accept("component_event")
     }
 
     @Test
     fun `component received event WHEN stopped AND view published`() {
         observer.onStart()
         observer.onStop()
-        uiEventSubject.onNext("event")
-        verify(component)("event")
+        uiEventSubject.onNext("view_event")
+        verify(component).accept("component_event")
     }
 
     @Test

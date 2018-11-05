@@ -6,6 +6,6 @@ import com.arkivanov.mvidroid.sample.details.store.details.DetailsState
 import io.reactivex.Observable
 
 class DetailsStates(
-    val detailsStates: Observable<DetailsState>,
-    val redirectStates: Observable<RedirectState<DetailsRedirect>>
+    val detailsStates: Observable<out DetailsState>,
+    val redirectStates: Observable<out RedirectState<DetailsRedirect>>
 )

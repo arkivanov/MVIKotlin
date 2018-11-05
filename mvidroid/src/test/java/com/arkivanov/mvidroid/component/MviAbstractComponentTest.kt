@@ -53,8 +53,8 @@ class MviAbstractComponentTest {
         val transformer: (String) -> String = mock {
             on { invoke("event") }.thenReturn("intent")
         }
-        TestComponent(eventTransformer = transformer)("event")
-        verify(store)("intent")
+        TestComponent(eventTransformer = transformer).accept("event")
+        verify(store).accept("intent")
     }
 
     @Test
@@ -64,7 +64,7 @@ class MviAbstractComponentTest {
         }
         TestComponent(labelTransformer = transformer)
         labels.accept("label")
-        verify(store)("intent")
+        verify(store).accept("intent")
     }
 
     @Test

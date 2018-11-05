@@ -4,6 +4,7 @@ import android.arch.lifecycle.DefaultLifecycleObserver
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import com.arkivanov.mvidroid.view.MviView
+import io.reactivex.Observable
 
 /**
  * Subscribes to Android Arch's Lifecycle events and calls appropriate methods of MviLifecycleObserver.
@@ -51,14 +52,41 @@ fun MviLifecycleObserver.attachTo(lifecycleOwner: LifecycleOwner) {
     attachTo(lifecycleOwner.lifecycle)
 }
 
-/**
- * Helper infix method that creates [MviViewBundle] from [MviView] and [MviViewModelMapper]
+/** Adds multiple View Bundles, see [MviViewBundle] for more information
  *
- * @param mapper a View Model Mapper that should be used to transform States to View Models
- * @param ViewModel type of View Model
- * @param UiEvent type of View's UI Events
- * @param States type of Component's States
+ * @param bundles an Iterable containing all View Bundles
+ * @return same instance of MviBinder for method chaining
  */
-infix fun <ViewModel : Any, UiEvent : Any, States : Any> MviView<ViewModel, UiEvent>.using(
-    mapper: MviViewModelMapper<States, ViewModel>
-): MviViewBundle<States, ViewModel, UiEvent> = MviViewBundle(this, mapper)
+fun <ComponentStates : Any, ComponentEvent : Any> MviBinder<ComponentStates, ComponentEvent>.addViewBundles(
+    bundles: Iterable<MviViewBundle<ComponentStates, ComponentEvent>>
+): MviBinder<ComponentStates, ComponentEvent> {
+    bundles.forEach { addViewBundle(it) }
+    return this
+}
+
+/**
+ * Adds View and its mappers to MviBinder, see [MviBinder] for more information
+ *
+ * @param view an instance of [MviView]
+ * @param modelMapper a View Model Mapper responsible for mappings Component States to View Models
+ * @param eventMapper a View Event Mapper responsible for mappings View Events to Component Events
+ * @return same instance of MviBinder for method chaining
+ */
+fun <ComponentStates : Any, ComponentEvent : Any, ViewModel : Any, ViewEvent : Any> MviBinder<ComponentStates, ComponentEvent>.addView(
+    view: MviView<ViewModel, ViewEvent>,
+    modelMapper: (ComponentStates) -> Observable<out ViewModel>,
+    eventMapper: (ViewEvent) -> ComponentEvent?
+): MviBinder<ComponentStates, ComponentEvent> = addViewBundle(MviViewBundle.create(view, modelMapper, eventMapper))
+
+/**
+ * Adds View and its View Model Mapper to MviBinder.
+ * For views whose Event types are same as Component Event type. See [MviBinder] for more information.
+ *
+ * @param view an instance of [MviView]
+ * @param modelMapper a View Model Mapper responsible for mappings Component States to View Models
+ * @return same instance of MviBinder for method chaining
+ */
+fun <ComponentStates : Any, ComponentEvent : Any, ViewModel : Any> MviBinder<ComponentStates, ComponentEvent>.addView(
+    view: MviView<ViewModel, ComponentEvent>,
+    modelMapper: (ComponentStates) -> Observable<out ViewModel>
+): MviBinder<ComponentStates, ComponentEvent> = addViewBundle(MviViewBundle.create(view, modelMapper))

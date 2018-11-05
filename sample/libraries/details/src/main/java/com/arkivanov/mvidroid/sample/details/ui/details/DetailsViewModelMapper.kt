@@ -1,12 +1,11 @@
 package com.arkivanov.mvidroid.sample.details.ui.details
 
-import com.arkivanov.mvidroid.bind.MviViewModelMapper
 import com.arkivanov.mvidroid.sample.details.component.DetailsStates
 import io.reactivex.Observable
 
-internal object DetailsViewModelMapper : MviViewModelMapper<DetailsStates, DetailsViewModel> {
+internal object DetailsViewModelMapper : (DetailsStates) -> Observable<out DetailsViewModel> {
 
-    override fun map(states: DetailsStates): Observable<DetailsViewModel> =
+    override fun invoke(states: DetailsStates): Observable<out DetailsViewModel> =
         states
             .detailsStates
             .map {

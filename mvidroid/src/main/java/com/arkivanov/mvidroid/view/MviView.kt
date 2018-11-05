@@ -5,17 +5,17 @@ import io.reactivex.Observable
 
 /**
  * Interface of View, accepts View Models and produces UI Events.
- * See [Binder][com.arkivanov.mvidroid.bind.Binder] to find out how to bind Components with Views.
+ * See [MviBinder][com.arkivanov.mvidroid.bind.MviBinder] to find out how to bind Components with Views.
  *
  * @param ViewModel type of View Model, typically a data class
- * @param UiEvent type of UI Events
+ * @param ViewEvent type of View Events
  */
-interface MviView<in ViewModel : Any, UiEvent : Any> {
+interface MviView<in ViewModel : Any, out ViewEvent : Any> {
 
     /**
      * An observable of View's UI Events, emissions must be performed only on Main thread
      */
-    val uiEvents: Observable<UiEvent>
+    val events: Observable<out ViewEvent>
 
     /**
      * Called when a new View Model is available, called on Main thread
@@ -26,7 +26,7 @@ interface MviView<in ViewModel : Any, UiEvent : Any> {
     fun bind(model: ViewModel)
 
     /**
-     * Called by [Binder][com.arkivanov.mvidroid.bind.Binder] at the end of View's life-cycle
+     * Called by [MviBinder][com.arkivanov.mvidroid.bind.MviBinder] at the end of View's life-cycle, on Main thread
      */
     @MainThread
     fun onDestroy()

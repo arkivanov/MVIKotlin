@@ -5,7 +5,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arkivanov.mvidroid.bind.Binder
+import com.arkivanov.mvidroid.bind.MviBinder
+import com.arkivanov.mvidroid.bind.addViewBundles
 import com.arkivanov.mvidroid.bind.attachTo
 import com.arkivanov.mvidroid.sample.app.app.app
 import com.arkivanov.mvidroid.sample.app.screen.details.DetailsFragment
@@ -35,9 +36,9 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Binder(component)
+        MviBinder(component)
             .setDisposeComponent(false)
-            .addViews(ListViewFactory(view, RedirectHandlerImpl()).create())
+            .addViewBundles(ListViewFactory(view, RedirectHandlerImpl()).create())
             .bind()
             .attachTo(viewLifecycleOwner)
     }

@@ -9,14 +9,14 @@ import java.util.*
 /**
  * Base class for [MviView] implementation.
  * Accepts View Models and provides ability to diff View Models field by field to avoid unnecessary view bindings.
- * Provides UI Events as output and a method to dispatch them.
+ * Provides View Events as output and a method to dispatch them.
  */
-open class MviBaseView<ViewModel : Any, UiEvent : Any> @MainThread constructor() : MviView<ViewModel, UiEvent> {
+open class MviBaseView<ViewModel : Any, ViewEvent : Any> @MainThread constructor() : MviView<ViewModel, ViewEvent> {
 
     private val diffs = LinkedList<Diff<*, *>>()
     private var oldValue: ViewModel? = null
-    private val uiEventsSubject = PublishSubject.create<UiEvent>()
-    override val uiEvents: Observable<UiEvent> = uiEventsSubject
+    private val uiEventsSubject = PublishSubject.create<ViewEvent>()
+    override val events: Observable<ViewEvent> = uiEventsSubject
 
     @CallSuper
     override fun bind(model: ViewModel) {
@@ -67,10 +67,10 @@ open class MviBaseView<ViewModel : Any, UiEvent : Any> @MainThread constructor()
     }
 
     /**
-     * Dispatches UI Events to Component
+     * Dispatches View Events to Component
      */
     @MainThread
-    protected fun dispatch(event: UiEvent) {
+    protected fun dispatch(event: ViewEvent) {
         uiEventsSubject.onNext(event)
     }
 

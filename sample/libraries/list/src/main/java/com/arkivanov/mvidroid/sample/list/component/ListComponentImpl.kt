@@ -10,7 +10,7 @@ import com.jakewharton.rxrelay2.Relay
 internal class ListComponentImpl(
     listStore: ListStore,
     redirectStore: RedirectStore<ListRedirect>
-) : MviAbstractComponent<ListUiEvent, ListStates, Relay<Any>>(
+) : MviAbstractComponent<ListEvent, ListStates, Relay<Any>>(
     stores = listOf(
         MviStoreBundle(
             store = listStore,
@@ -29,21 +29,21 @@ internal class ListComponentImpl(
             redirectStates = redirectStore.states
         )
 
-    private object ListStoreUiEventTransformer : (ListUiEvent) -> ListStore.Intent? {
-        override fun invoke(event: ListUiEvent): ListStore.Intent? =
+    private object ListStoreUiEventTransformer : (ListEvent) -> ListStore.Intent? {
+        override fun invoke(event: ListEvent): ListStore.Intent? =
             when (event) {
-                is ListUiEvent.OnAddItem -> ListStore.Intent.Add(event.text)
-                is ListUiEvent.OnSetItemCompleted -> ListStore.Intent.SetCompleted(event.id, event.isCompleted)
-                is ListUiEvent.OnDeleteItem -> ListStore.Intent.Delete(event.id)
+                is ListEvent.OnAddItem -> ListStore.Intent.Add(event.text)
+                is ListEvent.OnSetItemCompleted -> ListStore.Intent.SetCompleted(event.id, event.isCompleted)
+                is ListEvent.OnDeleteItem -> ListStore.Intent.Delete(event.id)
                 else -> null
             }
     }
 
-    private object RedirectStoreUiEventTransformer : (ListUiEvent) -> RedirectStore.Intent<ListRedirect>? {
-        override fun invoke(event: ListUiEvent): RedirectStore.Intent<ListRedirect>? =
+    private object RedirectStoreUiEventTransformer : (ListEvent) -> RedirectStore.Intent<ListRedirect>? {
+        override fun invoke(event: ListEvent): RedirectStore.Intent<ListRedirect>? =
             when (event) {
-                is ListUiEvent.OnItemSelected -> RedirectStore.Intent(ListRedirect.ShowItemDetails(event.id))
-                ListUiEvent.OnRedirectHandled -> RedirectStore.Intent(null)
+                is ListEvent.OnItemSelected -> RedirectStore.Intent(ListRedirect.ShowItemDetails(event.id))
+                ListEvent.OnRedirectHandled -> RedirectStore.Intent(null)
                 else -> null
             }
     }

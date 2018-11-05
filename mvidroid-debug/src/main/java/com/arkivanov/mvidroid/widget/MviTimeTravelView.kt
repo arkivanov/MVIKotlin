@@ -14,10 +14,10 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.arkivanov.mvidroid.debug.R
 import com.arkivanov.mvidroid.store.MviEventType
-import com.arkivanov.mvidroid.store.factory.timetravel.MviTimeTravelStoreFactory
-import com.arkivanov.mvidroid.store.interceptor.timetravel.MviTimeTravelEvent
-import com.arkivanov.mvidroid.store.interceptor.timetravel.MviTimeTravelEvents
-import com.arkivanov.mvidroid.store.interceptor.timetravel.MviTimeTravelState
+import com.arkivanov.mvidroid.store.timetravel.MviTimeTravelController
+import com.arkivanov.mvidroid.store.timetravel.MviTimeTravelEvent
+import com.arkivanov.mvidroid.store.timetravel.MviTimeTravelEvents
+import com.arkivanov.mvidroid.store.timetravel.MviTimeTravelState
 import com.arkivanov.mvidroid.utils.DeepStringMode
 import com.arkivanov.mvidroid.utils.toDeepString
 import io.reactivex.disposables.Disposable
@@ -25,7 +25,7 @@ import java.util.*
 
 /**
  * Provides time travel controls like (record, stop, step back and forward, etc.) and displays list of recorded events.
- * Tap on event to show its details. Tap on Bug icon to debug the event. Uses [MviTimeTravelStoreFactory].
+ * Tap on event to show its details. Tap on Bug icon to debug the event. Uses [MviTimeTravelController].
  * Used by [MviTimeTravelDrawer].
  */
 class MviTimeTravelView @JvmOverloads constructor(
@@ -51,15 +51,15 @@ class MviTimeTravelView @JvmOverloads constructor(
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-        recordButton.setOnClickListener { MviTimeTravelStoreFactory.startRecording() }
-        stopButton.setOnClickListener { MviTimeTravelStoreFactory.stop() }
-        moveToStartButton.setOnClickListener { MviTimeTravelStoreFactory.moveToStart() }
-        stepBackwardButton.setOnClickListener { MviTimeTravelStoreFactory.stepBackward() }
-        stepForwardButton.setOnClickListener { MviTimeTravelStoreFactory.stepForward() }
-        moveToEndButton.setOnClickListener { MviTimeTravelStoreFactory.moveToEnd() }
-        cancelButton.setOnClickListener { MviTimeTravelStoreFactory.cancel() }
+        recordButton.setOnClickListener { MviTimeTravelController.startRecording() }
+        stopButton.setOnClickListener { MviTimeTravelController.stop() }
+        moveToStartButton.setOnClickListener { MviTimeTravelController.moveToStart() }
+        stepBackwardButton.setOnClickListener { MviTimeTravelController.stepBackward() }
+        stepForwardButton.setOnClickListener { MviTimeTravelController.stepForward() }
+        moveToEndButton.setOnClickListener { MviTimeTravelController.moveToEnd() }
+        cancelButton.setOnClickListener { MviTimeTravelController.cancel() }
 
-        MviTimeTravelStoreFactory
+        MviTimeTravelController
             .events
             .subscribe {
                 adapter.setEvents(it)
@@ -79,7 +79,7 @@ class MviTimeTravelView @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         disposable =
-            MviTimeTravelStoreFactory
+            MviTimeTravelController
                 .states
                 .distinctUntilChanged()
                 .subscribe {
@@ -181,7 +181,7 @@ class MviTimeTravelView @JvmOverloads constructor(
                         .show()
                 }
 
-                debugButton.setOnClickListener { MviTimeTravelStoreFactory.debugEvent(boundEvent) }
+                debugButton.setOnClickListener { MviTimeTravelController.debugEvent(boundEvent) }
             }
 
             @SuppressLint("SetTextI18n")

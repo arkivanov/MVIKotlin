@@ -13,7 +13,7 @@ import io.reactivex.disposables.Disposable
  * @param Intent Type of Intent. Intent is a call to action, it triggers some Action in Store.
  * @param Label Type of Label. Labels are used for inter-Store communication.
  */
-interface MviStore<State : Any, in Intent : Any, Label : Any> : (Intent) -> Unit, Disposable {
+interface MviStore<out State : Any, in Intent : Any, out Label : Any> : Disposable {
 
     /**
      * Provides access to current state, must be accessed only from Main thread
@@ -24,18 +24,18 @@ interface MviStore<State : Any, in Intent : Any, Label : Any> : (Intent) -> Unit
     /**
      * Observable of States. Emissions are performed on Main thread.
      */
-    val states: Observable<State>
+    val states: Observable<out State>
 
     /**
      * Observable of Labels. Emissions are performed on Main thread.
      */
-    val labels: Observable<Label>
+    val labels: Observable<out Label>
 
     /**
      * Sends Intent to Store, must me called only on Main thread
      */
     @MainThread
-    override fun invoke(intent: Intent)
+    fun accept(intent: Intent)
 
     /**
      * Disposes the Store and all its active operations, must be called only on Main thread
