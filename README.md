@@ -88,7 +88,7 @@ To send an `Intent` you simply call `accept(Intent)` method. Use field `state` t
 
 ### State
 
-`State` is a data produced by `Store`, typically represented as a data class (Kotlin). It is a good practice to keep `Store`’s `States` immutable.
+`State` is a data produced by `Store`, typically represented as a data class (Kotlin). It is a good practice to keep `Store’s` `States` immutable.
 
 ### Intent
 
@@ -96,7 +96,7 @@ To send an `Intent` you simply call `accept(Intent)` method. Use field `state` t
 
 ### Label
 
-`Labels` are special events produced by `Store` used for inter-Store communication. When `Store` produces a `Label` it then gets converted to another Stores’ `Intents`. So one `Label` mapped to one or more `Intents`.
+`Labels` are special events produced by `Store` used for inter-Store communication. When `Store` produces a `Label` it then gets converted to another `Stores’` `Intents`. So one `Label` mapped to one or more `Intents`.
 
 ### View
 
