@@ -65,16 +65,16 @@ In MVIDroid Model is represented by MviStore interface (Store). This is the main
 Here is how MviStore interface looks like:
 
 ```kotlin
-interface MviStore<State : Any, in Intent : Any, Label : Any> : (Intent) -> Unit, Disposable {
+interface MviStore<out State : Any, in Intent : Any, out Label : Any> : Disposable {
 
     @get:MainThread
     val state: State
 
-    val states: Observable<State>
-    val labels: Observable<Label>
+    val states: Observable<out State>
+    val labels: Observable<out Label>
 
     @MainThread
-    override fun invoke(intent: Intent)
+    fun accept(intent: Intent)
 
     @MainThread
     override fun dispose()
@@ -100,16 +100,16 @@ Labels are special events produced by Store used for inter-Store communication. 
 
 ### View
 
-In MVIDroid View is represented by MviView interface and its base class MviBaseView which you should extend in order to implement a view. It accepts View Models (bind(ViewModel) method) and produces UI Events (uiEvents field). View also has onDestroy() callback which is called automatically when View is destroyed.
+In MVIDroid View is represented by MviView interface and its base class MviBaseView which you should extend in order to implement a view. It accepts View Models (bind(ViewModel) method) and produces View Events (events field). View also has onDestroy() callback which is called automatically when View is destroyed.
 
 ![View](https://s8.postimg.cc/weijkrp91/View2_1.png)
 
 MviView interface:
 
 ```kotlin
-interface MviView<in ViewModel : Any, UiEvent : Any> {
+interface MviView<in ViewModel : Any, ViewEvent : Any> {
 
-    val uiEvents: Observable<UiEvent>
+    val events: Observable<out ViewEvent>
 
     @MainThread
     fun bind(model: ViewModel)
@@ -121,10 +121,10 @@ interface MviView<in ViewModel : Any, UiEvent : Any> {
 
 ### Component
 
-Component is represented by MviComponent interface and its abstract implementation MviAbstractComponent. There are number of responsibilities of Component:
+Component is represented by MviComponent interface and its abstract implementation MviAbstractComponent. There are a number of responsibilities of Component:
 * provides States of Stores (states field)
-* accepts UI Events (invoke() method) and Labels from outside, transforms them to Intents and passes to appropriate Stores
-* passs Labels from Stores to outside
+* accepts Component Events (accept() method) and Labels from outside, transforms them to Intents and passes to appropriate Stores
+* passes Labels from Stores to outside
 * disposes Stores when Component is disposed itself (Component implements Disposable interface)
 * acts as a facade of Stores which makes Component completely independent from UI
 
@@ -133,13 +133,13 @@ Component is represented by MviComponent interface and its abstract implementati
 MviComponent interface:
 
 ```kotlin
-interface MviComponent<in UiEvent : Any, out States : Any> : (UiEvent) -> Unit, Disposable {
+interface MviComponent<in Event : Any, out States : Any> : Disposable {
 
     @get:MainThread
     val states: States
 
     @MainThread
-    override fun invoke(event: UiEvent)
+    fun accept(event: Event)
 
     @MainThread
     override fun dispose()
