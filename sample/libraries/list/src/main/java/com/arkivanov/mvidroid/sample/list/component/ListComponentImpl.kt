@@ -14,11 +14,11 @@ internal class ListComponentImpl(
     stores = listOf(
         MviStoreBundle(
             store = listStore,
-            uiEventTransformer = ListStoreUiEventTransformer
+            eventTransformer = ListStoreUiEventTransformer
         ),
         MviStoreBundle(
             store = redirectStore,
-            uiEventTransformer = RedirectStoreUiEventTransformer
+            eventTransformer = RedirectStoreUiEventTransformer
         )
     )
 ), ListComponent {

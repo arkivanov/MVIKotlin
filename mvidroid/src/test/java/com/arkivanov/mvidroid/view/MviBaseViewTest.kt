@@ -101,7 +101,7 @@ class MviBaseViewTest {
 
 
     @Test
-    fun `ui event emitted WHEN dispatched`() {
+    fun `event emitted WHEN dispatched`() {
         val view = TestView()
         val observer = TestObserver<String>()
         view.events.subscribe(observer)

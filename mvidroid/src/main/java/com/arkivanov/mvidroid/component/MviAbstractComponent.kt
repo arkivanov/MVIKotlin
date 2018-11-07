@@ -64,6 +64,6 @@ abstract class MviAbstractComponent<in Event : Any, out States : Any, Labels> @M
     }
 
     private fun <Intent : Any> MviStoreBundle<Intent, Event>.handleUiEvent(event: Event) {
-        uiEventTransformer?.invoke(event)?.also { store.accept(it) }
+        eventTransformer?.invoke(event)?.also { store.accept(it) }
     }
 }

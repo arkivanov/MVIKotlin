@@ -23,8 +23,8 @@ interface MviComponent<in Event : Any, out States : Any> : Disposable {
     val states: States
 
     /**
-     * Use this method to send a UI Events to Component.
-     * Every UI Event will be converted to Stores' Intents and redirected to appropriate Stores.
+     * Use this method to send Events to Component.
+     * Every Event will be converted to Intents that will be redirected to appropriate Stores.
      * Must be called only on Main thread.
      */
     @MainThread

@@ -15,11 +15,11 @@ internal class DetailsComponentImpl(
     stores = listOf(
         MviStoreBundle(
             store = detailsStore,
-            uiEventTransformer = DetailsStoreUiEventTransformer
+            eventTransformer = DetailsStoreUiEventTransformer
         ),
         MviStoreBundle(
             store = redirectStore,
-            uiEventTransformer = RedirectStoreUiEventTransformer,
+            eventTransformer = RedirectStoreUiEventTransformer,
             labelTransformer = RedirectStoreLabelTransformer
         )
     ),

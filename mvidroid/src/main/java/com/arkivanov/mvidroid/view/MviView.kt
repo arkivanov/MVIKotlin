@@ -4,7 +4,7 @@ import android.support.annotation.MainThread
 import io.reactivex.Observable
 
 /**
- * Interface of View, accepts View Models and produces UI Events.
+ * Interface of View, accepts View Models and produces View Events.
  * See [MviBinder][com.arkivanov.mvidroid.bind.MviBinder] to find out how to bind Components with Views.
  *
  * @param ViewModel type of View Model, typically a data class
@@ -13,7 +13,7 @@ import io.reactivex.Observable
 interface MviView<in ViewModel : Any, out ViewEvent : Any> {
 
     /**
-     * An observable of View's UI Events, emissions must be performed only on Main thread
+     * An observable of View Events, emissions must be performed only on Main thread
      */
     val events: Observable<out ViewEvent>
 
