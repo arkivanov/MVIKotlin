@@ -14,8 +14,8 @@ allprojects {
 In your module's build.gradle:
 ```
 dependencies {
-    implementation 'com.github.arkivanov.mvidroid:mvidroid:1.1.7'
-    implementation 'com.github.arkivanov.mvidroid:mvidroid-debug:1.1.7'
+    implementation 'com.github.arkivanov.mvidroid:mvidroid:1.2.0'
+    implementation 'com.github.arkivanov.mvidroid:mvidroid-debug:1.2.0'
 }
 ```
 ### Maven:
@@ -34,12 +34,12 @@ Dependency:
 <dependency>
     <groupId>com.github.arkivanov.mvidroid</groupId>
     <artifactId>mvidroid</artifactId>
-    <version>1.1.7</version>
+    <version>1.2.0</version>
 </dependency>
 <dependency>
     <groupId>com.github.arkivanov.mvidroid</groupId>
     <artifactId>mvidroid-debug</artifactId>
-    <version>1.1.7</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
