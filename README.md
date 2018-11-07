@@ -52,7 +52,7 @@ MVI (Model-View-Intent) is a design pattern where Model is an active component w
 
 ## What is MVIDroid
 
-MVIDroid is a framework written 100% in Kotlin which brings MVI pattern to Android. It is specially designed and optimized for Android platform, very lightweight and efficient. Includes powerful debug tools like logging and time travel.
+MVIDroid is a framework written 100% in Kotlin which brings MVI pattern to Android. It is specially designed and optimized for Android platform, very lightweight and efficient. Includes powerful debug tools like logging and time travel. Also MVIDroid provides a pattern for decoupling of business logic and UI, so you can make them completely independent from each other.
 
 ## Base concepts
 
