@@ -6,6 +6,7 @@ import android.widget.EditText
 import com.arkivanov.mvidroid.sample.list.R
 import com.arkivanov.mvidroid.sample.list.component.ListEvent
 import com.arkivanov.mvidroid.view.MviBaseView
+import com.arkivanov.mvidroid.view.registerDiffByReference
 
 internal class ListView(root: View) : MviBaseView<ListViewModel, ListEvent>() {
 
@@ -38,6 +39,6 @@ internal class ListView(root: View) : MviBaseView<ListViewModel, ListEvent>() {
             todoEditText.text = null
         }
 
-        registerDiffByReference(adapter, ListViewModel::items) { items = it }
+        registerDiffByReference(ListViewModel::items) { adapter.items = it }
     }
 }

@@ -11,6 +11,7 @@ import com.arkivanov.mvidroid.sample.common.utils.SimpleTextWatcher
 import com.arkivanov.mvidroid.sample.details.R
 import com.arkivanov.mvidroid.sample.details.component.DetailsEvent
 import com.arkivanov.mvidroid.view.MviBaseView
+import com.arkivanov.mvidroid.view.registerDiffByEquals
 
 internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEvent>() {
 
@@ -51,24 +52,24 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEv
             }
         }
 
-        registerDiffByEquals(editText, DetailsViewModel::text) {
-            if (!TextUtils.equals(it, text)) {
-                removeTextChangedListener(textChangedListener)
-                setText(it)
-                addTextChangedListener(textChangedListener)
-                setSelection(it.length)
+        registerDiffByEquals(DetailsViewModel::text) {
+            if (!TextUtils.equals(it, editText.text)) {
+                editText.removeTextChangedListener(textChangedListener)
+                editText.setText(it)
+                editText.addTextChangedListener(textChangedListener)
+                editText.setSelection(it.length)
             }
         }
 
-        registerDiffByEquals(checkBox, DetailsViewModel::isCompleted) {
-            if (it != isChecked) {
-                setOnCheckedChangeListener(null)
-                isChecked = it
-                setOnCheckedChangeListener(onCheckedChangeListener)
+        registerDiffByEquals(DetailsViewModel::isCompleted) {
+            if (it != checkBox.isChecked) {
+                checkBox.setOnCheckedChangeListener(null)
+                checkBox.isChecked = it
+                checkBox.setOnCheckedChangeListener(onCheckedChangeListener)
             }
         }
 
-        registerDiffByEquals(this, DetailsViewModel::isError) {
+        registerDiffByEquals(DetailsViewModel::isError) {
             editText.setVisible(!it)
             checkBox.setVisible(!it)
             errorView.setVisible(it)

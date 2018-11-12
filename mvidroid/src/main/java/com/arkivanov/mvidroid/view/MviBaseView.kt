@@ -13,77 +13,57 @@ import java.util.*
  */
 open class MviBaseView<ViewModel : Any, ViewEvent : Any> @MainThread constructor() : MviView<ViewModel, ViewEvent> {
 
-    private val diffs = LinkedList<Diff<*, *>>()
+    private val diffs = LinkedList<Diff<*>>()
     private var oldValue: ViewModel? = null
-    private val uiEventsSubject = PublishSubject.create<ViewEvent>()
-    override val events: Observable<ViewEvent> = uiEventsSubject
+    private val viewEventsSubject = PublishSubject.create<ViewEvent>()
+    override val events: Observable<ViewEvent> = viewEventsSubject
 
     @CallSuper
     override fun bind(model: ViewModel) {
         val prevModel = oldValue
         oldValue = model
-        diffs.forEach { it.diff(model, prevModel) }
+        diffs.forEach { it(model, prevModel) }
     }
 
     override fun onDestroy() {
-        uiEventsSubject.onComplete()
+        viewEventsSubject.onComplete()
     }
 
     /**
      * Generic method to register diff strategies.
      * Registered strategies are used to diff field by field every incoming View Model.
      *
-     * @param view a view to set value to
-     * @param getValue a function that returns a value from View Model to diff
+     * @param mapper a function that returns a value from View Model to diff
      * @param comparator custom comparator that compares two values and returns true if they are equal, false otherwise
-     * @param setValue a function that accepts value and binds it to a view
-     * @param V type of view
+     * @param consumer a function that accepts value and binds it to a view
      * @param T type of value
      */
     @MainThread
-    protected fun <V : Any, T> registerDiff(
-        view: V,
-        getValue: ViewModel.() -> T,
+    fun <T> registerDiff(
+        mapper: (ViewModel) -> T,
         comparator: (newValue: T, oldValue: T) -> Boolean,
-        setValue: V.(T) -> Unit
+        consumer: (T) -> Unit
     ) {
-        diffs.add(Diff(view, getValue, comparator, setValue))
-    }
-
-    /**
-     * Registers a diff strategy that compares values by equals. See [registerDiff] for more information.
-     */
-    @MainThread
-    protected fun <V : Any, T> registerDiffByEquals(view: V, getValue: ViewModel.() -> T, setValue: V.(T) -> Unit) {
-        registerDiff(view, getValue, { newValue, oldValue -> newValue == oldValue }, setValue)
-    }
-
-    /**
-     * Registers a diff strategy that compares values by reference. See [registerDiff] for more information.
-     */
-    @MainThread
-    protected fun <V : Any, T> registerDiffByReference(view: V, getValue: ViewModel.() -> T, setValue: V.(T) -> Unit) {
-        registerDiff(view, getValue, { newValue, oldValue -> newValue === oldValue }, setValue)
+        diffs.add(Diff(mapper, comparator, consumer))
     }
 
     /**
      * Dispatches View Events to Component
      */
     @MainThread
-    protected fun dispatch(event: ViewEvent) {
-        uiEventsSubject.onNext(event)
+    fun dispatch(event: ViewEvent) {
+        viewEventsSubject.onNext(event)
     }
 
-    private inner class Diff<V : Any, T>(
-        private val view: V,
-        private val getValue: ViewModel.() -> T,
+    private inner class Diff<T>(
+        private val mapper: (ViewModel) -> T,
         private val comparator: (newValue: T, oldValue: T) -> Boolean,
-        private val setValue: V.(T) -> Unit
+        private val consumer: (T) -> Unit
     ) {
-        fun diff(newModel: ViewModel, previousModel: ViewModel?) {
-            val newValue = newModel.getValue()
-            if ((previousModel == null) || !comparator(newValue, previousModel.getValue())) {
-                view.setValue(newValue)
+        operator fun invoke(newModel: ViewModel, previousModel: ViewModel?) {
+            val newValue = mapper(newModel)
+            if ((previousModel == null) || !comparator(newValue, mapper(previousModel))) {
+                consumer(newValue)
             }
         }
     }
