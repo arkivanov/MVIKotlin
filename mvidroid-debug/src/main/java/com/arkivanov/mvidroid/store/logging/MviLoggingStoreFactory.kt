@@ -25,7 +25,7 @@ class MviLoggingStoreFactory(
     var mode: Mode = Mode.MEDIUM
 ) : MviStoreFactory {
 
-    override fun <State : Any, Intent : Any, Action : Any, Result : Any, Label : Any> create(
+    override fun <State : Any, Intent : Any, Label : Any, Action : Any, Result : Any> create(
         name: String,
         initialState: State,
         bootstrapper: MviBootstrapper<Action>?,

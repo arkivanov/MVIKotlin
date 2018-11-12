@@ -2,8 +2,8 @@ package com.arkivanov.mvidroid.sample.common.store.redirect
 
 import com.arkivanov.mvidroid.sample.common.store.redirect.RedirectStore.Intent
 import com.arkivanov.mvidroid.store.MviStore
-import com.arkivanov.mvidroid.store.component.MviReducer
 import com.arkivanov.mvidroid.store.MviStoreFactory
+import com.arkivanov.mvidroid.store.component.MviReducer
 import com.arkivanov.mvidroid.store.createExecutorless
 import kotlin.reflect.KClass
 

@@ -5,8 +5,8 @@ import io.reactivex.disposables.Disposable
 
 /**
  * Executors are used to execute Actions, dispatch Results and publish Labels.
- * In other words it's a place for business logic. Please pay attention that it cannot be a singleton.
- * Must be created only on Main thread.
+ * In other words it's a place for business logic.
+ * IMPORTANT: please pay attention that it must not be a singleton.
  */
 abstract class MviExecutor<State : Any, in Action : Any, Result : Any, Label : Any> @MainThread constructor() {
 
@@ -21,7 +21,6 @@ abstract class MviExecutor<State : Any, in Action : Any, Result : Any, Label : A
     @get:MainThread
     protected val state: State
         get() = stateSupplier()
-
 
     /**
      * Called internally by Store

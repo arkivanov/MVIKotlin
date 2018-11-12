@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arkivanov.mvidroid.bind.MviBinder
 import com.arkivanov.mvidroid.bind.addViewBundles
 import com.arkivanov.mvidroid.bind.attachTo
+import com.arkivanov.mvidroid.bind.binder
 import com.arkivanov.mvidroid.sample.app.app.app
 import com.arkivanov.mvidroid.sample.app.screen.inflateViewWithDebugDrawer
 import com.arkivanov.mvidroid.sample.app.screen.router
@@ -36,7 +36,7 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        MviBinder(component)
+        binder(component)
             .setDisposeComponent(false)
             .addViewBundles(DetailsViewFactory(view, RedirectHandlerImpl()).create())
             .bind()

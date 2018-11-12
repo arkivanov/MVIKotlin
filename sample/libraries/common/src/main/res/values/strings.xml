@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">app_name</string>
+    <string name="details">Details</string>
     <string name="add">add</string>
     <string name="add_todo_hint">add_todo_hint</string>
     <string name="completed">completed</string>

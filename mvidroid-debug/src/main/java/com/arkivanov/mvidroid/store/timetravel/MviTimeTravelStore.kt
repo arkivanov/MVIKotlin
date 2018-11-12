@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-internal class MviTimeTravelStore<out State : Any, in Intent : Any, in Action : Any, in Result : Any, out Label : Any> @MainThread constructor(
+internal class MviTimeTravelStore<out State : Any, in Intent : Any, out Label : Any, Action : Any, Result : Any> @MainThread constructor(
     private val name: String,
     initialState: State,
     private val bootstrapper: MviBootstrapper<Action>?,

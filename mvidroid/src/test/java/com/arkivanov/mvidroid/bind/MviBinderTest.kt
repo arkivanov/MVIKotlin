@@ -12,7 +12,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class BindUtilsTest {
+class MviBinderTest {
 
     private val component = mock<MviComponent<String, String>> {
         on { states }.thenReturn("states")
@@ -37,7 +37,7 @@ class BindUtilsTest {
         on { invoke("view_event") }.thenReturn("component_event")
     }
 
-    private val binder = MviBinder(component).addViewBundle(MviViewBundle.create(view, viewModelMapper, viewEventMapper))
+    private val binder = binder(component).addViewBundle(viewBundle(view, viewModelMapper, viewEventMapper))
     private var observer = binder.bind()
 
     @Test

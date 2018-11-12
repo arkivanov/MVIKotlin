@@ -11,7 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
-internal class MviDefaultStore<out State : Any, in Intent : Any, in Action : Any, out Result : Any, out Label : Any> @MainThread constructor(
+internal class MviDefaultStore<out State : Any, in Intent : Any, out Label : Any, Action : Any, Result : Any> @MainThread constructor(
     initialState: State,
     bootstrapper: MviBootstrapper<Action>? = null,
     private val intentToAction: (Intent) -> Action,

@@ -22,6 +22,7 @@ dependencies {
     implementation project(':mvidroid')
     implementation project(':sample:libraries:common')
     implementation "com.android.support:support-annotations:$support_library_version"
+    implementation "com.android.support:appcompat-v7:$support_library_version"
     implementation "com.android.support:design:$support_library_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

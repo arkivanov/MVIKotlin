@@ -54,8 +54,8 @@ abstract class MviAbstractComponent<in Event : Any, out States : Any, Labels> @M
     }
 
     private fun <Intent : Any> MviStoreBundle<Intent, *>.connectLabels(labels: Labels) {
-        labelTransformer?.also { transformer ->
-            disposables.add(labels.mapNotNull(transformer).subscribe { store.accept(it) })
+        labelMapper?.also { mapper ->
+            disposables.add(labels.mapNotNull(mapper).subscribe { store.accept(it) })
         }
 
         if (!isPersistent) {
@@ -64,6 +64,6 @@ abstract class MviAbstractComponent<in Event : Any, out States : Any, Labels> @M
     }
 
     private fun <Intent : Any> MviStoreBundle<Intent, Event>.handleUiEvent(event: Event) {
-        eventTransformer?.invoke(event)?.also { store.accept(it) }
+        eventMapper?.invoke(event)?.also { store.accept(it) }
     }
 }

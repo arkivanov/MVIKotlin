@@ -1,10 +1,10 @@
 package com.arkivanov.mvidroid.sample.list.component
 
 import com.arkivanov.mvidroid.component.MviAbstractComponent
-import com.arkivanov.mvidroid.component.MviStoreBundle
 import com.arkivanov.mvidroid.sample.common.store.redirect.RedirectStore
 import com.arkivanov.mvidroid.sample.list.model.ListRedirect
 import com.arkivanov.mvidroid.sample.list.store.list.ListStore
+import com.arkivanov.mvidroid.store.toBundle
 import com.jakewharton.rxrelay2.Relay
 
 internal class ListComponentImpl(
@@ -12,14 +12,8 @@ internal class ListComponentImpl(
     redirectStore: RedirectStore<ListRedirect>
 ) : MviAbstractComponent<ListEvent, ListStates, Relay<Any>>(
     stores = listOf(
-        MviStoreBundle(
-            store = listStore,
-            eventTransformer = ListStoreUiEventTransformer
-        ),
-        MviStoreBundle(
-            store = redirectStore,
-            eventTransformer = RedirectStoreUiEventTransformer
-        )
+        listStore.toBundle(eventMapper = ListStoreUiEventMapper),
+        redirectStore.toBundle(eventMapper = RedirectStoreUiEventMapper)
     )
 ), ListComponent {
 
@@ -29,7 +23,7 @@ internal class ListComponentImpl(
             redirectStates = redirectStore.states
         )
 
-    private object ListStoreUiEventTransformer : (ListEvent) -> ListStore.Intent? {
+    private object ListStoreUiEventMapper : (ListEvent) -> ListStore.Intent? {
         override fun invoke(event: ListEvent): ListStore.Intent? =
             when (event) {
                 is ListEvent.OnAddItem -> ListStore.Intent.Add(event.text)
@@ -39,7 +33,7 @@ internal class ListComponentImpl(
             }
     }
 
-    private object RedirectStoreUiEventTransformer : (ListEvent) -> RedirectStore.Intent<ListRedirect>? {
+    private object RedirectStoreUiEventMapper : (ListEvent) -> RedirectStore.Intent<ListRedirect>? {
         override fun invoke(event: ListEvent): RedirectStore.Intent<ListRedirect>? =
             when (event) {
                 is ListEvent.OnItemSelected -> RedirectStore.Intent(ListRedirect.ShowItemDetails(event.id))

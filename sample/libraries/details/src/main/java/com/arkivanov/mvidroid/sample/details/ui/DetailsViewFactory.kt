@@ -3,6 +3,7 @@ package com.arkivanov.mvidroid.sample.details.ui
 import android.support.annotation.LayoutRes
 import android.view.View
 import com.arkivanov.mvidroid.bind.MviViewBundle
+import com.arkivanov.mvidroid.bind.viewBundle
 import com.arkivanov.mvidroid.sample.common.ui.redirect.RedirectView
 import com.arkivanov.mvidroid.sample.details.R
 import com.arkivanov.mvidroid.sample.details.component.DetailsEvent
@@ -18,8 +19,8 @@ class DetailsViewFactory(
 
     fun create(): List<MviViewBundle<DetailsStates, DetailsEvent>> =
         listOf(
-            MviViewBundle.create(DetailsView(root), DetailsViewModelMapper),
-            MviViewBundle.create(RedirectView(redirectHandler), DetailsStates::redirectStates) { DetailsEvent.OnRedirectHandled }
+            viewBundle(DetailsView(root), DetailsViewModelMapper),
+            viewBundle(RedirectView(redirectHandler), DetailsStates::redirectStates) { DetailsEvent.OnRedirectHandled }
         )
 
     companion object {

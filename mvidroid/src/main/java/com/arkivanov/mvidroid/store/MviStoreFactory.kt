@@ -23,13 +23,13 @@ interface MviStoreFactory {
      * If not provided, then State will never change.
      * @param State type of Store's State
      * @param Intent type of Store's Intents
+     * @param Label type of Store's Labels
      * @param Action type of Store's Actions
      * @param Result type of Store's Results
-     * @param Label type of Store's Labels
      * @return a new instance of Store
      */
     @MainThread
-    fun <State : Any, Intent : Any, Action : Any, Result : Any, Label : Any> create(
+    fun <State : Any, Intent : Any, Label : Any, Action : Any, Result : Any> create(
         name: String,
         initialState: State,
         bootstrapper: MviBootstrapper<Action>? = null,

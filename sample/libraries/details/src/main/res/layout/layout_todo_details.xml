@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/details" />
 
     <EditText
         android:id="@+id/edit_text"
@@ -22,20 +23,22 @@
         android:background="@null"
         android:gravity="top|start"
         android:hint="@string/add_todo_hint"
+        android:importantForAutofill="no"
         android:inputType="textCapSentences|textAutoComplete|textAutoCorrect|textLongMessage|textMultiLine"
         app:layout_constraintBottom_toTopOf="@+id/check_completed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:targetApi="o"
         tools:text="Text" />
 
     <CheckBox
         android:id="@+id/check_completed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/completed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,8 +48,8 @@
         android:id="@+id/text_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/error_something_went_wrong"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

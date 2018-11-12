@@ -6,10 +6,10 @@ import com.arkivanov.mvidroid.sample.details.model.TodoDetails
 import com.arkivanov.mvidroid.sample.details.store.details.DetailsStore.Intent
 import com.arkivanov.mvidroid.sample.details.store.details.DetailsStore.Label
 import com.arkivanov.mvidroid.store.MviStore
+import com.arkivanov.mvidroid.store.MviStoreFactory
 import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
 import com.arkivanov.mvidroid.store.component.MviSimpleBootstrapper
-import com.arkivanov.mvidroid.store.MviStoreFactory
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

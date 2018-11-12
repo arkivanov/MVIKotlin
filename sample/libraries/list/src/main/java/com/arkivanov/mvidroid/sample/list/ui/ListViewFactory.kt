@@ -3,6 +3,7 @@ package com.arkivanov.mvidroid.sample.list.ui
 import android.support.annotation.LayoutRes
 import android.view.View
 import com.arkivanov.mvidroid.bind.MviViewBundle
+import com.arkivanov.mvidroid.bind.viewBundle
 import com.arkivanov.mvidroid.sample.common.ui.redirect.RedirectView
 import com.arkivanov.mvidroid.sample.list.R
 import com.arkivanov.mvidroid.sample.list.component.ListEvent
@@ -18,8 +19,8 @@ class ListViewFactory(
 
     fun create(): List<MviViewBundle<ListStates, ListEvent>> =
         listOf(
-            MviViewBundle.create(ListView(root), ListViewModelMapper),
-            MviViewBundle.create(RedirectView(redirectHandler), ListStates::redirectStates) { ListEvent.OnRedirectHandled }
+            viewBundle(ListView(root), ListViewModelMapper),
+            viewBundle(RedirectView(redirectHandler), ListStates::redirectStates) { ListEvent.OnRedirectHandled }
         )
 
     companion object {

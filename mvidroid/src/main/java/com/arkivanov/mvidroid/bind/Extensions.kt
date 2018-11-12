@@ -57,9 +57,9 @@ fun MviLifecycleObserver.attachTo(lifecycleOwner: LifecycleOwner) {
  * @param bundles an Iterable containing all View Bundles
  * @return same instance of MviBinder for method chaining
  */
-fun <ComponentStates : Any, ComponentEvent : Any> MviBinder<ComponentStates, ComponentEvent>.addViewBundles(
+fun <ComponentEvent : Any, ComponentStates : Any> MviBinder<ComponentEvent, ComponentStates>.addViewBundles(
     bundles: Iterable<MviViewBundle<ComponentStates, ComponentEvent>>
-): MviBinder<ComponentStates, ComponentEvent> {
+): MviBinder<ComponentEvent, ComponentStates> {
     bundles.forEach { addViewBundle(it) }
     return this
 }
@@ -68,25 +68,40 @@ fun <ComponentStates : Any, ComponentEvent : Any> MviBinder<ComponentStates, Com
  * Adds View and its mappers to MviBinder, see [MviBinder] for more information
  *
  * @param view an instance of [MviView]
- * @param modelMapper a View Model Mapper responsible for mappings Component States to View Models
- * @param eventMapper a View Event Mapper responsible for mappings View Events to Component Events
+ * @param modelMapper a View Model Mapper responsible for mapping of Component States to View Models
+ * @param eventMapper a View Event Mapper responsible for mapping of View Events to Component Events
  * @return same instance of MviBinder for method chaining
  */
-fun <ComponentStates : Any, ComponentEvent : Any, ViewModel : Any, ViewEvent : Any> MviBinder<ComponentStates, ComponentEvent>.addView(
+fun <ComponentEvent : Any, ComponentStates : Any, ViewModel : Any, ViewEvent : Any> MviBinder<ComponentEvent, ComponentStates>.addView(
     view: MviView<ViewModel, ViewEvent>,
     modelMapper: (ComponentStates) -> Observable<out ViewModel>,
     eventMapper: (ViewEvent) -> ComponentEvent?
-): MviBinder<ComponentStates, ComponentEvent> = addViewBundle(MviViewBundle.create(view, modelMapper, eventMapper))
+): MviBinder<ComponentEvent, ComponentStates> =
+    addViewBundle(viewBundle(view, modelMapper, eventMapper))
 
 /**
  * Adds View and its View Model Mapper to MviBinder.
- * For views whose Event types are same as Component Event type. See [MviBinder] for more information.
+ * For views whose Event type is same as Component Event type. See [MviBinder] for more information.
  *
  * @param view an instance of [MviView]
- * @param modelMapper a View Model Mapper responsible for mappings Component States to View Models
+ * @param modelMapper a View Model Mapper responsible for mapping of Component States to View Models
  * @return same instance of MviBinder for method chaining
  */
-fun <ComponentStates : Any, ComponentEvent : Any, ViewModel : Any> MviBinder<ComponentStates, ComponentEvent>.addView(
+fun <ComponentEvent : Any, ComponentStates : Any, ViewModel : Any> MviBinder<ComponentEvent, ComponentStates>.addView(
     view: MviView<ViewModel, ComponentEvent>,
     modelMapper: (ComponentStates) -> Observable<out ViewModel>
-): MviBinder<ComponentStates, ComponentEvent> = addViewBundle(MviViewBundle.create(view, modelMapper))
+): MviBinder<ComponentEvent, ComponentStates> =
+    addViewBundle(viewBundle(view, modelMapper))
+
+/**
+ * Adds View to MviBinder.
+ * For views that accept Store state as View Model and whose Event type is same as Component Event type.
+ * See [MviBinder] for more information.
+ *
+ * @param view an instance of [MviView]
+ * @return same instance of MviBinder for method chaining
+ */
+fun <ComponentEvent : Any, StoreState : Any> MviBinder<ComponentEvent, Observable<out StoreState>>.addView(
+    view: MviView<StoreState, ComponentEvent>
+): MviBinder<ComponentEvent, Observable<out StoreState>> =
+    addViewBundle(viewBundle(view))

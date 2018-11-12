@@ -49,20 +49,20 @@ class MviAbstractComponentTest {
     }
 
     @Test
-    fun `intent received by store WHEN event transformer provided AND event published`() {
+    fun `intent received by store WHEN event mapper provided AND event published`() {
         val transformer: (String) -> String = mock {
             on { invoke("event") }.thenReturn("intent")
         }
-        TestComponent(eventTransformer = transformer).accept("event")
+        TestComponent(eventMapper = transformer).accept("event")
         verify(store).accept("intent")
     }
 
     @Test
-    fun `intent received by store WHEN label transformer provided AND label published`() {
-        val transformer: (Any) -> String = mock {
+    fun `intent received by store WHEN label mapper provided AND label published`() {
+        val mapper: (Any) -> String = mock {
             on { invoke("label") }.thenReturn("intent")
         }
-        TestComponent(labelTransformer = transformer)
+        TestComponent(labelMapper = mapper)
         labels.accept("label")
         verify(store).accept("intent")
     }
@@ -83,12 +83,12 @@ class MviAbstractComponentTest {
     }
 
     private inner class TestComponent(
-        eventTransformer: ((String) -> String?)? = null,
-        labelTransformer: ((Any) -> String?)? = null,
+        eventMapper: ((String) -> String?)? = null,
+        labelMapper: ((Any) -> String?)? = null,
         isPersistent: Boolean = false,
         onDisposeAction: (() -> Unit)? = null
     ) : MviAbstractComponent<String, String, TestLabels>(
-        listOf(MviStoreBundle(store, eventTransformer, labelTransformer, isPersistent)),
+        listOf(MviStoreBundle(store, eventMapper, labelMapper, isPersistent)),
         labels,
         onDisposeAction
     ) {
