@@ -6,6 +6,7 @@ import com.arkivanov.mvidroid.store.MviStoreFactory
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
 import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
+import com.arkivanov.mvidroid.store.defaultstore.MviDefaultStoreFactory
 import com.arkivanov.mvidroid.utils.DeepStringMode
 import com.arkivanov.mvidroid.utils.logger.MviDefaultLogger
 import com.arkivanov.mvidroid.utils.logger.MviLogger
@@ -20,7 +21,7 @@ import io.reactivex.disposables.Disposable
  * @param mode logging mode, see [MviLoggingStoreFactory.Mode] for more information
  */
 class MviLoggingStoreFactory(
-    private val delegate: MviStoreFactory,
+    private val delegate: MviStoreFactory = MviDefaultStoreFactory,
     private val logger: MviLogger = MviDefaultLogger,
     var mode: Mode = Mode.MEDIUM
 ) : MviStoreFactory {

@@ -20,7 +20,7 @@ import com.arkivanov.mvidroid.store.timetravel.MviTimeTravelEvents
 import com.arkivanov.mvidroid.store.timetravel.MviTimeTravelState
 import com.arkivanov.mvidroid.utils.DeepStringMode
 import com.arkivanov.mvidroid.utils.toDeepString
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 
 /**
@@ -45,7 +45,7 @@ class MviTimeTravelView @JvmOverloads constructor(
     private val moveToEndButton = findViewById<View>(R.id.button_time_travel_move_to_end)
     private val cancelButton = findViewById<View>(R.id.button_time_travel_cancel)
     private val adapter = Adapter()
-    private var disposable: Disposable? = null
+    private var disposables = CompositeDisposable()
 
     init {
         recyclerView.adapter = adapter
@@ -58,13 +58,6 @@ class MviTimeTravelView @JvmOverloads constructor(
         stepForwardButton.setOnClickListener { MviTimeTravelController.stepForward() }
         moveToEndButton.setOnClickListener { MviTimeTravelController.moveToEnd() }
         cancelButton.setOnClickListener { MviTimeTravelController.cancel() }
-
-        MviTimeTravelController
-            .events
-            .subscribe {
-                adapter.setEvents(it)
-                recyclerView.scrollToPosition(it.index + 1)
-            }
     }
 
     override fun onFinishInflate() {
@@ -78,23 +71,30 @@ class MviTimeTravelView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        disposable =
-            MviTimeTravelController
-                .states
-                .distinctUntilChanged()
-                .subscribe {
-                    @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
-                    when (it) {
-                        MviTimeTravelState.IDLE -> setControlsVisibility(record = true)
-                        MviTimeTravelState.RECORDING -> setControlsVisibility(stop = true, cancel = true)
-                        MviTimeTravelState.STOPPED -> setControlsVisibility(next = true, prev = true, cancel = true)
-                    }
+        MviTimeTravelController
+            .events
+            .subscribe {
+                adapter.setEvents(it)
+                recyclerView.scrollToPosition(it.index + 1)
+            }
+            .also { disposables.add(it) }
+
+        MviTimeTravelController
+            .states
+            .distinctUntilChanged()
+            .subscribe {
+                @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
+                when (it) {
+                    MviTimeTravelState.IDLE -> setControlsVisibility(record = true)
+                    MviTimeTravelState.RECORDING -> setControlsVisibility(stop = true, cancel = true)
+                    MviTimeTravelState.STOPPED -> setControlsVisibility(next = true, prev = true, cancel = true)
                 }
+            }
+            .also { disposables.add(it) }
     }
 
     override fun onDetachedFromWindow() {
-        disposable?.dispose()
-        disposable = null
+        disposables.clear()
 
         super.onDetachedFromWindow()
     }

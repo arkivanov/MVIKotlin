@@ -40,8 +40,8 @@ usually represented as data class
 They are also usually a sealed classes.
 
 The good news is that you don't need to implement this interface.
-Instead you should use `MviStoreFactory` to create a `Store`.
-But it's a good practice to define an interface for your `Store`.
+Instead you should use `MviStoreFactory` and its default implementation
+`MviDefaultStoreFactory' to create a `Store`.
 
 Store can have up to three components:
 1. `Executor`: every `Intent` is converted to an `Action` that is executed by
