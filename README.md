@@ -26,8 +26,8 @@ allprojects {
 In your module's build.gradle:
 ```
 dependencies {
-    implementation 'com.github.arkivanov.mvidroid:mvidroid:1.2.3'
-    implementation 'com.github.arkivanov.mvidroid:mvidroid-debug:1.2.3'
+    implementation 'com.github.arkivanov.mvidroid:mvidroid:1.2.4'
+    implementation 'com.github.arkivanov.mvidroid:mvidroid-debug:1.2.4'
 }
 ```
 
@@ -48,12 +48,12 @@ Dependency:
 <dependency>
     <groupId>com.github.arkivanov.mvidroid</groupId>
     <artifactId>mvidroid</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
 </dependency>
 <dependency>
     <groupId>com.github.arkivanov.mvidroid</groupId>
     <artifactId>mvidroid-debug</artifactId>
-    <version>1.2.3/version>
+    <version>1.2.4/version>
 </dependency>
 ```
 
