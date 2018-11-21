@@ -11,7 +11,6 @@ import com.arkivanov.mvidroid.sample.common.utils.SimpleTextWatcher
 import com.arkivanov.mvidroid.sample.details.R
 import com.arkivanov.mvidroid.sample.details.component.DetailsEvent
 import com.arkivanov.mvidroid.view.MviBaseView
-import com.arkivanov.mvidroid.view.registerDiffByEquals
 
 internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEvent>() {
 

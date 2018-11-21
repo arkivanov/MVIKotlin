@@ -39,7 +39,7 @@ open class MviBaseView<ViewModel : Any, ViewEvent : Any> @MainThread constructor
      * @param T type of value
      */
     @MainThread
-    fun <T> registerDiff(
+    protected fun <T> registerDiff(
         mapper: (ViewModel) -> T,
         comparator: (newValue: T, oldValue: T) -> Boolean,
         consumer: (T) -> Unit
@@ -48,10 +48,26 @@ open class MviBaseView<ViewModel : Any, ViewEvent : Any> @MainThread constructor
     }
 
     /**
+     * Registers a diff strategy that compares values by equals. See [registerDiff] for more information.
+     */
+    @MainThread
+    protected fun <T> registerDiffByEquals(mapper: ViewModel.() -> T, consumer: (T) -> Unit) {
+        registerDiff(mapper, { newValue, oldValue -> newValue == oldValue }, consumer)
+    }
+
+    /**
+     * Registers a diff strategy that compares values by reference. See [registerDiff] for more information.
+     */
+    @MainThread
+    protected fun <T> registerDiffByReference(mapper: ViewModel.() -> T, consumer: (T) -> Unit) {
+        registerDiff(mapper, { newValue, oldValue -> newValue === oldValue }, consumer)
+    }
+
+    /**
      * Dispatches View Events to Component
      */
     @MainThread
-    fun dispatch(event: ViewEvent) {
+    protected fun dispatch(event: ViewEvent) {
         viewEventsSubject.onNext(event)
     }
 

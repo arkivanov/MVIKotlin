@@ -13,7 +13,7 @@ class MviBaseViewTest {
 
     @Before
     fun before() {
-        view.registerDiff(TestViewModel::value, { a, b -> a == b }, consumer::setValue)
+        view.registerTestDiff()
     }
 
     @Test
@@ -76,6 +76,10 @@ class MviBaseViewTest {
     private inner class TestView : MviBaseView<TestViewModel, String>() {
         fun dispatchTestEvent() {
             dispatch("event")
+        }
+
+        fun registerTestDiff() {
+            registerDiff(TestViewModel::value, { a, b -> a == b }, consumer::setValue)
         }
     }
 }

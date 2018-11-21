@@ -168,7 +168,7 @@ class UserInfoView(root: View) : MviBaseView<UserInfoViewModel, UserInfoViewEven
 `MviBaseView` has `registerDiff(Mapper, Comparator, Consumer)`
 method which allows you to diff `View Models` field by field and assign
 values to your views only if they are changed. Plus there are two useful
-extension methods, `registerDiffByEquals(Mapper, Consumer)` and
+methods, `registerDiffByEquals(Mapper, Consumer)` and
 `registerDiffByReference(Mapper, Consumer)`, that provide diffing
 by `equals` and by `reference` respectively.
 
