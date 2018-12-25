@@ -27,7 +27,7 @@ internal class MviDefaultStore<out State : Any, in Intent : Any, out Label : Any
     override val state: State
         get() {
             assertOnMainThread()
-            return statesSubject.value
+            return statesSubject.value ?: throw IllegalStateException("State is not available, perhaps Store was destroyed")
         }
 
     private val disposables = Disposables()
@@ -40,7 +40,7 @@ internal class MviDefaultStore<out State : Any, in Intent : Any, out Label : Any
             {
                 assertOnMainThread()
                 with(reducer) {
-                    statesSubject.onNext(statesSubject.value.reduce(it))
+                    statesSubject.onNext(statesSubject.value!!.reduce(it))
                 }
             },
             {

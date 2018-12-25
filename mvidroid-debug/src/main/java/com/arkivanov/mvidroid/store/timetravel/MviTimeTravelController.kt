@@ -26,13 +26,13 @@ object MviTimeTravelController {
     private val stores = HashMap<String, MviTimeTravelStore<*, *, *, *, *>>()
 
     private var state: MviTimeTravelState
-        get() = statesSubject.value
+        get() = statesSubject.value!!
         set(value) {
             statesSubject.onNext(value)
         }
 
     private var currentEvents: MviTimeTravelEvents
-        get() = eventsSubject.value
+        get() = eventsSubject.value!!
         set(value) {
             eventsSubject.onNext(value)
         }

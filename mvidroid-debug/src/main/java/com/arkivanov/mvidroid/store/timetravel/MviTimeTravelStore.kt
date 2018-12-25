@@ -31,7 +31,7 @@ internal class MviTimeTravelStore<out State : Any, in Intent : Any, out Label : 
     override val state: State
         get() {
             assertOnMainThread()
-            return statesSubject.value
+            return statesSubject.value ?: throw IllegalStateException("State is not available, perhaps Store was destroyed")
         }
 
     override val labels: Observable<out Label> = labelsSubject
