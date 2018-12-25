@@ -57,7 +57,7 @@ fun <Intent : Any, State : Any> binder(
 ): MviBinder<Intent, Observable<out State>> =
     binder(
         object : MviAbstractComponent<Intent, Observable<out State>, Nothing>(
-            stores = listOf(MviStoreBundle(store))
+            stores = listOf(MviStoreBundle(store = store, eventMapper = { it }))
         ) {
             override val states: Observable<out State> = store.states
         }
