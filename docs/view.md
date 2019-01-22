@@ -9,14 +9,10 @@ interface MviView<in ViewModel : Any, out ViewEvent : Any> {
 
     @MainThread
     fun bind(model: ViewModel)
-
-    @MainThread
-    fun onDestroy()
 }
 ```
 
-As you can see `View` produces `View Events` and accepts `View Models`,
-and it also has `onDestroy` callback which is called at the end of life-cycle.
+As you can see `View` just produces `View Events` and accepts `View Models`.
 
 ![View](media/view.jpg)
 
@@ -124,7 +120,7 @@ class UserInfoView(root: View) : MviBaseView<UserInfoViewModel, UserInfoViewEven
 
 Now we can edit every field of user info. And there is one problem now,
 we are rebinding whole view every time, even if there is only one field
-changed. Fortunately `MviBaseView` has a nice 'ViewModel' diff feature.
+changed. Fortunately `MVIDroid` comes with a nice model diff feature.
 
 ```kotlin
 class UserInfoView(root: View) : MviBaseView<UserInfoViewModel, UserInfoViewEvent>() {
@@ -135,23 +131,23 @@ class UserInfoView(root: View) : MviBaseView<UserInfoViewModel, UserInfoViewEven
             .apply {
                 setOnClickListener { dispatch(UserInfoViewEvent.OnNameClick) }
             }
-            .also { registerDiffByEquals(UserInfoViewModel::name, it::setText) }
+            .also { diff.diffByEquals(UserInfoViewModel::name, it::setText) }
 
         root
             .findViewById<TextView>(R.id.text_about)
             .apply {
                 setOnClickListener { dispatch(UserInfoViewEvent.OnAboutClick) }
             }
-            .also { registerDiffByEquals(UserInfoViewModel::about, it::setText) }
+            .also { diff.diffByEquals(UserInfoViewModel::about, it::setText) }
 
-        registerDiffByEquals(UserInfoViewModel::nameEditDialogText) { text ->
+        diff.diffByEquals(UserInfoViewModel::nameEditDialogText) { text ->
             if (text != null) {
                 dispatch(UserInfoViewEvent.OnEditDialogShown)
                 showEditDialog(text) { dispatch(UserInfoViewEvent.OnNameChanged(it)) }
             }
         }
 
-        registerDiffByEquals(UserInfoViewModel::aboutEditDialogText) { text ->
+        diff.diffByEquals(UserInfoViewModel::aboutEditDialogText) { text ->
             if (text != null) {
                 dispatch(UserInfoViewEvent.OnEditDialogShown)
                 showEditDialog(text) { dispatch(UserInfoViewEvent.OnAboutChanged(it)) }
@@ -165,12 +161,11 @@ class UserInfoView(root: View) : MviBaseView<UserInfoViewModel, UserInfoViewEven
 }
 ```
 
-`MviBaseView` has `registerDiff(Mapper, Comparator, Consumer)`
-method which allows you to diff `View Models` field by field and assign
+`MviBaseView` contains protected 'diff: ModelDiff' that allows you to 
+diff `View Models` field by field using custom comparators and assign
 values to your views only if they are changed. Plus there are two useful
-methods, `registerDiffByEquals(Mapper, Consumer)` and
-`registerDiffByReference(Mapper, Consumer)`, that provide diffing
-by `equals` and by `reference` respectively.
+extensions methods, `diffByEquals(Mapper, Consumer)` and `diffByReference(Mapper, Consumer)`,
+that provide diffing by `equals` and by `reference` respectively.
 
 ---
 [Previous](component.md) [Index](index.md) [Next](binding.md)
