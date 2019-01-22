@@ -17,6 +17,8 @@ import io.reactivex.Observable
  * and subscribes all Views to their View Models on life-cycle "onStart" event
  * * Unsubscribes all Views from their View Models on life-cycle "onStop" event
  * * Disposes Component (if needed) and all Views on life-cycle "onDestroy" event
+ *
+ * To create an instance of MviBinder use [binder] functions.
  */
 interface MviBinder<in ComponentEvent : Any, out ComponentStates : Any> {
 

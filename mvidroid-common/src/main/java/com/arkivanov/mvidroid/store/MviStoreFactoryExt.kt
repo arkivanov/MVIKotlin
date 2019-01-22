@@ -1,7 +1,6 @@
 package com.arkivanov.mvidroid.store
 
 import android.support.annotation.MainThread
-import com.arkivanov.mvidroid.component.MviStoreBundle
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
 import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
@@ -20,21 +19,6 @@ private val bypassExecutorFactory: () -> MviExecutor<Any, Any, Any, Any> =
             }
         }
     }
-
-/**
- * Wraps Store into [MviStoreBundle]
- */
-fun <Intent : Any, ComponentEvent : Any> MviStore<*, Intent, *>.toBundle(
-    eventMapper: ((ComponentEvent) -> Intent?)? = null,
-    labelMapper: ((Any) -> Intent?)? = null,
-    isPersistent: Boolean = false
-): MviStoreBundle<Intent, ComponentEvent> =
-    MviStoreBundle(
-        store = this,
-        eventMapper = eventMapper,
-        labelMapper = labelMapper,
-        isPersistent = isPersistent
-    )
 
 /**
  * Creates an implementation of Store that does not accept Intents

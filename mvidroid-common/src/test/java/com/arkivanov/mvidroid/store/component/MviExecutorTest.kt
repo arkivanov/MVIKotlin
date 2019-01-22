@@ -1,6 +1,5 @@
 package com.arkivanov.mvidroid.store.component
 
-import com.arkivanov.mvidroid.testutils.TestExecutor
 import io.reactivex.disposables.Disposable
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -31,7 +30,7 @@ class MviExecutorTest {
         assertEquals("label", str)
     }
 
-    private class MyTestExecutor : TestExecutor() {
+    private class MyTestExecutor : MviExecutor<String, String, String, String>() {
         override fun execute(action: String): Disposable? = null
 
         fun getState(): String = state

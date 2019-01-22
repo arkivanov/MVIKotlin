@@ -8,7 +8,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Test
 
-class ExtensionsAndroidArchTest {
+class MviLifecycleObserverExtTest {
 
     private lateinit var addedObserver: DefaultLifecycleObserver
     private val lifecycle = mock<Lifecycle> {

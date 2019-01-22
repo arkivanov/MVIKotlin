@@ -19,6 +19,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':mvidroid-common')
     implementation project(':mvidroid')
     implementation project(':sample:libraries:common')
     implementation "com.android.support:support-annotations:$support_library_version"

@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.arkivanov.mvidroid.sample.app"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -29,6 +29,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':mvidroid-common')
     implementation project(':mvidroid')
     implementation project(":mvidroid-debug")
     implementation project(":sample:libraries:list")

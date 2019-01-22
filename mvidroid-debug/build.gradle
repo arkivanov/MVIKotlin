@@ -20,15 +20,15 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':mvidroid-common')
-    implementation project(':mvidroid')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:design:$support_library_version"
     implementation "com.android.support:recyclerview-v7:$support_library_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rx_java_version"
-    if (!System.env.JITPACK) {
-        testImplementation project(':test-utils')
-    }
+
+    implementation "junit:junit:$junit_version"
+    implementation "com.nhaarman:mockito-kotlin:$mockito_kotlin_version"
+    implementation "org.mockito:mockito-core:$mockito_core_version"
 }
 
 setupSourcesAndDocs(project)

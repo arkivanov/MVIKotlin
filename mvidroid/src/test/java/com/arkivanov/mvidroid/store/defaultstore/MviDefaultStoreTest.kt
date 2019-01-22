@@ -1,8 +1,8 @@
 package com.arkivanov.mvidroid.store.defaultstore
 
 import com.arkivanov.mvidroid.store.component.MviBootstrapper
+import com.arkivanov.mvidroid.store.component.MviExecutor
 import com.arkivanov.mvidroid.store.component.MviReducer
-import com.arkivanov.mvidroid.testutils.TestExecutor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -161,12 +161,12 @@ internal class MviDefaultStoreTest {
         lateinit var resultConsumer: (String) -> Unit
         lateinit var labelConsumer: (String) -> Unit
 
-        val executor = mock<TestExecutor> { _ ->
-            on { init(any(), any(), any()) }.thenAnswer {
+        val executor = mock<MviExecutor<String, String, String, String>> {
+            on { init(any(), any(), any()) }.thenAnswer { invocation ->
                 isInitialized = true
-                stateSupplier = it.getArgument(0)
-                resultConsumer = it.getArgument(1)
-                labelConsumer = it.getArgument(2)
+                stateSupplier = invocation.getArgument(0)
+                resultConsumer = invocation.getArgument(1)
+                labelConsumer = invocation.getArgument(2)
                 Unit
             }
 
