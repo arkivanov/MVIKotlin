@@ -20,10 +20,10 @@ class MviBinderTest {
 
     private val uiEventSubject = PublishSubject.create<String>()
     private val viewModels = ArrayList<String>()
-    private val view = mock<MviView<String, String>> { _ ->
+    private val view = mock<MviView<String, String>> {
         on { events }.thenReturn(uiEventSubject)
-        on { bind(any()) }.thenAnswer {
-            viewModels.add(it.getArgument(0))
+        on { bind(any()) }.thenAnswer { invocation ->
+            viewModels.add(invocation.getArgument(0))
             null
         }
     }
@@ -85,12 +85,6 @@ class MviBinderTest {
     fun `component disposed WHEN observer destroyed`() {
         observer.onDestroy()
         verify(component).dispose()
-    }
-
-    @Test
-    fun `view disposed WHEN observer destroyed`() {
-        observer.onDestroy()
-        verify(view).onDestroy()
     }
 
     @Test

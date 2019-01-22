@@ -13,7 +13,7 @@ import io.reactivex.Observable
 interface MviView<in ViewModel : Any, out ViewEvent : Any> {
 
     /**
-     * An observable of View Events, emissions must be performed only on Main thread
+     * Observable of View Events, emissions must be performed only on Main thread
      */
     val events: Observable<out ViewEvent>
 
@@ -24,10 +24,4 @@ interface MviView<in ViewModel : Any, out ViewEvent : Any> {
      */
     @MainThread
     fun bind(model: ViewModel)
-
-    /**
-     * Called by [MviBinder][com.arkivanov.mvidroid.bind.MviBinder] at the end of View's life-cycle, on Main thread
-     */
-    @MainThread
-    fun onDestroy()
 }

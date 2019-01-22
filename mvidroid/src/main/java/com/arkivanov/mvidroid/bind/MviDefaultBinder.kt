@@ -60,7 +60,6 @@ internal class MviDefaultBinder<in ComponentEvent : Any, out ComponentStates : A
 
                 override fun onDestroy() {
                     onDestroyDisposables.dispose()
-                    views.forEach { it.view.onDestroy() }
                     if (disposeComponent) {
                         component.dispose()
                     }

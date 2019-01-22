@@ -10,6 +10,7 @@ import android.widget.EditText
 import com.arkivanov.mvidroid.sample.common.utils.SimpleTextWatcher
 import com.arkivanov.mvidroid.sample.details.R
 import com.arkivanov.mvidroid.sample.details.component.DetailsEvent
+import com.arkivanov.mvidroid.utils.diffByEquals
 import com.arkivanov.mvidroid.view.MviBaseView
 
 internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEvent>() {
@@ -51,7 +52,7 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEv
             }
         }
 
-        registerDiffByEquals(DetailsViewModel::text) {
+        diff.diffByEquals(DetailsViewModel::text) {
             if (!TextUtils.equals(it, editText.text)) {
                 editText.removeTextChangedListener(textChangedListener)
                 editText.setText(it)
@@ -60,7 +61,7 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEv
             }
         }
 
-        registerDiffByEquals(DetailsViewModel::isCompleted) {
+        diff.diffByEquals(DetailsViewModel::isCompleted) {
             if (it != checkBox.isChecked) {
                 checkBox.setOnCheckedChangeListener(null)
                 checkBox.isChecked = it
@@ -68,7 +69,7 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEv
             }
         }
 
-        registerDiffByEquals(DetailsViewModel::isError) {
+        diff.diffByEquals(DetailsViewModel::isError) {
             editText.setVisible(!it)
             checkBox.setVisible(!it)
             errorView.setVisible(it)
