@@ -4,6 +4,9 @@ import android.support.annotation.MainThread
 import io.reactivex.disposables.Disposable
 
 /**
+ * [MviComponent] is deprecated in favour of manual bindings with RxUtils.kt from com.arkivanov.mvidroid.utils package.
+ * Bind all your sources and consumers directly in Activity/Fragment or delegate to some sort of custom component.
+ *
  * Represents a group of Stores.
  *
  * Responsibilities:
@@ -14,6 +17,8 @@ import io.reactivex.disposables.Disposable
  * @param Event type of Events
  * @param States type of States, typically includes States from all Component's Stores
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 interface MviComponent<in Event : Any, out States : Any> : Disposable {
 
     /**

@@ -8,6 +8,8 @@ import io.reactivex.Observable
  * @param bundles an Iterable containing all View Bundles
  * @return same instance of MviBinder for method chaining
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 fun <ComponentEvent : Any, ComponentStates : Any> MviBinder<ComponentEvent, ComponentStates>.addViewBundles(
     bundles: Iterable<MviViewBundle<ComponentStates, ComponentEvent>>
 ): MviBinder<ComponentEvent, ComponentStates> {
@@ -23,6 +25,8 @@ fun <ComponentEvent : Any, ComponentStates : Any> MviBinder<ComponentEvent, Comp
  * @param eventMapper a View Event Mapper responsible for mapping of View Events to Component Events
  * @return same instance of MviBinder for method chaining
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 fun <ComponentEvent : Any, ComponentStates : Any, ViewModel : Any, ViewEvent : Any> MviBinder<ComponentEvent, ComponentStates>.addView(
     view: MviView<ViewModel, ViewEvent>,
     modelMapper: (ComponentStates) -> Observable<out ViewModel>,
@@ -38,6 +42,8 @@ fun <ComponentEvent : Any, ComponentStates : Any, ViewModel : Any, ViewEvent : A
  * @param modelMapper a View Model Mapper responsible for mapping of Component States to View Models
  * @return same instance of MviBinder for method chaining
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 fun <ComponentEvent : Any, ComponentStates : Any, ViewModel : Any> MviBinder<ComponentEvent, ComponentStates>.addView(
     view: MviView<ViewModel, ComponentEvent>,
     modelMapper: (ComponentStates) -> Observable<out ViewModel>
@@ -52,6 +58,8 @@ fun <ComponentEvent : Any, ComponentStates : Any, ViewModel : Any> MviBinder<Com
  * @param view an instance of [MviView]
  * @return same instance of MviBinder for method chaining
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 fun <ComponentEvent : Any, StoreState : Any> MviBinder<ComponentEvent, Observable<out StoreState>>.addView(
     view: MviView<StoreState, ComponentEvent>
 ): MviBinder<ComponentEvent, Observable<out StoreState>> =

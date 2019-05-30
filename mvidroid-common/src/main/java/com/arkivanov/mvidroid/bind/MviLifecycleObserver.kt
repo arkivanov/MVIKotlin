@@ -6,6 +6,7 @@ import android.support.annotation.MainThread
  * Life-cycle observer that provides you control over View and Component life-cycles.
  * See [MviBinder] for more information.
  */
+// TODO: To be moved to "utils" package
 interface MviLifecycleObserver {
 
     /**

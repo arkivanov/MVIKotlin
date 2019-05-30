@@ -9,16 +9,15 @@ import android.widget.CompoundButton
 import android.widget.EditText
 import com.arkivanov.mvidroid.sample.common.utils.SimpleTextWatcher
 import com.arkivanov.mvidroid.sample.details.R
-import com.arkivanov.mvidroid.sample.details.component.DetailsEvent
 import com.arkivanov.mvidroid.utils.diffByEquals
 import com.arkivanov.mvidroid.view.MviBaseView
 
-internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEvent>() {
+internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsView.Event>() {
 
     private val textChangedListener =
         object : SimpleTextWatcher {
             override fun afterTextChanged(s: Editable) {
-                dispatch(DetailsEvent.OnTextChanged(s.toString()))
+                dispatch(Event.OnTextChanged(s.toString()))
             }
         }
 
@@ -28,7 +27,7 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEv
 
     private val onCheckedChangeListener =
         CompoundButton.OnCheckedChangeListener { _, isChecked ->
-            dispatch(DetailsEvent.OnSetCompleted(isChecked))
+            dispatch(Event.OnSetCompleted(isChecked))
         }
 
     private val checkBox = root.findViewById<CheckBox>(R.id.check_completed).apply {
@@ -43,7 +42,7 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEv
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.menu_delete -> {
-                        dispatch(DetailsEvent.OnDelete);
+                        dispatch(Event.OnDelete)
                         true
                     }
 
@@ -80,5 +79,11 @@ internal class DetailsView(root: View) : MviBaseView<DetailsViewModel, DetailsEv
         private fun View.setVisible(isVisible: Boolean) {
             visibility = if (isVisible) View.VISIBLE else View.GONE
         }
+    }
+
+    sealed class Event {
+        data class OnTextChanged(val text: String) : Event()
+        data class OnSetCompleted(val isCompleted: Boolean) : Event()
+        object OnDelete : Event()
     }
 }

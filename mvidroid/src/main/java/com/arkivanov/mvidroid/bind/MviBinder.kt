@@ -9,6 +9,10 @@ import com.arkivanov.mvidroid.store.MviStore
 import io.reactivex.Observable
 
 /**
+ * Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually.
+ * See [com.arkivanov.mvidroid.utils.subscribe], [com.arkivanov.mvidroid.utils.subscribeMvi] and [MviLifecycleObserver]
+ * for more information.
+
  * Binds Component withs Views.
  * Responsibilities:
  * * Transforms Views' Events to Component Events using provided View Event Mappers
@@ -19,7 +23,9 @@ import io.reactivex.Observable
  * * Disposes Component (if needed) and all Views on life-cycle "onDestroy" event
  *
  * To create an instance of MviBinder use [binder] functions.
+ *
  */
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 interface MviBinder<in ComponentEvent : Any, out ComponentStates : Any> {
 
     /**
@@ -50,10 +56,14 @@ interface MviBinder<in ComponentEvent : Any, out ComponentStates : Any> {
     fun bind(): MviLifecycleObserver
 }
 
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 fun <ComponentEvent : Any, ComponentStates : Any> binder(
     component: MviComponent<ComponentEvent, ComponentStates>
 ): MviBinder<ComponentEvent, ComponentStates> = MviDefaultBinder(component)
 
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 fun <Intent : Any, State : Any> binder(
     store: MviStore<State, Intent, *>
 ): MviBinder<Intent, Observable<out State>> =

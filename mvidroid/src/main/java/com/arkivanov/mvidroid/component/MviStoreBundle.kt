@@ -3,6 +3,8 @@ package com.arkivanov.mvidroid.component
 import com.arkivanov.mvidroid.store.MviStore
 
 /**
+ * [MviComponent] is deprecated.
+ *
  * A holder for Store and its View Event and Label mapper, used in [MviAbstractComponent]
  *
  * @param store a Store
@@ -12,6 +14,7 @@ import com.arkivanov.mvidroid.store.MviStore
  * @param Intent type of Store's Intents
  * @param ComponentEvent type of Component's Events
  */
+@Deprecated(message = "MviComponent is deprecated")
 class MviStoreBundle<Intent : Any, in ComponentEvent : Any>(
     val store: MviStore<*, Intent, *>,
     val eventMapper: ((ComponentEvent) -> Intent?)? = null,

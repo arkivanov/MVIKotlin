@@ -8,6 +8,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 
 /**
+ * [MviComponent] is deprecated in favour of manual bindings with RxUtils.kt from com.arkivanov.mvidroid.utils package.
+ * Bind all your sources and consumers directly in Activity/Fragment or delegate to some sort of custom component.
+ *
  * Abstract implementation of [MviComponent].
  *
  * Responsibilities:
@@ -16,6 +19,8 @@ import io.reactivex.functions.Consumer
  *     * converts Labels to Stores' Intents and redirects them to appropriate Stores
  *     * redirects Labels from non-persistent Stores to Labels relay
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(message = "Use RxUtils.kt from com.arkivanov.mvidroid.utils package and bind sources to consumers manually")
 abstract class MviAbstractComponent<in Event : Any, out States : Any, Labels> @MainThread constructor(
     private val stores: List<MviStoreBundle<*, Event>>,
     labels: Labels? = null,
