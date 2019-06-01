@@ -38,8 +38,20 @@
         android:contentDescription="@null"
         android:src="@drawable/ic_time_travel_record"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_time_travel_stop"
+        app:layout_constraintEnd_toStartOf="@id/button_time_travel_import"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator_controls" />
+
+    <ImageButton
+        android:id="@+id/button_time_travel_import"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_time_travel_import"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_time_travel_stop"
+        app:layout_constraintStart_toEndOf="@id/button_time_travel_record"
         app:layout_constraintTop_toBottomOf="@+id/separator_controls" />
 
     <ImageButton
@@ -51,7 +63,7 @@
         android:src="@drawable/ic_time_travel_stop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_time_travel_move_to_start"
-        app:layout_constraintStart_toEndOf="@id/button_time_travel_record"
+        app:layout_constraintStart_toEndOf="@id/button_time_travel_import"
         app:layout_constraintTop_toBottomOf="@+id/separator_controls" />
 
     <ImageButton
@@ -110,7 +122,19 @@
         android:contentDescription="@null"
         android:src="@drawable/ic_time_travel_cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_time_travel_export"
         app:layout_constraintStart_toEndOf="@id/button_time_travel_move_to_end"
+        app:layout_constraintTop_toBottomOf="@+id/separator_controls" />
+
+    <ImageButton
+        android:id="@+id/button_time_travel_export"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_time_travel_export"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/button_time_travel_cancel"
         app:layout_constraintTop_toBottomOf="@+id/separator_controls" />
 </android.support.constraint.ConstraintLayout>

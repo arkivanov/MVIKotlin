@@ -13,7 +13,7 @@ class MviTimeTravelControllerRecordingTest {
 
     @Before
     fun before() {
-        env.factory.startRecording()
+        env.controller.startRecording()
     }
 
     @After
@@ -77,20 +77,20 @@ class MviTimeTravelControllerRecordingTest {
 
     @Test
     fun `in idle state WHEN cancelled without events`() {
-        env.factory.cancel()
+        env.controller.cancel()
         assertEquals(MviTimeTravelState.IDLE, env.state)
     }
 
     @Test
     fun `in idle state WHEN cancelled with events`() {
         env.produceIntentEventForStore1()
-        env.factory.cancel()
+        env.controller.cancel()
         assertEquals(MviTimeTravelState.IDLE, env.state)
     }
 
     @Test
     fun `in idle state WHEN stopped without events`() {
-        env.factory.stop()
+        env.controller.stop()
         assertEquals(MviTimeTravelState.IDLE, env.state)
     }
 }

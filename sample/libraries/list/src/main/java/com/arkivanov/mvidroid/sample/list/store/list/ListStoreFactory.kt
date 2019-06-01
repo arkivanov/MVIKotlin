@@ -11,6 +11,7 @@ import com.arkivanov.mvidroid.store.component.MviReducer
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import java.io.Serializable
 
 internal class ListStoreFactory(
     private val factory: MviStoreFactory,
@@ -28,13 +29,13 @@ internal class ListStoreFactory(
         ), ListStore {
         }
 
-    private sealed class Action {
+    private sealed class Action : Serializable {
         class ExecuteIntent(val intent: Intent) : Action()
         object Load : Action()
         class HandleUpdate(val update: ListDataSource.Update) : Action()
     }
 
-    private sealed class Result {
+    private sealed class Result : Serializable  {
         class Added(val item: TodoItem) : Result()
         class CompletedChanged(val id: Long, val isCompleted: Boolean) : Result()
         class Deleted(val id: Long) : Result()

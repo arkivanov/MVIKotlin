@@ -5,7 +5,11 @@ import android.support.annotation.MainThread
 import com.arkivanov.mvidroid.store.MviEventType
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import java.util.*
+import java.util.ArrayList
+import java.util.Deque
+import java.util.HashMap
+import java.util.HashSet
+import java.util.LinkedList
 
 /**
  * Provides methods to control time travel feature.
@@ -25,27 +29,33 @@ object MviTimeTravelController {
     private val postponedEvents = ArrayList<MviTimeTravelEvent>()
     private val stores = HashMap<String, MviTimeTravelStore<*, *, *, *, *>>()
 
-    private var state: MviTimeTravelState
+    /**
+     * Returns current time travel state, see [MviTimeTravelState] for more information
+     */
+    var state: MviTimeTravelState
         get() = statesSubject.value!!
-        set(value) {
+        private set(value) {
             statesSubject.onNext(value)
         }
 
-    private var currentEvents: MviTimeTravelEvents
+    /**
+     * Returns current time travel events, see [MviTimeTravelEvents] for more information
+     */
+    var events: MviTimeTravelEvents
         get() = eventsSubject.value!!
-        set(value) {
+        private set(value) {
             eventsSubject.onNext(value)
         }
 
     /**
      * Observable of time travel state, see [MviTimeTravelState] for more information
      */
-    val states: Observable<MviTimeTravelState> = statesSubject
+    val stateUpdates: Observable<MviTimeTravelState> = statesSubject
 
     /**
      * Obserable of time travel events, see [MviTimeTravelEvents] for more information
      */
-    val events: Observable<MviTimeTravelEvents> = eventsSubject
+    val eventsUpdates: Observable<MviTimeTravelEvents> = eventsSubject
 
     @SuppressLint("CheckResult")
     internal fun <State : Any, Intent : Any, Action : Any, Result : Any, Label : Any> attachStore(
@@ -60,6 +70,18 @@ object MviTimeTravelController {
 
         store.events.subscribe(::onEvent, {}, { stores.remove(storeName) })
         store.init()
+    }
+
+    /**
+     * Sets current state to [MviTimeTravelState.STOPPED] and replaces any existing events with the provided ones
+     */
+    @MainThread
+    fun restoreEvents(events: MviTimeTravelEvents) {
+        if (events.items.isNotEmpty()) {
+            state = MviTimeTravelState.STOPPED
+            this.events = events.copy(index = -1)
+            moveToEnd()
+        }
     }
 
     /**
@@ -79,7 +101,7 @@ object MviTimeTravelController {
     @MainThread
     fun stop() {
         if (state === MviTimeTravelState.RECORDING) {
-            state = if (currentEvents.items.isNotEmpty()) MviTimeTravelState.STOPPED else MviTimeTravelState.IDLE
+            state = if (events.items.isNotEmpty()) MviTimeTravelState.STOPPED else MviTimeTravelState.IDLE
         }
     }
 
@@ -89,7 +111,7 @@ object MviTimeTravelController {
     @MainThread
     fun moveToStart() {
         if (state === MviTimeTravelState.STOPPED) {
-            move(currentEvents, -1)
+            move(events, -1)
         }
     }
 
@@ -99,7 +121,7 @@ object MviTimeTravelController {
     @MainThread
     fun stepBackward() {
         if (state === MviTimeTravelState.STOPPED) {
-            step(currentEvents, false)
+            step(events, false)
         }
     }
 
@@ -109,7 +131,7 @@ object MviTimeTravelController {
     @MainThread
     fun stepForward() {
         if (state === MviTimeTravelState.STOPPED) {
-            step(currentEvents, true)
+            step(events, true)
         }
     }
 
@@ -119,7 +141,7 @@ object MviTimeTravelController {
     @MainThread
     fun moveToEnd() {
         if (state === MviTimeTravelState.STOPPED) {
-            move(currentEvents, currentEvents.items.lastIndex)
+            move(events, events.items.lastIndex)
         }
     }
 
@@ -129,7 +151,7 @@ object MviTimeTravelController {
     @MainThread
     fun cancel() {
         if (state !== MviTimeTravelState.IDLE) {
-            currentEvents = MviTimeTravelEvents()
+            events = MviTimeTravelEvents()
             val oldState = state
             state = MviTimeTravelState.IDLE
 
@@ -163,9 +185,9 @@ object MviTimeTravelController {
     private fun onEvent(event: MviTimeTravelEvent) {
         when {
             state === MviTimeTravelState.RECORDING -> {
-                currentEvents = currentEvents.copy(
-                    items = currentEvents.items + event,
-                    index = currentEvents.items.size
+                events = events.copy(
+                    items = events.items + event,
+                    index = events.items.size
                 )
                 process(event)
             }
@@ -238,7 +260,7 @@ object MviTimeTravelController {
         }
 
         if (publish) {
-            currentEvents = events.copy(index = to)
+            this.events = events.copy(index = to)
         }
     }
 

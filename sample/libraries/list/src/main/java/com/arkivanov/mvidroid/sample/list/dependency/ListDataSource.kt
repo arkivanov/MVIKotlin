@@ -4,6 +4,7 @@ import com.arkivanov.mvidroid.sample.list.model.TodoItem
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import java.io.Serializable
 
 interface ListDataSource {
 
@@ -16,7 +17,7 @@ interface ListDataSource {
 
     fun delete(itemId: Long): Completable
 
-    sealed class Update {
+    sealed class Update  : Serializable {
         class Added(val item: TodoItem) : Update()
         class Changed(val item: TodoItem) : Update()
         class Deleted(val itemId: Long) : Update()

@@ -19,19 +19,19 @@ internal class MviTimeTravelControllerTestingEnvironment {
         on { eventProcessor }.thenReturn(store2EventProcessor)
     }
 
-    val factory = MviTimeTravelController
-    val state: MviTimeTravelState get() = factory.states.firstOrError().blockingGet()
-    val events: MviTimeTravelEvents get() = factory.events.firstOrError().blockingGet()
+    val controller = MviTimeTravelController
+    val state: MviTimeTravelState get() = controller.stateUpdates.firstOrError().blockingGet()
+    val events: MviTimeTravelEvents get() = controller.eventsUpdates.firstOrError().blockingGet()
 
     init {
-        factory.attachStore(store1, "store1")
-        factory.attachStore(store2, "store2")
+        controller.attachStore(store1, "store1")
+        controller.attachStore(store2, "store2")
     }
 
     fun release() {
         store1Events.onComplete()
         store2Events.onComplete()
-        factory.cancel()
+        controller.cancel()
     }
 
     fun createIntentEventForStore1(value: String = "intent1", state: String = "state1"): MviTimeTravelEvent =

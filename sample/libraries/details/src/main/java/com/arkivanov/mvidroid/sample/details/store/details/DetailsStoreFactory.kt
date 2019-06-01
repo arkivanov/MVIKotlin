@@ -13,6 +13,7 @@ import com.arkivanov.mvidroid.store.component.MviSimpleBootstrapper
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 internal class DetailsStoreFactory(
@@ -32,12 +33,12 @@ internal class DetailsStoreFactory(
         ), DetailsStore {
         }
 
-    private sealed class Action {
+    private sealed class Action : Serializable {
         class ExecuteIntent(val intent: Intent) : Action()
         object Load : Action()
     }
 
-    private sealed class Result {
+    private sealed class Result : Serializable {
         class Loaded(val details: TodoDetails) : Result()
         object LoadingError : Result()
         class TextChanged(val text: String) : Result()

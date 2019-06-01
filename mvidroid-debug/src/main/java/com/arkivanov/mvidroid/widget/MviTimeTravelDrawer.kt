@@ -10,6 +10,7 @@ import android.view.View
  * Handy drawer that displays [MviTimeTravelView].
  * Set your content using [MviTimeTravelDrawer.setContentView] or specify it as a single child in XML.
  */
+@Deprecated("Use MviTimeTravelView directly")
 class MviTimeTravelDrawer @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
 ) : DrawerLayout(context, attrs, defStyle) {

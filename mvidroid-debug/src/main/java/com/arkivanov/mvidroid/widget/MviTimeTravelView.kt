@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -21,7 +22,7 @@ import com.arkivanov.mvidroid.store.timetravel.MviTimeTravelState
 import com.arkivanov.mvidroid.utils.DeepStringMode
 import com.arkivanov.mvidroid.utils.toDeepString
 import io.reactivex.disposables.CompositeDisposable
-import java.util.*
+import java.util.IdentityHashMap
 
 /**
  * Provides time travel controls like (record, stop, step back and forward, etc.) and displays list of recorded events.
@@ -44,6 +45,8 @@ class MviTimeTravelView @JvmOverloads constructor(
     private val stepForwardButton = findViewById<View>(R.id.button_time_travel_step_forward)
     private val moveToEndButton = findViewById<View>(R.id.button_time_travel_move_to_end)
     private val cancelButton = findViewById<View>(R.id.button_time_travel_cancel)
+    private val exportButton = findViewById<View>(R.id.button_time_travel_export)
+    private val importButton = findViewById<View>(R.id.button_time_travel_import)
     private val adapter = Adapter()
     private var disposables = CompositeDisposable()
 
@@ -72,7 +75,7 @@ class MviTimeTravelView @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         MviTimeTravelController
-            .events
+            .eventsUpdates
             .subscribe {
                 adapter.setEvents(it)
                 recyclerView.scrollToPosition(it.index + 1)
@@ -80,16 +83,9 @@ class MviTimeTravelView @JvmOverloads constructor(
             .also { disposables.add(it) }
 
         MviTimeTravelController
-            .states
+            .stateUpdates
             .distinctUntilChanged()
-            .subscribe {
-                @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
-                when (it) {
-                    MviTimeTravelState.IDLE -> setControlsVisibility(record = true)
-                    MviTimeTravelState.RECORDING -> setControlsVisibility(stop = true, cancel = true)
-                    MviTimeTravelState.STOPPED -> setControlsVisibility(next = true, prev = true, cancel = true)
-                }
-            }
+            .subscribe { updateControlsVisibility(it) }
             .also { disposables.add(it) }
     }
 
@@ -99,12 +95,36 @@ class MviTimeTravelView @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
+    fun setOnExportEventsListener(listener: (() -> Unit)?) {
+        exportButton.setOnClickListener(listener)
+        updateControlsVisibility()
+    }
+
+    fun setOnImportEventsListener(listener: (() -> Unit)?) {
+        importButton.setOnClickListener(listener)
+        updateControlsVisibility()
+    }
+
+    private fun updateControlsVisibility() {
+        updateControlsVisibility(MviTimeTravelController.state)
+    }
+
+    private fun updateControlsVisibility(state: MviTimeTravelState) {
+        when (state) {
+            MviTimeTravelState.IDLE -> setControlsVisibility(record = true, import = true)
+            MviTimeTravelState.RECORDING -> setControlsVisibility(stop = true, cancel = true)
+            MviTimeTravelState.STOPPED -> setControlsVisibility(next = true, prev = true, cancel = true, export = true)
+        }.also {}
+    }
+
     private fun setControlsVisibility(
         record: Boolean = false,
         stop: Boolean = false,
         prev: Boolean = false,
         next: Boolean = false,
-        cancel: Boolean = false
+        cancel: Boolean = false,
+        export: Boolean = false,
+        import: Boolean = false
     ) {
         recordButton.setVisible(record)
         stopButton.setVisible(stop)
@@ -113,11 +133,21 @@ class MviTimeTravelView @JvmOverloads constructor(
         stepForwardButton.setVisible(next)
         moveToEndButton.setVisible(next)
         cancelButton.setVisible(cancel)
+        exportButton.setVisible(export && exportButton.hasOnClickListeners())
+        importButton.setVisible(import && importButton.hasOnClickListeners())
     }
 
     private companion object {
         private fun View.setVisible(isVisible: Boolean) {
             visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+
+        private fun View.setOnClickListener(listener: (() -> Unit)?) {
+            setOnClickListener(
+                listener?.let { callback ->
+                    OnClickListener { callback() }
+                }
+            )
         }
     }
 
@@ -190,7 +220,8 @@ class MviTimeTravelView @JvmOverloads constructor(
                 debugButton.setVisible(event.type !== MviEventType.STATE)
                 storeNameTextView.text = event.storeName
                 eventNameTextView.text = "${event.value::class.java.simpleName} (${event.type.name})"
-                eventValueTextView.text = eventsMap[event] ?: event.value.toDeepString(DeepStringMode.SHORT, false).also { eventsMap[event] = it }
+                eventValueTextView.text =
+                    eventsMap[event] ?: event.value.toDeepString(DeepStringMode.SHORT, false).also { eventsMap[event] = it }
             }
         }
 

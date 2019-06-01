@@ -8,4 +8,9 @@
     <string name="completed">Completed</string>
     <string name="delete">Delete</string>
     <string name="error_something_went_wrong">Something went wrong :-(</string>
+    <string name="time_travel_serialize_error">Error serializing time travel events</string>
+    <string name="time_travel_deserialize_error">Error deserializing time travel events</string>
+    <string name="time_travel_clipboard_empty">Clipboard does not contain any text</string>
+    <string name="time_travel_export_subject">MVIDroid time travel events</string>
+    <string name="time_travel_export_chooser_title">MVIDroid time travel</string>
 </resources>

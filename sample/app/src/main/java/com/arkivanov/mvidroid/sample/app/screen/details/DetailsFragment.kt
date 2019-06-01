@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arkivanov.mvidroid.sample.app.app.app
-import com.arkivanov.mvidroid.sample.app.screen.inflateViewWithDebugDrawer
 import com.arkivanov.mvidroid.sample.app.screen.router
 import com.arkivanov.mvidroid.sample.app.store.storeFactory
 import com.arkivanov.mvidroid.sample.details.DetailsComponent
@@ -31,7 +30,7 @@ class DetailsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflateViewWithDebugDrawer(DetailsComponent.LAYOUT_ID, container)
+        inflater.inflate(DetailsComponent.LAYOUT_ID, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,6 +1,7 @@
 package com.arkivanov.mvidroid.store.timetravel
 
 import com.arkivanov.mvidroid.store.MviEventType
+import java.io.Serializable
 
 /**
  * Describes a recorded time travel event
@@ -15,4 +16,9 @@ data class MviTimeTravelEvent(
     val type: MviEventType,
     val value: Any,
     val state: Any
-)
+) : Serializable {
+
+    private companion object {
+        private const val serialVersionUID = 1L
+    }
+}
