@@ -67,10 +67,9 @@ You can find a sample project in the repo: todo list with details view.
 The sample project covers most of the cases:
 - Multiple `Stores`
 - Multiple screens
-- `Components` with multiple `Stores`
 - `Stores` shared between `Components`
 - Delayed operations and their cancellation
 - `Labels`
 - `View` with `RecycleView` and `Adapter`
 - Logging in debug build
-- Time travel drawer in debug build (right side of the screen)
+- Time travel drawer in debug build with export/import (right side of the screen)
