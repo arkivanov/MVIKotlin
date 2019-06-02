@@ -53,18 +53,20 @@ from all `Stores` in your app. All recorded events appear in event list
 where you can:
 * view (scroll) entire event list
 * switch to any previous state by moving backward and forward in list
-(UI reflects selected state)
+(UI reflects the selected state)
 * tap on any event to display all its properties (objects are deep-parsed
 using Java Reflection and all its properties are displayed in readable
 JSON format)
 * fire any event again: you can put breakpoint in your code, fire event
-and debug it
+(using "Bug" icon) and debug it
+* serialize and deserialize events in order to transfer them from one
+device to another (remote debug)
 
 Time travel can be enabled using `MviTimeTravelStoreFactory`, just pass
 it instead of `MviDefaultStoreFactory` to all your `Store Factories`.
 To control time travel and to display its events you can use
-`MviTimeTravelDrawer` as root view and put single child with content
-into it. Alternatively you can use 'MviTimeTravelView' if drawer does
-not work for you.
+`MviTimeTravelView`.
 
 You can find a working example in sample app.
+
+[Previous](binding.md) [Index](index.md)

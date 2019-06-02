@@ -1,7 +1,7 @@
 ## Binding
 
-In previous chapters we learned about three main things of MVIDroid:
-`Store`, `Component` and `View`. And now it's time to bind them together.
+In previous chapters we learned about two main things of MVIDroid:
+`Store` and `View`. And now it's time to bind them together.
 
 Let's start from simplest case.
 
@@ -38,20 +38,28 @@ class UserInfoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binder(UserInfoStoreFactory().create())
-            .addView(UserInfoView())
-            .bind()
-            .attachTo(this)
+        val store = UserInfoStoreFactory().create().attachTo(lifecycle)
+        val view = UserInfoView()
+
+        store
+            .states
+            .subscribeMvi(view)
+            .attachTo(lifecycle)
     }
 }
 ```
 
-We used `MviBinder` to bind `Store` with `View`. Its `bind()` method
-returns `MviLifecycleObserver` that has a number of methods to control
-life-cycle. And there is an extension method `attachTo(LifecycleOwner)`
-that attaches `MviLifecycleObserver` to life-cycle of `Activity`.
+We used `Observable.subscribeMvi(...)` extension function to bind `Store`
+with `View`. It returns `MviLifecycleObserver` that has a number of
+methods to control life-cycle. And there is an extension method
+`MviLifecycleObserver.attachTo(Lifecycle)` that attaches
+`MviLifecycleObserver` to Android Arch Lifecycle. In this case
+`UserInfoView` will be automatically subscribed to `UserInfoStore` on
+`Activity` start and unsubscribed on `Activity` stop. Please also note
+the handy `Disposable.attachTo(Lifecycle)` extension function, it disposes
+the disposable (`UserInfoStore` in our case) at the end of life-cycle.
 
-What if need to make our `View` independent from business logic
+What if we need to make our `View` independent from business logic
 (from `Store`). In this case we will need `View Model` and `View Events`.
 ```kotlin
 data class UserInfoViewModel(
@@ -70,8 +78,8 @@ class UserInfoView : MviBaseView<UserInfoViewModel, UserInfoViewEvent>() {
 And we need to define two mappers: first one will convert
 `State` to `ViewModel` and second one will convert `View Events` to `Intents`.
 ```kotlin
-object UserInfoViewModelMapper : (Observable<out UserInfoState>) -> Observable<out UserInfoViewModel> {
-    override fun invoke(states: Observable<out UserInfoState>): Observable<out UserInfoViewModel> {
+object UserInfoViewModelMapper : (UserInfoState) -> UserInfoViewModel {
+    override fun invoke(state: UserInfoState): UserInfoViewModel {
         ...
     }
 }
@@ -89,77 +97,28 @@ class UserInfoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binder(UserInfoStoreFactory().create())
-            .addView(UserInfoView(), UserInfoViewModelMapper, UserInfoViewEventMapper)
-            .bind()
-            .attachTo(this)
+        val store = UserInfoStoreFactory().create().attachTo(lifecycle)
+        val view = UserInfoView()
+
+        store
+            .states
+            .map(UserInfoViewModelMapper)
+            .subscribeMvi(view)
+            .attachTo(lifecycle)
+
+        view
+            .events
+            .map(UserInfoViewEventMapper)
+            .subscribe(store)
+            .attachTo(lifecycle)
     }
 }
 ```
 
-We have passed two mappers to `MviBinder` together with `View`. You
-can observe that our `View` is now completely independent from business
-logic (from `Store`).
-
-Now what if we have many `Stores` and there is a `Component` around them?
-```kotlin
-sealed class UserEvent {
-    ...
-}
-
-data class UserStates(
-    ...
-)
-
-interface UserComponent : MviComponent<UserEvent, UserStates>
-
-```
-
-Then our mappers will convert `States` to `View Models` and
-`View Events` to `Component Events`:
-```kotlin
-object UserInfoViewModelMapper : (UserStates) -> Observable<out UserInfoViewModel> {
-    override fun invoke(states: UserStates): Observable<out UserInfoViewModel> {
-        ...
-    }
-}
-
-object UserInfoViewEventMapper : (UserInfoViewEvent) -> UserEvent {
-    override fun invoke(event: UserInfoViewEvent): UserEvent {
-        ...
-    }
-}
-
-```
-
-And we can use same `MviBinder` and bind `Component` to `View`:
-```kotlin
-class UserInfoActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binder(UserComponentFactory().create())
-            ...
-    }
-}
-```
-
-And of course we can add as many `Views` as we want:
-```kotlin
-class UserInfoActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binder(UserComponentFactory().create())
-            .addView(UserInfoView(), UserInfoViewModelMapper, UserInfoViewEventMapper)
-            .addView(...)
-            .addView(...)
-            .addView(...)
-            .bind()
-            .attachTo(this)
-    }
-}
-```
+We bound `UserInfoStore` with `UserInfoView` using mappers. You can observe
+that our `View` is now completely independent from business logic (from `Store`).
+Please not that we used `Observable.subscribe(...)` function to bind `View Events`
+to Intents` as there is not point to unsubscribe/resubscribe them.
 
 ---
-[Previous](view.md) [Index](index.md)
+[Previous](view.md) [Index](index.md) [Next](debug.md)

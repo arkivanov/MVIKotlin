@@ -168,4 +168,4 @@ extensions methods, `diffByEquals(Mapper, Consumer)` and `diffByReference(Mapper
 that provide diffing by `equals` and by `reference` respectively.
 
 ---
-[Previous](component.md) [Index](index.md) [Next](binding.md)
+[Previous](store.md) [Index](index.md) [Next](binding.md)

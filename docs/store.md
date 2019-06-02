@@ -354,4 +354,4 @@ implement "javax.inject.Provider" interface so you can easily bind
 `Store` interface with its provider
 
 ---
-[Index](index.md) [Next](component.md)
+[Index](index.md) [Next](view.md)
