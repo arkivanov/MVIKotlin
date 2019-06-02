@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/arkivanov/MVIDroid.svg)](https://jitpack.io/#arkivanov/MVIDroid)
+
 ## What is MVIDroid
 
 MVIDroid is a framework written 100% in Kotlin which brings MVI pattern
