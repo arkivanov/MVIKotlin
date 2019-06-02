@@ -28,8 +28,8 @@ allprojects {
 In your module's build.gradle:
 ```
 dependencies {
-    implementation 'com.github.arkivanov.mvidroid:mvidroid:1.2.6'
-    implementation 'com.github.arkivanov.mvidroid:mvidroid-debug:1.2.6'
+    implementation 'com.github.arkivanov.mvidroid:mvidroid:<version>'
+    implementation 'com.github.arkivanov.mvidroid:mvidroid-debug:<version>'
 }
 ```
 
@@ -50,12 +50,12 @@ Dependency:
 <dependency>
     <groupId>com.github.arkivanov.mvidroid</groupId>
     <artifactId>mvidroid</artifactId>
-    <version>1.2.6</version>
+    <version>version</version>
 </dependency>
 <dependency>
     <groupId>com.github.arkivanov.mvidroid</groupId>
     <artifactId>mvidroid-debug</artifactId>
-    <version>1.2.6/version>
+    <version>version/version>
 </dependency>
 ```
 
