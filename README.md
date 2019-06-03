@@ -2,7 +2,7 @@
 
 ## What is MVIDroid
 
-MVIDroid is a framework written 100% in Kotlin which brings MVI pattern
+MVIDroid is a framework written 100% in Kotlin that brings MVI pattern
 to Android. It is specially designed and optimized for Android platform,
 very lightweight and efficient. Includes powerful debug tools like
 logging and time travel. Also MVIDroid provides a pattern for decoupling
