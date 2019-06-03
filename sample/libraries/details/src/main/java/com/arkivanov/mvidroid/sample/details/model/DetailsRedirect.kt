@@ -1,6 +1,8 @@
 package com.arkivanov.mvidroid.sample.details.model
 
-sealed class DetailsRedirect {
+import java.io.Serializable
+
+sealed class DetailsRedirect : Serializable {
 
     object Finish : DetailsRedirect()
 }

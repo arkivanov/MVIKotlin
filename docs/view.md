@@ -118,6 +118,11 @@ class UserInfoView(root: View) : MviBaseView<UserInfoViewModel, UserInfoViewEven
 }
 ```
 
+Alternatively you can create your own mutable `SingleLifeEvent` that can
+be used only once and then cleared. In this case you don't have to
+"consume" the events. You can find an example of `SingleLifeEvent` in the
+Sample App.
+
 Now we can edit every field of user info. And there is one problem now,
 we are rebinding whole view every time, even if there is only one field
 changed. Fortunately `MVIDroid` comes with a nice model diff feature.

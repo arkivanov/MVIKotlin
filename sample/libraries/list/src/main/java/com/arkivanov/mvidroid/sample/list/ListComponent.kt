@@ -59,8 +59,7 @@ class ListComponent(
             .distinctUntilChanged()
             .mapNotNull(RedirectState<ListRedirect>::redirect)
             .subscribeMvi {
-                redirectStore.accept(RedirectStore.Intent(null))
-                redirectHandler(it)
+                it.use(redirectHandler)
             }
             .attachTo(viewLifecycle)
 

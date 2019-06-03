@@ -69,8 +69,7 @@ class DetailsComponent(
             .distinctUntilChanged()
             .mapNotNull(RedirectState<DetailsRedirect>::redirect)
             .subscribeMvi {
-                redirectStore.accept(RedirectStore.Intent(null))
-                redirectHandler(it)
+                it.use(redirectHandler)
             }
             .attachTo(viewLifecycle)
     }
