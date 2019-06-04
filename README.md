@@ -75,3 +75,6 @@ The sample project covers most of the cases:
 - `View` with `RecycleView` and `Adapter`
 - Logging in debug build
 - Time travel drawer in debug build with export/import (right side of the screen)
+
+## Watch video (time travel, logs, debug, etc.)
+[![Debug with MVIDroid](https://img.youtube.com/vi/4W81Y8MsiHc/0.jpg)](https://youtu.be/4W81Y8MsiHc)
