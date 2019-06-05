@@ -69,7 +69,6 @@ You can find a sample project in the repo: todo list with details view.
 The sample project covers most of the cases:
 - Multiple `Stores`
 - Multiple screens
-- `Stores` shared between `Components`
 - Delayed operations and their cancellation
 - `Labels`
 - `View` with `RecycleView` and `Adapter`
