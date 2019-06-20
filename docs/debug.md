@@ -69,4 +69,9 @@ To control time travel and to display its events you can use
 
 You can find a working example in sample app.
 
+### Watch video
+
+Here is the video showing power of logging and time travel.
+[![Debugging with MVIDroid](https://img.youtube.com/vi/_bbxR503-u0/0.jpg)](https://youtu.be/_bbxR503-u0)
+
 [Previous](binding.md) [Index](index.md)
