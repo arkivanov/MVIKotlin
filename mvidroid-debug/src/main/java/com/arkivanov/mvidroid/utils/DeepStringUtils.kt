@@ -1,6 +1,7 @@
 package com.arkivanov.mvidroid.utils
 
 import org.json.JSONObject
+import java.lang.reflect.Field
 import java.lang.reflect.TypeVariable
 import kotlin.math.min
 
@@ -64,6 +65,7 @@ private fun Any.toJson(mode: DeepStringMode, visitedObjects: MutableSet<Any>): J
     JSONObject().also { json ->
         when (this) {
             is Iterable<*> -> json.putValues(iterator(), mode, visitedObjects)
+            is Map<*, *> -> json.putValues(entries.iterator(), mode, visitedObjects)
             is Array<*> -> json.putValues(iterator(), mode, visitedObjects)
             is IntArray -> json.putValues(this, mode)
             is LongArray -> json.putValues(this, mode)
@@ -135,8 +137,20 @@ private fun JSONObject.putValues(array: ByteArray, mode: DeepStringMode) {
     }
 }
 
+private val Class<*>.allFields: List<Field>
+    get() {
+        val list = ArrayList<Field>()
+        var cls: Class<*>? = this
+        while (cls != null) {
+            list += cls.declaredFields
+            cls = cls.superclass
+        }
+
+        return list
+    }
+
 private fun JSONObject.putValues(obj: Any, mode: DeepStringMode, visitedObjects: MutableSet<Any>) {
-    obj::class.java.declaredFields.forEach { field ->
+    obj.javaClass.allFields.forEach { field ->
         val isAccessible = field.isAccessible
         if (!isAccessible) {
             field.isAccessible = true
@@ -195,7 +209,7 @@ private fun Class<*>.toTypeNameWithGenerics(value: Any?): String =
             .typeParameters
             .takeUnless(Array<*>::isEmpty)
             ?.joinToString(separator = ", ", prefix = "<", postfix = ">", transform = TypeVariable<*>::getName)
-            ?.let { "$simpleName$it" }
+            ?.let { "${clazz.simpleName}$it" }
             ?: clazz.simpleName
     }
 
