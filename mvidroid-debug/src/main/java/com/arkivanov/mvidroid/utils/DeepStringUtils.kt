@@ -5,7 +5,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.TypeVariable
 import kotlin.math.min
 
-private val fieldBlackList = hashSetOf("serialVersionUID", "INSTANCE")
+private val BLACK_LIST_FIELDS = hashSetOf("serialVersionUID", "INSTANCE")
 
 internal fun Any.toDeepString(mode: DeepStringMode, format: Boolean): String =
     toJsonValue(mode, HashSet()).let {
@@ -141,7 +141,7 @@ private val Class<*>.allFields: List<Field>
     get() {
         val list = ArrayList<Field>()
         var cls: Class<*>? = this
-        while (cls != null) {
+        while ((cls != null) && (cls != Object::class.java)) {
             list += cls.declaredFields
             cls = cls.superclass
         }
@@ -185,7 +185,7 @@ private fun JSONObject.putValues(obj: Any, mode: DeepStringMode, visitedObjects:
     }
 }
 
-private fun String.isAllowedFieldName(): Boolean = !startsWith("$") && !fieldBlackList.contains(this)
+private fun String.isAllowedFieldName(): Boolean = !startsWith("$") && !BLACK_LIST_FIELDS.contains(this)
 
 private fun Any?.toFullTypeName(): String = if (this == null) "?" else this::class.java.toFullTypeName(this)
 
