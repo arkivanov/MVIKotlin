@@ -65,7 +65,7 @@ private fun Any.toJson(mode: DeepStringMode, visitedObjects: MutableSet<Any>): J
     JSONObject().also { json ->
         when (this) {
             is Iterable<*> -> json.putValues(iterator(), mode, visitedObjects)
-            is Map<*, *> -> json.putValues(entries.iterator(), mode, visitedObjects)
+            is Map<*, *> -> json.putValues(this, mode, visitedObjects)
             is Array<*> -> json.putValues(iterator(), mode, visitedObjects)
             is IntArray -> json.putValues(this, mode)
             is LongArray -> json.putValues(this, mode)
@@ -83,10 +83,28 @@ private fun JSONObject.putValues(iterator: Iterator<*>, mode: DeepStringMode, vi
     val limit: Int? = getArrayLimit(mode)
     var index = 0
     while (((limit == null) || (index < limit)) && iterator.hasNext()) {
-        val value = iterator.next()
-        putValue("$index: ${value.toFullTypeName()}", value?.toJsonValue(mode, visitedObjects))
+        putTypedValue(index.toString(), iterator.next(), null, mode, visitedObjects)
         index++
     }
+}
+
+private fun JSONObject.putValues(map: Map<*, *>, mode: DeepStringMode, visitedObjects: MutableSet<Any>) {
+    val limit: Int? = getArrayLimit(mode)
+    var index = 0
+    val iterator = map.entries.iterator()
+
+    while (((limit == null) || (index < limit)) && iterator.hasNext()) {
+        val (key: Any?, value: Any?) = iterator.next()
+        val entryJson = JSONObject()
+        entryJson.putTypedValue("key", key, null, mode, visitedObjects)
+        entryJson.putTypedValue("value", value, null, mode, visitedObjects)
+        put("$index", entryJson)
+        index++
+    }
+}
+
+private fun JSONObject.putTypedValue(prefix: String, value: Any?, valueClass: Class<*>?, mode: DeepStringMode, visitedObjects: MutableSet<Any>) {
+    putValue("$prefix: ${getFullTypeName(value, valueClass)}", value?.toJsonValue(mode, visitedObjects))
 }
 
 private fun JSONObject.putValues(array: IntArray, mode: DeepStringMode) {
@@ -150,6 +168,16 @@ private val Class<*>.allFields: List<Field>
     }
 
 private fun JSONObject.putValues(obj: Any, mode: DeepStringMode, visitedObjects: MutableSet<Any>) {
+    if (obj is Throwable) {
+        putTypedValue("message", obj.message, String::class.java, mode, visitedObjects)
+        putTypedValue("cause", obj.cause, Throwable::class.java, mode, visitedObjects)
+        if (mode === DeepStringMode.FULL) {
+            putTypedValue("stackTrace", obj.stackTrace, null, mode, visitedObjects)
+        }
+
+        return
+    }
+
     obj.javaClass.allFields.forEach { field ->
         val isAccessible = field.isAccessible
         if (!isAccessible) {
@@ -167,14 +195,7 @@ private fun JSONObject.putValues(obj: Any, mode: DeepStringMode, visitedObjects:
                     Char::class.javaPrimitiveType -> put("$fieldName: char", field.getChar(obj))
                     Short::class.javaPrimitiveType -> put("$fieldName: short", field.getShort(obj))
                     Byte::class.javaPrimitiveType -> put("$fieldName: byte", field.getByte(obj))
-
-                    else -> {
-                        val value: Any? = field.get(obj)
-                        putValue(
-                            "$fieldName: ${field.type.toFullTypeName(value)}",
-                            value?.toJsonValue(mode, visitedObjects)
-                        )
-                    }
+                    else -> putTypedValue(fieldName, field.get(obj), field.type, mode, visitedObjects)
                 }
             }
         } finally {
@@ -187,20 +208,20 @@ private fun JSONObject.putValues(obj: Any, mode: DeepStringMode, visitedObjects:
 
 private fun String.isAllowedFieldName(): Boolean = !startsWith("$") && !BLACK_LIST_FIELDS.contains(this)
 
-private fun Any?.toFullTypeName(): String = if (this == null) "?" else this::class.java.toFullTypeName(this)
+private fun getFullTypeName(value: Any?, valueClass: Class<*>? = null): String {
+    val clazz = value?.javaClass ?: valueClass ?: return "?"
 
-private fun Class<*>.toFullTypeName(value: Any?): String {
     if (value != null) {
-        if (isArray) {
-            return simpleName.replaceFirst("[]", "[${java.lang.reflect.Array.getLength(value)}]")
+        if (clazz.isArray) {
+            return clazz.simpleName.replaceFirst("[]", "[${java.lang.reflect.Array.getLength(value)}]")
         }
 
         if (value is Collection<*>) {
-            return "${toTypeNameWithGenerics(value)}(${value.size})"
+            return "${clazz.toTypeNameWithGenerics(value)}(${value.size})"
         }
     }
 
-    return toTypeNameWithGenerics(value)
+    return clazz.toTypeNameWithGenerics(value)
 }
 
 private fun Class<*>.toTypeNameWithGenerics(value: Any?): String =
