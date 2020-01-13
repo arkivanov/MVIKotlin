@@ -1,7 +1,0 @@
-<resources>
-
-    <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-    </style>
-</resources>
