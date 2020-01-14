@@ -8,6 +8,7 @@ object Deps {
 
             object StdLib {
                 object Common : Dependency(group = Kotlin, name = "kotlin-stdlib-common", version = version)
+                object Jdk7 : Dependency(group = Kotlin, name = "kotlin-stdlib-jdk7", version = version)
             }
         }
     }
@@ -15,7 +16,7 @@ object Deps {
     object Android {
         object Tools {
             object Build : Group(name = "com.android.tools.build") {
-                object Gradle : Dependency(group = Build, name = "gradle", version = "3.4.1")
+                object Gradle : Dependency(group = Build, name = "gradle", version = "3.5.2")
             }
         }
     }
