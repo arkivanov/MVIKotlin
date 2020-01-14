@@ -3,13 +3,11 @@ plugins {
     kotlin("android")
 }
 
-android {
-    compileSdkVersion(29)
+project.setupAndroidSdkVersions()
 
+android {
     defaultConfig {
         applicationId = "com.arkivanov.mvikotlin.android.sample"
-        minSdkVersion(15)
-        targetSdkVersion(29)
         versionCode = 1
         versionName = "1.0"
     }

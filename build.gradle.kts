@@ -2,18 +2,6 @@ plugins {
     `kotlin-dsl`
 }
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-
-    dependencies {
-        classpath(Deps.Jetbrains.Kotlin.Plugin)
-        classpath(Deps.Android.Tools.Build.Gradle)
-    }
-}
-
 allprojects {
     repositories {
         google()
