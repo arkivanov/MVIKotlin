@@ -1,3 +1,5 @@
+@file:JvmName("MainThreadAssert")
+
 package com.arkivanov.mvikotlin.core.utils
 
 import android.os.Looper

@@ -10,6 +10,16 @@ object Deps {
                 object Common : Dependency(group = Kotlin, name = "kotlin-stdlib-common", version = version)
                 object Jdk7 : Dependency(group = Kotlin, name = "kotlin-stdlib-jdk7", version = version)
             }
+
+            object Test {
+                object Common : Dependency(group = Kotlin, name = "kotlin-test-common", version = version)
+                object Js : Dependency(group = Kotlin, name = "kotlin-test-js", version = version)
+                object Junit : Dependency(group = Kotlin, name = "kotlin-test-junit", version = version)
+            }
+
+            object TestAnnotations {
+                object Common : Dependency(group = Kotlin, name = "kotlin-test-annotations-common", version = version)
+            }
         }
     }
 

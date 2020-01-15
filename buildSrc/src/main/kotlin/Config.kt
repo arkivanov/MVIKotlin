@@ -26,10 +26,35 @@ fun Project.setupMultiplatform() {
                 }
             }
 
-            androidMain {
+            commonTest {
+                dependencies {
+                    implementation(Deps.Jetbrains.Kotlin.Test.Common)
+                    implementation(Deps.Jetbrains.Kotlin.TestAnnotations.Common)
+                }
+            }
+
+            jvmCommonMain {
+                dependsOn(commonMain)
+
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.StdLib.Jdk7)
                 }
+            }
+
+            jvmCommonTest {
+                dependsOn(commonTest)
+
+                dependencies {
+                    implementation(Deps.Jetbrains.Kotlin.Test.Junit)
+                }
+            }
+
+            androidMain {
+                dependsOn(jvmCommonMain)
+            }
+
+            androidTest {
+                dependsOn(jvmCommonTest)
             }
         }
     }
@@ -66,10 +91,34 @@ fun SourceSets.commonMain(block: KotlinSourceSet.() -> Unit) {
     commonMain.apply(block)
 }
 
+val SourceSets.commonTest: KotlinSourceSet get() = getOrCreate("commonTest")
+
+fun SourceSets.commonTest(block: KotlinSourceSet.() -> Unit) {
+    commonTest.apply(block)
+}
+
+val SourceSets.jvmCommonMain: KotlinSourceSet get() = getOrCreate("jvmCommonMain")
+
+fun SourceSets.jvmCommonMain(block: KotlinSourceSet.() -> Unit) {
+    jvmCommonMain.apply(block)
+}
+
+val SourceSets.jvmCommonTest: KotlinSourceSet get() = getOrCreate("jvmCommonTest")
+
+fun SourceSets.jvmCommonTest(block: KotlinSourceSet.() -> Unit) {
+    jvmCommonTest.apply(block)
+}
+
 val SourceSets.androidMain: KotlinSourceSet get() = getOrCreate("androidMain")
 
 fun SourceSets.androidMain(block: KotlinSourceSet.() -> Unit) {
     androidMain.apply(block)
+}
+
+val SourceSets.androidTest: KotlinSourceSet get() = getOrCreate("androidTest")
+
+fun SourceSets.androidTest(block: KotlinSourceSet.() -> Unit) {
+    androidTest.apply(block)
 }
 
 private fun SourceSets.getOrCreate(name: String): KotlinSourceSet = findByName(name) ?: create(name)

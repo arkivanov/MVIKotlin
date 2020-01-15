@@ -29,6 +29,7 @@ private inline fun <T> Subject<T>.subscribeActual(observer: Observer<T>, onSubsc
 
     val newMap = updateAndGet { it?.plus(disposable to observer) }
     if (newMap == null) {
+        disposable.dispose()
         observer.onComplete()
     } else {
         onSubscribed()
