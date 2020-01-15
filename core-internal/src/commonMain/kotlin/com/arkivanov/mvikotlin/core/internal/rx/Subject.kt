@@ -12,6 +12,8 @@ typealias Subject<T> = AtomicReference<Map<Disposable, Observer<T>>?>
 @Suppress("FunctionName")
 fun <T> Subject(): Subject<T> = Subject(emptyMap())
 
+val <T> Subject<T>.isActive: Boolean get() = value != null
+
 fun <T> Subject<T>.subscribe(observer: Observer<T>): Disposable = subscribeActual(observer)
 
 fun <T> Subject<T>.subscribe(observer: Observer<T>, value: T): Disposable =
