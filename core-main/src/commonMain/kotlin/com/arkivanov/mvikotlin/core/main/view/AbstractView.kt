@@ -1,5 +1,6 @@
 package com.arkivanov.mvikotlin.core.main.view
 
+import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.internal.rx.Subject
 import com.arkivanov.mvikotlin.core.internal.rx.onNext
 import com.arkivanov.mvikotlin.core.internal.rx.subscribe
@@ -13,6 +14,7 @@ abstract class AbstractView<in Model, Event> : View<Model, Event> {
 
     override fun events(observer: Observer<Event>): Disposable = subject.subscribe(observer)
 
+    @MainThread
     protected open fun dispatch(event: Event) {
         subject.onNext(event)
     }

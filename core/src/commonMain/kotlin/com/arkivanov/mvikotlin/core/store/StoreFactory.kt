@@ -1,7 +1,10 @@
 package com.arkivanov.mvikotlin.core.store
 
+import com.arkivanov.mvikotlin.core.annotations.MainThread
+
 interface StoreFactory {
 
+    @MainThread
     fun <Intent, Action, Result, State, Label> create(
         initialState: State,
         bootstrapper: Bootstrapper<Action>? = null,

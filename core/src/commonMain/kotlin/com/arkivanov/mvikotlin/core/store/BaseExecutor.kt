@@ -1,5 +1,7 @@
 package com.arkivanov.mvikotlin.core.store
 
+import com.arkivanov.mvikotlin.core.annotations.MainThread
+
 abstract class BaseExecutor<in Intent, in Action, State, Result, Label> : Executor<Intent, Action, State, Result, Label> {
 
     private var isInitialized = false
@@ -26,10 +28,12 @@ abstract class BaseExecutor<in Intent, in Action, State, Result, Label> : Execut
     override fun dispose() {
     }
 
+    @MainThread
     protected fun dispatch(result: Result) {
         resultConsumer(result)
     }
 
+    @MainThread
     protected fun publish(label: Label) {
         labelConsumer(label)
     }
