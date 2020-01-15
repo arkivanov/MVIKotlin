@@ -1,9 +1,10 @@
-package com.arkivanov.mvikotlin.core.internal
+package com.arkivanov.mvikotlin.core.internal.rx
 
 import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
 
-inline fun Disposable(crossinline onDispose: () -> Unit): Disposable =
+@Suppress("FunctionName")
+inline fun Disposable(crossinline onDispose: Disposable.() -> Unit = {}): Disposable =
     object : Disposable {
         @Suppress("ObjectPropertyName")
         private val _isDisposed = AtomicBoolean()

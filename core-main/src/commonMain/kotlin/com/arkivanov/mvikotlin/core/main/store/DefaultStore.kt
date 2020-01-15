@@ -1,9 +1,9 @@
 package com.arkivanov.mvikotlin.core.main.store
 
-import com.arkivanov.mvikotlin.core.internal.AtomicObservers
-import com.arkivanov.mvikotlin.core.internal.complete
-import com.arkivanov.mvikotlin.core.internal.onNext
-import com.arkivanov.mvikotlin.core.internal.register
+import com.arkivanov.mvikotlin.core.internal.rx.Subject
+import com.arkivanov.mvikotlin.core.internal.rx.onComplete
+import com.arkivanov.mvikotlin.core.internal.rx.onNext
+import com.arkivanov.mvikotlin.core.internal.rx.subscribe
 import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
@@ -26,8 +26,8 @@ internal class DefaultStore<in Intent, in Action, out Result, out State, out Lab
     override val isDisposed: Boolean get() = _isDisposed.value
     private val _state = AtomicReference(initialState)
     override val state: State get() = _state.value
-    private val stateObservers = AtomicObservers<State>()
-    private val labelObservers = AtomicObservers<Label>()
+    private val stateSubject = Subject<State>()
+    private val labelSubject = Subject<Label>()
 
     init {
         executor.init(
@@ -37,17 +37,17 @@ internal class DefaultStore<in Intent, in Action, out Result, out State, out Lab
                     .updateAndGet { oldState ->
                         reducer.run { oldState.reduce(result) }
                     }
-                    .also { stateObservers.onNext(it) }
+                    .also { stateSubject.onNext(it) }
             },
-            labelConsumer = { labelObservers.onNext(it) }
+            labelConsumer = { labelSubject.onNext(it) }
         )
 
         bootstrapper?.bootstrap(actionConsumer = executor::handleAction)
     }
 
-    override fun states(observer: Observer<State>): Disposable = stateObservers.register(observer, _state.value)
+    override fun states(observer: Observer<State>): Disposable = stateSubject.subscribe(observer, _state.value)
 
-    override fun labels(observer: Observer<Label>): Disposable = labelObservers.register(observer)
+    override fun labels(observer: Observer<Label>): Disposable = labelSubject.subscribe(observer)
 
     override fun accept(intent: Intent) {
         executor.handleIntent(intent)
@@ -56,7 +56,7 @@ internal class DefaultStore<in Intent, in Action, out Result, out State, out Lab
     override fun dispose() {
         _isDisposed.value = true
         executor.dispose()
-        stateObservers.complete()
-        labelObservers.complete()
+        stateSubject.onComplete()
+        labelSubject.onComplete()
     }
 }
