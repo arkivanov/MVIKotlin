@@ -1,1 +1,1 @@
-include ':core', ':core-internal', ':core-main', ':samples:android:app'
+include ':utils-internal', ':core', ':core-internal', ':core-main', ':samples:android:app'

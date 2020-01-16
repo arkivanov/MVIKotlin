@@ -17,7 +17,7 @@ import com.badoo.reaktive.utils.atomic.updateAndGet
 
 internal class DefaultStore<in Intent, in Action, out Result, out State, out Label>(
     initialState: State,
-    bootstrapper: Bootstrapper<Action>? = null,
+    private val bootstrapper: Bootstrapper<Action>? = null,
     executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
     private val reducer: Reducer<State, Result>
 ) : Store<Intent, State, Label> {
@@ -35,7 +35,15 @@ internal class DefaultStore<in Intent, in Action, out Result, out State, out Lab
 
     init {
         executor.init(stateSupplier = _state::value, resultConsumer = ::onResult, labelConsumer = ::onLabel)
-        bootstrapper?.bootstrap(actionConsumer = executor::handleAction)
+        bootstrapper?.bootstrap(actionConsumer = ::onAction)
+    }
+
+    private fun onAction(action: Action) {
+        assertOnMainThread()
+
+        doIfNotDisposed {
+            executor.handleAction(action)
+        }
     }
 
     private fun onResult(result: Result) {
@@ -80,6 +88,7 @@ internal class DefaultStore<in Intent, in Action, out Result, out State, out Lab
         assertOnMainThread()
 
         doIfNotDisposed {
+            bootstrapper?.dispose()
             executor.dispose()
             stateSubject.onComplete()
             labelSubject.onComplete()

@@ -1,9 +1,8 @@
 package com.arkivanov.mvikotlin.core.internal.rx
 
-import com.arkivanov.mvikotlin.core.rx.Observer
+import com.arkivanov.mvikotlin.utils.internal.AtomicList
+import com.arkivanov.mvikotlin.utils.internal.add
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
-import com.badoo.reaktive.utils.atomic.AtomicReference
-import com.badoo.reaktive.utils.atomic.update
 import com.badoo.reaktive.utils.freeze
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,13 +15,13 @@ class SubjectTest {
 
     @Test
     fun multicasts_values_to_all_subscribers() {
-        val values1 = AtomicReference(emptyList<Int?>())
-        val values2 = AtomicReference(emptyList<Int?>())
+        val values1 = AtomicList<Int?>()
+        val values2 = AtomicList<Int?>()
 
-        subject.subscribe(observer(onNext = { value -> values1.update { it + value } }))
+        subject.subscribe(observer(onNext = values1::add))
         subject.onNext(0)
         subject.onNext(null)
-        subject.subscribe(observer(onNext = { value -> values2.update { it + value } }))
+        subject.subscribe(observer(onNext = values2::add))
         subject.onNext(1)
         subject.onNext(null)
 
@@ -68,9 +67,9 @@ class SubjectTest {
     @Test
     fun produces_values_to_another_observers_WHEN_one_observer_unsubscribed_and_new_values() {
         val disposable1 = subject.subscribe(observer())
-        val values2 = AtomicReference(emptyList<Int?>())
+        val values2 = AtomicList<Int?>()
 
-        subject.subscribe(observer(onNext = { value -> values2.update { it + value } }))
+        subject.subscribe(observer(onNext = values2::add))
         disposable1.dispose()
         subject.onNext(0)
         subject.onNext(null)
@@ -80,19 +79,19 @@ class SubjectTest {
 
     @Test
     fun produces_initial_value_WHEN_subscribed_with_value() {
-        val values1 = AtomicReference(emptyList<Int?>())
+        val values1 = AtomicList<Int?>()
 
-        subject.subscribe(observer(onNext = { value -> values1.update { it + value } }), 0)
+        subject.subscribe(observer(onNext = values1::add), 0)
 
         assertEquals(listOf(0), values1.value)
     }
 
     @Test
     fun does_not_produce_initial_value_to_new_observer_WHEN_already_completed_and_new_observer_subscribed_with_value() {
-        val values1 = AtomicReference(emptyList<Int?>())
+        val values1 = AtomicList<Int?>()
 
         subject.onComplete()
-        subject.subscribe(observer(onNext = { value -> values1.update { it + value } }), 0)
+        subject.subscribe(observer(onNext = values1::add), 0)
 
         assertEquals(emptyList(), values1.value)
     }
@@ -115,15 +114,4 @@ class SubjectTest {
 
         assertTrue(disposable.isDisposed)
     }
-
-    private fun observer(onNext: (Int?) -> Unit = {}, onComplete: () -> Unit = {}): Observer<Int?> =
-        object : Observer<Int?> {
-            override fun onNext(value: Int?) {
-                onNext.invoke(value)
-            }
-
-            override fun onComplete() {
-                onComplete.invoke()
-            }
-        }
 }

@@ -8,5 +8,11 @@ kotlin {
                 implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
+
+        commonTest {
+            dependencies {
+                implementation(project(":utils-internal"))
+            }
+        }
     }
 }
