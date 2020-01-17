@@ -6,14 +6,16 @@ kotlin {
             dependencies {
                 implementation(project(":core"))
                 implementation(project(":core-internal"))
+                implementation(project(":utils-internal"))
+                implementation(Deps.Jetbrains.Kotlin.Test.Common)
+                implementation(Deps.Jetbrains.Kotlin.TestAnnotations.Common)
                 implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
 
-        commonTest {
+        jvmCommonMain {
             dependencies {
-                implementation(project(":utils-internal"))
-                implementation(project(":core-test-internal"))
+                implementation(Deps.Jetbrains.Kotlin.Test.Junit)
             }
         }
     }

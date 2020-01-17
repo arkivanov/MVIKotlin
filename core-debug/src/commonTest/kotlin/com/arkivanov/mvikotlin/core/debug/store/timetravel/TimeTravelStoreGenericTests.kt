@@ -1,19 +1,24 @@
-package com.arkivanov.mvikotlin.core.main.store
+package com.arkivanov.mvikotlin.core.debug.store.timetravel
 
+import com.arkivanov.mvikotlin.core.internal.rx.observer
 import com.arkivanov.mvikotlin.core.test.internal.StoreGenericTests
 import com.arkivanov.mvikotlin.core.test.internal.StoreGenericTestsImpl
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
-class DefaultStoreTest : StoreGenericTests by StoreGenericTestsImpl(
+class TimeTravelStoreGenericTests : StoreGenericTests by StoreGenericTestsImpl(
     storeFactory = { initialState, bootstrapper, executorFactory, reducer ->
-        DefaultStore(
+        TimeTravelStore(
+            name = "store",
             initialState = initialState,
             bootstrapper = bootstrapper,
             executorFactory = executorFactory,
             reducer = reducer
-        )
+        ).apply {
+            events(observer(onNext = { event -> eventProcessor.process(event.type, event.value) }))
+            init()
+        }
     }
 ) {
 

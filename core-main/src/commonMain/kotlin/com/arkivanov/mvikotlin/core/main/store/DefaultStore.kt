@@ -1,5 +1,6 @@
 package com.arkivanov.mvikotlin.core.main.store
 
+import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.internal.rx.Subject
 import com.arkivanov.mvikotlin.core.internal.rx.isActive
 import com.arkivanov.mvikotlin.core.internal.rx.onComplete
@@ -15,9 +16,9 @@ import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.badoo.reaktive.utils.atomic.AtomicReference
 import com.badoo.reaktive.utils.atomic.updateAndGet
 
-internal class DefaultStore<in Intent, in Action, out Result, out State, out Label>(
+internal class DefaultStore<in Intent, in Action, out Result, out State, out Label> @MainThread constructor(
     initialState: State,
-    private val bootstrapper: Bootstrapper<Action>? = null,
+    private val bootstrapper: Bootstrapper<Action>?,
     executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
     private val reducer: Reducer<State, Result>
 ) : Store<Intent, State, Label> {
@@ -50,12 +51,14 @@ internal class DefaultStore<in Intent, in Action, out Result, out State, out Lab
         assertOnMainThread()
 
         doIfNotDisposed {
-            _state
-                .updateAndGet { oldState ->
-                    reducer.run { oldState.reduce(result) }
-                }
-                .also(stateSubject::onNext)
+            changeState {
+                reducer.run { it.reduce(result) }
+            }
         }
+    }
+
+    private inline fun changeState(func: (State) -> State) {
+        stateSubject.onNext(_state.updateAndGet(func))
     }
 
     private fun onLabel(label: Label) {
