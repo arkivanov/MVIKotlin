@@ -16,7 +16,7 @@ class TimeTravelStoreGenericTests : StoreGenericTests by StoreGenericTestsImpl(
             executorFactory = executorFactory,
             reducer = reducer
         ).apply {
-            events(observer(onNext = { event -> eventProcessor.process(event.type, event.value) }))
+            events(observer { eventProcessor.process(it.type, it.value) })
             init()
         }
     }

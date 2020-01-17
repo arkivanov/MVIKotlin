@@ -421,7 +421,7 @@ class StoreGenericTestsImpl(
                 reducer = reducer { it }
             )
 
-        store.labels(observer(onNext = { store.accept("intent2") }))
+        store.labels(observer { store.accept("intent2") })
         store.accept("intent1")
 
         assertEquals("result", stateRef.requireValue)
@@ -447,13 +447,11 @@ class StoreGenericTestsImpl(
             )
 
         store.states(
-            observer(
-                onNext = {
-                    if (it == "result") {
-                        store.accept("intent2")
-                    }
+            observer {
+                if (it == "result") {
+                    store.accept("intent2")
                 }
-            )
+            }
         )
         store.accept("intent1")
 

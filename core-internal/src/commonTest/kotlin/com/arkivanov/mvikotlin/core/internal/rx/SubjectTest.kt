@@ -58,7 +58,7 @@ class SubjectTest {
     fun does_not_produce_values_to_unsubscribed_observers() {
         val hasValue = AtomicBoolean()
 
-        subject.subscribe(observer(onNext = { hasValue.value = true })).dispose()
+        subject.subscribe(observer { hasValue.value = true }).dispose()
         subject.onNext(0)
 
         assertFalse(hasValue.value)
