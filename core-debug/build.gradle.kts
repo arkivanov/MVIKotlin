@@ -6,13 +6,13 @@ kotlin {
             dependencies {
                 implementation(project(":core"))
                 implementation(project(":core-internal"))
+                implementation(project(":utils-internal"))
                 implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
 
         commonTest {
             dependencies {
-                implementation(project(":utils-internal"))
                 implementation(project(":core-test-internal"))
             }
         }

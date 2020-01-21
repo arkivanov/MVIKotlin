@@ -5,6 +5,7 @@ import com.badoo.reaktive.utils.atomic.update
 
 typealias AtomicList<T> = AtomicReference<List<T>>
 
+@Suppress("FunctionName")
 fun <T> AtomicList(): AtomicList<T> = AtomicList(emptyList())
 
 fun <T> AtomicList<T>.add(element: T) {

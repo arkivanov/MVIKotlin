@@ -1,6 +1,12 @@
 package com.arkivanov.mvikotlin.core.debug.store.timetravel
 
-enum class TimeTravelState {
+data class TimeTravelState(
+    val events: List<TimeTravelEvent> = emptyList(),
+    val selectedEventIndex: Int = -1,
+    val mode: Mode = Mode.IDLE
+) {
 
-    IDLE, RECORDING, STOPPED
+    enum class Mode {
+        IDLE, RECORDING, STOPPED
+    }
 }

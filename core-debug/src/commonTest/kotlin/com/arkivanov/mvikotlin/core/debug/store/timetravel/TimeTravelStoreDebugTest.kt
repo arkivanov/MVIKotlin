@@ -312,8 +312,8 @@ class TimeTravelStoreDebugTest {
         initialState: String = "",
         executorFactory: () -> Executor<String, String, String, String, String> = { TestExecutor() },
         reducer: Reducer<String, String> = reducer()
-    ): TimeTravelStore<String, String, String, String, String> =
-        TimeTravelStore(
+    ): TimeTravelStore<String, String, String> =
+        TimeTravelStoreImpl(
             name = "store",
             initialState = initialState,
             bootstrapper = null,

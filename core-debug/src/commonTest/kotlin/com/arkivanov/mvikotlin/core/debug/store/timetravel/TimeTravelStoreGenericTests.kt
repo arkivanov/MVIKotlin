@@ -9,7 +9,7 @@ import kotlin.test.BeforeTest
 
 class TimeTravelStoreGenericTests : StoreGenericTests by StoreGenericTestsImpl(
     storeFactory = { initialState, bootstrapper, executorFactory, reducer ->
-        TimeTravelStore(
+        TimeTravelStoreImpl(
             name = "store",
             initialState = initialState,
             bootstrapper = bootstrapper,
