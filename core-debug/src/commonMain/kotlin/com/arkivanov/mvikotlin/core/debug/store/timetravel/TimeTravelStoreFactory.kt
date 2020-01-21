@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.core.main.store
+package com.arkivanov.mvikotlin.core.debug.store.timetravel
 
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
@@ -7,9 +7,9 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 
 /**
- * An implementation of [StoreFactory] that creates default implementations of [Store]
+ * An implementation of [StoreFactory] that creates [Store]s with time travel functionality
  */
-object DefaultStoreFactory : StoreFactory {
+object TimeTravelStoreFactory : StoreFactory {
 
     override fun <Intent, Action, Result, State, Label> create(
         name: String,
@@ -18,7 +18,8 @@ object DefaultStoreFactory : StoreFactory {
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
         reducer: Reducer<State, Result>
     ): Store<Intent, State, Label> =
-        DefaultStore(
+        TimeTravelStoreImpl(
+            name = name,
             initialState = initialState,
             bootstrapper = bootstrapper,
             executorFactory = executorFactory,
