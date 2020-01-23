@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.store.Store
 
-internal interface TimeTravelStore<in Intent, out State, out Label> : Store<Intent, State, Label> {
+internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label : Any> : Store<Intent, State, Label> {
 
     val name: String
     val eventProcessor: EventProcessor
@@ -23,7 +23,7 @@ internal interface TimeTravelStore<in Intent, out State, out Label> : Store<Inte
 
     interface EventProcessor {
         @MainThread
-        fun process(type: StoreEventType, value: Any?)
+        fun process(type: StoreEventType, value: Any)
     }
 
     interface EventDebugger {

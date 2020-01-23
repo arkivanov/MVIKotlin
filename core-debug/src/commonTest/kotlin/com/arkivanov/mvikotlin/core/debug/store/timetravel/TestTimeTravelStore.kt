@@ -62,18 +62,18 @@ internal class TestTimeTravelStore(
     }
 
     class TestEventProcessor : EventProcessor {
-        private val events = AtomicList<Pair<StoreEventType, Any?>>()
+        private val events = AtomicList<Pair<StoreEventType, Any>>()
 
-        override fun process(type: StoreEventType, value: Any?) {
+        override fun process(type: StoreEventType, value: Any) {
             events += type to value
         }
 
-        fun assertProcessedEvent(type: StoreEventType, value: Any?) {
+        fun assertProcessedEvent(type: StoreEventType, value: Any) {
             val pair = type to value
             assertEquals(1, events.value.count { it == pair })
         }
 
-        fun assertSingleProcessedEvent(type: StoreEventType, value: Any?) {
+        fun assertSingleProcessedEvent(type: StoreEventType, value: Any) {
             assertEquals(listOf(type to value), events.value)
         }
 

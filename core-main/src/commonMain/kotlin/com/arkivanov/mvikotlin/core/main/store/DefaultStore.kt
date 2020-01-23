@@ -16,7 +16,7 @@ import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.badoo.reaktive.utils.atomic.AtomicReference
 import com.badoo.reaktive.utils.atomic.updateAndGet
 
-internal class DefaultStore<in Intent, in Action, out Result, out State, out Label> @MainThread constructor(
+internal class DefaultStore<in Intent : Any, in Action : Any, out Result : Any, out State : Any, out Label : Any> @MainThread constructor(
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
     executorFactory: () -> Executor<Intent, Action, State, Result, Label>,

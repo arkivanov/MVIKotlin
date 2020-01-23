@@ -20,7 +20,7 @@ import com.badoo.reaktive.utils.atomic.getAndSet
 import com.badoo.reaktive.utils.atomic.update
 import com.badoo.reaktive.utils.atomic.updateAndGet
 
-internal class TimeTravelStoreImpl<in Intent, in Action, out Result, out State, out Label> @MainThread constructor(
+internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, out Result : Any, out State : Any, out Label : Any> @MainThread constructor(
     override val name: String,
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
@@ -106,7 +106,7 @@ internal class TimeTravelStoreImpl<in Intent, in Action, out Result, out State, 
         }
     }
 
-    private fun onEvent(type: StoreEventType, value: Any?, state: State) {
+    private fun onEvent(type: StoreEventType, value: Any, state: State) {
         assertOnMainThread()
 
         doIfNotDisposed {
@@ -127,7 +127,7 @@ internal class TimeTravelStoreImpl<in Intent, in Action, out Result, out State, 
 
     private inner class EventProcessorImpl : EventProcessor {
         @Suppress("UNCHECKED_CAST")
-        override fun process(type: StoreEventType, value: Any?) {
+        override fun process(type: StoreEventType, value: Any) {
             assertOnMainThread()
 
             doIfNotDisposed {

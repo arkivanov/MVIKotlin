@@ -1,7 +1,12 @@
 package com.arkivanov.mvikotlin.core.store
 
-fun <Intent, State, Label> StoreFactory.create(initialState: State, reducer: Reducer<State, Intent>): Store<Intent, State, Label> =
+fun <Intent : Any, State : Any, Label : Any> StoreFactory.create(
+    name: String,
+    initialState: State,
+    reducer: Reducer<State, Intent>
+): Store<Intent, State, Label> =
     create(
+        name = name,
         initialState = initialState,
         executorFactory = {
             object : BaseExecutor<Intent, Nothing, State, Intent, Label>() {

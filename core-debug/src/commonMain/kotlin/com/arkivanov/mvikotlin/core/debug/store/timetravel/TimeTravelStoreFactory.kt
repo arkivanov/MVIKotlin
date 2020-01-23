@@ -11,7 +11,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
  */
 object TimeTravelStoreFactory : StoreFactory {
 
-    override fun <Intent, Action, Result, State, Label> create(
+    override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,

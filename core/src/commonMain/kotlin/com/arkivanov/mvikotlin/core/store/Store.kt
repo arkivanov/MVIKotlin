@@ -4,7 +4,7 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
 
-interface Store<in Intent, out State, out Label> {
+interface Store<in Intent : Any, out State : Any, out Label : Any> {
 
     val state: State
     val isDisposed: Boolean

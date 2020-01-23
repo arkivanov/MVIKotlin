@@ -14,6 +14,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 data class TimeTravelEvent(
     val storeName: String,
     val type: StoreEventType,
-    val value: Any?,
-    val state: Any?
+    val value: Any,
+    val state: Any
 )
