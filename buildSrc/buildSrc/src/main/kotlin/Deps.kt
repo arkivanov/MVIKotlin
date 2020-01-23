@@ -31,6 +31,16 @@ object Deps {
         }
     }
 
+    object AndroidX {
+        object Core : Group(name = "androidx.core") {
+            object Ktx : Dependency(group = Core, name = "core-ktx", version = "1.1.0")
+        }
+
+        object RecyclerView : Group(name = "androidx.recyclerview") {
+            object RecyclerView : Dependency(group = AndroidX.RecyclerView, name = "recyclerview", version = "1.1.0")
+        }
+    }
+
     object Badoo {
         object Reaktive : Group(name = "com.badoo.reaktive") {
             private const val version = "1.1.8"
