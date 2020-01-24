@@ -1,13 +1,14 @@
 package com.arkivanov.mvikotlin.core.debug.store.timetravel
 
 import com.arkivanov.mvikotlin.core.debug.store.StoreEventType
+import com.badoo.reaktive.utils.freeze
 
 internal class TimeTravelControllerTestingEnvironment {
 
     val store1 = TestTimeTravelStore(name = "store1")
     val store2 = TestTimeTravelStore(name = "store2")
 
-    val controller = TimeTravelControllerImpl()
+    val controller = TimeTravelControllerImpl().freeze()
     val state: TimeTravelState get() = controller.state
     val events: List<TimeTravelEvent> get() = controller.state.events
 
