@@ -27,5 +27,11 @@ kotlin {
                 implementation(project(":core-test-internal"))
             }
         }
+
+        jvmMain {
+            dependencies {
+                implementation(Deps.Json.Json)
+            }
+        }
     }
 }

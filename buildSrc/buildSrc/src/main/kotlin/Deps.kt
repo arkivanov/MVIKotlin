@@ -55,6 +55,10 @@ object Deps {
         }
     }
 
+    object Json : Group(name = "org.json") {
+        object Json : Dependency(group = Deps.Json, name = "json", version = "20190722")
+    }
+
     open class Group(val name: String)
 
     open class Dependency private constructor(

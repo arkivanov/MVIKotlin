@@ -19,6 +19,7 @@ fun Project.setupMultiplatform() {
             publishLibraryVariants("release", "debug")
         }
 
+        jvm()
         linuxX64()
 
         sourceSets {
@@ -49,6 +50,14 @@ fun Project.setupMultiplatform() {
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.Test.Junit)
                 }
+            }
+
+            jvmMain {
+                dependsOn(jvmCommonMain)
+            }
+
+            jvmTest {
+                dependsOn(jvmCommonTest)
             }
 
             androidMain {
@@ -131,6 +140,20 @@ val SourceSets.jvmCommonTest: KotlinSourceSet get() = getOrCreate("jvmCommonTest
 
 fun SourceSets.jvmCommonTest(block: KotlinSourceSet.() -> Unit) {
     jvmCommonTest.apply(block)
+}
+
+// JVM
+
+val SourceSets.jvmMain: KotlinSourceSet get() = getOrCreate("jvmMain")
+
+fun SourceSets.jvmMain(block: KotlinSourceSet.() -> Unit) {
+    jvmMain.apply(block)
+}
+
+val SourceSets.jvmTest: KotlinSourceSet get() = getOrCreate("jvmTest")
+
+fun SourceSets.jvmTest(block: KotlinSourceSet.() -> Unit) {
+    jvmTest.apply(block)
 }
 
 // android
