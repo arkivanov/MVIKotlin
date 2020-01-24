@@ -17,6 +17,7 @@ kotlin {
                 implementation(project(":utils-internal"))
                 implementation(Deps.Badoo.Reaktive.Utils)
                 implementation(Deps.AndroidX.Core.Ktx)
+                implementation(Deps.AndroidX.AppCompat.AppCompat)
                 implementation(Deps.AndroidX.RecyclerView.RecyclerView)
             }
         }

@@ -36,6 +36,10 @@ object Deps {
             object Ktx : Dependency(group = Core, name = "core-ktx", version = "1.1.0")
         }
 
+        object AppCompat : Group(name = "androidx.appcompat") {
+            object AppCompat : Dependency(group = AndroidX.AppCompat, name = "appcompat", version = "1.1.0")
+        }
+
         object RecyclerView : Group(name = "androidx.recyclerview") {
             object RecyclerView : Dependency(group = AndroidX.RecyclerView, name = "recyclerview", version = "1.1.0")
         }

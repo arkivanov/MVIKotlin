@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,6 +19,8 @@ import com.arkivanov.mvikotlin.core.debug.store.timetravel.TimeTravelController
 import com.arkivanov.mvikotlin.core.debug.store.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.core.debug.store.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.core.debug.store.timetravel.timeTravelController
+import com.arkivanov.mvikotlin.core.debug.utils.DeepStringMode
+import com.arkivanov.mvikotlin.core.debug.utils.toDeepString
 import com.arkivanov.mvikotlin.core.internal.rx.observer
 import com.arkivanov.mvikotlin.core.rx.Disposable
 import java.util.IdentityHashMap
@@ -180,11 +183,11 @@ class TimeTravelView @JvmOverloads constructor(
 
             init {
                 itemView.setOnClickListener {
-                    //                    AlertDialog.Builder(itemView.context)
-//                        .setTitle(boundEvent.value::class.java.simpleName)
-//                        .setMessage(boundEvent.value.toDeepString(DeepStringMode.FULL, true))
-//                        .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
-//                        .show()
+                    AlertDialog.Builder(itemView.context)
+                        .setTitle(boundEvent.value::class.java.simpleName)
+                        .setMessage(boundEvent.value.toDeepString(DeepStringMode.FULL, true))
+                        .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                        .show()
                 }
 
                 debugButton.setOnClickListener { timeTravelController.debugEvent(boundEvent) }
@@ -197,7 +200,7 @@ class TimeTravelView @JvmOverloads constructor(
                 storeNameTextView.text = event.storeName
                 eventNameTextView.text = "${event.value::class.java.simpleName} (${event.type.name})"
                 eventValueTextView.text =
-                    eventsMap[event] //?: event.value.toDeepString(DeepStringMode.SHORT, false).also { eventsMap[event] = it }
+                    eventsMap[event] ?: event.value.toDeepString(DeepStringMode.SHORT, false).also { eventsMap[event] = it }
             }
         }
 
