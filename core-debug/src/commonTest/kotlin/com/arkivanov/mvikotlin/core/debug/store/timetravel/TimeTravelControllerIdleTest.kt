@@ -23,47 +23,47 @@ class TimeTravelControllerIdleTest {
     }
 
     @Test
-    fun `initial state is idle`() {
+    fun initial_state_is_idle() {
         assertEquals(TimeTravelState.Mode.IDLE, env.state.mode)
     }
 
     @Test
-    fun `processes intent WHEN intent emitted in idle state`() {
+    fun processes_intent_WHEN_intent_emitted_in_idle_state() {
         env.produceIntentEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.INTENT, "intent1")
     }
 
     @Test
-    fun `processes action WHEN action emitted in idle state`() {
+    fun processes_action_WHEN_action_emitted_in_idle_state() {
         env.produceActionEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.ACTION, "action1")
     }
 
     @Test
-    fun `processes result WHEN result emitted in idle state`() {
+    fun processes_result_WHEN_result_emitted_in_idle_state() {
         env.produceResultEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.RESULT, "result1")
     }
 
     @Test
-    fun `processes state WHEN state emitted in idle state`() {
+    fun processes_state_WHEN_state_emitted_in_idle_state() {
         env.produceStateEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.STATE, "state1")
     }
 
     @Test
-    fun `processes label WHEN label emitted in idle state`() {
+    fun processes_label_WHEN_label_emitted_in_idle_state() {
         env.produceLabelEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.LABEL, "label1")
     }
 
     @Test
-    fun `restores events`() {
+    fun restores_events() {
         val events =
             listOf(
                 env.createIntentEventForStore1(),
@@ -81,7 +81,7 @@ class TimeTravelControllerIdleTest {
     }
 
     @Test
-    fun `switched to last state for all stores WHEN restore events`() {
+    fun switched_to_last_state_for_all_stores_WHEN_restore_events() {
         env.controller.restoreEvents(
             listOf(
                 env.createIntentEventForStore1(),

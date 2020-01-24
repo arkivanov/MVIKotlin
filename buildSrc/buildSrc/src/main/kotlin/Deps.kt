@@ -9,6 +9,7 @@ object Deps {
             object StdLib {
                 object Common : Dependency(group = Kotlin, name = "kotlin-stdlib-common", version = version)
                 object Jdk7 : Dependency(group = Kotlin, name = "kotlin-stdlib-jdk7", version = version)
+                object Js : Dependency(group = Kotlin, name = "kotlin-stdlib-js", version = version)
             }
 
             object Test {

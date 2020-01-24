@@ -24,47 +24,47 @@ class TimeTravelControllerRecordingTest {
     }
 
     @Test
-    fun `state is recording WHEN recording started`() {
+    fun state_is_recording_WHEN_recording_started() {
         assertEquals(TimeTravelState.Mode.RECORDING, env.state.mode)
     }
 
     @Test
-    fun `processes intent WHEN intent emitted in recording state`() {
+    fun processes_intent_WHEN_intent_emitted_in_recording_state() {
         env.produceIntentEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.INTENT, "intent1")
     }
 
     @Test
-    fun `processes action WHEN action emitted in recording state`() {
+    fun processes_action_WHEN_action_emitted_in_recording_state() {
         env.produceActionEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.ACTION, "action1")
     }
 
     @Test
-    fun `processes result WHEN result emitted in recording state`() {
+    fun processes_result_WHEN_result_emitted_in_recording_state() {
         env.produceResultEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.RESULT, "result1")
     }
 
     @Test
-    fun `processes state WHEN state emitted in recording state`() {
+    fun processes_state_WHEN_state_emitted_in_recording_state() {
         env.produceStateEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.STATE, "state1")
     }
 
     @Test
-    fun `processes label WHEN label emitted in recording state`() {
+    fun processes_label_WHEN_label_emitted_in_recording_state() {
         env.produceLabelEventForStore1()
 
         env.store1.eventProcessor.assertProcessedEvent(StoreEventType.LABEL, "label1")
     }
 
     @Test
-    fun `events added to list in order WHEN emitted by store`() {
+    fun events_added_to_list_in_order_WHEN_emitted_by_store() {
         env.produceIntentEventForStore1()
         env.produceActionEventForStore1()
         env.produceResultEventForStore1()
@@ -84,14 +84,14 @@ class TimeTravelControllerRecordingTest {
     }
 
     @Test
-    fun `in idle state WHEN cancelled without events`() {
+    fun in_idle_state_WHEN_cancelled_without_events() {
         env.controller.cancel()
 
         assertEquals(TimeTravelState.Mode.IDLE, env.state.mode)
     }
 
     @Test
-    fun `in idle state WHEN cancelled with events`() {
+    fun in_idle_state_WHEN_cancelled_with_events() {
         env.produceIntentEventForStore1()
         env.controller.cancel()
 
@@ -99,7 +99,7 @@ class TimeTravelControllerRecordingTest {
     }
 
     @Test
-    fun `in idle state WHEN stopped without events`() {
+    fun in_idle_state_WHEN_stopped_without_events() {
         env.controller.stopRecording()
 
         assertEquals(TimeTravelState.Mode.IDLE, env.state.mode)

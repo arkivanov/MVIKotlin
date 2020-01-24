@@ -13,6 +13,12 @@ kotlin {
             }
         }
 
+        jsMain {
+            dependencies {
+                implementation(Deps.Jetbrains.Kotlin.Test.Js)
+            }
+        }
+
         jvmCommonMain {
             dependencies {
                 implementation(Deps.Jetbrains.Kotlin.Test.Junit)

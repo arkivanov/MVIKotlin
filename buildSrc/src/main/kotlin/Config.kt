@@ -1,9 +1,13 @@
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.getByName
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.invoke
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 fun Project.setupMultiplatform() {
     plugins.apply("kotlin-multiplatform")
@@ -15,6 +19,21 @@ fun Project.setupMultiplatform() {
     setupAndroidSdkVersions()
 
     kotlin {
+        js {
+            nodejs()
+            browser()
+
+            compilations.all {
+                compileKotlinTask.kotlinOptions {
+                    metaInfo = true
+                    sourceMap = true
+                    sourceMapEmbedSources = "always"
+                    moduleKind = "umd"
+                    main = "call"
+                }
+            }
+        }
+
         android {
             publishLibraryVariants("release", "debug")
         }
@@ -34,6 +53,14 @@ fun Project.setupMultiplatform() {
                     implementation(Deps.Jetbrains.Kotlin.Test.Common)
                     implementation(Deps.Jetbrains.Kotlin.TestAnnotations.Common)
                 }
+            }
+
+            jsNativeCommonMain {
+                dependsOn(commonMain)
+            }
+
+            jsNativeCommonTest {
+                dependsOn(commonTest)
             }
 
             jvmCommonMain {
@@ -68,12 +95,28 @@ fun Project.setupMultiplatform() {
                 dependsOn(jvmCommonTest)
             }
 
+            jsMain {
+                dependsOn(jsNativeCommonMain)
+
+                dependencies {
+                    implementation(Deps.Jetbrains.Kotlin.StdLib.Js)
+                }
+            }
+
+            jsTest {
+                dependsOn(jsNativeCommonTest)
+
+                dependencies {
+                    implementation(Deps.Jetbrains.Kotlin.Test.Js)
+                }
+            }
+
             nativeCommonMain {
-                dependsOn(commonMain)
+                dependsOn(jsNativeCommonMain)
             }
 
             nativeCommonTest {
-                dependsOn(commonTest)
+                dependsOn(jsNativeCommonTest)
             }
 
             linuxX64Main {
@@ -128,6 +171,20 @@ fun SourceSets.commonTest(block: KotlinSourceSet.() -> Unit) {
     commonTest.apply(block)
 }
 
+// jsNativeCommon
+
+val SourceSets.jsNativeCommonMain: KotlinSourceSet get() = getOrCreate("jsNativeCommonMain")
+
+fun SourceSets.jsNativeCommonMain(block: KotlinSourceSet.() -> Unit) {
+    jsNativeCommonMain.apply(block)
+}
+
+val SourceSets.jsNativeCommonTest: KotlinSourceSet get() = getOrCreate("jsNativeCommonTest")
+
+fun SourceSets.jsNativeCommonTest(block: KotlinSourceSet.() -> Unit) {
+    jsNativeCommonTest.apply(block)
+}
+
 // jvmCommon
 
 val SourceSets.jvmCommonMain: KotlinSourceSet get() = getOrCreate("jvmCommonMain")
@@ -142,7 +199,7 @@ fun SourceSets.jvmCommonTest(block: KotlinSourceSet.() -> Unit) {
     jvmCommonTest.apply(block)
 }
 
-// JVM
+// jvm
 
 val SourceSets.jvmMain: KotlinSourceSet get() = getOrCreate("jvmMain")
 
@@ -168,6 +225,20 @@ val SourceSets.androidTest: KotlinSourceSet get() = getOrCreate("androidTest")
 
 fun SourceSets.androidTest(block: KotlinSourceSet.() -> Unit) {
     androidTest.apply(block)
+}
+
+// js
+
+val SourceSets.jsMain: KotlinSourceSet get() = getOrCreate("jsMain")
+
+fun SourceSets.jsMain(block: KotlinSourceSet.() -> Unit) {
+    jsMain.apply(block)
+}
+
+val SourceSets.jsTest: KotlinSourceSet get() = getOrCreate("jsTest")
+
+fun SourceSets.jsTest(block: KotlinSourceSet.() -> Unit) {
+    jsTest.apply(block)
 }
 
 // nativeCommon

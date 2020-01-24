@@ -98,371 +98,371 @@ interface StoreGenericTests {
     fun executor_can_read_new_state_WHEN_recursive_intent_on_state()
 }
 
-class StoreGenericTestsImpl(
-    private val storeFactory: (
+fun StoreGenericTests(
+    storeFactory: (
         initialState: String,
         bootstrapper: Bootstrapper<String>?,
         executorFactory: () -> Executor<String, String, String, String, String>,
         reducer: Reducer<String, String>
     ) -> Store<String, String, String>
-) : StoreGenericTests {
+): StoreGenericTests =
+    object : StoreGenericTests {
+        @Test
+        override fun state_val_returns_initial_state_WHEN_created() {
+            val store = store(initialState = "initial")
 
-    @Test
-    override fun state_val_returns_initial_state_WHEN_created() {
-        val store = store(initialState = "initial")
+            val state = store.state
 
-        val state = store.state
+            assertEquals("initial", state)
+        }
 
-        assertEquals("initial", state)
-    }
+        @Test
+        override fun calls_bootstrapper_WHEN_created() {
+            val isCalled = AtomicBoolean()
 
-    @Test
-    override fun calls_bootstrapper_WHEN_created() {
-        val isCalled = AtomicBoolean()
+            store(bootstrapper = TestBootstrapper(bootstrap = { isCalled.value = true }))
 
-        store(bootstrapper = TestBootstrapper(bootstrap = { isCalled.value = true }))
+            assertTrue(isCalled.value)
+        }
 
-        assertTrue(isCalled.value)
-    }
+        @Test
+        override fun initializes_executor_WHEN_with_bootstrapper_and_created() {
+            val executor = TestExecutor()
 
-    @Test
-    override fun initializes_executor_WHEN_with_bootstrapper_and_created() {
-        val executor = TestExecutor()
+            store(bootstrapper = TestBootstrapper(), executorFactory = { executor })
 
-        store(bootstrapper = TestBootstrapper(), executorFactory = { executor })
+            assertTrue(executor.isInitialized)
+        }
 
-        assertTrue(executor.isInitialized)
-    }
+        @Test
+        override fun initializes_executor_WHEN_without_bootstrapper_and_created() {
+            val executor = TestExecutor()
 
-    @Test
-    override fun initializes_executor_WHEN_without_bootstrapper_and_created() {
-        val executor = TestExecutor()
+            store(executorFactory = { executor })
 
-        store(executorFactory = { executor })
+            assertTrue(executor.isInitialized)
+        }
 
-        assertTrue(executor.isInitialized)
-    }
+        @Test
+        override fun initializes_executor_before_bootstrapper_call_WHEN_with_bootstrapper_and_created() {
+            val events = AtomicList<String>()
 
-    @Test
-    override fun initializes_executor_before_bootstrapper_call_WHEN_with_bootstrapper_and_created() {
-        val events = AtomicList<String>()
+            store(
+                bootstrapper = TestBootstrapper { events += "bootstrap" },
+                executorFactory = { TestExecutor(init = { _, _, _ -> events += "init" }) }
+            )
 
-        store(
-            bootstrapper = TestBootstrapper { events += "bootstrap" },
-            executorFactory = { TestExecutor(init = { _, _, _ -> events += "init" }) }
-        )
+            assertEquals(listOf("init", "bootstrap"), events.value)
+        }
 
-        assertEquals(listOf("init", "bootstrap"), events.value)
-    }
+        @Test
+        override fun delivers_actions_from_bootstrapper_to_executor_after_bootstrap() {
+            val actions = AtomicList<String>()
+            val bootstrapper = TestBootstrapper()
 
-    @Test
-    override fun delivers_actions_from_bootstrapper_to_executor_after_bootstrap() {
-        val actions = AtomicList<String>()
-        val bootstrapper = TestBootstrapper()
-
-        store(
-            bootstrapper = bootstrapper,
-            executorFactory = { TestExecutor(handleAction = { actions += it }) }
-        )
-
-        bootstrapper.dispatch("action1")
-        bootstrapper.dispatch("action2")
-
-        assertEquals(listOf("action1", "action2"), actions.value)
-    }
-
-    @Test
-    override fun delivers_actions_from_bootstrapper_to_executor_during_bootstrap() {
-        val actions = AtomicList<String>()
-
-        store(
-            bootstrapper = TestBootstrapper {
-                dispatch("action1")
-                dispatch("action2")
-            },
-            executorFactory = { TestExecutor(handleAction = { actions += it }) }
-        )
-
-        assertEquals(listOf("action1", "action2"), actions.value)
-    }
-
-    @Test
-    override fun does_not_deliver_actions_from_bootstrapper_to_executor_WHEN_disposed_and_bootstrapper_produced_actions() {
-        val actions = AtomicList<String>()
-        val bootstrapper = TestBootstrapper()
-
-        val store =
             store(
                 bootstrapper = bootstrapper,
                 executorFactory = { TestExecutor(handleAction = { actions += it }) }
             )
 
-        store.dispose()
-        bootstrapper.dispatch("action1")
-        bootstrapper.dispatch("action2")
+            bootstrapper.dispatch("action1")
+            bootstrapper.dispatch("action2")
 
-        assertEquals(emptyList(), actions.value)
-    }
+            assertEquals(listOf("action1", "action2"), actions.value)
+        }
 
-    @Test
-    override fun produces_labels_from_executor() {
-        val labels = AtomicList<String>()
-        val executor = TestExecutor()
+        @Test
+        override fun delivers_actions_from_bootstrapper_to_executor_during_bootstrap() {
+            val actions = AtomicList<String>()
 
-        val store = store(executorFactory = { executor })
-        store.labels(observer(onNext = labels::add))
+            store(
+                bootstrapper = TestBootstrapper {
+                    dispatch("action1")
+                    dispatch("action2")
+                },
+                executorFactory = { TestExecutor(handleAction = { actions += it }) }
+            )
 
-        executor.publish("label1")
-        executor.publish("label2")
+            assertEquals(listOf("action1", "action2"), actions.value)
+        }
 
-        assertEquals(listOf("label1", "label2"), labels.value)
-    }
+        @Test
+        override fun does_not_deliver_actions_from_bootstrapper_to_executor_WHEN_disposed_and_bootstrapper_produced_actions() {
+            val actions = AtomicList<String>()
+            val bootstrapper = TestBootstrapper()
 
-    @Test
-    override fun does_not_produce_labels_from_executor_to_unsubscribed_observer() {
-        val labels = AtomicList<String>()
-        val executor = TestExecutor()
+            val store =
+                store(
+                    bootstrapper = bootstrapper,
+                    executorFactory = { TestExecutor(handleAction = { actions += it }) }
+                )
 
-        val store = store(executorFactory = { executor })
-        store.labels(observer(onNext = labels::add)).dispose()
+            store.dispose()
+            bootstrapper.dispatch("action1")
+            bootstrapper.dispatch("action2")
 
-        executor.publish("label1")
-        executor.publish("label2")
+            assertEquals(emptyList(), actions.value)
+        }
 
-        assertEquals(emptyList(), labels.value)
-    }
+        @Test
+        override fun produces_labels_from_executor() {
+            val labels = AtomicList<String>()
+            val executor = TestExecutor()
 
-    @Test
-    override fun delivers_intents_to_executor() {
-        val intents = AtomicList<String>()
-        val store = store(executorFactory = { TestExecutor(handleIntent = { intents += it }) })
+            val store = store(executorFactory = { executor })
+            store.labels(observer(onNext = labels::add))
 
-        store.accept("intent1")
-        store.accept("intent2")
+            executor.publish("label1")
+            executor.publish("label2")
 
-        assertEquals(listOf("intent1", "intent2"), intents.value)
-    }
+            assertEquals(listOf("label1", "label2"), labels.value)
+        }
 
-    @Test
-    override fun does_not_deliver_intents_to_executor_WHEN_disposed_and_new_intents() {
-        val intents = AtomicList<String>()
-        val store = store(executorFactory = { TestExecutor(handleIntent = { intents += it }) })
+        @Test
+        override fun does_not_produce_labels_from_executor_to_unsubscribed_observer() {
+            val labels = AtomicList<String>()
+            val executor = TestExecutor()
 
-        store.dispose()
-        store.accept("intent1")
-        store.accept("intent2")
+            val store = store(executorFactory = { executor })
+            store.labels(observer(onNext = labels::add)).dispose()
 
-        assertEquals(emptyList(), intents.value)
-    }
+            executor.publish("label1")
+            executor.publish("label2")
 
-    @Test
-    override fun executor_can_read_initial_state() {
-        val executor = TestExecutor()
-        store(initialState = "initial", executorFactory = { executor })
+            assertEquals(emptyList(), labels.value)
+        }
 
-        assertEquals("initial", executor.state)
-    }
+        @Test
+        override fun delivers_intents_to_executor() {
+            val intents = AtomicList<String>()
+            val store = store(executorFactory = { TestExecutor(handleIntent = { intents += it }) })
 
-    @Test
-    override fun executor_can_read_new_state_WHEN_state_changed() {
-        val executor = TestExecutor()
-        store(executorFactory = { executor }, reducer = reducer { it })
+            store.accept("intent1")
+            store.accept("intent2")
 
-        executor.dispatch("result")
+            assertEquals(listOf("intent1", "intent2"), intents.value)
+        }
 
-        assertEquals("result", executor.state)
-    }
+        @Test
+        override fun does_not_deliver_intents_to_executor_WHEN_disposed_and_new_intents() {
+            val intents = AtomicList<String>()
+            val store = store(executorFactory = { TestExecutor(handleIntent = { intents += it }) })
 
-    @Test
-    override fun delivers_results_from_executor_to_reducer() {
-        val results = AtomicList<String>()
-        val executor = TestExecutor()
-        store(
-            executorFactory = { executor },
-            reducer = reducer {
-                results += it
-                this
-            }
-        )
+            store.dispose()
+            store.accept("intent1")
+            store.accept("intent2")
 
-        executor.dispatch("result1")
-        executor.dispatch("result2")
+            assertEquals(emptyList(), intents.value)
+        }
 
-        assertEquals(listOf("result1", "result2"), results.value)
-    }
+        @Test
+        override fun executor_can_read_initial_state() {
+            val executor = TestExecutor()
+            store(initialState = "initial", executorFactory = { executor })
 
-    @Test
-    override fun state_val_returns_new_state_WHEN_new_state_returned_from_reducer() {
-        val executor = TestExecutor()
-        val store =
+            assertEquals("initial", executor.state)
+        }
+
+        @Test
+        override fun executor_can_read_new_state_WHEN_state_changed() {
+            val executor = TestExecutor()
+            store(executorFactory = { executor }, reducer = reducer { it })
+
+            executor.dispatch("result")
+
+            assertEquals("result", executor.state)
+        }
+
+        @Test
+        override fun delivers_results_from_executor_to_reducer() {
+            val results = AtomicList<String>()
+            val executor = TestExecutor()
+            store(
+                executorFactory = { executor },
+                reducer = reducer {
+                    results += it
+                    this
+                }
+            )
+
+            executor.dispatch("result1")
+            executor.dispatch("result2")
+
+            assertEquals(listOf("result1", "result2"), results.value)
+        }
+
+        @Test
+        override fun state_val_returns_new_state_WHEN_new_state_returned_from_reducer() {
+            val executor = TestExecutor()
+            val store =
+                store(
+                    executorFactory = { executor },
+                    reducer = reducer { it }
+                )
+
+            executor.dispatch("result")
+
+            assertEquals("result", store.state)
+        }
+
+        @Test
+        override fun executor_can_read_new_state_WHEN_new_state_returned_from_reducer() {
+            val executor = TestExecutor()
             store(
                 executorFactory = { executor },
                 reducer = reducer { it }
             )
 
-        executor.dispatch("result")
+            executor.dispatch("result")
 
-        assertEquals("result", store.state)
-    }
+            assertEquals("result", executor.state)
+        }
 
-    @Test
-    override fun executor_can_read_new_state_WHEN_new_state_returned_from_reducer() {
-        val executor = TestExecutor()
-        store(
-            executorFactory = { executor },
-            reducer = reducer { it }
-        )
+        @Test
+        override fun bootstrapper_disposed_WHEN_store_disposed() {
+            val bootstrapper = TestBootstrapper()
+            val store = store(bootstrapper = bootstrapper)
 
-        executor.dispatch("result")
+            store.dispose()
 
-        assertEquals("result", executor.state)
-    }
+            assertTrue(bootstrapper.isDisposed)
+        }
 
-    @Test
-    override fun bootstrapper_disposed_WHEN_store_disposed() {
-        val bootstrapper = TestBootstrapper()
-        val store = store(bootstrapper = bootstrapper)
+        @Test
+        override fun executor_disposed_WHEN_store_disposed() {
+            val executor = TestExecutor()
+            val store = store(executorFactory = { executor })
 
-        store.dispose()
+            store.dispose()
 
-        assertTrue(bootstrapper.isDisposed)
-    }
+            assertTrue(executor.isDisposed)
+        }
 
-    @Test
-    override fun executor_disposed_WHEN_store_disposed() {
-        val executor = TestExecutor()
-        val store = store(executorFactory = { executor })
+        @Test
+        override fun states_observers_completed_WHEN_store_disposed() {
+            val isCompleted1 = AtomicBoolean()
+            val isCompleted2 = AtomicBoolean()
+            val store = store()
+            store.states(observer(onComplete = { isCompleted1.value = true }))
+            store.states(observer(onComplete = { isCompleted2.value = true }))
 
-        store.dispose()
+            store.dispose()
 
-        assertTrue(executor.isDisposed)
-    }
+            assertTrue(isCompleted1.value)
+            assertTrue(isCompleted2.value)
+        }
 
-    @Test
-    override fun states_observers_completed_WHEN_store_disposed() {
-        val isCompleted1 = AtomicBoolean()
-        val isCompleted2 = AtomicBoolean()
-        val store = store()
-        store.states(observer(onComplete = { isCompleted1.value = true }))
-        store.states(observer(onComplete = { isCompleted2.value = true }))
+        @Test
+        override fun labels_observers_completed_WHEN_store_disposed() {
+            val isCompleted1 = AtomicBoolean()
+            val isCompleted2 = AtomicBoolean()
+            val store = store()
+            store.labels(observer(onComplete = { isCompleted1.value = true }))
+            store.labels(observer(onComplete = { isCompleted2.value = true }))
 
-        store.dispose()
+            store.dispose()
 
-        assertTrue(isCompleted1.value)
-        assertTrue(isCompleted2.value)
-    }
+            assertTrue(isCompleted1.value)
+            assertTrue(isCompleted2.value)
+        }
 
-    @Test
-    override fun labels_observers_completed_WHEN_store_disposed() {
-        val isCompleted1 = AtomicBoolean()
-        val isCompleted2 = AtomicBoolean()
-        val store = store()
-        store.labels(observer(onComplete = { isCompleted1.value = true }))
-        store.labels(observer(onComplete = { isCompleted2.value = true }))
+        @Test
+        override fun states_observers_disposables_disposed_WHEN_store_disposed() {
+            val store = store()
+            val disposable1 = store.states(observer())
+            val disposable2 = store.states(observer())
 
-        store.dispose()
+            store.dispose()
 
-        assertTrue(isCompleted1.value)
-        assertTrue(isCompleted2.value)
-    }
+            assertTrue(disposable1.isDisposed)
+            assertTrue(disposable2.isDisposed)
+        }
 
-    @Test
-    override fun states_observers_disposables_disposed_WHEN_store_disposed() {
-        val store = store()
-        val disposable1 = store.states(observer())
-        val disposable2 = store.states(observer())
+        @Test
+        override fun labels_observers_disposables_disposed_WHEN_store_disposed() {
+            val store = store()
+            val disposable1 = store.labels(observer())
+            val disposable2 = store.labels(observer())
 
-        store.dispose()
+            store.dispose()
 
-        assertTrue(disposable1.isDisposed)
-        assertTrue(disposable2.isDisposed)
-    }
+            assertTrue(disposable1.isDisposed)
+            assertTrue(disposable2.isDisposed)
+        }
 
-    @Test
-    override fun labels_observers_disposables_disposed_WHEN_store_disposed() {
-        val store = store()
-        val disposable1 = store.labels(observer())
-        val disposable2 = store.labels(observer())
+        @Test
+        override fun store_isDisposed_returns_true_WHEN_store_disposed() {
+            val store = store()
 
-        store.dispose()
+            store.dispose()
 
-        assertTrue(disposable1.isDisposed)
-        assertTrue(disposable2.isDisposed)
-    }
+            assertTrue(store.isDisposed)
+        }
 
-    @Test
-    override fun store_isDisposed_returns_true_WHEN_store_disposed() {
-        val store = store()
+        @Test
+        override fun executor_can_read_new_state_WHEN_recursive_intent_on_label() {
+            val stateRef = lazyAtomicReference<String>()
 
-        store.dispose()
-
-        assertTrue(store.isDisposed)
-    }
-
-    @Test
-    override fun executor_can_read_new_state_WHEN_recursive_intent_on_label() {
-        val stateRef = lazyAtomicReference<String>()
-
-        val store =
-            store(
-                executorFactory = {
-                    TestExecutor(
-                        handleIntent = { intent ->
-                            when (intent) {
-                                "intent1" -> {
-                                    dispatch("result")
-                                    publish("label")
+            val store =
+                store(
+                    executorFactory = {
+                        TestExecutor(
+                            handleIntent = { intent ->
+                                when (intent) {
+                                    "intent1" -> {
+                                        dispatch("result")
+                                        publish("label")
+                                    }
+                                    "intent2" -> stateRef.value = state
                                 }
-                                "intent2" -> stateRef.value = state
                             }
-                        }
-                    )
-                },
-                reducer = reducer { it }
-            )
+                        )
+                    },
+                    reducer = reducer { it }
+                )
 
-        store.labels(observer { store.accept("intent2") })
-        store.accept("intent1")
+            store.labels(observer { store.accept("intent2") })
+            store.accept("intent1")
 
-        assertEquals("result", stateRef.requireValue)
-    }
+            assertEquals("result", stateRef.requireValue)
+        }
 
-    @Test
-    override fun executor_can_read_new_state_WHEN_recursive_intent_on_state() {
-        val stateRef = lazyAtomicReference<String>()
+        @Test
+        override fun executor_can_read_new_state_WHEN_recursive_intent_on_state() {
+            val stateRef = lazyAtomicReference<String>()
 
-        val store =
-            store(
-                executorFactory = {
-                    TestExecutor(
-                        handleIntent = { intent ->
-                            when (intent) {
-                                "intent1" -> dispatch("result")
-                                "intent2" -> stateRef.value = state
+            val store =
+                store(
+                    executorFactory = {
+                        TestExecutor(
+                            handleIntent = { intent ->
+                                when (intent) {
+                                    "intent1" -> dispatch("result")
+                                    "intent2" -> stateRef.value = state
+                                }
                             }
-                        }
-                    )
-                },
-                reducer = reducer { it }
-            )
+                        )
+                    },
+                    reducer = reducer { it }
+                )
 
-        store.states(
-            observer {
-                if (it == "result") {
-                    store.accept("intent2")
+            store.states(
+                observer {
+                    if (it == "result") {
+                        store.accept("intent2")
+                    }
                 }
-            }
-        )
-        store.accept("intent1")
+            )
+            store.accept("intent1")
 
-        assertEquals("result", stateRef.requireValue)
+            assertEquals("result", stateRef.requireValue)
+        }
+
+        private fun store(
+            initialState: String = "initial_state",
+            bootstrapper: Bootstrapper<String>? = null,
+            executorFactory: () -> Executor<String, String, String, String, String> = { TestExecutor() },
+            reducer: Reducer<String, String> = reducer()
+        ): Store<String, String, String> =
+            storeFactory(initialState, bootstrapper, executorFactory, reducer).freeze()
     }
-
-    private fun store(
-        initialState: String = "initial_state",
-        bootstrapper: Bootstrapper<String>? = null,
-        executorFactory: () -> Executor<String, String, String, String, String> = { TestExecutor() },
-        reducer: Reducer<String, String> = reducer()
-    ): Store<String, String, String> =
-        storeFactory(initialState, bootstrapper, executorFactory, reducer).freeze()
-}

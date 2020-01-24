@@ -24,7 +24,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `in stopped state WHEN stopped with events`() {
+    fun in_stopped_state_WHEN_stopped_with_events() {
         env.produceIntentEventForStore1()
         env.controller.stopRecording()
 
@@ -32,7 +32,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `in idle state WHEN stopped and cancelled`() {
+    fun in_idle_state_WHEN_stopped_and_cancelled() {
         env.produceIntentEventForStore1()
         env.controller.stopRecording()
         env.controller.cancel()
@@ -41,7 +41,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `points to last event WHEN recorded and not stopped`() {
+    fun points_to_last_event_WHEN_recorded_and_not_stopped() {
         env.produceIntentEventForStore1()
         env.produceActionEventForStore2()
         env.produceResultEventForStore1()
@@ -52,7 +52,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `points to last event WHEN recorded and not stopped and step backward`() {
+    fun points_to_last_event_WHEN_recorded_and_not_stopped_and_step_backward() {
         env.produceStateEventForStore1()
         env.produceResultEventForStore1()
         env.controller.stepBackward()
@@ -61,7 +61,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `points to previous state WHEN stopped and step backward`() {
+    fun points_to_previous_state_WHEN_stopped_and_step_backward() {
         env.produceIntentEventForStore1()
         env.produceActionEventForStore2()
         env.produceResultEventForStore1()
@@ -74,7 +74,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `points to past previous state WHEN stopped and step backward twice`() {
+    fun points_to_past_previous_state_WHEN_stopped_and_step_backward_twice() {
         env.produceIntentEventForStore1()
         env.produceActionEventForStore1()
         env.produceResultEventForStore1()
@@ -93,7 +93,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `points to start WHEN stopped and step backward until end`() {
+    fun points_to_start_WHEN_stopped_and_step_backward_until_end() {
         env.produceStateEventForStore1()
         env.produceResultEventForStore1()
         env.controller.stopRecording()
@@ -104,7 +104,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `points to last state WHEN stopped and step backward and step forward`() {
+    fun points_to_last_state_WHEN_stopped_and_step_backward_and_step_forward() {
         env.produceStateEventForStore2()
         env.produceStateEventForStore1()
         env.produceResultEventForStore1()
@@ -116,7 +116,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `points to start WHEN stopped and move to start`() {
+    fun points_to_start_WHEN_stopped_and_move_to_start() {
         env.produceStateEventForStore2()
         env.produceStateEventForStore1()
         env.produceResultEventForStore1()
@@ -127,7 +127,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `points to last event WHEN recorded and move to start and move to end`() {
+    fun points_to_last_event_WHEN_recorded_and_move_to_start_and_move_to_end() {
         env.produceStateEventForStore2()
         env.produceStateEventForStore1()
         env.produceResultEventForStore1()
@@ -139,7 +139,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `no events processed WHEN moved from end to last state`() {
+    fun no_events_processed_WHEN_moved_from_end_to_last_state() {
         env.produceStateEventForStore1()
         env.produceResultEventForStore1()
         env.controller.stopRecording()
@@ -150,7 +150,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `previous state processed WHEN moved from last state to previous event`() {
+    fun previous_state_processed_WHEN_moved_from_last_state_to_previous_event() {
         env.produceResultEventForStore1()
         env.produceStateEventForStore2(state = "previous_state")
         env.controller.stopRecording()
@@ -160,7 +160,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `state processed WHEN moved from event past state to state`() {
+    fun state_processed_WHEN_moved_from_event_past_state_to_state() {
         env.produceResultEventForStore1()
         env.produceStateEventForStore2(state = "previous_state")
         env.controller.stopRecording()
@@ -172,7 +172,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `switched to first state for all stores WHEN moved from start`() {
+    fun switched_to_first_state_for_all_stores_WHEN_moved_from_start() {
         env.produceResultEventForStore1()
         env.produceStateEventForStore1(value = "state_1_2", state = "state_1_1")
         env.produceResultEventForStore2()
@@ -193,7 +193,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `switched to last state for all stores WHEN moved from start to last event`() {
+    fun switched_to_last_state_for_all_stores_WHEN_moved_from_start_to_last_event() {
         env.produceResultEventForStore1()
         env.produceStateEventForStore1(value = "state_1_2", state = "state_1_1")
         env.produceResultEventForStore2()
@@ -215,7 +215,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `second store state processed WHEN first store disposed after stopped`() {
+    fun second_store_state_processed_WHEN_first_store_disposed_after_stopped() {
         env.produceStateEventForStore1(value = "state_1_2", state = "state_1_1")
         env.produceStateEventForStore2(value = "state_2_2", state = "state_2_1")
         env.controller.stopRecording()
@@ -227,7 +227,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `first store ignored WHEN disposed after stopped`() {
+    fun first_store_ignored_WHEN_disposed_after_stopped() {
         env.produceStateEventForStore1(value = "state_1_2", state = "state_1_1")
         env.produceStateEventForStore2(value = "state_2_2", state = "state_2_1")
         env.controller.stopRecording()
@@ -239,7 +239,7 @@ class TimeTravelControllerStoppedTest {
     }
 
     @Test
-    fun `state restored in all stores WHEN recorded and cancelled`() {
+    fun state_restored_in_all_stores_WHEN_recorded_and_cancelled() {
         env.produceResultEventForStore1()
         env.produceResultEventForStore2()
         env.controller.stopRecording()
