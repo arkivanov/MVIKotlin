@@ -1,1 +1,1 @@
-include ':utils-internal', ':core', ':core-internal', ':core-test-internal', ':core-main', ':core-debug', ':samples:android:app'
+include ':utils-internal', ':core', ':core-internal', ':core-test-internal', ':core-main', ':core-timetravel', ':samples:android:app'
