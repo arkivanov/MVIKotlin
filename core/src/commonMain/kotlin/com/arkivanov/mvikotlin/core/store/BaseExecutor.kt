@@ -10,7 +10,7 @@ abstract class BaseExecutor<in Intent, in Action, State, Result, Label> : Execut
     private val callbacks = lazyAtomicReference<Callbacks<State, Result, Label>>()
     protected val state: State get() = callbacks.requireValue.state
 
-    override fun init(callbacks: Callbacks<State, Result, Label>) {
+    final override fun init(callbacks: Callbacks<State, Result, Label>) {
         check(this.callbacks.value == null) { "Executor is already initialized" }
 
         this.callbacks.value = callbacks
