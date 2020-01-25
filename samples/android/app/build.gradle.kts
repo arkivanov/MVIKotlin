@@ -22,6 +22,4 @@ android {
 
 dependencies {
     implementation(Deps.Jetbrains.Kotlin.StdLib.Jdk7)
-    implementation(project(":core"))
-    implementation(project(":core-main"))
 }
