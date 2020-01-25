@@ -98,6 +98,7 @@ interface StoreGenericTests {
     fun executor_can_read_new_state_WHEN_recursive_intent_on_state()
 }
 
+@Suppress("FunctionName")
 fun StoreGenericTests(
     storeFactory: (
         initialState: String,
@@ -149,7 +150,7 @@ fun StoreGenericTests(
 
             store(
                 bootstrapper = TestBootstrapper { events += "bootstrap" },
-                executorFactory = { TestExecutor(init = { _, _, _ -> events += "init" }) }
+                executorFactory = { TestExecutor(init = { events += "init" }) }
             )
 
             assertEquals(listOf("init", "bootstrap"), events.value)

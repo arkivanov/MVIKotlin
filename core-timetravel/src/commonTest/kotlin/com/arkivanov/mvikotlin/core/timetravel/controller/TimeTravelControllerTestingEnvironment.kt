@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.core.timetravel.controller
 
 import com.arkivanov.mvikotlin.core.store.StoreEventType
-import com.arkivanov.mvikotlin.core.timetravel.controller.TimeTravelControllerImpl
 import com.arkivanov.mvikotlin.core.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.core.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.core.timetravel.store.TestTimeTravelStore

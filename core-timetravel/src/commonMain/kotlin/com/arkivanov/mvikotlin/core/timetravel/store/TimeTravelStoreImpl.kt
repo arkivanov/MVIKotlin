@@ -1,9 +1,6 @@
 package com.arkivanov.mvikotlin.core.timetravel.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.store.StoreEventType
-import com.arkivanov.mvikotlin.core.timetravel.store.TimeTravelStore.EventDebugger
-import com.arkivanov.mvikotlin.core.timetravel.store.TimeTravelStore.EventProcessor
 import com.arkivanov.mvikotlin.core.internal.rx.Subject
 import com.arkivanov.mvikotlin.core.internal.rx.isActive
 import com.arkivanov.mvikotlin.core.internal.rx.onComplete
@@ -14,14 +11,18 @@ import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
+import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.timetravel.TimeTravelEvent
+import com.arkivanov.mvikotlin.core.timetravel.store.TimeTravelStore.EventDebugger
+import com.arkivanov.mvikotlin.core.timetravel.store.TimeTravelStore.EventProcessor
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.badoo.reaktive.utils.atomic.AtomicReference
 import com.badoo.reaktive.utils.atomic.getAndSet
 import com.badoo.reaktive.utils.atomic.update
 import com.badoo.reaktive.utils.atomic.updateAndGet
+import com.badoo.reaktive.utils.isFrozen
 
-internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, out Result : Any, out State : Any, out Label : Any> @MainThread constructor(
+internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
     override val name: String,
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
@@ -89,9 +90,17 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, out Result 
         assertOnMainThread()
 
         executor.init(
-            stateSupplier = internalState::value,
-            resultConsumer = { onEvent(StoreEventType.RESULT, it, state) },
-            labelConsumer = { onEvent(StoreEventType.LABEL, it, state) }
+            object : Executor.Callbacks<State, Result, Label> {
+                override val state: State get() = internalState.value
+
+                override fun onResult(result: Result) {
+                    onEvent(StoreEventType.RESULT, result, state)
+                }
+
+                override fun onLabel(label: Label) {
+                    onEvent(StoreEventType.LABEL, label, state)
+                }
+            }
         )
 
         bootstrapper?.bootstrap {
@@ -188,14 +197,21 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, out Result 
             val executor =
                 executorFactory().apply {
                     init(
-                        { localState.value },
-                        { result ->
-                            assertOnMainThread()
-                            reducer.run {
-                                localState.update { it.reduce(result) }
+                        object : Executor.Callbacks<State, Result, Label> {
+                            override val state: State get() = localState.value
+
+                            override fun onResult(result: Result) {
+                                assertOnMainThread()
+
+                                reducer.run {
+                                    localState.update { it.reduce(result) }
+                                }
                             }
-                        },
-                        { assertOnMainThread() }
+
+                            override fun onLabel(label: Label) {
+                                assertOnMainThread()
+                            }
+                        }
                     )
 
                     execute()

@@ -16,7 +16,7 @@ import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.badoo.reaktive.utils.atomic.AtomicReference
 import com.badoo.reaktive.utils.atomic.updateAndGet
 
-internal class DefaultStore<in Intent : Any, in Action : Any, out Result : Any, out State : Any, out Label : Any> @MainThread constructor(
+internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
     executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
@@ -35,36 +35,39 @@ internal class DefaultStore<in Intent : Any, in Action : Any, out Result : Any, 
     override val isDisposed: Boolean get() = !stateSubject.isActive
 
     init {
-        executor.init(stateSupplier = _state::value, resultConsumer = ::onResult, labelConsumer = ::onLabel)
-        bootstrapper?.bootstrap(actionConsumer = ::onAction)
-    }
+        executor.init(
+            object : Executor.Callbacks<State, Result, Label> {
+                override val state: State get() = _state.value
 
-    private fun onAction(action: Action) {
-        assertOnMainThread()
+                override fun onResult(result: Result) {
+                    assertOnMainThread()
 
-        doIfNotDisposed {
-            executor.handleAction(action)
-        }
-    }
+                    doIfNotDisposed {
+                        changeState { oldState ->
+                            reducer.run { oldState.reduce(result) }
+                        }
+                    }
+                }
 
-    private fun onResult(result: Result) {
-        assertOnMainThread()
+                override fun onLabel(label: Label) {
+                    assertOnMainThread()
 
-        doIfNotDisposed {
-            changeState {
-                reducer.run { it.reduce(result) }
+                    labelSubject.onNext(label)
+                }
+            }
+        )
+
+        bootstrapper?.bootstrap { action ->
+            assertOnMainThread()
+
+            doIfNotDisposed {
+                executor.handleAction(action)
             }
         }
     }
 
     private inline fun changeState(func: (State) -> State) {
         stateSubject.onNext(_state.updateAndGet(func))
-    }
-
-    private fun onLabel(label: Label) {
-        assertOnMainThread()
-
-        labelSubject.onNext(label)
     }
 
     override fun states(observer: Observer<State>): Disposable {

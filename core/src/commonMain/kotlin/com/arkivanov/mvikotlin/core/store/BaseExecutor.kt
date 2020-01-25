@@ -1,22 +1,19 @@
 package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
+import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.requireValue
 
 abstract class BaseExecutor<in Intent, in Action, State, Result, Label> : Executor<Intent, Action, State, Result, Label> {
 
-    private var isInitialized = false
-    private lateinit var stateSupplier: () -> State
-    private lateinit var resultConsumer: (Result) -> Unit
-    private lateinit var labelConsumer: (Label) -> Unit
-    protected val state: State get() = stateSupplier()
+    private val callbacks = lazyAtomicReference<Callbacks<State, Result, Label>>()
+    protected val state: State get() = callbacks.requireValue.state
 
-    final override fun init(stateSupplier: () -> State, resultConsumer: (Result) -> Unit, labelConsumer: (Label) -> Unit) {
-        require(!isInitialized) { "Executor is already initialized" }
+    override fun init(callbacks: Callbacks<State, Result, Label>) {
+        check(this.callbacks.value == null) { "Executor is already initialized" }
 
-        isInitialized = true
-        this.stateSupplier = stateSupplier
-        this.resultConsumer = resultConsumer
-        this.labelConsumer = labelConsumer
+        this.callbacks.value = callbacks
     }
 
     override fun handleIntent(intent: Intent) {
@@ -30,11 +27,11 @@ abstract class BaseExecutor<in Intent, in Action, State, Result, Label> : Execut
 
     @MainThread
     protected fun dispatch(result: Result) {
-        resultConsumer(result)
+        callbacks.requireValue.onResult(result)
     }
 
     @MainThread
     protected fun publish(label: Label) {
-        labelConsumer(label)
+        callbacks.requireValue.onLabel(label)
     }
 }

@@ -134,7 +134,7 @@ class LoggingStoreFactoryTest {
         }
     }
 
-    private class TestStore<in Intent : Any, Action, out State : Any, Result, out Label : Any>(
+    private class TestStore<in Intent : Any, Action, out State : Any, Result, Label : Any>(
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
@@ -149,15 +149,21 @@ class LoggingStoreFactoryTest {
             freeze()
 
             executor.init(
-                stateSupplier = _state::value,
-                resultConsumer = { result ->
-                    _state.update { oldState ->
-                        reducer.run {
-                            oldState.reduce(result)
+                object : Executor.Callbacks<State, Result, Label> {
+                    override val state: State get() = _state.value
+
+                    override fun onResult(result: Result) {
+                        _state.update { oldState ->
+                            reducer.run {
+                                oldState.reduce(result)
+                            }
                         }
                     }
-                },
-                labelConsumer = {}
+
+                    override fun onLabel(label: Label) {
+                        // no-op
+                    }
+                }
             )
 
             bootstrapper?.bootstrap(executor::handleAction)

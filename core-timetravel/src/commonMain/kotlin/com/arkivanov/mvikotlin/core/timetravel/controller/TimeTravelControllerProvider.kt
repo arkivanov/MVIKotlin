@@ -7,6 +7,6 @@ private val timeTravelControllerImpl = TimeTravelControllerImpl()
 val timeTravelController: TimeTravelController =
     timeTravelControllerImpl
 
-internal fun attachStore(store: TimeTravelStore<*, *, *>) {
+internal fun attachTimeTravelStore(store: TimeTravelStore<*, *, *>) {
     timeTravelControllerImpl.attachStore(store)
 }

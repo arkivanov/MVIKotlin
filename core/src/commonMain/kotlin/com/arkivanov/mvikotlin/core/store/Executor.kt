@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
 interface Executor<in Intent, in Action, in State, out Result, out Label> {
 
     @MainThread
-    fun init(stateSupplier: () -> State, resultConsumer: (Result) -> Unit, labelConsumer: (Label) -> Unit)
+    fun init(callbacks: Callbacks<State, Result, Label>)
 
     @MainThread
     fun handleIntent(intent: Intent)
@@ -15,4 +15,14 @@ interface Executor<in Intent, in Action, in State, out Result, out Label> {
 
     @MainThread
     fun dispose()
+
+    interface Callbacks<out State, in Result, in Label> {
+        val state: State
+
+        @MainThread
+        fun onResult(result: Result)
+
+        @MainThread
+        fun onLabel(label: Label)
+    }
 }
