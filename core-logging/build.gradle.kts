@@ -4,7 +4,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(project(":core"))
+                api(project(":core"))
                 implementation(project(":utils-internal"))
                 implementation(Deps.Jetbrains.Kotlin.Reflect)
             }

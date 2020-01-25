@@ -12,7 +12,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(project(":core"))
+                api(project(":core"))
                 implementation(project(":core-internal"))
                 implementation(project(":utils-internal"))
                 implementation(Deps.Badoo.Reaktive.Utils)
