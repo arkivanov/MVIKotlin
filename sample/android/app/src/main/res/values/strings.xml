@@ -1,0 +1,6 @@
+<resources>
+
+    <string name="app_name">MviKotlin</string>
+    <string name="add">Add</string>
+    <string name="add_todo_hint">Write ToDo</string>
+</resources>

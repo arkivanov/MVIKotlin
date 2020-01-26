@@ -46,6 +46,14 @@ object Deps {
         object RecyclerView : Group(name = "androidx.recyclerview") {
             object RecyclerView : Dependency(group = AndroidX.RecyclerView, name = "recyclerview", version = "1.1.0")
         }
+
+        object ConstraintLayout : Group(name = "androidx.constraintlayout") {
+            object ConstraintLayout : Dependency(group = AndroidX.ConstraintLayout, name = "constraintlayout", version = "1.1.3")
+        }
+
+        object DrawerLayout : Group(name = "androidx.drawerlayout") {
+            object DrawerLayout : Dependency(group = AndroidX.DrawerLayout, name = "drawerlayout", version = "1.0.0")
+        }
     }
 
     object Badoo {
