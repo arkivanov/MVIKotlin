@@ -249,4 +249,36 @@ class TimeTravelControllerStoppedTest {
         env.store1.assertStateRestored()
         env.store2.assertStateRestored()
     }
+
+    @Test
+    fun contains_events_in_order_WHEN_recorded() {
+        env.produceIntentEventForStore1()
+        env.produceActionEventForStore1()
+        env.produceResultEventForStore1()
+        env.produceStateEventForStore1()
+        env.produceLabelEventForStore1()
+        env.controller.stopRecording()
+
+        assertEquals(
+            listOf(
+                env.createIntentEventForStore1(),
+                env.createActionEventForStore1(),
+                env.createResultEventForStore1(),
+                env.createStateEventForStore1(),
+                env.createLabelEventForStore1()
+            ),
+            env.events
+        )
+    }
+
+    @Test
+    fun events_cleared_WHEN_recorded_and_cancelled() {
+        env.produceStateEventForStore1()
+        env.produceStateEventForStore2()
+        env.controller.stopRecording()
+        env.controller.cancel()
+
+        assertEquals(emptyList(), env.events)
+        assertEquals(-1, env.state.selectedEventIndex)
+    }
 }

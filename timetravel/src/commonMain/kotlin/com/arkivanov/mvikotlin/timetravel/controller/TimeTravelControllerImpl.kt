@@ -110,7 +110,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
 
         if (state.mode !== Mode.IDLE) {
             val oldMode = state.mode
-            swapState { it.copy(events = emptyList(), mode = Mode.IDLE) }
+            swapState { it.copy(events = emptyList(), selectedEventIndex = -1, mode = Mode.IDLE) }
 
             if (oldMode !== Mode.RECORDING) {
                 stores.values.forEach { it.restoreState() }

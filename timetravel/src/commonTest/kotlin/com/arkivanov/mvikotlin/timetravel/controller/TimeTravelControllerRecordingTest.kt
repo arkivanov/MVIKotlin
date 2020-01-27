@@ -105,4 +105,14 @@ class TimeTravelControllerRecordingTest {
 
         assertEquals(TimeTravelState.Mode.IDLE, env.state.mode)
     }
+
+    @Test
+    fun events_cleared_WHEN_cancelled() {
+        env.produceStateEventForStore1()
+        env.produceStateEventForStore2()
+        env.controller.cancel()
+
+        assertEquals(emptyList(), env.events)
+        assertEquals(-1, env.state.selectedEventIndex)
+    }
 }
