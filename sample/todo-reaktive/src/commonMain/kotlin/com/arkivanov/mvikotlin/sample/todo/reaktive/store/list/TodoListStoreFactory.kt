@@ -44,7 +44,7 @@ internal class TodoListStoreFactory(
         data class Added(val item: TodoItem) : Result()
     }
 
-    private inner class Executor : ReaktiveExecutor<Intent, Action, State, Result, Nothing>() {
+    private inner class Executor : ReaktiveExecutor<Intent, Action, Result, State, Nothing>() {
         override fun handleIntent(intent: Intent) {
             when (intent) {
                 is Intent.Delete -> delete(intent.id)

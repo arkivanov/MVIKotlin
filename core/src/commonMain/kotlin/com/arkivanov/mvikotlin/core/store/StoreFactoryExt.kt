@@ -9,7 +9,7 @@ fun <Intent : Any, State : Any, Label : Any> StoreFactory.create(
         name = name,
         initialState = initialState,
         executorFactory = {
-            object : BaseExecutor<Intent, Nothing, State, Intent, Label>() {
+            object : BaseExecutor<Intent, Nothing, Intent, State, Label>() {
                 override fun handleIntent(intent: Intent) {
                     super.handleIntent(intent)
                     dispatch(intent)

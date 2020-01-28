@@ -6,12 +6,12 @@ import com.arkivanov.mvikotlin.logging.LoggingMode
 import com.arkivanov.mvikotlin.logging.logger.Logger
 import com.arkivanov.mvikotlin.logging.logger.log
 
-internal class LoggingExecutor<in Intent, in Action, State, Result, Label>(
-    private val delegate: Executor<Intent, Action, State, Result, Label>,
+internal class LoggingExecutor<in Intent, in Action, Result, State, Label>(
+    private val delegate: Executor<Intent, Action, Result, State, Label>,
     private val logger: Logger,
     private val loggingMode: () -> LoggingMode,
     private val storeName: String
-) : Executor<Intent, Action, State, Result, Label> by delegate {
+) : Executor<Intent, Action, Result, State, Label> by delegate {
 
     override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
         delegate.init(

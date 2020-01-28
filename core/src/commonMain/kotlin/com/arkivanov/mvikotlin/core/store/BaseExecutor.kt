@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
 import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 
-abstract class BaseExecutor<in Intent, in Action, State, Result, Label> : Executor<Intent, Action, State, Result, Label> {
+abstract class BaseExecutor<in Intent, in Action, Result, State, Label> : Executor<Intent, Action, Result, State, Label> {
 
     private val callbacks = lazyAtomicReference<Callbacks<State, Result, Label>>()
     protected val state: State get() = callbacks.requireValue.state

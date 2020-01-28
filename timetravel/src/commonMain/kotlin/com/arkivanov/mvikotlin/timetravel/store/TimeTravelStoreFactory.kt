@@ -16,7 +16,7 @@ object TimeTravelStoreFactory : StoreFactory {
         name: String,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
-        executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
+        executorFactory: () -> Executor<Intent, Action, Result, State, Label>,
         reducer: Reducer<State, Result>
     ): Store<Intent, State, Label> =
         TimeTravelStoreImpl(

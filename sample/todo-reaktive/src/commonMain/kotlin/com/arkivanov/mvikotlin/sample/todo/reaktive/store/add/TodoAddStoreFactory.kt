@@ -35,7 +35,7 @@ internal class TodoAddStoreFactory(
         data class Text(val text: String) : Result()
     }
 
-    private inner class Executor : ReaktiveExecutor<Intent, Nothing, State, Result, Label>() {
+    private inner class Executor : ReaktiveExecutor<Intent, Nothing, Result, State, Label>() {
         override fun handleIntent(intent: Intent) {
             when (intent) {
                 is Intent.HandleTextChanged -> dispatch(

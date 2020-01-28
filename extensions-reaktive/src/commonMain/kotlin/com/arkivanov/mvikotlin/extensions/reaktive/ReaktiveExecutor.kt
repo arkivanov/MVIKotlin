@@ -11,8 +11,8 @@ import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.single.Single
 
 @UseExperimental(ExperimentalReaktiveApi::class)
-open class ReaktiveExecutor<in Intent, in Action, State, Result, Label> :
-    BaseExecutor<Intent, Action, State, Result, Label>(),
+open class ReaktiveExecutor<in Intent, in Action, Result, State, Label> :
+    BaseExecutor<Intent, Action, Result, State, Label>(),
     DisposableScope {
 
     private val scope = DisposableScope()

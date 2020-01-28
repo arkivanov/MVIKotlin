@@ -27,7 +27,7 @@ class LoggingStoreFactory(
         name: String,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
-        executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
+        executorFactory: () -> Executor<Intent, Action, Result, State, Label>,
         reducer: Reducer<State, Result>
     ): Store<Intent, State, Label> {
         logger.log(mode) { "$name: created" }
@@ -49,9 +49,9 @@ class LoggingStoreFactory(
         )
     }
 
-    private fun <Intent, Action, State, Result, Label> Executor<Intent, Action, State, Result, Label>.wrap(
+    private fun <Intent, Action, Result, State, Label> Executor<Intent, Action, Result, State, Label>.wrap(
         storeName: String
-    ): Executor<Intent, Action, State, Result, Label> =
+    ): Executor<Intent, Action, Result, State, Label> =
         LoggingExecutor(
             delegate = this,
             logger = logger,
