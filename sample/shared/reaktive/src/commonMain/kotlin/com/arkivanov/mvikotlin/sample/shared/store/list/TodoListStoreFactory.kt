@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
 import com.arkivanov.mvikotlin.sample.shared.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.shared.database.TodoItem
@@ -31,11 +32,11 @@ internal class TodoListStoreFactory(
         ) {
         }
 
-    private sealed class Action {
+    private sealed class Action : JvmSerializable {
         object LoadAll : Action()
     }
 
-    private sealed class Result {
+    private sealed class Result : JvmSerializable {
         data class Loaded(val items: List<TodoItem>) : Result()
         data class Deleted(val id: String) : Result()
         data class Updated(val item: TodoItem) : Result()

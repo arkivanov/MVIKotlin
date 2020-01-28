@@ -2,6 +2,7 @@ package com.arkivanov.mvikotlin.timetravel
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
+import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 
 /**
  * Describes a recorded time travel event
@@ -16,4 +17,4 @@ data class TimeTravelEvent(
     val type: StoreEventType,
     val value: Any,
     val state: Any
-)
+) : JvmSerializable

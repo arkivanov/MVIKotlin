@@ -3,6 +3,7 @@ package com.arkivanov.mvikotlin.sample.shared.store.add
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
 import com.arkivanov.mvikotlin.sample.shared.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.shared.database.TodoItem
@@ -30,7 +31,7 @@ internal class TodoAddStoreFactory(
         ) {
         }
 
-    private sealed class Result {
+    private sealed class Result : JvmSerializable {
         data class Text(val text: String) : Result()
     }
 
