@@ -6,7 +6,7 @@ interface TodoDatabase {
 
     fun create(data: TodoItem.Data): TodoItem
 
-    fun put(id: String, data: TodoItem.Data)
+    fun save(id: String, data: TodoItem.Data)
 
     fun delete(id: String)
 

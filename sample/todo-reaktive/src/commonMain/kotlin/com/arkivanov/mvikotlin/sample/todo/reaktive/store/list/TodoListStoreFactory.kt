@@ -81,7 +81,7 @@ internal class TodoListStoreFactory(
             val item = state.items.find { it.id == id } ?: return
 
             completableFromFunction {
-                database.put(id, item.data)
+                database.save(id, item.data)
             }
                 .subscribeOn(ioScheduler)
                 .subscribeScoped()

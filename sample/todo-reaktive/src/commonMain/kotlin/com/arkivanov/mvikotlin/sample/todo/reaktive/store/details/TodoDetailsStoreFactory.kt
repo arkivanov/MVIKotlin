@@ -78,7 +78,7 @@ internal class TodoDetailsStoreFactory(
             publish(Label.Changed(itemId, data))
 
             completableFromFunction {
-                database.put(itemId, data)
+                database.save(itemId, data)
             }
                 .subscribeOn(ioScheduler)
                 .subscribeScoped()
