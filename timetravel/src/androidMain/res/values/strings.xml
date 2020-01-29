@@ -1,4 +1,4 @@
 <resources>
 
-    <string name="time_travel_separator">Time</string>
+    <string name="mvi_time_travel_separator">Time</string>
 </resources>

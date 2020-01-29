@@ -13,7 +13,10 @@ internal interface TodoListStore : Store<Intent, State, Nothing> {
         data class ToggleDone(val id: String) : Intent()
         data class SelectItem(val id: String) : Intent()
         object UnselectItem : Intent()
-        data class HandleAdded(val item: TodoItem): Intent()
+        data class HandleAdded(val item: TodoItem) : Intent()
+        data class HandleTextChanged(val id: String, val text: String) : Intent()
+        data class HandleDeleted(val id: String) : Intent()
+        data class HandleItemChanged(val id: String, val data: TodoItem.Data) : Intent()
     }
 
     data class State(

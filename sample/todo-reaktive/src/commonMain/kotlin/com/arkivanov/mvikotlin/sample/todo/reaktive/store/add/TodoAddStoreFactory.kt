@@ -10,8 +10,8 @@ import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.add.TodoAddStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.add.TodoAddStore.Label
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.add.TodoAddStore.State
+import com.badoo.reaktive.scheduler.ioScheduler
 import com.badoo.reaktive.scheduler.mainScheduler
-import com.badoo.reaktive.scheduler.singleScheduler
 import com.badoo.reaktive.single.map
 import com.badoo.reaktive.single.observeOn
 import com.badoo.reaktive.single.singleFromFunction
@@ -32,41 +32,36 @@ internal class TodoAddStoreFactory(
         }
 
     private sealed class Result : JvmSerializable {
-        data class Text(val text: String) : Result()
+        data class TextChanged(val text: String) : Result()
     }
 
     private inner class Executor : ReaktiveExecutor<Intent, Nothing, Result, State, Label>() {
         override fun handleIntent(intent: Intent) {
             when (intent) {
-                is Intent.HandleTextChanged -> dispatch(
-                    Result.Text(
-                        intent.text
-                    )
-                )
+                is Intent.HandleTextChanged -> dispatch(Result.TextChanged(intent.text))
                 is Intent.Add -> addItem()
             }.let {}
         }
 
         private fun addItem() {
-            val text = state.text
-            if (!text.isBlank()) {
-                dispatch(Result.Text(""))
+            val text = state.text.takeUnless(String::isBlank) ?: return
 
-                singleFromFunction {
-                    database.put(TodoItem(text = text))
-                }
-                    .subscribeOn(singleScheduler)
-                    .observeOn(mainScheduler)
-                    .map(Label::Added)
-                    .subscribeScoped(isThreadLocal = true, onSuccess = ::publish)
+            dispatch(Result.TextChanged(""))
+
+            singleFromFunction {
+                database.create(TodoItem.Data(text = text))
             }
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .map(Label::Added)
+                .subscribeScoped(isThreadLocal = true, onSuccess = ::publish)
         }
     }
 
     private object ReducerImpl : Reducer<State, Result> {
         override fun State.reduce(result: Result): State =
             when (result) {
-                is Result.Text -> copy(text = result.text)
+                is Result.TextChanged -> copy(text = result.text)
             }
     }
 }

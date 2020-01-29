@@ -4,5 +4,5 @@
     android:layout_height="wrap_content"
     android:background="?android:dividerHorizontal"
     android:gravity="center_horizontal"
-    android:text="@string/time_travel_separator"
-    android:textAppearance="?textAppearanceCaption" />
+    android:text="@string/mvi_time_travel_separator"
+    android:textAppearance="?mviTextAppearanceCaption" />

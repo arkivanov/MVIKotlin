@@ -30,8 +30,9 @@ dependencies {
     implementation(Deps.AndroidX.RecyclerView.RecyclerView)
     implementation(Deps.AndroidX.ConstraintLayout.ConstraintLayout)
     implementation(Deps.AndroidX.DrawerLayout.DrawerLayout)
+    implementation(Deps.AndroidX.Core.Ktx)
     implementation(project(":mvikotlin"))
-    debugImplementation(project(":timetravel"))
-    debugImplementation(project(":logging"))
+    implementation(project(":timetravel"))
+    implementation(project(":logging"))
     implementation(project(":sample:todo-reaktive"))
 }

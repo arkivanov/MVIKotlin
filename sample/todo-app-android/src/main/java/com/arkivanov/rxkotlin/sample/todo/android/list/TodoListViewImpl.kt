@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Model
 import com.arkivanov.rxkotlin.sample.todo.android.R
+import com.arkivanov.rxkotlin.sample.todo.android.getViewById
 
 class TodoListViewImpl(
     root: View,
@@ -44,7 +45,7 @@ class TodoListViewImpl(
         }
 
     init {
-        requireNotNull(root.findViewById<RecyclerView>(R.id.recycler_view)).adapter = adapter
+        root.getViewById<RecyclerView>(R.id.recycler_view).adapter = adapter
     }
 
     override fun render(model: Model) {

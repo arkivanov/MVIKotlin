@@ -6,15 +6,15 @@ import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
-import com.arkivanov.mvikotlin.sample.todo.reaktive.BusEvent
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
+import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
+import com.arkivanov.mvikotlin.sample.todo.reaktive.BusEvent
 import com.arkivanov.mvikotlin.sample.todo.reaktive.eventBus
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.add.TodoAddStore
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.add.TodoAddStoreFactory
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.list.TodoListStore
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.list.TodoListStoreFactory
-import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
-import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 import com.badoo.reaktive.observable.map
 import com.badoo.reaktive.observable.mapNotNull
 
@@ -35,34 +35,43 @@ class TodoListController(
             database = database
         ).create()
 
-    private var binder: Binder? = null
+    private val storeBinder =
+        bind {
+            eventBus.mapNotNull(BusEvent::toIntent) bindTo todoListStore
+            todoAddStore.labels.map(TodoAddStore.Label::toBusEvent) bindTo eventBus
+        }
+
+    private var viewBinder: Binder? = null
+
+    init {
+        storeBinder.start()
+    }
 
     fun onViewCreated(todoListView: TodoListView, todoAddView: TodoAddView) {
-        binder =
+        viewBinder =
             bind {
                 todoListView.events.map(TodoListView.Event::toIntent) bindTo todoListStore
                 todoListStore.states.map(TodoListStore.State::toViewModel) bindTo todoListView
-                eventBus.mapNotNull(BusEvent::toIntent) bindTo todoListStore
 
                 todoAddView.events.map(TodoAddView.Event::toIntent) bindTo todoAddStore
                 todoAddStore.states.map(TodoAddStore.State::toViewModel) bindTo todoAddView
-                todoAddStore.labels.map(TodoAddStore.Label::toBusEvent) bindTo eventBus
             }
     }
 
     fun onStart() {
-        binder?.start()
+        viewBinder?.start()
     }
 
     fun onStop() {
-        binder?.stop()
+        viewBinder?.stop()
     }
 
     fun onViewDestroyed() {
-        binder = null
+        viewBinder = null
     }
 
     fun onDestroy() {
+        storeBinder.stop()
         todoListStore.dispose()
         todoAddStore.dispose()
     }

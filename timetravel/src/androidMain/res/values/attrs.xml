@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="textAppearanceBody1" format="reference" />
-    <attr name="textAppearanceBody2" format="reference" />
-    <attr name="textAppearanceCaption" format="reference" />
+    <attr name="mviTextAppearanceBody1" format="reference" />
+    <attr name="mviTextAppearanceBody2" format="reference" />
+    <attr name="mviTextAppearanceCaption" format="reference" />
 </resources>

@@ -1,26 +1,33 @@
 package com.arkivanov.mvikotlin.sample.todo.common.database
 
 import android.content.Context
+import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem.*
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 class TodoDatabaseImpl(
     context: Context
 ) : TodoDatabase {
 
-    private val map = ConcurrentHashMap<String, TodoItem>()
+    private val map = HashMap<String, TodoItem>()
+
+    init {
+        create(Data(text = "kek"))
+    }
 
     override fun get(id: String): TodoItem? = map[id]
 
-    override fun put(item: TodoItem): TodoItem =
-        if (item.id == "") {
-            val newItem = item.copy(id = UUID.randomUUID().toString())
-            map[newItem.id] = newItem
-            newItem
-        } else {
-            map[item.id] = item
-            item
-        }
+    override fun create(data: Data): TodoItem {
+        val id = UUID.randomUUID().toString()
+        val item = TodoItem(id = id, data = data)
+        map[id] = item
+
+        return item
+    }
+
+    override fun put(id: String, data: Data) {
+        val item = map[id] ?: return
+        map[id] = item.copy(data = data)
+    }
 
     override fun delete(id: String) {
         map -= id

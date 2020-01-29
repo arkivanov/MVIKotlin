@@ -89,9 +89,9 @@ class TodoListAdapter(
         fun bind(item: TodoItem) {
             boundItem = item
             checkBox.setOnCheckedChangeListener(null)
-            checkBox.isChecked = item.isDone
+            checkBox.isChecked = item.data.isDone
             checkBox.setOnCheckedChangeListener(onCheckedChangeListener)
-            textView.text = item.text
+            textView.text = item.data.text
         }
     }
 }
