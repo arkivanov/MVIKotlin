@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
-import com.arkivanov.mvikotlin.core.store.BaseBootstrapper
+import com.arkivanov.mvikotlin.core.store.AbstractBootstrapper
 import com.badoo.reaktive.annotations.ExperimentalReaktiveApi
 import com.badoo.reaktive.base.CompleteCallback
 import com.badoo.reaktive.completable.Completable
@@ -11,7 +11,7 @@ import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.single.Single
 
 @UseExperimental(ExperimentalReaktiveApi::class)
-abstract class ReaktiveBootstrapper<Action> : BaseBootstrapper<Action>(), DisposableScope {
+abstract class ReaktiveBootstrapper<Action> : AbstractBootstrapper<Action>(), DisposableScope {
 
     private val scope = DisposableScope()
 
@@ -27,41 +27,9 @@ abstract class ReaktiveBootstrapper<Action> : BaseBootstrapper<Action>(), Dispos
 
     final override val isDisposed: Boolean get() = scope.isDisposed
 
-    final override fun <T : CompleteCallback> T.scope(): T = scope.run { this@scope.scope() }
-
     final override fun <T : Disposable> T.scope(): T = scope.run { this@scope.scope() }
 
-    final override fun Completable.subscribeScoped(
-        isThreadLocal: Boolean,
-        onSubscribe: ((Disposable) -> Unit)?,
-        onError: ((Throwable) -> Unit)?,
-        onComplete: (() -> Unit)?
-    ): Disposable =
-        scope.run {
-            this@subscribeScoped.subscribeScoped(
-                isThreadLocal = isThreadLocal,
-                onSubscribe = onSubscribe,
-                onError = onError,
-                onComplete = onComplete
-            )
-        }
-
-    final override fun <T> Maybe<T>.subscribeScoped(
-        isThreadLocal: Boolean,
-        onSubscribe: ((Disposable) -> Unit)?,
-        onError: ((Throwable) -> Unit)?,
-        onComplete: (() -> Unit)?,
-        onSuccess: ((T) -> Unit)?
-    ): Disposable =
-        scope.run {
-            this@subscribeScoped.subscribeScoped(
-                isThreadLocal = isThreadLocal,
-                onSubscribe = onSubscribe,
-                onError = onError,
-                onComplete = onComplete,
-                onSuccess = onSuccess
-            )
-        }
+    final override fun <T : CompleteCallback> T.scope(): T = scope.run { this@scope.scope() }
 
     final override fun <T> Observable<T>.subscribeScoped(
         isThreadLocal: Boolean,
@@ -92,6 +60,38 @@ abstract class ReaktiveBootstrapper<Action> : BaseBootstrapper<Action>(), Dispos
                 onSubscribe = onSubscribe,
                 onError = onError,
                 onSuccess = onSuccess
+            )
+        }
+
+    final override fun <T> Maybe<T>.subscribeScoped(
+        isThreadLocal: Boolean,
+        onSubscribe: ((Disposable) -> Unit)?,
+        onError: ((Throwable) -> Unit)?,
+        onComplete: (() -> Unit)?,
+        onSuccess: ((T) -> Unit)?
+    ): Disposable =
+        scope.run {
+            this@subscribeScoped.subscribeScoped(
+                isThreadLocal = isThreadLocal,
+                onSubscribe = onSubscribe,
+                onError = onError,
+                onComplete = onComplete,
+                onSuccess = onSuccess
+            )
+        }
+
+    final override fun Completable.subscribeScoped(
+        isThreadLocal: Boolean,
+        onSubscribe: ((Disposable) -> Unit)?,
+        onError: ((Throwable) -> Unit)?,
+        onComplete: (() -> Unit)?
+    ): Disposable =
+        scope.run {
+            this@subscribeScoped.subscribeScoped(
+                isThreadLocal = isThreadLocal,
+                onSubscribe = onSubscribe,
+                onError = onError,
+                onComplete = onComplete
             )
         }
 }

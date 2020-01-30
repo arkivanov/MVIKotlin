@@ -170,7 +170,8 @@ class LoggingStoreFactoryTest {
                 }
             )
 
-            bootstrapper?.bootstrap(executor::handleAction)
+            bootstrapper?.init(executor::handleAction)
+            bootstrapper?.invoke()
         }
 
         override fun states(observer: Observer<State>): Disposable = throw NotImplementedError("Not required")

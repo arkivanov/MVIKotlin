@@ -5,7 +5,10 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
 interface Bootstrapper<out Action> {
 
     @MainThread
-    fun bootstrap(actionConsumer: (Action) -> Unit)
+    fun init(actionConsumer: (Action) -> Unit)
+
+    @MainThread
+    operator fun invoke()
 
     @MainThread
     fun dispose()

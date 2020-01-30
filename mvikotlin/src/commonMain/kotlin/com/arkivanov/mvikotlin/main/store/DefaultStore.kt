@@ -57,13 +57,15 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
             }
         )
 
-        bootstrapper?.bootstrap { action ->
+        bootstrapper?.init { action ->
             assertOnMainThread()
 
             doIfNotDisposed {
                 executor.handleAction(action)
             }
         }
+
+        bootstrapper?.invoke()
     }
 
     private inline fun changeState(func: (State) -> State) {

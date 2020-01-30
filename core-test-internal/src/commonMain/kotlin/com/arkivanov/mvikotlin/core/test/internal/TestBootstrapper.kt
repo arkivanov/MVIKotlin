@@ -6,17 +6,25 @@ import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
 
 class TestBootstrapper(
-    private val bootstrap: TestBootstrapper.() -> Unit = {}
+    private val init: () -> Unit = {},
+    private val invoke: TestBootstrapper.() -> Unit = {}
 ) : Bootstrapper<String> {
 
     private val actionConsumer = lazyAtomicReference<(String) -> Unit>()
+    val isInitialized: Boolean get() = actionConsumer.value != null
 
     private val _isDisposed = AtomicBoolean()
     val isDisposed: Boolean get() = _isDisposed.value
 
-    override fun bootstrap(actionConsumer: (String) -> Unit) {
+    override fun init(actionConsumer: (String) -> Unit) {
+        check(this.actionConsumer.value == null) { "Executor is already initialized" }
+
         this.actionConsumer.value = actionConsumer
-        bootstrap.invoke(this)
+        init()
+    }
+
+    override fun invoke() {
+        invoke.invoke(this)
     }
 
     override fun dispose() {

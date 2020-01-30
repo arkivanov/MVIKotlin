@@ -23,7 +23,10 @@ interface StoreGenericTests {
     fun state_val_returns_initial_state_WHEN_created()
 
     @Test
-    fun calls_bootstrapper_WHEN_created()
+    fun initializes_bootstrapper_WHEN_created()
+
+    @Test
+    fun calls_bootstrapper_after_initialization_WHEN_created()
 
     @Test
     fun initializes_executor_WHEN_with_bootstrapper_and_created()
@@ -108,7 +111,6 @@ fun StoreGenericTests(
     ) -> Store<String, String, String>
 ): StoreGenericTests =
     object : StoreGenericTests {
-        @Test
         override fun state_val_returns_initial_state_WHEN_created() {
             val store = store(initialState = "initial")
 
@@ -117,16 +119,22 @@ fun StoreGenericTests(
             assertEquals("initial", state)
         }
 
-        @Test
-        override fun calls_bootstrapper_WHEN_created() {
-            val isCalled = AtomicBoolean()
+        override fun initializes_bootstrapper_WHEN_created() {
+            val bootstrapper = TestBootstrapper()
 
-            store(bootstrapper = TestBootstrapper(bootstrap = { isCalled.value = true }))
+            store(bootstrapper = bootstrapper)
 
-            assertTrue(isCalled.value)
+            assertTrue(bootstrapper.isInitialized)
         }
 
-        @Test
+        override fun calls_bootstrapper_after_initialization_WHEN_created() {
+            val events = AtomicList<String>()
+
+            store(bootstrapper = TestBootstrapper(init = { events += "init" }, invoke = { events += "invoke" }))
+
+            assertEquals(listOf("init", "invoke"), events.value)
+        }
+
         override fun initializes_executor_WHEN_with_bootstrapper_and_created() {
             val executor = TestExecutor()
 
@@ -135,7 +143,6 @@ fun StoreGenericTests(
             assertTrue(executor.isInitialized)
         }
 
-        @Test
         override fun initializes_executor_WHEN_without_bootstrapper_and_created() {
             val executor = TestExecutor()
 
@@ -144,19 +151,17 @@ fun StoreGenericTests(
             assertTrue(executor.isInitialized)
         }
 
-        @Test
         override fun initializes_executor_before_bootstrapper_call_WHEN_with_bootstrapper_and_created() {
             val events = AtomicList<String>()
 
             store(
-                bootstrapper = TestBootstrapper { events += "bootstrap" },
-                executorFactory = { TestExecutor(init = { events += "init" }) }
+                bootstrapper = TestBootstrapper(init = { events += "bootstrapper" }),
+                executorFactory = { TestExecutor(init = { events += "executor" }) }
             )
 
-            assertEquals(listOf("init", "bootstrap"), events.value)
+            assertEquals(listOf("executor", "bootstrapper"), events.value)
         }
 
-        @Test
         override fun delivers_actions_from_bootstrapper_to_executor_after_bootstrap() {
             val actions = AtomicList<String>()
             val bootstrapper = TestBootstrapper()
@@ -172,7 +177,6 @@ fun StoreGenericTests(
             assertEquals(listOf("action1", "action2"), actions.value)
         }
 
-        @Test
         override fun delivers_actions_from_bootstrapper_to_executor_during_bootstrap() {
             val actions = AtomicList<String>()
 
@@ -187,7 +191,6 @@ fun StoreGenericTests(
             assertEquals(listOf("action1", "action2"), actions.value)
         }
 
-        @Test
         override fun does_not_deliver_actions_from_bootstrapper_to_executor_WHEN_disposed_and_bootstrapper_produced_actions() {
             val actions = AtomicList<String>()
             val bootstrapper = TestBootstrapper()
@@ -205,7 +208,6 @@ fun StoreGenericTests(
             assertEquals(emptyList(), actions.value)
         }
 
-        @Test
         override fun produces_labels_from_executor() {
             val labels = AtomicList<String>()
             val executor = TestExecutor()
@@ -219,7 +221,6 @@ fun StoreGenericTests(
             assertEquals(listOf("label1", "label2"), labels.value)
         }
 
-        @Test
         override fun does_not_produce_labels_from_executor_to_unsubscribed_observer() {
             val labels = AtomicList<String>()
             val executor = TestExecutor()
@@ -233,7 +234,6 @@ fun StoreGenericTests(
             assertEquals(emptyList(), labels.value)
         }
 
-        @Test
         override fun delivers_intents_to_executor() {
             val intents = AtomicList<String>()
             val store = store(executorFactory = { TestExecutor(handleIntent = { intents += it }) })
@@ -244,7 +244,6 @@ fun StoreGenericTests(
             assertEquals(listOf("intent1", "intent2"), intents.value)
         }
 
-        @Test
         override fun does_not_deliver_intents_to_executor_WHEN_disposed_and_new_intents() {
             val intents = AtomicList<String>()
             val store = store(executorFactory = { TestExecutor(handleIntent = { intents += it }) })
@@ -256,7 +255,6 @@ fun StoreGenericTests(
             assertEquals(emptyList(), intents.value)
         }
 
-        @Test
         override fun executor_can_read_initial_state() {
             val executor = TestExecutor()
             store(initialState = "initial", executorFactory = { executor })
@@ -264,7 +262,6 @@ fun StoreGenericTests(
             assertEquals("initial", executor.state)
         }
 
-        @Test
         override fun executor_can_read_new_state_WHEN_state_changed() {
             val executor = TestExecutor()
             store(executorFactory = { executor }, reducer = reducer { it })
@@ -274,7 +271,6 @@ fun StoreGenericTests(
             assertEquals("result", executor.state)
         }
 
-        @Test
         override fun delivers_results_from_executor_to_reducer() {
             val results = AtomicList<String>()
             val executor = TestExecutor()
@@ -292,7 +288,6 @@ fun StoreGenericTests(
             assertEquals(listOf("result1", "result2"), results.value)
         }
 
-        @Test
         override fun state_val_returns_new_state_WHEN_new_state_returned_from_reducer() {
             val executor = TestExecutor()
             val store =
@@ -306,7 +301,6 @@ fun StoreGenericTests(
             assertEquals("result", store.state)
         }
 
-        @Test
         override fun executor_can_read_new_state_WHEN_new_state_returned_from_reducer() {
             val executor = TestExecutor()
             store(
@@ -319,7 +313,6 @@ fun StoreGenericTests(
             assertEquals("result", executor.state)
         }
 
-        @Test
         override fun bootstrapper_disposed_WHEN_store_disposed() {
             val bootstrapper = TestBootstrapper()
             val store = store(bootstrapper = bootstrapper)
@@ -329,7 +322,6 @@ fun StoreGenericTests(
             assertTrue(bootstrapper.isDisposed)
         }
 
-        @Test
         override fun executor_disposed_WHEN_store_disposed() {
             val executor = TestExecutor()
             val store = store(executorFactory = { executor })
@@ -339,7 +331,6 @@ fun StoreGenericTests(
             assertTrue(executor.isDisposed)
         }
 
-        @Test
         override fun states_observers_completed_WHEN_store_disposed() {
             val isCompleted1 = AtomicBoolean()
             val isCompleted2 = AtomicBoolean()
@@ -353,7 +344,6 @@ fun StoreGenericTests(
             assertTrue(isCompleted2.value)
         }
 
-        @Test
         override fun labels_observers_completed_WHEN_store_disposed() {
             val isCompleted1 = AtomicBoolean()
             val isCompleted2 = AtomicBoolean()
@@ -367,7 +357,6 @@ fun StoreGenericTests(
             assertTrue(isCompleted2.value)
         }
 
-        @Test
         override fun states_observers_disposables_disposed_WHEN_store_disposed() {
             val store = store()
             val disposable1 = store.states(observer())
@@ -379,7 +368,6 @@ fun StoreGenericTests(
             assertTrue(disposable2.isDisposed)
         }
 
-        @Test
         override fun labels_observers_disposables_disposed_WHEN_store_disposed() {
             val store = store()
             val disposable1 = store.labels(observer())
@@ -391,7 +379,6 @@ fun StoreGenericTests(
             assertTrue(disposable2.isDisposed)
         }
 
-        @Test
         override fun store_isDisposed_returns_true_WHEN_store_disposed() {
             val store = store()
 
@@ -400,7 +387,6 @@ fun StoreGenericTests(
             assertTrue(store.isDisposed)
         }
 
-        @Test
         override fun executor_can_read_new_state_WHEN_recursive_intent_on_label() {
             val stateRef = lazyAtomicReference<String>()
 
@@ -428,7 +414,6 @@ fun StoreGenericTests(
             assertEquals("result", stateRef.requireValue)
         }
 
-        @Test
         override fun executor_can_read_new_state_WHEN_recursive_intent_on_state() {
             val stateRef = lazyAtomicReference<String>()
 

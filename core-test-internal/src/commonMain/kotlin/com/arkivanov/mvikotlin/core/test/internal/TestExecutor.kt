@@ -7,7 +7,7 @@ import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
 
 class TestExecutor(
-    private val init: (Callbacks<String, String, String>) -> Unit = {},
+    private val init: () -> Unit = {},
     private val handleIntent: TestExecutor.(String) -> Unit = {},
     private val handleAction: TestExecutor.(String) -> Unit = {}
 ) : Executor<String, String, String, String, String> {
@@ -22,7 +22,7 @@ class TestExecutor(
         check(this.callbacks.value == null) { "Executor is already initialized" }
 
         this.callbacks.value = callbacks
-        init.invoke(callbacks)
+        init()
     }
 
     override fun handleIntent(intent: String) {

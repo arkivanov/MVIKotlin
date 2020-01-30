@@ -2,9 +2,9 @@ package com.arkivanov.mvikotlin.core.store
 
 class SimpleBootstrapper<Action>(
     private vararg val actions: Action
-) : BaseBootstrapper<Action>() {
+) : AbstractBootstrapper<Action>() {
 
-    override fun bootstrap() {
+    override fun invoke() {
         actions.forEach(::dispatch)
     }
 }

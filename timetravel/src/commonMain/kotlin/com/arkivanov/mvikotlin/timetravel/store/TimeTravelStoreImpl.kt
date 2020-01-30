@@ -102,9 +102,11 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
             }
         )
 
-        bootstrapper?.bootstrap {
+        bootstrapper?.init {
             onEvent(StoreEventType.ACTION, it, state)
         }
+
+        bootstrapper?.invoke()
     }
 
     override fun restoreState() {
