@@ -24,6 +24,18 @@ object Deps {
                 object Common : Dependency(group = Kotlin, name = "kotlin-test-annotations-common", version = version)
             }
         }
+
+        object Kotlinx : Group(name = "org.jetbrains.kotlinx") {
+            object Coroutines {
+                private const val version = "1.3.3"
+
+                object Core : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core", version = version) {
+                    object Common : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-common", version = version)
+                    object Native : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-native", version = version)
+                    object Js : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-js", version = version)
+                }
+            }
+        }
     }
 
     object Android {
