@@ -34,6 +34,8 @@ object Deps {
                     object Native : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-native", version = version)
                     object Js : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-js", version = version)
                 }
+
+                object Android : Dependency(group = Kotlinx, name = "kotlinx-coroutines-android", version = version)
             }
         }
     }

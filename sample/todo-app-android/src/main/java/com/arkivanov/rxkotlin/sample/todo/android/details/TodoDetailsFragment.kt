@@ -9,14 +9,17 @@ import androidx.fragment.app.Fragment
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.todo.coroutines.controller.TodoDetailsCoroutinesController
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoDetailsReaktiveController
+import com.arkivanov.rxkotlin.sample.todo.android.FrameworkType
 import com.arkivanov.rxkotlin.sample.todo.android.R
 import java.io.Serializable
 
 class TodoDetailsFragment(
     private val database: TodoDatabase,
     private val storeFactory: StoreFactory,
-    private val callbacks: Callbacks
+    private val callbacks: Callbacks,
+    private val frameworkType: FrameworkType
 ) : Fragment() {
 
     private lateinit var controller: TodoDetailsController
@@ -26,11 +29,20 @@ class TodoDetailsFragment(
         super.onCreate(savedInstanceState)
 
         controller =
-            TodoDetailsReaktiveController(
-                storeFactory = storeFactory,
-                database = database,
-                itemId = args.itemId
-            )
+            when (frameworkType) {
+                FrameworkType.REAKTIVE ->
+                    TodoDetailsReaktiveController(
+                        storeFactory = storeFactory,
+                        database = database,
+                        itemId = args.itemId
+                    )
+
+                FrameworkType.COROUTINES -> TodoDetailsCoroutinesController(
+                    storeFactory = storeFactory,
+                    database = database,
+                    itemId = args.itemId
+                )
+            }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

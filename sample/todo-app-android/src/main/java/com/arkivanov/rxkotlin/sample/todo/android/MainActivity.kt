@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         FragmentFactoryImpl(
             database = app.database,
             storeFactory = storeFactory,
+            frameworkType = FrameworkType.COROUTINES,
             todoListFragmentCallbacks = TodoListFragmentCallbacksImpl(),
             todoDetailsFragmentCallbacks = TodoDetailsFragmentCallbacksImpl()
         )
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
     private class FragmentFactoryImpl(
         private val database: TodoDatabase,
         private val storeFactory: StoreFactory,
+        private val frameworkType: FrameworkType,
         private val todoListFragmentCallbacks: TodoListFragment.Callbacks,
         private val todoDetailsFragmentCallbacks: TodoDetailsFragment.Callbacks
     ) : FragmentFactory() {
@@ -75,14 +77,16 @@ class MainActivity : AppCompatActivity() {
             TodoListFragment(
                 database = database,
                 storeFactory = storeFactory,
-                callbacks = todoListFragmentCallbacks
+                callbacks = todoListFragmentCallbacks,
+                frameworkType = frameworkType
             )
 
         fun todoDetailsFragment(): TodoDetailsFragment =
             TodoDetailsFragment(
                 database = database,
                 storeFactory = storeFactory,
-                callbacks = todoDetailsFragmentCallbacks
+                callbacks = todoDetailsFragmentCallbacks,
+                frameworkType = frameworkType
             )
     }
 }

@@ -21,6 +21,7 @@ android {
 
     packagingOptions {
         exclude("META-INF/reaktive_debug.kotlin_module")
+        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
 }
 
@@ -31,8 +32,11 @@ dependencies {
     implementation(Deps.AndroidX.ConstraintLayout.ConstraintLayout)
     implementation(Deps.AndroidX.DrawerLayout.DrawerLayout)
     implementation(Deps.AndroidX.Core.Ktx)
+    implementation(Deps.Jetbrains.Kotlinx.Coroutines.Core)
+    implementation(Deps.Jetbrains.Kotlinx.Coroutines.Android)
     implementation(project(":mvikotlin"))
     implementation(project(":timetravel"))
     implementation(project(":logging"))
     implementation(project(":sample:todo-reaktive"))
+    implementation(project(":sample:todo-coroutines"))
 }
