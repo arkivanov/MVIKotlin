@@ -1,13 +1,9 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive
 
-import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
+import com.arkivanov.mvikotlin.sample.todo.common.internal.BusEvent
 import com.badoo.reaktive.subject.Relay
 import com.badoo.reaktive.subject.publish.PublishSubject
+import kotlin.native.concurrent.SharedImmutable
 
+@SharedImmutable
 internal val eventBus: Relay<BusEvent> = PublishSubject()
-
-internal sealed class BusEvent {
-    data class TodoItemAdded(val item: TodoItem) : BusEvent()
-    data class TodoItemChanged(val id: String, val data: TodoItem.Data) : BusEvent()
-    data class TodoItemDeleted(val id: String) : BusEvent()
-}

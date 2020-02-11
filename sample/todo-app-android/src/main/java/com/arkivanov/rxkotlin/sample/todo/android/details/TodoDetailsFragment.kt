@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
-import com.arkivanov.mvikotlin.sample.todo.reaktive.details.TodoDetailsController
+import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoDetailsReaktiveController
 import com.arkivanov.rxkotlin.sample.todo.android.R
 import java.io.Serializable
 
@@ -25,7 +26,7 @@ class TodoDetailsFragment(
         super.onCreate(savedInstanceState)
 
         controller =
-            TodoDetailsController(
+            TodoDetailsReaktiveController(
                 storeFactory = storeFactory,
                 database = database,
                 itemId = args.itemId

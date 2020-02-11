@@ -1,13 +1,13 @@
-package com.arkivanov.mvikotlin.sample.todo.reaktive.store.details
+package com.arkivanov.mvikotlin.sample.todo.common.internal.store.details
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.details.TodoDetailsStore.Intent
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.details.TodoDetailsStore.Label
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.details.TodoDetailsStore.State
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Intent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Label
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.State
 
-internal interface TodoDetailsStore : Store<Intent, State, Label> {
+interface TodoDetailsStore : Store<Intent, State, Label> {
 
     sealed class Intent : JvmSerializable {
         data class HandleTextChanged(val text: String) : Intent()

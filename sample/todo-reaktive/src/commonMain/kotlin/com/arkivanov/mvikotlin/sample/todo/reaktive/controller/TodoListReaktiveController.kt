@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.sample.todo.reaktive.list
+package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.reaktive.Binder
@@ -6,22 +6,26 @@ import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.todo.common.internal.BusEvent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toBusEvent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toViewModel
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.add.TodoAddStore
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
-import com.arkivanov.mvikotlin.sample.todo.reaktive.BusEvent
 import com.arkivanov.mvikotlin.sample.todo.reaktive.eventBus
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.add.TodoAddStore
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.add.TodoAddStoreFactory
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.list.TodoListStore
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.list.TodoListStoreFactory
+import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoAddStoreFactory
+import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoListStoreFactory
 import com.badoo.reaktive.observable.map
 import com.badoo.reaktive.observable.mapNotNull
 
-class TodoListController(
+class TodoListReaktiveController(
     storeFactory: StoreFactory,
     database: TodoDatabase
-) {
+) : TodoListController {
 
     private val todoListStore =
         TodoListStoreFactory(
@@ -47,7 +51,7 @@ class TodoListController(
         storeBinder.start()
     }
 
-    fun onViewCreated(todoListView: TodoListView, todoAddView: TodoAddView) {
+    override fun onViewCreated(todoListView: TodoListView, todoAddView: TodoAddView) {
         viewBinder =
             bind {
                 todoListView.events.map(TodoListView.Event::toIntent) bindTo todoListStore
@@ -58,19 +62,19 @@ class TodoListController(
             }
     }
 
-    fun onStart() {
+    override fun onStart() {
         viewBinder?.start()
     }
 
-    fun onStop() {
+    override fun onStop() {
         viewBinder?.stop()
     }
 
-    fun onViewDestroyed() {
+    override fun onViewDestroyed() {
         viewBinder = null
     }
 
-    fun onDestroy() {
+    override fun onDestroy() {
         storeBinder.stop()
         todoListStore.dispose()
         todoAddStore.dispose()

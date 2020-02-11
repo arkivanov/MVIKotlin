@@ -1,18 +1,18 @@
-package com.arkivanov.mvikotlin.sample.todo.reaktive.list
+package com.arkivanov.mvikotlin.sample.todo.common.internal.mapper
 
+import com.arkivanov.mvikotlin.sample.todo.common.internal.BusEvent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.Intent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.State
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Model
-import com.arkivanov.mvikotlin.sample.todo.reaktive.BusEvent
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.list.TodoListStore.Intent
-import com.arkivanov.mvikotlin.sample.todo.reaktive.store.list.TodoListStore.State
 
-internal fun State.toViewModel(): Model =
+fun State.toViewModel(): Model =
     Model(
         items = items,
         selectedItemId = selectedItemId
     )
 
-internal fun Event.toIntent(): Intent =
+fun Event.toIntent(): Intent =
     when (this) {
         is Event.ItemClicked -> Intent.SelectItem(id = id)
         is Event.ItemDoneClicked -> Intent.ToggleDone(id = id)
@@ -20,7 +20,7 @@ internal fun Event.toIntent(): Intent =
         is Event.ItemSelectionHandled -> Intent.UnselectItem
     }
 
-internal fun BusEvent.toIntent(): Intent? =
+fun BusEvent.toIntent(): Intent? =
     when (this) {
         is BusEvent.TodoItemAdded -> Intent.HandleAdded(item = item)
         is BusEvent.TodoItemChanged -> Intent.HandleItemChanged(id = id, data = data)
