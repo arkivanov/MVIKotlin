@@ -26,7 +26,7 @@ abstract class TodoAddStoreAbstractFactory(
             }
         }
 
-    protected abstract fun createExecutor(): Executor<Intent, Nothing, Result, State, Label>
+    protected abstract fun createExecutor(): Executor<Intent, Nothing, State, Result, Label>
 
     protected sealed class Result : JvmSerializable {
         data class TextChanged(val text: String) : Result()

@@ -21,10 +21,10 @@ internal class TodoDetailsStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Unit, Result, State, Label> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Unit, State, Result, Label> = ExecutorImpl()
 
-    private inner class ExecutorImpl : SuspendExecutor<Intent, Unit, Result, State, Label>(mainContext = mainContext) {
-        override suspend fun executeAction(action: Unit) {
+    private inner class ExecutorImpl : SuspendExecutor<Intent, Unit, State, Result, Label>(mainContext = mainContext) {
+        override suspend fun executeAction(action: Unit, getState: () -> State) {
             withContext(ioContext) {
                 database.get(itemId)
             }
@@ -32,25 +32,25 @@ internal class TodoDetailsStoreFactory(
                 .also(::dispatch)
         }
 
-        override suspend fun executeIntent(intent: Intent) {
+        override suspend fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.HandleTextChanged -> handleTextChanged(intent.text)
-                is Intent.ToggleDone -> toggleDone()
+                is Intent.HandleTextChanged -> handleTextChanged(intent.text, getState())
+                is Intent.ToggleDone -> toggleDone(getState())
                 is Intent.Delete -> delete()
             }.let {}
         }
 
-        private suspend fun handleTextChanged(text: String) {
+        private suspend fun handleTextChanged(text: String, state: State) {
             dispatch(Result.TextChanged(text))
-            save()
+            save(state)
         }
 
-        private suspend fun toggleDone() {
+        private suspend fun toggleDone(state: State) {
             dispatch(Result.DoneToggled)
-            save()
+            save(state)
         }
 
-        private suspend fun save() {
+        private suspend fun save(state: State) {
             val data = state.data ?: return
             publish(Label.Changed(itemId, data))
 

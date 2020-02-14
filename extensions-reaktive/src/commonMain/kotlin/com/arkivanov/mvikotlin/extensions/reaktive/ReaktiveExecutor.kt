@@ -1,6 +1,9 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
-import com.arkivanov.mvikotlin.core.store.BaseExecutor
+import com.arkivanov.mvikotlin.core.annotations.MainThread
+import com.arkivanov.mvikotlin.core.store.Executor
+import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.annotations.ExperimentalReaktiveApi
 import com.badoo.reaktive.base.CompleteCallback
 import com.badoo.reaktive.completable.Completable
@@ -11,16 +14,48 @@ import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.single.Single
 
 @UseExperimental(ExperimentalReaktiveApi::class)
-open class ReaktiveExecutor<in Intent, in Action, Result, State, Label> :
-    BaseExecutor<Intent, Action, Result, State, Label>(),
+open class ReaktiveExecutor<in Intent, in Action, in State, Result, Label> :
+    Executor<Intent, Action, State, Result, Label>,
     DisposableScope {
 
+    private val callbacks = lazyAtomicReference<Executor.Callbacks<State, Result, Label>>()
+    private val getState: () -> State = { callbacks.requireValue.state }
     private val scope = DisposableScope()
+
+    override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
+        check(this.callbacks.value == null) { "Executor is already initialized" }
+
+        this.callbacks.value = callbacks
+    }
+
+    final override fun handleIntent(intent: Intent) {
+        executeIntent(intent, getState)
+    }
+
+    @MainThread
+    protected open fun executeIntent(intent: Intent, getState: () -> State) {
+    }
+
+    final override fun handleAction(action: Action) {
+        executeAction(action, getState)
+    }
+
+    @MainThread
+    protected open fun executeAction(action: Action, getState: () -> State) {
+    }
 
     override fun dispose() {
         scope.dispose()
+    }
 
-        super.dispose()
+    @MainThread
+    protected fun dispatch(result: Result) {
+        callbacks.requireValue.onResult(result)
+    }
+
+    @MainThread
+    protected fun publish(label: Label) {
+        callbacks.requireValue.onLabel(label)
     }
 
     /*

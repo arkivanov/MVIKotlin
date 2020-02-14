@@ -19,19 +19,19 @@ internal class TodoListStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Unit, Result, State, Nothing> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Unit, State, Result, Nothing> = ExecutorImpl()
 
-    private inner class ExecutorImpl : SuspendExecutor<Intent, Unit, Result, State, Nothing>(mainContext = mainContext) {
-        override suspend fun executeAction(action: Unit) {
+    private inner class ExecutorImpl : SuspendExecutor<Intent, Unit, State, Result, Nothing>(mainContext = mainContext) {
+        override suspend fun executeAction(action: Unit, getState: () -> State) {
             withContext(ioContext) { database.getAll() }
                 .let(Result::Loaded)
                 .also(::dispatch)
         }
 
-        override suspend fun executeIntent(intent: Intent) {
+        override suspend fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
-                is Intent.ToggleDone -> toggleDone(intent.id)
+                is Intent.ToggleDone -> toggleDone(intent.id, getState())
                 is Intent.SelectItem -> dispatch(Result.SelectionChanged(intent.id))
                 is Intent.UnselectItem -> dispatch(Result.SelectionChanged(null))
                 is Intent.HandleAdded -> dispatch(Result.Added(intent.item))
@@ -49,7 +49,7 @@ internal class TodoListStoreFactory(
             }
         }
 
-        private suspend fun toggleDone(id: String) {
+        private suspend fun toggleDone(id: String, state: State) {
             dispatch(Result.DoneToggled(id))
 
             val item = state.items.find { it.id == id } ?: return

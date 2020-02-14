@@ -29,7 +29,7 @@ abstract class TodoDetailsStoreAbstractFactory(
             }
         }
 
-    protected abstract fun createExecutor(): Executor<Intent, Unit, Result, State, Label>
+    protected abstract fun createExecutor(): Executor<Intent, Unit, State, Result, Label>
 
     protected sealed class Result : JvmSerializable {
         data class Loaded(val data: TodoItem.Data) : Result()

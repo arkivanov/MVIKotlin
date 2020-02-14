@@ -1,43 +1,61 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
-import com.arkivanov.mvikotlin.core.store.BaseExecutor
+import com.arkivanov.mvikotlin.core.annotations.MainThread
+import com.arkivanov.mvikotlin.core.store.Executor
+import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
+import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.requireValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-open class SuspendExecutor<in Intent, in Action, Result, State, Label>(
+open class SuspendExecutor<in Intent, in Action, in State, Result, Label>(
     mainContext: CoroutineContext = Dispatchers.Main
-) : BaseExecutor<Intent, Action, Result, State, Label>() {
+) : Executor<Intent, Action, State, Result, Label> {
 
+    private val callbacks = lazyAtomicReference<Callbacks<State, Result, Label>>()
+    private val getState: () -> State = { callbacks.requireValue.state }
     private val scope = CoroutineScope(mainContext)
 
-    final override fun handleIntent(intent: Intent) {
-        super.handleIntent(intent)
+    override fun init(callbacks: Callbacks<State, Result, Label>) {
+        check(this.callbacks.value == null) { "Executor is already initialized" }
 
+        this.callbacks.value = callbacks
+    }
+
+    final override fun handleIntent(intent: Intent) {
         scope.launch {
-            executeIntent(intent)
+            executeIntent(intent, getState)
         }
     }
 
-    protected open suspend fun executeIntent(intent: Intent) {
+    @MainThread
+    protected open suspend fun executeIntent(intent: Intent, getState: () -> State) {
     }
 
     final override fun handleAction(action: Action) {
-        super.handleAction(action)
-
         scope.launch {
-            executeAction(action)
+            executeAction(action, getState)
         }
     }
 
-    protected open suspend fun executeAction(action: Action) {
+    @MainThread
+    protected open suspend fun executeAction(action: Action, getState: () -> State) {
     }
 
     override fun dispose() {
         scope.cancel()
+    }
 
-        super.dispose()
+    @MainThread
+    protected fun dispatch(result: Result) {
+        callbacks.requireValue.onResult(result)
+    }
+
+    @MainThread
+    protected fun publish(label: Label) {
+        callbacks.requireValue.onLabel(label)
     }
 }

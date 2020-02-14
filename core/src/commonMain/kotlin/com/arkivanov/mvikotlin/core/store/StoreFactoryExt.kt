@@ -1,5 +1,8 @@
 package com.arkivanov.mvikotlin.core.store
 
+import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.requireValue
+
 fun <Intent : Any, State : Any, Label : Any> StoreFactory.create(
     name: String,
     initialState: State,
@@ -9,10 +12,17 @@ fun <Intent : Any, State : Any, Label : Any> StoreFactory.create(
         name = name,
         initialState = initialState,
         executorFactory = {
-            object : BaseExecutor<Intent, Nothing, Intent, State, Label>() {
+            object : Executor<Intent, Nothing, State, Intent, Label> {
+                private val callbacks = lazyAtomicReference<Executor.Callbacks<State, Intent, Label>>()
+
+                override fun init(callbacks: Executor.Callbacks<State, Intent, Label>) {
+                    check(this.callbacks.value == null) { "Executor is already initialized" }
+
+                    this.callbacks.value = callbacks
+                }
+
                 override fun handleIntent(intent: Intent) {
-                    super.handleIntent(intent)
-                    dispatch(intent)
+                    callbacks.requireValue.onResult(intent)
                 }
             }
         },

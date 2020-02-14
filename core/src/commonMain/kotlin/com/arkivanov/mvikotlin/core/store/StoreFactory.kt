@@ -9,7 +9,7 @@ interface StoreFactory {
         name: String,
         initialState: State,
         bootstrapper: Bootstrapper<Action>? = null,
-        executorFactory: () -> Executor<Intent, Action, Result, State, Label>,
+        executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
         @Suppress("UNCHECKED_CAST")
         reducer: Reducer<State, Result> = bypassReducer as Reducer<State, Any>
     ): Store<Intent, State, Label>

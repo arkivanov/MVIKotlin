@@ -25,7 +25,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     override val name: String,
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
-    private val executorFactory: () -> Executor<Intent, Action, Result, State, Label>,
+    private val executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
     private val reducer: Reducer<State, Result>
 ) : TimeTravelStore<Intent, State, Label> {
 
@@ -192,7 +192,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
             }
         }
 
-        private fun debugExecutor(initialState: State, execute: Executor<Intent, Action, Result, State, Label>.() -> Unit) {
+        private fun debugExecutor(initialState: State, execute: Executor<Intent, Action, State, Result, Label>.() -> Unit) {
             val localState = AtomicReference(initialState)
 
             val executor =

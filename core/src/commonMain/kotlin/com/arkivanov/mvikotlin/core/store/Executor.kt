@@ -2,19 +2,22 @@ package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 
-interface Executor<in Intent, in Action, out Result, in State, out Label> {
+interface Executor<in Intent, in Action, in State, out Result, out Label> {
 
     @MainThread
     fun init(callbacks: Callbacks<State, Result, Label>)
 
     @MainThread
-    fun handleIntent(intent: Intent)
+    fun handleIntent(intent: Intent) {
+    }
 
     @MainThread
-    fun handleAction(action: Action)
+    fun handleAction(action: Action) {
+    }
 
     @MainThread
-    fun dispose()
+    fun dispose() {
+    }
 
     interface Callbacks<out State, in Result, in Label> {
         val state: State

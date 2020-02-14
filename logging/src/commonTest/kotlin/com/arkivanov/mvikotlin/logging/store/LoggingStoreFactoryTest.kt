@@ -100,7 +100,7 @@ class LoggingStoreFactoryTest {
                     name: String,
                     initialState: State,
                     bootstrapper: Bootstrapper<Action>?,
-                    executorFactory: () -> Executor<Intent, Action, Result, State, Label>,
+                    executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
                     reducer: Reducer<State, Result>
                 ): Store<Intent, State, Label> =
                     TestStore(
@@ -141,7 +141,7 @@ class LoggingStoreFactoryTest {
     private class TestStore<in Intent : Any, Action, out State : Any, Result, Label : Any>(
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
-        executorFactory: () -> Executor<Intent, Action, Result, State, Label>,
+        executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
         private val reducer: Reducer<State, Result>
     ) : Store<Intent, State, Label> {
         private val _state = AtomicReference(initialState)

@@ -26,10 +26,10 @@ internal class TodoDetailsStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Unit, Result, State, Label> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Unit, State, Result, Label> = ExecutorImpl()
 
-    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, Result, State, Label>() {
-        override fun handleAction(action: Unit) {
+    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Result, Label>() {
+        override fun executeAction(action: Unit, getState: () -> State) {
             singleFromFunction {
                 database.get(itemId)
             }
@@ -39,25 +39,25 @@ internal class TodoDetailsStoreFactory(
                 .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
         }
 
-        override fun handleIntent(intent: Intent) {
+        override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.HandleTextChanged -> handleTextChanged(intent.text)
-                is Intent.ToggleDone -> toggleDone()
+                is Intent.HandleTextChanged -> handleTextChanged(intent.text, getState())
+                is Intent.ToggleDone -> toggleDone(getState())
                 is Intent.Delete -> delete()
             }.let {}
         }
 
-        private fun handleTextChanged(text: String) {
+        private fun handleTextChanged(text: String, state: State) {
             dispatch(Result.TextChanged(text))
-            save()
+            save(state)
         }
 
-        private fun toggleDone() {
+        private fun toggleDone(state: State) {
             dispatch(Result.DoneToggled)
-            save()
+            save(state)
         }
 
-        private fun save() {
+        private fun save(state: State) {
             val data = state.data ?: return
             publish(Label.Changed(itemId, data))
 

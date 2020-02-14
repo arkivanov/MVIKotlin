@@ -19,7 +19,7 @@ import com.badoo.reaktive.utils.atomic.updateAndGet
 internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
-    executorFactory: () -> Executor<Intent, Action, Result, State, Label>,
+    executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
     private val reducer: Reducer<State, Result>
 ) : Store<Intent, State, Label> {
 

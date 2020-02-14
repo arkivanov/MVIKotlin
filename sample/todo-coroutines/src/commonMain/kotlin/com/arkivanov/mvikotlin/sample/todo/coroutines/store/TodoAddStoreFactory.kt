@@ -21,17 +21,17 @@ internal class TodoAddStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Nothing, Result, State, Label> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Nothing, State, Result, Label> = ExecutorImpl()
 
-    private inner class ExecutorImpl : SuspendExecutor<Intent, Nothing, Result, State, Label>(mainContext = mainContext) {
-        override suspend fun executeIntent(intent: Intent) {
+    private inner class ExecutorImpl : SuspendExecutor<Intent, Nothing, State, Result, Label>(mainContext = mainContext) {
+        override suspend fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.HandleTextChanged -> dispatch(Result.TextChanged(intent.text))
-                is Intent.Add -> addItem()
+                is Intent.Add -> addItem(getState())
             }.let {}
         }
 
-        private suspend fun addItem() {
+        private suspend fun addItem(state: State) {
             val text = state.text.takeUnless(String::isBlank) ?: return
 
             dispatch(Result.TextChanged(""))

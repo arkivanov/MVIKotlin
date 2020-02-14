@@ -39,7 +39,7 @@ abstract class TodoListStoreAbstractFactory(
         data class Changed(val id: String, val data: TodoItem.Data) : Result()
     }
 
-    protected abstract fun createExecutor(): Executor<Intent, Unit, Result, State, Nothing>
+    protected abstract fun createExecutor(): Executor<Intent, Unit, State, Result, Nothing>
 
     private object ReducerImpl : Reducer<State, Result> {
         override fun State.reduce(result: Result): State =

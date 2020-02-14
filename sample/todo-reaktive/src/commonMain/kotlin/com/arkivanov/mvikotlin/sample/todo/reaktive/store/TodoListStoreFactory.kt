@@ -23,10 +23,10 @@ internal class TodoListStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Unit, Result, State, Nothing> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Unit, State, Result, Nothing> = ExecutorImpl()
 
-    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, Result, State, Nothing>() {
-        override fun handleAction(action: Unit) {
+    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Result, Nothing>() {
+        override fun executeAction(action: Unit, getState: () -> State) {
             singleFromFunction(database::getAll)
                 .subscribeOn(ioScheduler)
                 .map(Result::Loaded)
@@ -34,10 +34,10 @@ internal class TodoListStoreFactory(
                 .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
         }
 
-        override fun handleIntent(intent: Intent) {
+        override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
-                is Intent.ToggleDone -> toggleDone(intent.id)
+                is Intent.ToggleDone -> toggleDone(intent.id, getState())
                 is Intent.SelectItem -> dispatch(Result.SelectionChanged(intent.id))
                 is Intent.UnselectItem -> dispatch(Result.SelectionChanged(null))
                 is Intent.HandleAdded -> dispatch(Result.Added(intent.item))
@@ -55,7 +55,7 @@ internal class TodoListStoreFactory(
                 .subscribeScoped()
         }
 
-        private fun toggleDone(id: String) {
+        private fun toggleDone(id: String, state: State) {
             dispatch(Result.DoneToggled(id))
 
             val item = state.items.find { it.id == id } ?: return
