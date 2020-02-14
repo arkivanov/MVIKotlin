@@ -13,7 +13,7 @@ import com.arkivanov.mvikotlin.utils.internal.add
 import com.arkivanov.mvikotlin.utils.internal.clear
 import com.arkivanov.mvikotlin.utils.internal.get
 import com.arkivanov.mvikotlin.utils.internal.isEmpty
-import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.plusAssign
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
@@ -41,7 +41,7 @@ class TimeTravelStoreDebugTest {
 
     @Test
     fun new_executor_called_WHEN_debug_intent() {
-        val intent = lazyAtomicReference<String>()
+        val intent = lateinitAtomicReference<String>()
         val executors =
             ExecutorQueue { index ->
                 if (index == 0) {
@@ -77,7 +77,7 @@ class TimeTravelStoreDebugTest {
 
     @Test
     fun new_executor_called_WHEN_debug_action() {
-        val action = lazyAtomicReference<String>()
+        val action = lateinitAtomicReference<String>()
         val executors =
             ExecutorQueue { index ->
                 if (index == 0) {
@@ -253,8 +253,8 @@ class TimeTravelStoreDebugTest {
 
     @Test
     fun reducer_called_with_original_state_and_result_WHEN_debug_result() {
-        val state = lazyAtomicReference<String>()
-        val result = lazyAtomicReference<String>()
+        val state = lateinitAtomicReference<String>()
+        val result = lateinitAtomicReference<String>()
 
         val store =
             store(

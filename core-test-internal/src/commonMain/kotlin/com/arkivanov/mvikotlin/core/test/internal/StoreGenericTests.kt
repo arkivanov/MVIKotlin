@@ -7,7 +7,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.utils.internal.AtomicList
 import com.arkivanov.mvikotlin.utils.internal.add
-import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.plusAssign
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
@@ -388,7 +388,7 @@ fun StoreGenericTests(
         }
 
         override fun executor_can_read_new_state_WHEN_recursive_intent_on_label() {
-            val stateRef = lazyAtomicReference<String>()
+            val stateRef = lateinitAtomicReference<String>()
 
             val store =
                 store(
@@ -415,7 +415,7 @@ fun StoreGenericTests(
         }
 
         override fun executor_can_read_new_state_WHEN_recursive_intent_on_state() {
-            val stateRef = lazyAtomicReference<String>()
+            val stateRef = lateinitAtomicReference<String>()
 
             val store =
                 store(

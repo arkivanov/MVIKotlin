@@ -3,7 +3,8 @@ package com.arkivanov.mvikotlin.extensions.coroutines
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
-import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.initialize
+import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,14 +16,12 @@ open class SuspendExecutor<in Intent, in Action, in State, Result, Label>(
     mainContext: CoroutineContext = Dispatchers.Main
 ) : Executor<Intent, Action, State, Result, Label> {
 
-    private val callbacks = lazyAtomicReference<Callbacks<State, Result, Label>>()
+    private val callbacks = lateinitAtomicReference<Callbacks<State, Result, Label>>()
     private val getState: () -> State = { callbacks.requireValue.state }
     private val scope = CoroutineScope(mainContext)
 
     override fun init(callbacks: Callbacks<State, Result, Label>) {
-        check(this.callbacks.value == null) { "Executor is already initialized" }
-
-        this.callbacks.value = callbacks
+        this.callbacks.initialize(callbacks)
     }
 
     final override fun handleIntent(intent: Intent) {

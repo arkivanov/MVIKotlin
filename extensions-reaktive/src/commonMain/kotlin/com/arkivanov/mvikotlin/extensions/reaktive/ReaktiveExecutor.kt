@@ -2,7 +2,8 @@ package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.store.Executor
-import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.initialize
+import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.annotations.ExperimentalReaktiveApi
 import com.badoo.reaktive.base.CompleteCallback
@@ -18,14 +19,12 @@ open class ReaktiveExecutor<in Intent, in Action, in State, Result, Label> :
     Executor<Intent, Action, State, Result, Label>,
     DisposableScope {
 
-    private val callbacks = lazyAtomicReference<Executor.Callbacks<State, Result, Label>>()
+    private val callbacks = lateinitAtomicReference<Executor.Callbacks<State, Result, Label>>()
     private val getState: () -> State = { callbacks.requireValue.state }
     private val scope = DisposableScope()
 
     override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
-        check(this.callbacks.value == null) { "Executor is already initialized" }
-
-        this.callbacks.value = callbacks
+        this.callbacks.initialize(callbacks)
     }
 
     final override fun handleIntent(intent: Intent) {

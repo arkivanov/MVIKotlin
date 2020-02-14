@@ -1,16 +1,15 @@
 package com.arkivanov.mvikotlin.core.store
 
-import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.initialize
+import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 
 abstract class AbstractBootstrapper<Action> : Bootstrapper<Action> {
 
-    private val actionConsumer = lazyAtomicReference<(Action) -> Unit>()
+    private val actionConsumer = lateinitAtomicReference<(Action) -> Unit>()
 
     final override fun init(actionConsumer: (Action) -> Unit) {
-        check(this.actionConsumer.value == null) { "Bootstrapper is already initialized" }
-
-        this.actionConsumer.value = actionConsumer
+        this.actionConsumer.initialize(actionConsumer)
     }
 
     protected fun dispatch(action: Action) {

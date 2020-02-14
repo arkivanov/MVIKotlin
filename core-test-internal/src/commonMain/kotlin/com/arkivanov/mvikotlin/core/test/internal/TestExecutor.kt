@@ -2,7 +2,8 @@ package com.arkivanov.mvikotlin.core.test.internal
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
-import com.arkivanov.mvikotlin.utils.internal.lazyAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.initialize
+import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
 
@@ -12,16 +13,14 @@ class TestExecutor(
     private val handleAction: TestExecutor.(String) -> Unit = {}
 ) : Executor<String, String, String, String, String> {
 
-    private val callbacks = lazyAtomicReference<Callbacks<String, String, String>>()
+    private val callbacks = lateinitAtomicReference<Callbacks<String, String, String>>()
     val isInitialized: Boolean get() = callbacks.value != null
     val state: String get() = callbacks.requireValue.state
     private val _isDisposed = AtomicBoolean()
     val isDisposed: Boolean get() = _isDisposed.value
 
     override fun init(callbacks: Callbacks<String, String, String>) {
-        check(this.callbacks.value == null) { "Executor is already initialized" }
-
-        this.callbacks.value = callbacks
+        this.callbacks.initialize(callbacks)
         init()
     }
 
