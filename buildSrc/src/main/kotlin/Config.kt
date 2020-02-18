@@ -7,7 +7,6 @@ import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.dsl.KotlinJsOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
 fun Project.setupMultiplatform() {
     plugins.apply("kotlin-multiplatform")
@@ -40,6 +39,8 @@ fun Project.setupMultiplatform() {
 
         jvm()
         linuxX64()
+        iosX64()
+        iosArm64()
 
         sourceSets {
             commonMain {
@@ -125,6 +126,38 @@ fun Project.setupMultiplatform() {
 
             linuxX64Test {
                 dependsOn(nativeCommonTest)
+            }
+
+            darwinCommonMain {
+                dependsOn(nativeCommonMain)
+            }
+
+            darwinCommonTest {
+                dependsOn(nativeCommonTest)
+            }
+
+            iosCommonMain {
+                dependsOn(darwinCommonMain)
+            }
+
+            iosCommonTest {
+                dependsOn(darwinCommonTest)
+            }
+
+            iosX64Main {
+                dependsOn(iosCommonMain)
+            }
+
+            iosX64Test {
+                dependsOn(iosCommonTest)
+            }
+
+            iosArm64Main {
+                dependsOn(iosCommonMain)
+            }
+
+            iosArm64Test {
+                dependsOn(iosCommonTest)
             }
         }
     }
@@ -267,4 +300,60 @@ val SourceSets.linuxX64Test: KotlinSourceSet get() = getOrCreate("linuxX64Test")
 
 fun SourceSets.linuxX64Test(block: KotlinSourceSet.() -> Unit) {
     linuxX64Test.apply(block)
+}
+
+// darwinCommon
+
+val SourceSets.darwinCommonMain: KotlinSourceSet get() = getOrCreate("darwinCommonMain")
+
+fun SourceSets.darwinCommonMain(block: KotlinSourceSet.() -> Unit) {
+    darwinCommonMain.apply(block)
+}
+
+val SourceSets.darwinCommonTest: KotlinSourceSet get() = getOrCreate("darwinCommonTest")
+
+fun SourceSets.darwinCommonTest(block: KotlinSourceSet.() -> Unit) {
+    darwinCommonTest.apply(block)
+}
+
+// iosCommon
+
+val SourceSets.iosCommonMain: KotlinSourceSet get() = getOrCreate("iosCommonMain")
+
+fun SourceSets.iosCommonMain(block: KotlinSourceSet.() -> Unit) {
+    iosCommonMain.apply(block)
+}
+
+val SourceSets.iosCommonTest: KotlinSourceSet get() = getOrCreate("iosCommonTest")
+
+fun SourceSets.iosCommonTest(block: KotlinSourceSet.() -> Unit) {
+    iosCommonTest.apply(block)
+}
+
+// iosX64
+
+val SourceSets.iosX64Main: KotlinSourceSet get() = getOrCreate("iosX64Main")
+
+fun SourceSets.iosX64Main(block: KotlinSourceSet.() -> Unit) {
+    iosX64Main.apply(block)
+}
+
+val SourceSets.iosX64Test: KotlinSourceSet get() = getOrCreate("iosX64Test")
+
+fun SourceSets.iosX64Test(block: KotlinSourceSet.() -> Unit) {
+    iosX64Test.apply(block)
+}
+
+// iosArm64
+
+val SourceSets.iosArm64Main: KotlinSourceSet get() = getOrCreate("iosArm64Main")
+
+fun SourceSets.iosArm64Main(block: KotlinSourceSet.() -> Unit) {
+    iosArm64Main.apply(block)
+}
+
+val SourceSets.iosArm64Test: KotlinSourceSet get() = getOrCreate("iosArm64Test")
+
+fun SourceSets.iosArm64Test(block: KotlinSourceSet.() -> Unit) {
+    iosArm64Test.apply(block)
 }
