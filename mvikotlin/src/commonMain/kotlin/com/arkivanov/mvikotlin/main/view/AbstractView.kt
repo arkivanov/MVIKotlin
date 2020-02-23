@@ -8,7 +8,7 @@ import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.view.View
 
-abstract class AbstractView<in Model, Event> : View<Model, Event> {
+abstract class AbstractView<in Model : Any, Event : Any> : View<Model, Event> {
 
     private val subject = Subject<Event>()
 

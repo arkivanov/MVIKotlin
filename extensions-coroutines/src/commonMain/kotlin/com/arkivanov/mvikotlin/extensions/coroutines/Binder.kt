@@ -18,7 +18,7 @@ fun bind(mainContext: CoroutineContext = Dispatchers.Main, builder: BindingsBuil
 interface BindingsBuilder {
     infix fun <T> Flow<T>.bindTo(consumer: suspend (T) -> Unit)
 
-    infix fun <T> Flow<T>.bindTo(view: View<T, *>)
+    infix fun <T : Any> Flow<T>.bindTo(view: View<T, *>)
 
     infix fun <T : Any> Flow<T>.bindTo(store: Store<T, *, *>)
 }
@@ -39,7 +39,7 @@ private class BuilderBinder(
         bindings += Binding(this, consumer)
     }
 
-    override fun <T> Flow<T>.bindTo(view: View<T, *>) {
+    override fun <T : Any> Flow<T>.bindTo(view: View<T, *>) {
         this bindTo {
             assertOnMainThread()
             view.render(it)

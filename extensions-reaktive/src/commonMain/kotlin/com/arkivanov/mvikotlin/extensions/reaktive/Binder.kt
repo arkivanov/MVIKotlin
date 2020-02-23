@@ -16,7 +16,7 @@ interface BindingsBuilder {
 
     infix fun <T> Observable<T>.bindTo(consumer: ValueCallback<T>)
 
-    infix fun <T> Observable<T>.bindTo(view: View<T, *>)
+    infix fun <T : Any> Observable<T>.bindTo(view: View<T, *>)
 
     infix fun <T : Any> Observable<T>.bindTo(store: Store<T, *, *>)
 }
@@ -38,7 +38,7 @@ private class BuilderBinder : BindingsBuilder, Binder, CompositeDisposable() {
         this bindTo consumer::onNext
     }
 
-    override fun <T> Observable<T>.bindTo(view: View<T, *>) {
+    override fun <T : Any> Observable<T>.bindTo(view: View<T, *>) {
         this bindTo {
             assertOnMainThread()
             view.render(it)

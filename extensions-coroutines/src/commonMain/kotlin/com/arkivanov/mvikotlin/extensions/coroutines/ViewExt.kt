@@ -5,5 +5,5 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
-val <Event> View<*, Event>.events: Flow<Event>
+val <Event : Any> View<*, Event>.events: Flow<Event>
     get() = toFlow(View<*, Event>::events)
