@@ -1,4 +1,5 @@
-project.setupMultiplatform()
+setupMultiplatform()
+setupXcodeSync()
 
 kotlin {
     sourceSets {
@@ -9,6 +10,7 @@ kotlin {
                 api(project(":sample:todo-common"))
                 implementation(project(":sample:todo-common-internal"))
                 implementation(Deps.Badoo.Reaktive.Reaktive)
+                implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
     }

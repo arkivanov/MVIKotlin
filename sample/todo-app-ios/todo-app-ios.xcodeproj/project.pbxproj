@@ -1,0 +1,811 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1F38433523FDD21900501F27 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38433423FDD21900501F27 /* AppDelegate.swift */; };
+		1F38433723FDD21900501F27 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38433623FDD21900501F27 /* SceneDelegate.swift */; };
+		1F38433B23FDD21B00501F27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F38433A23FDD21B00501F27 /* Assets.xcassets */; };
+		1F38433E23FDD21B00501F27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F38433D23FDD21B00501F27 /* Preview Assets.xcassets */; };
+		1F38434123FDD21B00501F27 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F38433F23FDD21B00501F27 /* LaunchScreen.storyboard */; };
+		1F38434A23FDD36900501F27 /* TodoLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F38434923FDD36900501F27 /* TodoLib.framework */; };
+		1F38434B23FDD36900501F27 /* TodoLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F38434923FDD36900501F27 /* TodoLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1F60093124034D65003AFD12 /* TodoAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F60093024034D65003AFD12 /* TodoAdd.swift */; };
+		1F6009372403E6E5003AFD12 /* TimeTravelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6009362403E6E5003AFD12 /* TimeTravelViewController.swift */; };
+		1F601887240481980081C459 /* TimeTravelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F601886240481980081C459 /* TimeTravelView.swift */; };
+		1F601889240483920081C459 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F601888240483920081C459 /* ContentView.swift */; };
+		1F743D242405D36D00C1F544 /* DebugDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F743D232405D36D00C1F544 /* DebugDrawer.swift */; };
+		1F79AF562401B26900CC6AEA /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF552401B26900CC6AEA /* TodoRow.swift */; };
+		1F79AF582401B4A700CC6AEA /* TodoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF572401B4A700CC6AEA /* TodoList.swift */; };
+		1F79AF5A2401B54500CC6AEA /* TodoItemExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF592401B54500CC6AEA /* TodoItemExt.swift */; };
+		1F79AF5E2401CAB500CC6AEA /* TodoListViewImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */; };
+		1F79AF602401CB0300CC6AEA /* TodoAddViewImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1F38434C23FDD36900501F27 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1F38434B23FDD36900501F27 /* TodoLib.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0388B10CE980EDA4BC7C67AE /* TodoDatabaseImpl.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDatabaseImpl.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseImpl.kt"; sourceTree = "<group>"; };
+		0478C47EA0F992BB6BDDE415 /* TodoDetailsView.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDetailsView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoDetailsView.kt"; sourceTree = "<group>"; };
+		101DD62475686998BD7345C6 /* TodoListController.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoListController.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/controller/TodoListController.kt"; sourceTree = "<group>"; };
+		1938554023558B877B0E2E8E /* TodoListView.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoListView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoListView.kt"; sourceTree = "<group>"; };
+		1F38433123FDD21900501F27 /* todo-app-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "todo-app-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F38433423FDD21900501F27 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1F38433623FDD21900501F27 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		1F38433A23FDD21B00501F27 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1F38433D23FDD21B00501F27 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1F38434023FDD21B00501F27 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1F38434223FDD21B00501F27 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F38434923FDD36900501F27 /* TodoLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TodoLib.framework; path = "../todo-darwin-umbrella/build/bin/iosX64/debugFramework/TodoLib.framework"; sourceTree = "<group>"; };
+		1F60093024034D65003AFD12 /* TodoAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAdd.swift; sourceTree = "<group>"; };
+		1F6009362403E6E5003AFD12 /* TimeTravelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTravelViewController.swift; sourceTree = "<group>"; };
+		1F601886240481980081C459 /* TimeTravelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTravelView.swift; sourceTree = "<group>"; };
+		1F601888240483920081C459 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1F743D232405D36D00C1F544 /* DebugDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDrawer.swift; sourceTree = "<group>"; };
+		1F79AF552401B26900CC6AEA /* TodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRow.swift; sourceTree = "<group>"; };
+		1F79AF572401B4A700CC6AEA /* TodoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoList.swift; sourceTree = "<group>"; };
+		1F79AF592401B54500CC6AEA /* TodoItemExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemExt.swift; sourceTree = "<group>"; };
+		1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewImpl.swift; sourceTree = "<group>"; };
+		1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAddViewImpl.swift; sourceTree = "<group>"; };
+		2C06C63CD306913ACB7977C1 /* TodoItemExt.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoItemExt.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItemExt.kt"; sourceTree = "<group>"; };
+		32305CAD887469A129CF0A18 /* TodoItem.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoItem.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItem.kt"; sourceTree = "<group>"; };
+		48BCFF0D371F93831EF13C40 /* TodoDetailsController.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDetailsController.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/controller/TodoDetailsController.kt"; sourceTree = "<group>"; };
+		49AEF39F9D14E34D80F687BA /* Dummy.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Dummy.kt; path = "../todo-darwin-umbrella/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/darwin/umbrella/Dummy.kt"; sourceTree = "<group>"; };
+		6BEAF13C5E0725DA97BF5876 /* TodoAddStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoAddStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoAddStoreFactory.kt"; sourceTree = "<group>"; };
+		7EFDD771154571D9E662D6CF /* TodoDatabaseImpl.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDatabaseImpl.kt; path = "../todo-common/src/darwinCommonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseImpl.kt"; sourceTree = "<group>"; };
+		8AE0187E8F297691279648EC /* TodoListReaktiveController.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoListReaktiveController.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/controller/TodoListReaktiveController.kt"; sourceTree = "<group>"; };
+		A8F6903F8143302EA3B52B12 /* TodoDatabase.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDatabase.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabase.kt"; sourceTree = "<group>"; };
+		B9101A3ECF9C65849700DCDE /* TodoDetailsReaktiveController.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDetailsReaktiveController.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/controller/TodoDetailsReaktiveController.kt"; sourceTree = "<group>"; };
+		C73259F17571D5C3D934D1B5 /* TodoItemContract.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoItemContract.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItemContract.kt"; sourceTree = "<group>"; };
+		C97140325D4CDFE699450F65 /* TodoAddView.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoAddView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoAddView.kt"; sourceTree = "<group>"; };
+		D7CA79765AE77857F1B1AAA3 /* TodoDetailsStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDetailsStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoDetailsStoreFactory.kt"; sourceTree = "<group>"; };
+		DF99E95B8A35A3ECAECE231C /* TodoListStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoListStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoListStoreFactory.kt"; sourceTree = "<group>"; };
+		E56C8A08C1894C84632F54F6 /* EventBus.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = EventBus.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/EventBus.kt"; sourceTree = "<group>"; };
+		FC4A3E955C36541B88E4989B /* TodoDatabaseOpenHelper.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDatabaseOpenHelper.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseOpenHelper.kt"; sourceTree = "<group>"; };
+		FDA63019E0C179407DD80EAC /* Utils.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Utils.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/Utils.kt"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1F38432E23FDD21900501F27 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F38434A23FDD36900501F27 /* TodoLib.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00E35B205D3813BCA336F31A /* sample */ = {
+			isa = PBXGroup;
+			children = (
+				40061EEC23B8A6BB4115980C /* todo */,
+			);
+			name = sample;
+			sourceTree = "<group>";
+		};
+		05DDFB0D03B79B124C05DBB4 /* todo */ = {
+			isa = PBXGroup;
+			children = (
+				FDACCDDD5F655F2A83720727 /* common */,
+			);
+			name = todo;
+			sourceTree = "<group>";
+		};
+		08CB3ED5061792F28D33DF6A /* store */ = {
+			isa = PBXGroup;
+			children = (
+				6BEAF13C5E0725DA97BF5876 /* TodoAddStoreFactory.kt */,
+				D7CA79765AE77857F1B1AAA3 /* TodoDetailsStoreFactory.kt */,
+				DF99E95B8A35A3ECAECE231C /* TodoListStoreFactory.kt */,
+			);
+			name = store;
+			sourceTree = "<group>";
+		};
+		0939CF0F9D4A8B40650AEA31 /* arkivanov */ = {
+			isa = PBXGroup;
+			children = (
+				FCB371CC3DC7240FA751FF1A /* mvikotlin */,
+			);
+			name = arkivanov;
+			sourceTree = "<group>";
+		};
+		0EE4397810D0B509E1E21B3C /* sample */ = {
+			isa = PBXGroup;
+			children = (
+				05DDFB0D03B79B124C05DBB4 /* todo */,
+			);
+			name = sample;
+			sourceTree = "<group>";
+		};
+		110D40CEB1B078C2BC078392 /* main */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = main;
+			sourceTree = "<group>";
+		};
+		1F128C804757D523A6379722 /* reaktive */ = {
+			isa = PBXGroup;
+			children = (
+				E56C8A08C1894C84632F54F6 /* EventBus.kt */,
+				3E0078C7B9BAD61D663724D1 /* controller */,
+				08CB3ED5061792F28D33DF6A /* store */,
+			);
+			name = reaktive;
+			sourceTree = "<group>";
+		};
+		1F38432823FDD21900501F27 = {
+			isa = PBXGroup;
+			children = (
+				1F38433323FDD21900501F27 /* todo-app-ios */,
+				1F38433223FDD21900501F27 /* Products */,
+				1F38434823FDD36900501F27 /* Frameworks */,
+				38F3D9EAEA0133B9CF039131 /* Kotlin */,
+			);
+			sourceTree = "<group>";
+		};
+		1F38433223FDD21900501F27 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F38433123FDD21900501F27 /* todo-app-ios.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1F38433323FDD21900501F27 /* todo-app-ios */ = {
+			isa = PBXGroup;
+			children = (
+				1F38433423FDD21900501F27 /* AppDelegate.swift */,
+				1F38433623FDD21900501F27 /* SceneDelegate.swift */,
+				1F38433A23FDD21B00501F27 /* Assets.xcassets */,
+				1F38433F23FDD21B00501F27 /* LaunchScreen.storyboard */,
+				1F38434223FDD21B00501F27 /* Info.plist */,
+				1F38433C23FDD21B00501F27 /* Preview Content */,
+				1F79AF552401B26900CC6AEA /* TodoRow.swift */,
+				1F79AF572401B4A700CC6AEA /* TodoList.swift */,
+				1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */,
+				1F79AF592401B54500CC6AEA /* TodoItemExt.swift */,
+				1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */,
+				1F60093024034D65003AFD12 /* TodoAdd.swift */,
+				1F6009362403E6E5003AFD12 /* TimeTravelViewController.swift */,
+				1F601886240481980081C459 /* TimeTravelView.swift */,
+				1F601888240483920081C459 /* ContentView.swift */,
+				1F743D232405D36D00C1F544 /* DebugDrawer.swift */,
+			);
+			path = "todo-app-ios";
+			sourceTree = "<group>";
+		};
+		1F38433C23FDD21B00501F27 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				1F38433D23FDD21B00501F27 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1F38434823FDD36900501F27 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1F38434923FDD36900501F27 /* TodoLib.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2E135C8EFCC9EDF3CF9674F2 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				C3B8BAE61B89840B6F040172 /* com */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		38F3D9EAEA0133B9CF039131 /* Kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				58800297037E511536061798 /* commonMain */,
+				110D40CEB1B078C2BC078392 /* main */,
+				DF7F0557B57499A3A1844E5B /* androidMain */,
+				756332801B2588E3B0CE78C1 /* darwinCommonMain */,
+				F7A4EE0DFDEA5F0D285AB784 /* iosArm64Main */,
+			);
+			name = Kotlin;
+			sourceTree = "<group>";
+		};
+		3E0078C7B9BAD61D663724D1 /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				B9101A3ECF9C65849700DCDE /* TodoDetailsReaktiveController.kt */,
+				8AE0187E8F297691279648EC /* TodoListReaktiveController.kt */,
+			);
+			name = controller;
+			sourceTree = "<group>";
+		};
+		40061EEC23B8A6BB4115980C /* todo */ = {
+			isa = PBXGroup;
+			children = (
+				8C7C22C3E20345099001EA12 /* common */,
+			);
+			name = todo;
+			sourceTree = "<group>";
+		};
+		40B17608E1B29D5E5B091755 /* com */ = {
+			isa = PBXGroup;
+			children = (
+				FD20A89EED3688DCAA61A099 /* arkivanov */,
+			);
+			name = com;
+			sourceTree = "<group>";
+		};
+		4D9A91DBC9F05381F51EC7A8 /* todo */ = {
+			isa = PBXGroup;
+			children = (
+				BAF8B3E72BC61C2FBEA5267C /* darwin */,
+				1F128C804757D523A6379722 /* reaktive */,
+				EDCA01F0451F91B9765BCCBC /* common */,
+			);
+			name = todo;
+			sourceTree = "<group>";
+		};
+		571CAED7974AD138C173A8F6 /* sample */ = {
+			isa = PBXGroup;
+			children = (
+				4D9A91DBC9F05381F51EC7A8 /* todo */,
+			);
+			name = sample;
+			sourceTree = "<group>";
+		};
+		5729844CA8B72ABAB1977EB3 /* sample */ = {
+			isa = PBXGroup;
+			children = (
+				C58FF7865238D7E0D3632AC4 /* todo */,
+			);
+			name = sample;
+			sourceTree = "<group>";
+		};
+		58800297037E511536061798 /* commonMain */ = {
+			isa = PBXGroup;
+			children = (
+				C6E45477901815C86D925C7E /* kotlin */,
+			);
+			name = commonMain;
+			sourceTree = "<group>";
+		};
+		756332801B2588E3B0CE78C1 /* darwinCommonMain */ = {
+			isa = PBXGroup;
+			children = (
+				AC71AF090097EC591876010B /* kotlin */,
+			);
+			name = darwinCommonMain;
+			sourceTree = "<group>";
+		};
+		7A3C770BBF4FD3C671A6CB32 /* com */ = {
+			isa = PBXGroup;
+			children = (
+				B5F98E1700FDEDEFD61C2F87 /* arkivanov */,
+			);
+			name = com;
+			sourceTree = "<group>";
+		};
+		7A775346264F0A3098D4E5D4 /* mvikotlin */ = {
+			isa = PBXGroup;
+			children = (
+				5729844CA8B72ABAB1977EB3 /* sample */,
+			);
+			name = mvikotlin;
+			sourceTree = "<group>";
+		};
+		7EA37CBD1FD97E1E1E210D34 /* arkivanov */ = {
+			isa = PBXGroup;
+			children = (
+				7A775346264F0A3098D4E5D4 /* mvikotlin */,
+			);
+			name = arkivanov;
+			sourceTree = "<group>";
+		};
+		89D55F74FA65626FFA0955FC /* com */ = {
+			isa = PBXGroup;
+			children = (
+				0939CF0F9D4A8B40650AEA31 /* arkivanov */,
+			);
+			name = com;
+			sourceTree = "<group>";
+		};
+		8C7C22C3E20345099001EA12 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				CBA1C29F2A25731C37999577 /* database */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+		A9C049911C7BAA1EC3D6E1EC /* mvikotlin */ = {
+			isa = PBXGroup;
+			children = (
+				00E35B205D3813BCA336F31A /* sample */,
+			);
+			name = mvikotlin;
+			sourceTree = "<group>";
+		};
+		AC71AF090097EC591876010B /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				7A3C770BBF4FD3C671A6CB32 /* com */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		ADDEBA1B8C5AE242F9169206 /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				48BCFF0D371F93831EF13C40 /* TodoDetailsController.kt */,
+				101DD62475686998BD7345C6 /* TodoListController.kt */,
+			);
+			name = controller;
+			sourceTree = "<group>";
+		};
+		B5F98E1700FDEDEFD61C2F87 /* arkivanov */ = {
+			isa = PBXGroup;
+			children = (
+				A9C049911C7BAA1EC3D6E1EC /* mvikotlin */,
+			);
+			name = arkivanov;
+			sourceTree = "<group>";
+		};
+		B6D093005589B406C0E4BBC4 /* umbrella */ = {
+			isa = PBXGroup;
+			children = (
+				49AEF39F9D14E34D80F687BA /* Dummy.kt */,
+			);
+			name = umbrella;
+			sourceTree = "<group>";
+		};
+		BAF8B3E72BC61C2FBEA5267C /* darwin */ = {
+			isa = PBXGroup;
+			children = (
+				B6D093005589B406C0E4BBC4 /* umbrella */,
+			);
+			name = darwin;
+			sourceTree = "<group>";
+		};
+		C3B8BAE61B89840B6F040172 /* com */ = {
+			isa = PBXGroup;
+			children = (
+				7EA37CBD1FD97E1E1E210D34 /* arkivanov */,
+			);
+			name = com;
+			sourceTree = "<group>";
+		};
+		C58FF7865238D7E0D3632AC4 /* todo */ = {
+			isa = PBXGroup;
+			children = (
+				DF64E59C0869BEBB9381258D /* common */,
+			);
+			name = todo;
+			sourceTree = "<group>";
+		};
+		C6E45477901815C86D925C7E /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				89D55F74FA65626FFA0955FC /* com */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		CBA1C29F2A25731C37999577 /* database */ = {
+			isa = PBXGroup;
+			children = (
+				7EFDD771154571D9E662D6CF /* TodoDatabaseImpl.kt */,
+			);
+			name = database;
+			sourceTree = "<group>";
+		};
+		CC188BA1A6E875C7BCE4223D /* mvikotlin */ = {
+			isa = PBXGroup;
+			children = (
+				0EE4397810D0B509E1E21B3C /* sample */,
+			);
+			name = mvikotlin;
+			sourceTree = "<group>";
+		};
+		CFAB2F9C83D0DB0DDE0FCAC5 /* database */ = {
+			isa = PBXGroup;
+			children = (
+				0388B10CE980EDA4BC7C67AE /* TodoDatabaseImpl.kt */,
+				FC4A3E955C36541B88E4989B /* TodoDatabaseOpenHelper.kt */,
+				C73259F17571D5C3D934D1B5 /* TodoItemContract.kt */,
+				FDA63019E0C179407DD80EAC /* Utils.kt */,
+			);
+			name = database;
+			sourceTree = "<group>";
+		};
+		DDBF4B4901C0E625A190E9C8 /* database */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = database;
+			sourceTree = "<group>";
+		};
+		DF64E59C0869BEBB9381258D /* common */ = {
+			isa = PBXGroup;
+			children = (
+				CFAB2F9C83D0DB0DDE0FCAC5 /* database */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+		DF7F0557B57499A3A1844E5B /* androidMain */ = {
+			isa = PBXGroup;
+			children = (
+				2E135C8EFCC9EDF3CF9674F2 /* kotlin */,
+			);
+			name = androidMain;
+			sourceTree = "<group>";
+		};
+		E45A935849920AB6730195D7 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				C97140325D4CDFE699450F65 /* TodoAddView.kt */,
+				0478C47EA0F992BB6BDDE415 /* TodoDetailsView.kt */,
+				1938554023558B877B0E2E8E /* TodoListView.kt */,
+			);
+			name = view;
+			sourceTree = "<group>";
+		};
+		EDCA01F0451F91B9765BCCBC /* common */ = {
+			isa = PBXGroup;
+			children = (
+				ADDEBA1B8C5AE242F9169206 /* controller */,
+				F8311CC30A7A4839F605723F /* database */,
+				E45A935849920AB6730195D7 /* view */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+		F3AD1515D3194B53D9BEE99E /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				40B17608E1B29D5E5B091755 /* com */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		F7A4EE0DFDEA5F0D285AB784 /* iosArm64Main */ = {
+			isa = PBXGroup;
+			children = (
+				F3AD1515D3194B53D9BEE99E /* kotlin */,
+			);
+			name = iosArm64Main;
+			sourceTree = "<group>";
+		};
+		F8311CC30A7A4839F605723F /* database */ = {
+			isa = PBXGroup;
+			children = (
+				A8F6903F8143302EA3B52B12 /* TodoDatabase.kt */,
+				32305CAD887469A129CF0A18 /* TodoItem.kt */,
+				2C06C63CD306913ACB7977C1 /* TodoItemExt.kt */,
+			);
+			name = database;
+			sourceTree = "<group>";
+		};
+		FCB371CC3DC7240FA751FF1A /* mvikotlin */ = {
+			isa = PBXGroup;
+			children = (
+				571CAED7974AD138C173A8F6 /* sample */,
+			);
+			name = mvikotlin;
+			sourceTree = "<group>";
+		};
+		FD20A89EED3688DCAA61A099 /* arkivanov */ = {
+			isa = PBXGroup;
+			children = (
+				CC188BA1A6E875C7BCE4223D /* mvikotlin */,
+			);
+			name = arkivanov;
+			sourceTree = "<group>";
+		};
+		FDACCDDD5F655F2A83720727 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				DDBF4B4901C0E625A190E9C8 /* database */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1F38433023FDD21900501F27 /* todo-app-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F38434523FDD21B00501F27 /* Build configuration list for PBXNativeTarget "todo-app-ios" */;
+			buildPhases = (
+				1F38432D23FDD21900501F27 /* Sources */,
+				1F38432E23FDD21900501F27 /* Frameworks */,
+				1F38432F23FDD21900501F27 /* Resources */,
+				1F38434C23FDD36900501F27 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "todo-app-ios";
+			productName = "todo-app-ios";
+			productReference = 1F38433123FDD21900501F27 /* todo-app-ios.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1F38432923FDD21900501F27 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = arkivanov;
+				TargetAttributes = {
+					1F38433023FDD21900501F27 = {
+						CreatedOnToolsVersion = 11.3;
+					};
+				};
+			};
+			buildConfigurationList = 1F38432C23FDD21900501F27 /* Build configuration list for PBXProject "todo-app-ios" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1F38432823FDD21900501F27;
+			productRefGroup = 1F38433223FDD21900501F27 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1F38433023FDD21900501F27 /* todo-app-ios */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1F38432F23FDD21900501F27 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F38434123FDD21B00501F27 /* LaunchScreen.storyboard in Resources */,
+				1F38433E23FDD21B00501F27 /* Preview Assets.xcassets in Resources */,
+				1F38433B23FDD21B00501F27 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1F38432D23FDD21900501F27 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F79AF602401CB0300CC6AEA /* TodoAddViewImpl.swift in Sources */,
+				1F601889240483920081C459 /* ContentView.swift in Sources */,
+				1F601887240481980081C459 /* TimeTravelView.swift in Sources */,
+				1F6009372403E6E5003AFD12 /* TimeTravelViewController.swift in Sources */,
+				1F743D242405D36D00C1F544 /* DebugDrawer.swift in Sources */,
+				1F79AF5A2401B54500CC6AEA /* TodoItemExt.swift in Sources */,
+				1F79AF582401B4A700CC6AEA /* TodoList.swift in Sources */,
+				1F38433523FDD21900501F27 /* AppDelegate.swift in Sources */,
+				1F38433723FDD21900501F27 /* SceneDelegate.swift in Sources */,
+				1F79AF562401B26900CC6AEA /* TodoRow.swift in Sources */,
+				1F79AF5E2401CAB500CC6AEA /* TodoListViewImpl.swift in Sources */,
+				1F60093124034D65003AFD12 /* TodoAdd.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1F38433F23FDD21B00501F27 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F38434023FDD21B00501F27 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1F38434323FDD21B00501F27 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "../todo-darwin-umbrella/build/bin/iosX64/debugFramework";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1F38434423FDD21B00501F27 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "../todo-darwin-umbrella/build/bin/iosX64/releaseFramework";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1F38434623FDD21B00501F27 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"todo-app-ios/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "todo-app-ios/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.arkivanov.mvikotlin.sample.todo.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1F38434723FDD21B00501F27 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"todo-app-ios/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = "todo-app-ios/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.arkivanov.mvikotlin.sample.todo.ios;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F38432C23FDD21900501F27 /* Build configuration list for PBXProject "todo-app-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F38434323FDD21B00501F27 /* Debug */,
+				1F38434423FDD21B00501F27 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F38434523FDD21B00501F27 /* Build configuration list for PBXNativeTarget "todo-app-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F38434623FDD21B00501F27 /* Debug */,
+				1F38434723FDD21B00501F27 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1F38432923FDD21900501F27 /* Project object */;
+}

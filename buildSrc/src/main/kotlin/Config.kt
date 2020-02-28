@@ -1,10 +1,8 @@
+import co.touchlab.kotlinxcodesync.SyncExtension
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.getByName
 import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.invoke
-import org.jetbrains.kotlin.gradle.dsl.KotlinJsOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
@@ -180,6 +178,15 @@ fun Project.android(block: BaseExtension.() -> Unit) {
 
 fun Project.kotlin(block: KotlinMultiplatformExtension.() -> Unit) {
     extensions.getByType<KotlinMultiplatformExtension>().block()
+}
+
+fun Project.setupXcodeSync() {
+    plugins.apply("co.touchlab.kotlinxcodesync")
+
+    extensions.getByType<SyncExtension>().run {
+        projectPath = "../todo-app-ios/todo-app-ios.xcodeproj"
+        target = "todo-app-ios"
+    }
 }
 
 typealias SourceSets = NamedDomainObjectContainer<KotlinSourceSet>

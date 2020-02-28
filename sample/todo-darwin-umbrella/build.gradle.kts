@@ -23,7 +23,7 @@ fun KotlinNativeTarget.setupIosBinaries() {
     binaries {
         framework {
             baseName = "TodoLib"
-//                freeCompilerArgs = freeCompilerArgs.plus("-Xobjc-generics")
+            freeCompilerArgs = freeCompilerArgs.plus("-Xobjc-generics").toMutableList()
 
             export(project(":mvikotlin"))
             export(project(":logging"))

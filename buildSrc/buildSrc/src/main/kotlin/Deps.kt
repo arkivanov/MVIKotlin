@@ -84,6 +84,10 @@ object Deps {
         object Json : Dependency(group = Deps.Json, name = "json", version = "20190722")
     }
 
+    object TouchLab : Group(name = "co.touchlab"){
+        object KotlinXcodeSync : Dependency(group = TouchLab, name = "kotlinxcodesync", version = "0.2")
+    }
+
     open class Group(val name: String)
 
     open class Dependency private constructor(
