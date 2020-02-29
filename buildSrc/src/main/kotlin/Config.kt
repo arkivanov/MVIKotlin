@@ -6,6 +6,40 @@ import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
+enum class BuildType {
+    ALL, NON_NATIVE, LINUX, IOS
+}
+
+val Project.buildType: BuildType
+    get() =
+        rootProject
+            .findProperty("build_type")
+            ?.toString()
+            ?.let(BuildType::valueOf)
+            ?: BuildType.ALL
+
+private enum class BuildTarget {
+    ANDROID, JVM, JS, LINUX_X64, IOS_X64, IOS_ARM64
+}
+
+private val buildTypeToBuildTargets: Map<BuildType, Set<BuildTarget>> =
+    mapOf(
+        BuildType.ALL to BuildTarget.values().toSet(),
+        BuildType.NON_NATIVE to setOf(BuildTarget.ANDROID, BuildTarget.JVM, BuildTarget.JS),
+        BuildType.LINUX to setOf(BuildTarget.LINUX_X64),
+        BuildType.IOS to setOf(BuildTarget.IOS_X64, BuildTarget.IOS_ARM64)
+    )
+
+private val BuildType.buildTargets: Set<BuildTarget> get() = requireNotNull(buildTypeToBuildTargets[this])
+
+private fun Project.isBuildTargetAvailable(target: BuildTarget): Boolean = buildType.buildTargets.contains(target)
+
+private fun Project.doIfBuildTargetAvailable(target: BuildTarget, block: () -> Unit) {
+    if (isBuildTargetAvailable(target)) {
+        block()
+    }
+}
+
 fun Project.setupMultiplatform() {
     plugins.apply("kotlin-multiplatform")
     plugins.apply("com.android.library")
@@ -16,29 +50,44 @@ fun Project.setupMultiplatform() {
     setupAndroidSdkVersions()
 
     kotlin {
-        js {
-            nodejs()
-            browser()
+        doIfBuildTargetAvailable(BuildTarget.JS) {
+            js {
+                nodejs()
+                browser()
 
-            compilations.all {
-                compileKotlinTask.kotlinOptions {
-                    metaInfo = true
-                    sourceMap = true
-                    sourceMapEmbedSources = "always"
-                    moduleKind = "umd"
-                    main = "call"
+                compilations.all {
+                    compileKotlinTask.kotlinOptions {
+                        metaInfo = true
+                        sourceMap = true
+                        sourceMapEmbedSources = "always"
+                        moduleKind = "umd"
+                        main = "call"
+                    }
                 }
             }
         }
 
-        android {
-            publishLibraryVariants("release", "debug")
+        doIfBuildTargetAvailable(BuildTarget.ANDROID) {
+            android {
+                publishLibraryVariants("release", "debug")
+            }
         }
 
-        jvm()
-        linuxX64()
-        iosX64()
-        iosArm64()
+        doIfBuildTargetAvailable(BuildTarget.JVM) {
+            jvm()
+        }
+
+        doIfBuildTargetAvailable(BuildTarget.LINUX_X64) {
+            linuxX64()
+        }
+
+        doIfBuildTargetAvailable(BuildTarget.IOS_X64) {
+            iosX64()
+        }
+
+        doIfBuildTargetAvailable(BuildTarget.IOS_ARM64) {
+            iosArm64()
+        }
 
         sourceSets {
             commonMain {
@@ -54,13 +103,8 @@ fun Project.setupMultiplatform() {
                 }
             }
 
-            jsNativeCommonMain {
-                dependsOn(commonMain)
-            }
-
-            jsNativeCommonTest {
-                dependsOn(commonTest)
-            }
+            jsNativeCommonMain.dependsOn(commonMain)
+            jsNativeCommonTest.dependsOn(commonMain)
 
             jvmCommonMain {
                 dependsOn(commonMain)
@@ -78,21 +122,11 @@ fun Project.setupMultiplatform() {
                 }
             }
 
-            jvmMain {
-                dependsOn(jvmCommonMain)
-            }
+            jvmMain.dependsOn(jvmCommonMain)
+            jvmTest.dependsOn(jvmCommonTest)
 
-            jvmTest {
-                dependsOn(jvmCommonTest)
-            }
-
-            androidMain {
-                dependsOn(jvmCommonMain)
-            }
-
-            androidTest {
-                dependsOn(jvmCommonTest)
-            }
+            androidMain.dependsOn(jvmCommonMain)
+            androidTest.dependsOn(jvmCommonTest)
 
             jsMain {
                 dependsOn(jsNativeCommonMain)
@@ -110,53 +144,23 @@ fun Project.setupMultiplatform() {
                 }
             }
 
-            nativeCommonMain {
-                dependsOn(jsNativeCommonMain)
-            }
+            nativeCommonMain.dependsOn(jsNativeCommonMain)
+            nativeCommonTest.dependsOn(jsNativeCommonTest)
 
-            nativeCommonTest {
-                dependsOn(jsNativeCommonTest)
-            }
+            linuxX64Main.dependsOn(nativeCommonMain)
+            linuxX64Test.dependsOn(nativeCommonTest)
 
-            linuxX64Main {
-                dependsOn(nativeCommonMain)
-            }
+            darwinCommonMain.dependsOn(nativeCommonMain)
+            darwinCommonTest.dependsOn(nativeCommonTest)
 
-            linuxX64Test {
-                dependsOn(nativeCommonTest)
-            }
+            iosCommonMain.dependsOn(darwinCommonMain)
+            iosCommonTest.dependsOn(darwinCommonTest)
 
-            darwinCommonMain {
-                dependsOn(nativeCommonMain)
-            }
+            iosX64Main.dependsOn(iosCommonMain)
+            iosX64Test.dependsOn(iosCommonTest)
 
-            darwinCommonTest {
-                dependsOn(nativeCommonTest)
-            }
-
-            iosCommonMain {
-                dependsOn(darwinCommonMain)
-            }
-
-            iosCommonTest {
-                dependsOn(darwinCommonTest)
-            }
-
-            iosX64Main {
-                dependsOn(iosCommonMain)
-            }
-
-            iosX64Test {
-                dependsOn(iosCommonTest)
-            }
-
-            iosArm64Main {
-                dependsOn(iosCommonMain)
-            }
-
-            iosArm64Test {
-                dependsOn(iosCommonTest)
-            }
+            iosArm64Main.dependsOn(iosCommonMain)
+            iosArm64Test.dependsOn(iosCommonTest)
         }
     }
 }

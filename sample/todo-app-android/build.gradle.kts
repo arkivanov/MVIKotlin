@@ -3,7 +3,7 @@ plugins {
     kotlin("android")
 }
 
-project.setupAndroidSdkVersions()
+setupAndroidSdkVersions()
 
 android {
     defaultConfig {

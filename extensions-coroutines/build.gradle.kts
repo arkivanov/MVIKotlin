@@ -1,4 +1,4 @@
-project.setupMultiplatform()
+setupMultiplatform()
 
 kotlin {
     sourceSets {

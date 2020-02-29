@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
-project.setupMultiplatform()
+setupMultiplatform()
 
 kotlin {
     iosX64().setupIosBinaries()

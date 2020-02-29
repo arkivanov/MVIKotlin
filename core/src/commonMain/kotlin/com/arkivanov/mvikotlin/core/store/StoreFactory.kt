@@ -15,7 +15,7 @@ interface StoreFactory {
     ): Store<Intent, State, Label>
 
     private companion object {
-        private val bypassReducer =
+        private val bypassReducer: Reducer<Any, Any> =
             object : Reducer<Any, Any> {
                 override fun Any.reduce(result: Any): Any = this
             }
