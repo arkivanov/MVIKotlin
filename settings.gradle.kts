@@ -14,6 +14,8 @@ include(":sample:todo-common-internal")
 include(":sample:todo-reaktive")
 include(":sample:todo-coroutines")
 
+//include(":tools:check-publication")
+
 doIfBuildTargetAvailable<BuildTarget.Darwin> {
     include(":sample:todo-darwin-umbrella")
 }
