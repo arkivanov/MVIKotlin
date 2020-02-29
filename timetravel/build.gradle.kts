@@ -1,4 +1,5 @@
 setupMultiplatform()
+setupPublication()
 
 doIfBuildTargetAvailable<BuildTarget.Android> {
     android {

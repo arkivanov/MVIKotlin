@@ -1,3 +1,5 @@
+enableFeaturePreview("GRADLE_METADATA")
+
 include(":utils-internal")
 include(":core")
 include(":core-internal")

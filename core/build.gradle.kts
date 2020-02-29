@@ -1,4 +1,5 @@
 setupMultiplatform()
+setupPublication()
 
 kotlin {
     sourceSets {

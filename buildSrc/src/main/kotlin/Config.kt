@@ -3,8 +3,11 @@ import com.android.build.gradle.BaseExtension
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
@@ -70,9 +73,6 @@ inline fun <reified T : BuildTarget> ExtensionAware.doIfBuildTargetAvailable(blo
 
 fun Project.setupMultiplatform() {
     plugins.apply("kotlin-multiplatform")
-
-    group = "com.arkivanov.mvikotlin"
-    version = "0.0.1"
 
     doIfBuildTargetAvailable<BuildTarget.Android> {
         plugins.apply("com.android.library")
@@ -192,6 +192,61 @@ fun Project.setupMultiplatform() {
 
             iosArm64Main.dependsOn(iosCommonMain)
             iosArm64Test.dependsOn(iosCommonTest)
+        }
+    }
+}
+
+fun Project.setupPublication() {
+    plugins.apply("maven-publish")
+
+    group = "com.arkivanov.mvikotlin"
+    version = "2.0.0-preview1"
+
+    val userId = "arkivanov"
+    val userName = "Arkadii Ivanov"
+    val userEmail = "arkann1985@gmail.com"
+    val githubUrl = "https://github.com/arkivanov/MVIDroid"
+    val githubScmUrl = "scm:git:git://github.com/arkivanov/MVIDroid.git"
+
+    extensions.getByType<PublishingExtension>().run {
+        publications.withType<MavenPublication>().all {
+            pom {
+                withXml {
+                    asNode().apply {
+                        appendNode("name", "MVIKotlin")
+                        appendNode("description", "Kotlin Multiplatform MVI framework")
+                        appendNode("url", githubUrl)
+                    }
+                }
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set(userId)
+                        name.set(userName)
+                        email.set(userEmail)
+                    }
+                }
+                scm {
+                    url.set(githubUrl)
+                    connection.set(githubScmUrl)
+                    developerConnection.set(githubScmUrl)
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                url = uri("https://api.bintray.com/maven/arkivanov/maven/mvikotlin/;publish=0;override=1")
+                credentials {
+                    username = userId
+                    password = findProperty("bintray_api_key")?.toString()
+                }
+            }
         }
     }
 }
