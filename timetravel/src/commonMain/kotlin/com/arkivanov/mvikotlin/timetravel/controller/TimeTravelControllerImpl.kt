@@ -38,7 +38,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
     override fun states(observer: Observer<TimeTravelState>): Disposable = stateSubject.subscribe(observer, state)
 
     @MainThread
-    internal fun attachStore(store: TimeTravelStore<*, *, *>) {
+    fun attachStore(store: TimeTravelStore<*, *, *>) {
         assertOnMainThread()
         val storeName = store.name
         check(!stores.containsKey(storeName)) { "Duplicate store: $storeName" }

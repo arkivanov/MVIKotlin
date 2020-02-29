@@ -2,6 +2,8 @@ import co.touchlab.kotlinxcodesync.SyncExtension
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
+import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
@@ -10,47 +12,76 @@ enum class BuildType {
     ALL, NON_NATIVE, LINUX, IOS
 }
 
-val Project.buildType: BuildType
+val ExtensionAware.buildType: BuildType
     get() =
-        rootProject
-            .findProperty("build_type")
+        find("build_type")
             ?.toString()
             ?.let(BuildType::valueOf)
             ?: BuildType.ALL
 
-private enum class BuildTarget {
-    ANDROID, JVM, JS, LINUX_X64, IOS_X64, IOS_ARM64
+private fun ExtensionAware.find(key: String) =
+    if (extra.has(key)) extra.get(key) else null
+
+interface BuildTarget {
+
+    interface NonNative : BuildTarget
+
+    interface Native : BuildTarget
+
+    interface Darwin : Native
+
+    interface Ios : Darwin
+
+    interface Linux : Native
+
+    object Android : NonNative
+    object Jvm : NonNative
+    object Js : NonNative
+    object IosX64 : Ios
+    object IosArm64 : Ios
+    object LinuxX64 : Linux
 }
 
 private val buildTypeToBuildTargets: Map<BuildType, Set<BuildTarget>> =
     mapOf(
-        BuildType.ALL to BuildTarget.values().toSet(),
-        BuildType.NON_NATIVE to setOf(BuildTarget.ANDROID, BuildTarget.JVM, BuildTarget.JS),
-        BuildType.LINUX to setOf(BuildTarget.LINUX_X64),
-        BuildType.IOS to setOf(BuildTarget.IOS_X64, BuildTarget.IOS_ARM64)
+        BuildType.ALL to setOf(
+            BuildTarget.Android,
+            BuildTarget.Jvm,
+            BuildTarget.Js,
+            BuildTarget.IosX64,
+            BuildTarget.IosArm64,
+            BuildTarget.LinuxX64
+        ),
+        BuildType.NON_NATIVE to setOf(BuildTarget.Android, BuildTarget.Jvm, BuildTarget.Js),
+        BuildType.LINUX to setOf(BuildTarget.LinuxX64),
+        BuildType.IOS to setOf(BuildTarget.IosX64, BuildTarget.IosArm64)
     )
 
-private val BuildType.buildTargets: Set<BuildTarget> get() = requireNotNull(buildTypeToBuildTargets[this])
+val BuildType.buildTargets: Set<BuildTarget> get() = requireNotNull(buildTypeToBuildTargets[this])
 
-private fun Project.isBuildTargetAvailable(target: BuildTarget): Boolean = buildType.buildTargets.contains(target)
+inline fun <reified T : BuildTarget> ExtensionAware.isBuildTargetAvailable(): Boolean =
+    buildType.buildTargets.any { it is T }
 
-private fun Project.doIfBuildTargetAvailable(target: BuildTarget, block: () -> Unit) {
-    if (isBuildTargetAvailable(target)) {
+inline fun <reified T : BuildTarget> ExtensionAware.doIfBuildTargetAvailable(block: () -> Unit) {
+    if (isBuildTargetAvailable<T>()) {
         block()
     }
 }
 
 fun Project.setupMultiplatform() {
     plugins.apply("kotlin-multiplatform")
-    plugins.apply("com.android.library")
 
     group = "com.arkivanov.mvikotlin"
     version = "0.0.1"
 
-    setupAndroidSdkVersions()
+    doIfBuildTargetAvailable<BuildTarget.Android> {
+        plugins.apply("com.android.library")
+
+        setupAndroidSdkVersions()
+    }
 
     kotlin {
-        doIfBuildTargetAvailable(BuildTarget.JS) {
+        doIfBuildTargetAvailable<BuildTarget.Js> {
             js {
                 nodejs()
                 browser()
@@ -67,25 +98,25 @@ fun Project.setupMultiplatform() {
             }
         }
 
-        doIfBuildTargetAvailable(BuildTarget.ANDROID) {
+        doIfBuildTargetAvailable<BuildTarget.Android> {
             android {
                 publishLibraryVariants("release", "debug")
             }
         }
 
-        doIfBuildTargetAvailable(BuildTarget.JVM) {
+        doIfBuildTargetAvailable<BuildTarget.Jvm> {
             jvm()
         }
 
-        doIfBuildTargetAvailable(BuildTarget.LINUX_X64) {
+        doIfBuildTargetAvailable<BuildTarget.LinuxX64> {
             linuxX64()
         }
 
-        doIfBuildTargetAvailable(BuildTarget.IOS_X64) {
+        doIfBuildTargetAvailable<BuildTarget.IosX64> {
             iosX64()
         }
 
-        doIfBuildTargetAvailable(BuildTarget.IOS_ARM64) {
+        doIfBuildTargetAvailable<BuildTarget.IosArm64> {
             iosArm64()
         }
 
@@ -104,7 +135,7 @@ fun Project.setupMultiplatform() {
             }
 
             jsNativeCommonMain.dependsOn(commonMain)
-            jsNativeCommonTest.dependsOn(commonMain)
+            jsNativeCommonTest.dependsOn(commonTest)
 
             jvmCommonMain {
                 dependsOn(commonMain)

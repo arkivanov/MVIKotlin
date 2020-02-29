@@ -1,9 +1,11 @@
 setupMultiplatform()
 
-android {
-    sourceSets {
-        getByName("main") {
-            res.srcDirs("src/androidMain/res")
+doIfBuildTargetAvailable<BuildTarget.Android> {
+    android {
+        sourceSets {
+            getByName("main") {
+                res.srcDirs("src/androidMain/res")
+            }
         }
     }
 }
