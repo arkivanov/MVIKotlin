@@ -13,33 +13,28 @@ import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore
-import com.arkivanov.mvikotlin.utils.internal.AtomicList
-import com.arkivanov.mvikotlin.utils.internal.AtomicMap
-import com.arkivanov.mvikotlin.utils.internal.clear
-import com.arkivanov.mvikotlin.utils.internal.containsKey
-import com.arkivanov.mvikotlin.utils.internal.get
-import com.arkivanov.mvikotlin.utils.internal.minusAssign
-import com.arkivanov.mvikotlin.utils.internal.plusAssign
-import com.arkivanov.mvikotlin.utils.internal.set
-import com.arkivanov.mvikotlin.utils.internal.size
-import com.arkivanov.mvikotlin.utils.internal.values
-import com.badoo.reaktive.utils.atomic.AtomicReference
-import com.badoo.reaktive.utils.atomic.updateAndGet
+import com.badoo.reaktive.utils.ensureNeverFrozen
+import kotlin.collections.set
 
 internal class TimeTravelControllerImpl : TimeTravelController {
 
-    @Suppress("ObjectPropertyName")
-    private var _state = AtomicReference(TimeTravelState())
-    override val state: TimeTravelState get() = _state.value
+    init {
+        ensureNeverFrozen()
+    }
+
+    override var state: TimeTravelState = TimeTravelState()
+        private set
+
     private val stateSubject = Subject<TimeTravelState>()
-    private val postponedEvents = AtomicList<TimeTravelEvent>()
-    private val stores = AtomicMap<String, TimeTravelStore<*, *, *>>()
+    private val postponedEvents = ArrayList<TimeTravelEvent>()
+    private val stores = HashMap<String, TimeTravelStore<*, *, *>>()
 
     override fun states(observer: Observer<TimeTravelState>): Disposable = stateSubject.subscribe(observer, state)
 
     @MainThread
     fun attachStore(store: TimeTravelStore<*, *, *>) {
         assertOnMainThread()
+
         val storeName = store.name
         check(!stores.containsKey(storeName)) { "Duplicate store: $storeName" }
 
@@ -114,7 +109,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
 
             if (oldMode !== Mode.RECORDING) {
                 stores.values.forEach { it.restoreState() }
-                postponedEvents.value.forEach { process(it) }
+                postponedEvents.forEach { process(it) }
             }
 
             postponedEvents.clear()
@@ -208,8 +203,11 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         stores[event.storeName]?.eventProcessor?.process(event.type, previousValue ?: event.value)
     }
 
-    private inline fun swapState(reducer: (TimeTravelState) -> TimeTravelState): TimeTravelState =
-        _state
-            .updateAndGet(reducer)
-            .also(stateSubject::onNext)
+    private inline fun swapState(reducer: (TimeTravelState) -> TimeTravelState): TimeTravelState {
+        val newState = reducer(state)
+        state = newState
+        stateSubject.onNext(newState)
+
+        return newState
+    }
 }
