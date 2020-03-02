@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
+import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.utils.internal.initialize
 import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
@@ -13,6 +14,10 @@ import com.badoo.reaktive.maybe.Maybe
 import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.single.Single
 
+/**
+ * An abstract implementation of the [Bootstrapper] that provides interoperability with Reaktive.
+ * Implements [DisposableScope] which disposes when the [Bootstrapper] is disposed.
+ */
 @UseExperimental(ExperimentalReaktiveApi::class)
 abstract class ReaktiveBootstrapper<Action> : Bootstrapper<Action>, DisposableScope {
 
@@ -23,6 +28,11 @@ abstract class ReaktiveBootstrapper<Action> : Bootstrapper<Action>, DisposableSc
         this.actionConsumer.initialize(actionConsumer)
     }
 
+    /**
+     * Dispatches the `Action` to the [Store]
+     *
+     * @param action an `Action` to be dispatched
+     */
     protected fun dispatch(action: Action) {
         actionConsumer.requireValue.invoke(action)
     }

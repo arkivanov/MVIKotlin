@@ -7,7 +7,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 
 /**
- * An implementation of [StoreFactory] that creates default implementations of [Store]
+ * An implementation of the [StoreFactory] that creates default implementations of the [Store]
  */
 object DefaultStoreFactory : StoreFactory {
 

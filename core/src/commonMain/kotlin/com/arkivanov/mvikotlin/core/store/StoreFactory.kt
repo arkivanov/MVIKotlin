@@ -2,6 +2,10 @@ package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 
+/**
+ * Creates instances of [Store]s using the provided components.
+ * You can create different [Store] wrappers and combine them depending on circumstances.
+ */
 interface StoreFactory {
 
     @MainThread

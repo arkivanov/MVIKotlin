@@ -1,7 +1,10 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
+import com.arkivanov.mvikotlin.core.store.Reducer
+import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.utils.internal.initialize
 import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
@@ -14,6 +17,10 @@ import com.badoo.reaktive.maybe.Maybe
 import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.single.Single
 
+/**
+ * An abstract implementation of the [Executor] that provides interoperability with Reaktive.
+ * Implements [DisposableScope] which disposes when the [Executor] is disposed.
+ */
 @UseExperimental(ExperimentalReaktiveApi::class)
 open class ReaktiveExecutor<in Intent, in Action, in State, Result, Label> :
     Executor<Intent, Action, State, Result, Label>,
@@ -31,6 +38,12 @@ open class ReaktiveExecutor<in Intent, in Action, in State, Result, Label> :
         executeIntent(intent, getState)
     }
 
+    /**
+     * The companion of the [Executor.handleIntent] method
+     *
+     * @param intent an `Intent` received by the [Store]
+     * @param getState a `State` supplier that returns the *current* `State` of the [Store]
+     */
     @MainThread
     protected open fun executeIntent(intent: Intent, getState: () -> State) {
     }
@@ -39,6 +52,12 @@ open class ReaktiveExecutor<in Intent, in Action, in State, Result, Label> :
         executeAction(action, getState)
     }
 
+    /**
+     * The companion of the [Executor.handleAction] method
+     *
+     * @param action an `Action` produced by the [Bootstrapper]
+     * @param getState a `State` supplier that returns the *current* `State` of the [Store]
+     */
     @MainThread
     protected open fun executeAction(action: Action, getState: () -> State) {
     }
@@ -47,11 +66,22 @@ open class ReaktiveExecutor<in Intent, in Action, in State, Result, Label> :
         scope.dispose()
     }
 
+    /**
+     * Dispatches the provided `Result` to the [Reducer].
+     * The updated `State` will be available immediately after this method returns.
+     *
+     * @param result a `Result` to be dispatched to the `Reducer`
+     */
     @MainThread
     protected fun dispatch(result: Result) {
         callbacks.requireValue.onResult(result)
     }
 
+    /**
+     * Sends the provided `Label` to the [Store] for publication
+     *
+     * @param label a `Label` to be published
+     */
     @MainThread
     protected fun publish(label: Label) {
         callbacks.requireValue.onLabel(label)

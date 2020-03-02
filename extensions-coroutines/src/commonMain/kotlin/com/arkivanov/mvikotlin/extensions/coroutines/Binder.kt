@@ -12,15 +12,42 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * A builder function for the [Binder]
+ *
+ * @param mainContext a main CoroutineContext, the default value is Dispatchers.Main
+ * @param builder the DSL block function
+ *
+ * @return a new instance of the [Binder]
+ */
 fun bind(mainContext: CoroutineContext = Dispatchers.Main, builder: BindingsBuilder.() -> Unit): Binder =
     BuilderBinder(mainContext = mainContext)
         .also(builder)
 
 interface BindingsBuilder {
+
+    /**
+     * Creates a binding between this [Flow] and the provided `consumer`
+     *
+     * @receiver a stream of values
+     * @param consumer a `consumer` of values
+     */
     infix fun <T> Flow<T>.bindTo(consumer: suspend (T) -> Unit)
 
+    /**
+     * Creates a binding between this [Flow] and the provided [ViewRenderer]
+     *
+     * @receiver a stream of the `View Models`
+     * @param viewRenderer a [ViewRenderer] that will consume the `View Models`
+     */
     infix fun <Model : Any> Flow<Model>.bindTo(viewRenderer: ViewRenderer<Model>)
 
+    /**
+     * Creates a binding between this [Flow] and the provided [Store]
+     *
+     * @receiver a stream of the [Store] `States`
+     * @param store a [Store] that will consume the `Intents`
+     */
     infix fun <Intent : Any> Flow<Intent>.bindTo(store: Store<Intent, *, *>)
 }
 

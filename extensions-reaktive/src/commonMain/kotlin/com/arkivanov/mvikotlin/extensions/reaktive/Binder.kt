@@ -10,15 +10,47 @@ import com.badoo.reaktive.disposable.addTo
 import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.observable.subscribe
 
+/**
+ * A builder function for the [Binder]
+ *
+ * @param builder the DSL block function
+ *
+ * @return a new instance of the [Binder]
+ */
 fun bind(builder: BindingsBuilder.() -> Unit): Binder = BuilderBinder().also(builder)
 
 interface BindingsBuilder {
+
+    /**
+     * Creates a binding between this [Observable] and the provided `consumer`
+     *
+     * @receiver a stream of values
+     * @param consumer a `consumer` of values
+     */
     infix fun <T> Observable<T>.bindTo(consumer: (T) -> Unit)
 
+    /**
+     * Creates a binding between this [Observable] and the provided `consumer`
+     *
+     * @receiver a stream of values
+     * @param consumer a `consumer` of values represented as [ValueCallback]
+     */
     infix fun <T> Observable<T>.bindTo(consumer: ValueCallback<T>)
 
+    /**
+     * Creates a binding between this [Observable] and the provided [ViewRenderer]
+     *
+     * @receiver a stream of the `View Models`
+     * @param viewRenderer a [ViewRenderer] that will consume the `View Models`
+     */
     infix fun <Model : Any> Observable<Model>.bindTo(viewRenderer: ViewRenderer<Model>)
 
+    /**
+     * Creates a binding between this [Observable] and the provided [Store]
+     *
+     * @receiver a stream of the [Store] `States`
+     * @param store a [Store] that will consume the `Intents`
+     */
     infix fun <Intent : Any> Observable<Intent>.bindTo(store: Store<Intent, *, *>)
 }
 

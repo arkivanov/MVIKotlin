@@ -11,10 +11,10 @@ import com.arkivanov.mvikotlin.logging.logger.Logger
 import com.arkivanov.mvikotlin.logging.logger.log
 
 /**
- * An implementation of [StoreFactory] that wraps another Store factory and provides logging
+ * An implementation of the [StoreFactory] that wraps another [StoreFactory] and provides logging
  *
- * @param delegate an instance of another factory that will be wrapped by this factory
- * @param logger A [Logger] that can be used to implement custom logging. By default [DefaultLogger] is used.
+ * @param delegate a [StoreFactory] that will be wrapped by this factory
+ * @param logger a [Logger], by default the [DefaultLogger] is used
  * @param mode logging mode, see [LoggingMode] for more information
  */
 class LoggingStoreFactory(
