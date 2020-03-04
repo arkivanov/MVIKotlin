@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
+import com.arkivanov.mvikotlin.core.binder.Binder
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.reaktive.Binder
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels

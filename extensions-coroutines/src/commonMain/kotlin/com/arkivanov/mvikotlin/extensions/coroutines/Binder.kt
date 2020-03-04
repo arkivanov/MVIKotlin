@@ -1,8 +1,9 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
+import com.arkivanov.mvikotlin.core.binder.Binder
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
-import com.arkivanov.mvikotlin.core.view.View
+import com.arkivanov.mvikotlin.core.view.ViewRenderer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -18,15 +19,9 @@ fun bind(mainContext: CoroutineContext = Dispatchers.Main, builder: BindingsBuil
 interface BindingsBuilder {
     infix fun <T> Flow<T>.bindTo(consumer: suspend (T) -> Unit)
 
-    infix fun <T : Any> Flow<T>.bindTo(view: View<T, *>)
+    infix fun <Model : Any> Flow<Model>.bindTo(viewRenderer: ViewRenderer<Model>)
 
-    infix fun <T : Any> Flow<T>.bindTo(store: Store<T, *, *>)
-}
-
-interface Binder {
-    fun start()
-
-    fun stop()
+    infix fun <Intent : Any> Flow<Intent>.bindTo(store: Store<Intent, *, *>)
 }
 
 private class BuilderBinder(
@@ -39,10 +34,10 @@ private class BuilderBinder(
         bindings += Binding(this, consumer)
     }
 
-    override fun <T : Any> Flow<T>.bindTo(view: View<T, *>) {
+    override fun <Model : Any> Flow<Model>.bindTo(viewRenderer: ViewRenderer<Model>) {
         this bindTo {
             assertOnMainThread()
-            view.render(it)
+            viewRenderer.render(it)
         }
     }
 

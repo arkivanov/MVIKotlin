@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.sample.todo.coroutines.controller
 
+import com.arkivanov.mvikotlin.core.binder.Binder
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.Binder
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.events
 import com.arkivanov.mvikotlin.extensions.coroutines.labels

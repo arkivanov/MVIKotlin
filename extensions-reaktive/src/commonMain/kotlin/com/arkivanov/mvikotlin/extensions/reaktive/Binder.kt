@@ -1,8 +1,9 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
+import com.arkivanov.mvikotlin.core.binder.Binder
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
-import com.arkivanov.mvikotlin.core.view.View
+import com.arkivanov.mvikotlin.core.view.ViewRenderer
 import com.badoo.reaktive.base.ValueCallback
 import com.badoo.reaktive.disposable.CompositeDisposable
 import com.badoo.reaktive.disposable.addTo
@@ -16,15 +17,9 @@ interface BindingsBuilder {
 
     infix fun <T> Observable<T>.bindTo(consumer: ValueCallback<T>)
 
-    infix fun <T : Any> Observable<T>.bindTo(view: View<T, *>)
+    infix fun <Model : Any> Observable<Model>.bindTo(viewRenderer: ViewRenderer<Model>)
 
-    infix fun <T : Any> Observable<T>.bindTo(store: Store<T, *, *>)
-}
-
-interface Binder {
-    fun start()
-
-    fun stop()
+    infix fun <Intent : Any> Observable<Intent>.bindTo(store: Store<Intent, *, *>)
 }
 
 private class BuilderBinder : BindingsBuilder, Binder, CompositeDisposable() {
@@ -38,10 +33,10 @@ private class BuilderBinder : BindingsBuilder, Binder, CompositeDisposable() {
         this bindTo consumer::onNext
     }
 
-    override fun <T : Any> Observable<T>.bindTo(view: View<T, *>) {
+    override fun <Model : Any> Observable<Model>.bindTo(viewRenderer: ViewRenderer<Model>) {
         this bindTo {
             assertOnMainThread()
-            view.render(it)
+            viewRenderer.render(it)
         }
     }
 
