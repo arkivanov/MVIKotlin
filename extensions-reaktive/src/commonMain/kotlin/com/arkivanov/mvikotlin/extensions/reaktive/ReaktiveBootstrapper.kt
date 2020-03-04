@@ -1,6 +1,9 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
-import com.arkivanov.mvikotlin.core.store.AbstractBootstrapper
+import com.arkivanov.mvikotlin.core.store.Bootstrapper
+import com.arkivanov.mvikotlin.utils.internal.initialize
+import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
+import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.annotations.ExperimentalReaktiveApi
 import com.badoo.reaktive.base.CompleteCallback
 import com.badoo.reaktive.completable.Completable
@@ -11,14 +14,21 @@ import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.single.Single
 
 @UseExperimental(ExperimentalReaktiveApi::class)
-abstract class ReaktiveBootstrapper<Action> : AbstractBootstrapper<Action>(), DisposableScope {
+abstract class ReaktiveBootstrapper<Action> : Bootstrapper<Action>, DisposableScope {
 
+    private val actionConsumer = lateinitAtomicReference<(Action) -> Unit>()
     private val scope = DisposableScope()
+
+    final override fun init(actionConsumer: (Action) -> Unit) {
+        this.actionConsumer.initialize(actionConsumer)
+    }
+
+    protected fun dispatch(action: Action) {
+        actionConsumer.requireValue.invoke(action)
+    }
 
     override fun dispose() {
         scope.dispose()
-
-        super.dispose()
     }
 
     /*
