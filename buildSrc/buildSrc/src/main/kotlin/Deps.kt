@@ -75,6 +75,7 @@ object Deps {
             private const val version = "1.1.8"
 
             object Reaktive : Dependency(group = Badoo.Reaktive, name = "reaktive", version = version)
+            object ReaktiveAnnotations : Dependency(group = Badoo.Reaktive, name = "reaktive-annotations", version = version)
             object ReaktiveTesting : Dependency(group = Badoo.Reaktive, name = "reaktive-testing", version = version)
             object Utils : Dependency(group = Badoo.Reaktive, name = "utils", version = version)
         }

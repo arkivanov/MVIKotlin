@@ -9,6 +9,7 @@ kotlin {
                 implementation(project(":core-internal"))
                 implementation(project(":utils-internal"))
                 implementation(Deps.Badoo.Reaktive.Reaktive)
+                implementation(Deps.Badoo.Reaktive.ReaktiveAnnotations)
                 implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
