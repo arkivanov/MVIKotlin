@@ -13,6 +13,7 @@ import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore
+import com.badoo.reaktive.utils.ThreadLocalHolder
 import com.badoo.reaktive.utils.ensureNeverFrozen
 import kotlin.collections.set
 
@@ -39,7 +40,19 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         check(!stores.containsKey(storeName)) { "Duplicate store: $storeName" }
 
         stores[storeName] = store
-        store.events(observer(onComplete = { stores -= storeName }, onNext = ::onEvent))
+
+        val observerThreadLocalHolder = ThreadLocalHolder(observer(onComplete = { stores -= storeName }, onNext = ::onEvent))
+
+        store.events(
+            observer(
+                onComplete = {
+                    observerThreadLocalHolder.get()?.onComplete()
+                    observerThreadLocalHolder.dispose()
+                },
+                onNext = { observerThreadLocalHolder.get()?.onNext(it) }
+            )
+        )
+
         store.init()
     }
 
