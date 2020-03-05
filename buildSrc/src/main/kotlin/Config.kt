@@ -2,14 +2,19 @@ import co.touchlab.kotlinxcodesync.SyncExtension
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 enum class BuildType {
     ALL, NON_NATIVE, LINUX, IOS
@@ -192,6 +197,26 @@ fun Project.setupMultiplatform() {
 
             iosArm64Main.dependsOn(iosCommonMain)
             iosArm64Test.dependsOn(iosCommonTest)
+        }
+
+        doIfBuildTargetAvailable<BuildTarget.IosX64> {
+            val iosX64Test: Task by tasks.creating {
+                val device = findProperty("iosDevice")?.toString() ?: "iPhone 8"
+                val testExecutable = iosX64().binaries.getTest(NativeBuildType.DEBUG)
+                dependsOn(testExecutable.linkTaskName)
+                group = JavaBasePlugin.VERIFICATION_GROUP
+                description = "Runs tests for target 'iosX64' on an iOS simulator"
+
+                println("Path: testExecutable.outputFile.absolutePath")
+
+                doLast {
+                    exec {
+                        commandLine("xcrun", "simctl", "spawn", "--standalone", device, testExecutable.outputFile.absolutePath)
+                    }
+                }
+            }
+
+            tasks.getByName("check").dependsOn(iosX64Test)
         }
     }
 }
