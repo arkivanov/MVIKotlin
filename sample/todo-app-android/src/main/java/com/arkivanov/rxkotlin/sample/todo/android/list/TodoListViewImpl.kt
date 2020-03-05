@@ -3,7 +3,7 @@ package com.arkivanov.rxkotlin.sample.todo.android.list
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.arkivanov.mvikotlin.core.utils.diff
-import com.arkivanov.mvikotlin.main.view.AbstractView
+import com.arkivanov.mvikotlin.core.view.AbstractView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Model

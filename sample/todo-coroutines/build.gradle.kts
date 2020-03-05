@@ -4,8 +4,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(project(":core"))
-                implementation(project(":extensions-coroutines"))
+                implementation(project(":mvikotlin"))
+                implementation(project(":mvikotlin-extensions-coroutines"))
                 api(project(":sample:todo-common"))
                 implementation(project(":sample:todo-common-internal"))
                 implementation(Deps.Jetbrains.Kotlinx.Coroutines.Core.Common)

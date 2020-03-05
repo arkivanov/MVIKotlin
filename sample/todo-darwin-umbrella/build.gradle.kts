@@ -9,9 +9,9 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(project(":mvikotlin"))
-                api(project(":logging"))
-                api(project(":timetravel"))
+                api(project(":mvikotlin-main"))
+                api(project(":mvikotlin-logging"))
+                api(project(":mvikotlin-timetravel"))
                 api(project(":sample:todo-common"))
                 api(project(":sample:todo-reaktive"))
             }
@@ -25,9 +25,9 @@ fun KotlinNativeTarget.setupIosBinaries() {
             baseName = "TodoLib"
             freeCompilerArgs = freeCompilerArgs.plus("-Xobjc-generics").toMutableList()
 
-            export(project(":mvikotlin"))
-            export(project(":logging"))
-            export(project(":timetravel"))
+            export(project(":mvikotlin-main"))
+            export(project(":mvikotlin-logging"))
+            export(project(":mvikotlin-timetravel"))
             export(project(":sample:todo-common"))
             export(project(":sample:todo-reaktive"))
         }

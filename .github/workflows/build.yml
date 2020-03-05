@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install nodejs chromium-browser
       - name: Build JVM, Android, JS
-        run: ./gradlew :utils-internal:build :core:build :core-internal:build :core-test-internal:build :mvikotlin:build :logging:build :timetravel:build :extensions-reaktive:build :extensions-coroutines:build :sample:todo-app-android:assembleDebug -Pbuild_type=NON_NATIVE
+        run: ./gradlew :utils-internal:build :mvikotlin:build :core-internal:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :sample:todo-app-android:assembleDebug -Pbuild_type=NON_NATIVE
   linux-build:
     name: Build Linux
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build Linux
-        run: ./gradlew :utils-internal:build :core:build :core-internal:build :core-test-internal:build :mvikotlin:build :logging:build :timetravel:build :extensions-reaktive:build :extensions-coroutines:build -Pbuild_type=LINUX
+        run: ./gradlew :utils-internal:build :mvikotlin:build :core-internal:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build -Pbuild_type=LINUX
   ios-build:
     name: Build iOS
     runs-on: macos-latest
@@ -42,4 +42,4 @@ jobs:
         with:
           java-version: 1.8
       - name: Build iOS
-        run: ./gradlew :utils-internal:build :core:build :core-internal:build :core-test-internal:build :mvikotlin:build :logging:build :timetravel:build :extensions-reaktive:build :extensions-coroutines:build :sample:todo-darwin-umbrella:iosX64MainBinaries :sample:todo-darwin-umbrella:iosArm64MainBinaries -Pbuild_type=IOS
+        run: ./gradlew :utils-internal:build :mvikotlin:build :core-internal:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :sample:todo-darwin-umbrella:iosX64MainBinaries :sample:todo-darwin-umbrella:iosArm64MainBinaries -Pbuild_type=IOS

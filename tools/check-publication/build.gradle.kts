@@ -19,12 +19,12 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("com.arkivanov.mvikotlin:core:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin:$version")
-                implementation("com.arkivanov.mvikotlin:logging:$version")
-                implementation("com.arkivanov.mvikotlin:timetravel:$version")
-                implementation("com.arkivanov.mvikotlin:extensions-reaktive:$version")
-                implementation("com.arkivanov.mvikotlin:extensions-coroutines:$version")
+                implementation("com.arkivanov.mvikotlin:mvikotlin-main:$version")
+                implementation("com.arkivanov.mvikotlin:mvikotlin-logging:$version")
+                implementation("com.arkivanov.mvikotlin:mvikotlin-timetravel:$version")
+                implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-reaktive:$version")
+                implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$version")
             }
         }
     }

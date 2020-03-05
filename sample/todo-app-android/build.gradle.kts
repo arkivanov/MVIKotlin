@@ -34,9 +34,9 @@ dependencies {
     implementation(Deps.AndroidX.Core.Ktx)
     implementation(Deps.Jetbrains.Kotlinx.Coroutines.Core)
     implementation(Deps.Jetbrains.Kotlinx.Coroutines.Android)
-    implementation(project(":mvikotlin"))
-    implementation(project(":timetravel"))
-    implementation(project(":logging"))
+    implementation(project(":mvikotlin-main"))
+    implementation(project(":mvikotlin-timetravel"))
+    implementation(project(":mvikotlin-logging"))
     implementation(project(":sample:todo-reaktive"))
     implementation(project(":sample:todo-coroutines"))
 }
