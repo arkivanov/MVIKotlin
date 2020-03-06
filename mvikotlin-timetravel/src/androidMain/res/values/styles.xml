@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MviKotlinThemeOverlay" parent="ThemeOverlay.AppCompat.Light">
+
+        <item name="mviTextAppearanceBody1">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="mviTextAppearanceBody2">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="mviTextAppearanceCaption">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+</resources>

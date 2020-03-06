@@ -1,0 +1,2 @@
+setupMultiplatform()
+setupPublication()
