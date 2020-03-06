@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
 /**
  * Represents a consumer of the `View Models`
  *
- * @see View
+ * @see MviView
  */
 interface ViewRenderer<in Model : Any> {
 

@@ -1,10 +1,10 @@
 package com.arkivanov.mvikotlin.sample.todo.common.view
 
-import com.arkivanov.mvikotlin.core.view.View
+import com.arkivanov.mvikotlin.core.view.MviView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Model
 
-interface TodoDetailsView : View<Model, Event> {
+interface TodoDetailsView : MviView<Model, Event> {
 
     data class Model(
         val text: String,

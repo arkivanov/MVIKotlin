@@ -9,7 +9,7 @@
 import Foundation
 import TodoLib
 
-class TodoAddViewImpl : AbstractView<TodoAddViewModel, TodoAddViewEvent>, TodoAddView, ObservableObject {
+class TodoAddViewImpl : AbstractMviView<TodoAddViewModel, TodoAddViewEvent>, TodoAddView, ObservableObject {
     
     @Published var model: TodoAddViewModel?
     

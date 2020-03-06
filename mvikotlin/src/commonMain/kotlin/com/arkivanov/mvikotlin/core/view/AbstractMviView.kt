@@ -8,9 +8,9 @@ import com.arkivanov.mvikotlin.rx.internal.onNext
 import com.arkivanov.mvikotlin.rx.internal.subscribe
 
 /**
- * Abstract implementation of the [View] that provides ability to dispatch `View Events`
+ * Abstract implementation of the [MviView] that provides ability to dispatch `View Events`
  */
-abstract class AbstractView<in Model : Any, Event : Any> : View<Model, Event> {
+abstract class AbstractMviView<in Model : Any, Event : Any> : MviView<Model, Event> {
 
     private val subject = Subject<Event>()
 

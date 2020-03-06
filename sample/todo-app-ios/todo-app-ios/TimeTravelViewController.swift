@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import TodoLib
 
-class TimeTravelViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, CoreObserver {
+class TimeTravelViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, Observer {
 
     private let colorSelectedCell = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1)
     private weak var tableView: UITableView?
@@ -21,7 +21,7 @@ class TimeTravelViewController : UIViewController, UITableViewDelegate, UITableV
     private weak var stepForwardButton: UIButton?
     private weak var moveToEndButton: UIButton?
     private weak var cancelButton: UIButton?
-    private var disposable: CoreDisposable?
+    private var disposable: Disposable?
     private var state: TimeTravelState?
     private let timeTravelController = TimeTravelControllerProviderKt.timeTravelController
 

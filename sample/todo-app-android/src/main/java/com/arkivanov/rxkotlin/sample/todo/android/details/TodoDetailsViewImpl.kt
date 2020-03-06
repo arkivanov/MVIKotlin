@@ -6,7 +6,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import com.arkivanov.mvikotlin.core.utils.diff
-import com.arkivanov.mvikotlin.core.view.AbstractView
+import com.arkivanov.mvikotlin.core.view.AbstractMviView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Model
@@ -18,7 +18,7 @@ import com.arkivanov.rxkotlin.sample.todo.android.setTextCompat
 class TodoDetailsViewImpl(
     root: View,
     private val onFinished: () -> Unit
-) : AbstractView<Model, Event>(), TodoDetailsView {
+) : AbstractMviView<Model, Event>(), TodoDetailsView {
 
     private val textWatcher =
         object : SimpleTextWatcher() {

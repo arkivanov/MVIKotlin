@@ -7,7 +7,7 @@ import com.arkivanov.mvikotlin.rx.Observer
 /**
  * Represents a source of the `View Events`
  *
- * @see View
+ * @see MviView
  */
 interface ViewEvents<out Event : Any> {
 
