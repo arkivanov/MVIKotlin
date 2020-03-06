@@ -1,4 +1,5 @@
 [![Download](https://api.bintray.com/packages/arkivanov/maven/mvikotlin/images/download.svg)](https://bintray.com/badoo/maven/reaktive/_latestVersion)
+[![License](https://img.shields.io/badge/License-Apache/2.0-blue.svg)](https://github.com/arkivanov/MVIKotlin/blob/master/LICENSE)
 
 ## MVIDroid to MVIKotlin transition
 The library was recently converted to Kotlin Multiplatform. The name of the library 
@@ -69,8 +70,9 @@ The sample project is a todo list with details view.
 * Sample iOS application with Reaktive implementation only, plus logging and time travel is [here](sample/todo-app-ios)   
 
 ## Watch video (time travel, logs, debug, etc.)
-Debugging Android application with MVIKotlin
+
+#### Debugging Android application with MVIKotlin
 [![Debugging Android application with MVIKotlin](https://img.youtube.com/vi/_bbxR503-u0/0.jpg)](https://youtu.be/_bbxR503-u0)
 
-Debugging iOS application with MVIKotlin
+#### Debugging iOS application with MVIKotlin
 [![Debugging iOS application with MVIKotlin](https://img.youtube.com/vi/MJCYQzeL-w8/0.jpg)](https://youtu.be/MJCYQzeL-w8)
