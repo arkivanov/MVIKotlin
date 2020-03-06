@@ -1,4 +1,4 @@
-// ./gradlew :tools:check-publication -Pversion=2.0.0-preview1 bintray_api_key=
+// ./gradlew :tools:check-publication -Pversion=2.0.0-preview1 -Pbintray_api_key=
 
 setupMultiplatform()
 
@@ -19,6 +19,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation("com.arkivanov.mvikotlin:rx:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin-main:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin-logging:$version")
