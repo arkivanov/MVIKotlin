@@ -230,8 +230,8 @@ fun Project.setupPublication() {
     val userId = "arkivanov"
     val userName = "Arkadii Ivanov"
     val userEmail = "arkann1985@gmail.com"
-    val githubUrl = "https://github.com/arkivanov/MVIDroid"
-    val githubScmUrl = "scm:git:git://github.com/arkivanov/MVIDroid.git"
+    val githubUrl = "https://github.com/arkivanov/MVIKotlin"
+    val githubScmUrl = "scm:git:git://github.com/arkivanov/MVIKotlin.git"
 
     extensions.getByType<PublishingExtension>().run {
         publications.withType<MavenPublication>().all {
