@@ -1,3 +1,5 @@
+[![Download](https://api.bintray.com/packages/arkivanov/maven/mvikotlin/images/download.svg)](https://bintray.com/badoo/maven/reaktive/_latestVersion)
+
 ## MVIDroid to MVIKotlin transition
 The library was recently converted to Kotlin Multiplatform. The name of the library 
 was also changed to MVIKotlin, from my point of view it works better for the new format.
