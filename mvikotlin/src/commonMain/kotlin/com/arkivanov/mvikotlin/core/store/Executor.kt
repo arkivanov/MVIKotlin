@@ -11,7 +11,7 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
  * @see Reducer
  * @see Bootstrapper
  */
-interface Executor<in Intent, in Action, in State, out Result, out Label> {
+interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result : Any, out Label : Any> {
 
     /**
      * Initializes the [Executor], called internally by the [Store]
