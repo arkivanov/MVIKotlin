@@ -138,7 +138,7 @@ class LoggingStoreFactoryTest {
         }
     }
 
-    private class TestStore<in Intent : Any, Action, out State : Any, Result, Label : Any>(
+    private class TestStore<in Intent : Any, Action : Any, out State : Any, Result : Any, Label : Any>(
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
