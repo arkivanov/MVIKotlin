@@ -19,7 +19,7 @@ import com.badoo.reaktive.single.Single
  * Implements [DisposableScope] which disposes when the [Bootstrapper] is disposed.
  */
 @UseExperimental(ExperimentalReaktiveApi::class)
-abstract class ReaktiveBootstrapper<Action> : Bootstrapper<Action>, DisposableScope {
+abstract class ReaktiveBootstrapper<Action : Any> : Bootstrapper<Action>, DisposableScope {
 
     private val actionConsumer = lateinitAtomicReference<(Action) -> Unit>()
     private val scope = DisposableScope()

@@ -49,7 +49,7 @@ class LoggingStoreFactory(
         )
     }
 
-    private fun <Intent, Action, State, Result, Label> Executor<Intent, Action, State, Result, Label>.wrap(
+    private fun <Intent : Any, Action : Any, State : Any, Result : Any, Label : Any> Executor<Intent, Action, State, Result, Label>.wrap(
         storeName: String
     ): Executor<Intent, Action, State, Result, Label> =
         LoggingExecutor(

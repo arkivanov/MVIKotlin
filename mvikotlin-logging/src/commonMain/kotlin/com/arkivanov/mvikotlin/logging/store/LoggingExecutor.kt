@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.logging.LoggingMode
 import com.arkivanov.mvikotlin.logging.logger.Logger
 import com.arkivanov.mvikotlin.logging.logger.log
 
-internal class LoggingExecutor<in Intent, in Action, State, Result, Label>(
+internal class LoggingExecutor<in Intent : Any, in Action : Any, State : Any, Result : Any, Label : Any>(
     private val delegate: Executor<Intent, Action, State, Result, Label>,
     private val logger: Logger,
     private val loggingMode: () -> LoggingMode,

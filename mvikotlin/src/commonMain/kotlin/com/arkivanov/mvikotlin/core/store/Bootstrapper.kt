@@ -11,7 +11,7 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
  * @see Store
  * @see Executor
  */
-interface Bootstrapper<out Action> {
+interface Bootstrapper<out Action : Any> {
 
     /**
      * Initializes the [Bootstrapper], called internally by the [Store]

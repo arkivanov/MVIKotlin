@@ -15,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
  * An abstract implementation of the [Bootstrapper] that provides interoperability with coroutines.
  * All coroutines are launched in a scope which closes when the [Bootstrapper] is disposed.
  */
-abstract class SuspendBootstrapper<Action>(
+abstract class SuspendBootstrapper<Action : Any>(
     mainContext: CoroutineContext = Dispatchers.Main
 ) : Bootstrapper<Action> {
 

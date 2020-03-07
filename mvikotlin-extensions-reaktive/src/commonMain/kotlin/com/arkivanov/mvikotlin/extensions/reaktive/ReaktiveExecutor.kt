@@ -22,7 +22,7 @@ import com.badoo.reaktive.single.Single
  * Implements [DisposableScope] which disposes when the [Executor] is disposed.
  */
 @UseExperimental(ExperimentalReaktiveApi::class)
-open class ReaktiveExecutor<in Intent, in Action, in State, Result, Label> :
+open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Result : Any, Label : Any> :
     Executor<Intent, Action, State, Result, Label>,
     DisposableScope {
 
