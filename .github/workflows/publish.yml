@@ -1,0 +1,46 @@
+name: Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  non-native-build:
+    name: Publish JVM, Android, JS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Update dependencies
+        run: sudo apt-get update
+      - name: Publish JVM, Android, JS
+        run: ./gradlew publish -Pbuild_type=NON_NATIVE -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
+  linux-build:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build Linux
+        run: ./gradlew publish -Pbuild_type=LINUX -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
+  ios-build:
+    name: Build iOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build iOS
+        run: ./gradlew publish -Pbuild_type=IOS -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
+
