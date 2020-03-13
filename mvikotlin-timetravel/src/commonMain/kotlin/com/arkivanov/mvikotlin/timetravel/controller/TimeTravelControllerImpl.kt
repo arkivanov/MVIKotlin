@@ -1,14 +1,12 @@
 package com.arkivanov.mvikotlin.timetravel.controller
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.rx.internal.Subject
-import com.arkivanov.mvikotlin.rx.observer
-import com.arkivanov.mvikotlin.rx.internal.onNext
-import com.arkivanov.mvikotlin.rx.internal.subscribe
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
+import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
+import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
@@ -23,14 +21,12 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         ensureNeverFrozen()
     }
 
-    override var state: TimeTravelState = TimeTravelState()
-        private set
-
-    private val stateSubject = Subject<TimeTravelState>()
+    private val stateSubject = BehaviorSubject(TimeTravelState())
+    override val state: TimeTravelState get() = stateSubject.value
     private val postponedEvents = ArrayList<TimeTravelEvent>()
     private val stores = HashMap<String, TimeTravelStore<*, *, *>>()
 
-    override fun states(observer: Observer<TimeTravelState>): Disposable = stateSubject.subscribe(observer, state)
+    override fun states(observer: Observer<TimeTravelState>): Disposable = stateSubject.subscribe(observer)
 
     @MainThread
     fun attachStore(store: TimeTravelStore<*, *, *>) {
@@ -221,11 +217,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         stores[event.storeName]?.eventProcessor?.process(event.type, previousValue ?: event.value)
     }
 
-    private inline fun swapState(reducer: (TimeTravelState) -> TimeTravelState): TimeTravelState {
-        val newState = reducer(state)
-        state = newState
-        stateSubject.onNext(newState)
-
-        return newState
+    private inline fun swapState(reducer: (TimeTravelState) -> TimeTravelState) {
+        stateSubject.onNext(reducer(state))
     }
 }
