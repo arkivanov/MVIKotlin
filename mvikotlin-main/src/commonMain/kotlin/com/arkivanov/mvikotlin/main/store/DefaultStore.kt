@@ -8,13 +8,8 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.Subject
-import com.arkivanov.mvikotlin.rx.internal.isActive
-import com.arkivanov.mvikotlin.rx.internal.onComplete
-import com.arkivanov.mvikotlin.rx.internal.onNext
-import com.arkivanov.mvikotlin.rx.internal.subscribe
-import com.badoo.reaktive.utils.atomic.AtomicReference
-import com.badoo.reaktive.utils.atomic.updateAndGet
+import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
+import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 
 internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
     initialState: State,
@@ -27,17 +22,16 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
         assertOnMainThread()
     }
 
-    private val executor = executorFactory()
-    private val _state = AtomicReference(initialState)
-    override val state: State get() = _state.value
-    private val stateSubject = Subject<State>()
-    private val labelSubject = Subject<Label>()
+    private val stateSubject = BehaviorSubject(initialState)
+    override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
+    private val labelSubject = PublishSubject<Label>()
+    private val executor = executorFactory()
 
     init {
         executor.init(
             object : Executor.Callbacks<State, Result, Label> {
-                override val state: State get() = _state.value
+                override val state: State get() = stateSubject.value
 
                 override fun onResult(result: Result) {
                     assertOnMainThread()
@@ -69,13 +63,13 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
     }
 
     private inline fun changeState(func: (State) -> State) {
-        stateSubject.onNext(_state.updateAndGet(func))
+        stateSubject.onNext(func(stateSubject.value))
     }
 
     override fun states(observer: Observer<State>): Disposable {
         assertOnMainThread()
 
-        return stateSubject.subscribe(observer, _state.value)
+        return stateSubject.subscribe(observer)
     }
 
     override fun labels(observer: Observer<Label>): Disposable {

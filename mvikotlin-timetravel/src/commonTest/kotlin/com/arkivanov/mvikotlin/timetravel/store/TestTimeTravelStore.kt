@@ -3,10 +3,7 @@ package com.arkivanov.mvikotlin.timetravel.store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.Subject
-import com.arkivanov.mvikotlin.rx.internal.onComplete
-import com.arkivanov.mvikotlin.rx.internal.onNext
-import com.arkivanov.mvikotlin.rx.internal.subscribe
+import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.EventDebugger
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.EventProcessor
@@ -25,7 +22,7 @@ internal class TestTimeTravelStore(
 
     override val eventProcessor = TestEventProcessor()
     override val eventDebugger = TestEventDebugger()
-    private val _events = Subject<TimeTravelEvent>()
+    private val _events = PublishSubject<TimeTravelEvent>()
     private val isStateRestored = AtomicBoolean()
     override val state: String get() = TODO()
 

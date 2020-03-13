@@ -90,6 +90,7 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
     /**
      * Returns whether the [Store] is disposed or not
      */
+    @MainThread
     val isDisposed: Boolean
 
     /**

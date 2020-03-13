@@ -1,11 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.rx.internal.Subject
-import com.arkivanov.mvikotlin.rx.internal.isActive
-import com.arkivanov.mvikotlin.rx.internal.onComplete
-import com.arkivanov.mvikotlin.rx.internal.onNext
-import com.arkivanov.mvikotlin.rx.internal.subscribe
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
@@ -13,6 +8,8 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
+import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
+import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.EventDebugger
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.EventProcessor
@@ -34,22 +31,20 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     }
 
     private val executor = executorFactory()
-    private val _state = AtomicReference(initialState)
-    override val state: State get() = _state.value
     private val internalState = AtomicReference(initialState)
-    private val stateSubject = Subject<State>()
-    private val labelSubject = Subject<Label>()
-    private val eventSubject = Subject<TimeTravelEvent>()
+    private val stateSubject = BehaviorSubject(initialState)
+    override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
+    private val labelSubject = PublishSubject<Label>()
+    private val eventSubject = PublishSubject<TimeTravelEvent>()
     private val debuggingExecutor = AtomicReference<Executor<*, *, *, *, *>?>(null)
-
     override val eventProcessor: EventProcessor = EventProcessorImpl()
     override val eventDebugger: EventDebugger = EventDebuggerImpl()
 
     override fun states(observer: Observer<State>): Disposable {
         assertOnMainThread()
 
-        return stateSubject.subscribe(observer, _state.value)
+        return stateSubject.subscribe(observer)
     }
 
     override fun labels(observer: Observer<Label>): Disposable {
@@ -126,7 +121,6 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     }
 
     private fun changeState(state: State) {
-        _state.value = state
         stateSubject.onNext(state)
     }
 

@@ -3,16 +3,19 @@ package com.arkivanov.mvikotlin.core.view
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.Subject
-import com.arkivanov.mvikotlin.rx.internal.onNext
-import com.arkivanov.mvikotlin.rx.internal.subscribe
+import com.arkivanov.mvikotlin.rx.internal.PublishSubject
+import com.badoo.reaktive.utils.ensureNeverFrozen
 
 /**
  * Abstract implementation of the [MviView] that provides ability to dispatch `View Events`
  */
 abstract class AbstractMviView<in Model : Any, Event : Any> : MviView<Model, Event> {
 
-    private val subject = Subject<Event>()
+    init {
+        ensureNeverFrozen()
+    }
+
+    private val subject = PublishSubject<Event>()
 
     override fun events(observer: Observer<Event>): Disposable = subject.subscribe(observer)
 
