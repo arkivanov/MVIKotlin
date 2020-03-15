@@ -17,7 +17,7 @@ provided as separate modules.
 
 ![MVI](docs/media/mvi.jpg)
 
-## Setup:
+## Setup
 Recommended minimum Gradle version is 5.3. Please read first the documentation about
 [metadata publishing mode](https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#experimental-metadata-publishing-mode).
 
@@ -69,6 +69,9 @@ The sample project is a todo list with details view.
 * Sample Android application with both Reaktive and coroutines implementations, plus logging and time travel is [here](sample/todo-app-android)
 * Sample iOS application with Reaktive implementation only, plus logging and time travel is [here](sample/todo-app-ios)   
 
+## Author
+Twitter: [@arkann1985](https://twitter.com/arkann1985)
+
 ## Watch video (time travel, logs, debug, etc.)
 
 #### Debugging Android application with MVIKotlin
@@ -77,5 +80,3 @@ The sample project is a todo list with details view.
 #### Debugging iOS application with MVIKotlin
 [![Debugging iOS application with MVIKotlin](https://img.youtube.com/vi/MJCYQzeL-w8/0.jpg)](https://youtu.be/MJCYQzeL-w8)
 
-## Author
-Twitter: [@arkann1985](https://twitter.com/arkann1985)
