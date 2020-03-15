@@ -76,3 +76,6 @@ The sample project is a todo list with details view.
 
 #### Debugging iOS application with MVIKotlin
 [![Debugging iOS application with MVIKotlin](https://img.youtube.com/vi/MJCYQzeL-w8/0.jpg)](https://youtu.be/MJCYQzeL-w8)
+
+## Author
+Twitter: [@arkann1985](https://twitter.com/arkann1985)
