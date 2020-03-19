@@ -1,4 +1,4 @@
-package com.arkivanov.rxkotlin.sample.todo.android.list
+package com.arkivanov.mvikotlin.sample.todo.android.list
 
 import android.view.View
 import android.widget.EditText
@@ -7,10 +7,10 @@ import com.arkivanov.mvikotlin.core.view.AbstractMviView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView.Model
-import com.arkivanov.rxkotlin.sample.todo.android.R
-import com.arkivanov.rxkotlin.sample.todo.android.SimpleTextWatcher
-import com.arkivanov.rxkotlin.sample.todo.android.getViewById
-import com.arkivanov.rxkotlin.sample.todo.android.setTextCompat
+import com.arkivanov.mvikotlin.sample.todo.android.R
+import com.arkivanov.mvikotlin.sample.todo.android.SimpleTextWatcher
+import com.arkivanov.mvikotlin.sample.todo.android.getViewById
+import com.arkivanov.mvikotlin.sample.todo.android.setTextCompat
 
 class TodoAddViewImpl(root: View) : AbstractMviView<Model, Event>(), TodoAddView {
 

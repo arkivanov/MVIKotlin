@@ -2,6 +2,8 @@ package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
 import com.arkivanov.mvikotlin.core.binder.Binder
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
+import com.arkivanov.mvikotlin.core.utils.statekeeper.get
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
@@ -24,6 +26,7 @@ import com.badoo.reaktive.observable.mapNotNull
 
 class TodoListReaktiveController(
     storeFactory: StoreFactory,
+    stateKeeperProvider: StateKeeperProvider<Any>,
     database: TodoDatabase
 ) : TodoListController {
 
@@ -31,7 +34,7 @@ class TodoListReaktiveController(
         TodoListStoreFactory(
             storeFactory = storeFactory,
             database = database
-        ).create()
+        ).create(stateKeeper = stateKeeperProvider.get())
 
     private val todoAddStore =
         TodoAddStoreFactory(

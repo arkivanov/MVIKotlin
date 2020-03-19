@@ -1,4 +1,4 @@
-package com.arkivanov.rxkotlin.sample.todo.android.list
+package com.arkivanov.mvikotlin.sample.todo.android.list
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -7,8 +7,8 @@ import com.arkivanov.mvikotlin.core.view.AbstractMviView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Model
-import com.arkivanov.rxkotlin.sample.todo.android.R
-import com.arkivanov.rxkotlin.sample.todo.android.getViewById
+import com.arkivanov.mvikotlin.sample.todo.android.R
+import com.arkivanov.mvikotlin.sample.todo.android.getViewById
 
 class TodoListViewImpl(
     root: View,

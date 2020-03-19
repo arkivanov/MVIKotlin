@@ -1,4 +1,4 @@
-package com.arkivanov.rxkotlin.sample.todo.android.details
+package com.arkivanov.mvikotlin.sample.todo.android.details
 
 import android.view.MenuItem
 import android.view.View
@@ -10,10 +10,10 @@ import com.arkivanov.mvikotlin.core.view.AbstractMviView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Model
-import com.arkivanov.rxkotlin.sample.todo.android.R
-import com.arkivanov.rxkotlin.sample.todo.android.SimpleTextWatcher
-import com.arkivanov.rxkotlin.sample.todo.android.getViewById
-import com.arkivanov.rxkotlin.sample.todo.android.setTextCompat
+import com.arkivanov.mvikotlin.sample.todo.android.R
+import com.arkivanov.mvikotlin.sample.todo.android.SimpleTextWatcher
+import com.arkivanov.mvikotlin.sample.todo.android.getViewById
+import com.arkivanov.mvikotlin.sample.todo.android.setTextCompat
 
 class TodoDetailsViewImpl(
     root: View,

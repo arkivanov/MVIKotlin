@@ -1,4 +1,4 @@
-package com.arkivanov.rxkotlin.sample.todo.android.list
+package com.arkivanov.mvikotlin.sample.todo.android.list
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
-import com.arkivanov.rxkotlin.sample.todo.android.R
+import com.arkivanov.mvikotlin.sample.todo.android.R
 
 class TodoListAdapter(
     private val listener: Listener
