@@ -1,4 +1,4 @@
-package com.arkivanov.rxkotlin.sample.todo.android
+package com.arkivanov.mvikotlin.sample.todo.android
 
 import android.content.ClipboardManager
 import android.content.Context

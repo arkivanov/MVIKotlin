@@ -2,6 +2,8 @@ package com.arkivanov.mvikotlin.sample.todo.coroutines.controller
 
 import com.arkivanov.mvikotlin.core.binder.Binder
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
+import com.arkivanov.mvikotlin.core.utils.statekeeper.get
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.events
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
@@ -28,6 +30,7 @@ import kotlinx.coroutines.flow.mapNotNull
 @FlowPreview
 class TodoListCoroutinesController(
     storeFactory: StoreFactory,
+    stateKeeperProvider: StateKeeperProvider<Any>,
     database: TodoDatabase
 ) : TodoListController {
 
@@ -37,7 +40,7 @@ class TodoListCoroutinesController(
             database = database,
             mainContext = mainDispatcher,
             ioContext = ioDispatcher
-        ).create()
+        ).create(stateKeeper = stateKeeperProvider.get())
 
     private val todoAddStore =
         TodoAddStoreFactory(

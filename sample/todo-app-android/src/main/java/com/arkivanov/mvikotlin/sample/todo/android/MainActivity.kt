@@ -1,4 +1,4 @@
-package com.arkivanov.rxkotlin.sample.todo.android
+package com.arkivanov.mvikotlin.sample.todo.android
 
 import android.os.Bundle
 import androidx.annotation.IdRes
@@ -6,26 +6,36 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.statekeeper.SimpleStateKeeperContainer
+import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
+import com.arkivanov.mvikotlin.core.utils.statekeeper.saveAndGet
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
-import com.arkivanov.rxkotlin.sample.todo.android.details.TodoDetailsFragment
-import com.arkivanov.rxkotlin.sample.todo.android.list.TodoListFragment
+import com.arkivanov.mvikotlin.sample.todo.android.details.TodoDetailsFragment
+import com.arkivanov.mvikotlin.sample.todo.android.list.TodoListFragment
 
 class MainActivity : AppCompatActivity() {
 
-    private val fragmentFactory by lazy {
-        FragmentFactoryImpl(
-            database = app.database,
-            storeFactory = storeFactory,
-            frameworkType = FrameworkType.COROUTINES,
-            todoListFragmentCallbacks = TodoListFragmentCallbacksImpl(),
-            todoDetailsFragmentCallbacks = TodoDetailsFragmentCallbacksImpl()
-        )
-    }
+    private val nonConfigurationStateKeeperContainer = SimpleStateKeeperContainer()
+    private lateinit var fragmentFactory: FragmentFactoryImpl
 
     @IdRes
     private val contentId: Int = if (BuildConfig.DEBUG) R.id.content else android.R.id.content
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        @Suppress("UNCHECKED_CAST", "DEPRECATION")
+        fragmentFactory =
+            FragmentFactoryImpl(
+                database = app.database,
+                storeFactory = storeFactory,
+                stateKeeperProvider = nonConfigurationStateKeeperContainer.getProvider(
+                    savedState = lastCustomNonConfigurationInstance as MutableMap<String, Any>?
+                ),
+                frameworkType = FrameworkType.COROUTINES,
+                todoListFragmentCallbacks = TodoListFragmentCallbacksImpl(),
+                todoDetailsFragmentCallbacks = TodoDetailsFragmentCallbacksImpl()
+            )
+
+
         supportFragmentManager.fragmentFactory = fragmentFactory
 
         super.onCreate(savedInstanceState)
@@ -41,6 +51,8 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
     }
+
+    override fun onRetainCustomNonConfigurationInstance(): Any? = nonConfigurationStateKeeperContainer.saveAndGet(HashMap())
 
     private inner class TodoListFragmentCallbacksImpl : TodoListFragment.Callbacks {
         override fun onItemSelected(id: String) {
@@ -62,6 +74,7 @@ class MainActivity : AppCompatActivity() {
     private class FragmentFactoryImpl(
         private val database: TodoDatabase,
         private val storeFactory: StoreFactory,
+        private val stateKeeperProvider: StateKeeperProvider<Any>,
         private val frameworkType: FrameworkType,
         private val todoListFragmentCallbacks: TodoListFragment.Callbacks,
         private val todoDetailsFragmentCallbacks: TodoDetailsFragment.Callbacks
@@ -77,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             TodoListFragment(
                 database = database,
                 storeFactory = storeFactory,
+                stateKeeperProvider = stateKeeperProvider,
                 callbacks = todoListFragmentCallbacks,
                 frameworkType = frameworkType
             )

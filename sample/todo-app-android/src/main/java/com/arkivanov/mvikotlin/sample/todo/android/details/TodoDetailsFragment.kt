@@ -1,4 +1,4 @@
-package com.arkivanov.rxkotlin.sample.todo.android.details
+package com.arkivanov.mvikotlin.sample.todo.android.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +11,8 @@ import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsControll
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.coroutines.controller.TodoDetailsCoroutinesController
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoDetailsReaktiveController
-import com.arkivanov.rxkotlin.sample.todo.android.FrameworkType
-import com.arkivanov.rxkotlin.sample.todo.android.R
+import com.arkivanov.mvikotlin.sample.todo.android.FrameworkType
+import com.arkivanov.mvikotlin.sample.todo.android.R
 import java.io.Serializable
 
 class TodoDetailsFragment(

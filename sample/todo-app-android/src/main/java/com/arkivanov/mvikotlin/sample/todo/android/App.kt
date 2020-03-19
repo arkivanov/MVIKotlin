@@ -1,4 +1,4 @@
-package com.arkivanov.rxkotlin.sample.todo.android
+package com.arkivanov.mvikotlin.sample.todo.android
 
 import android.app.Application
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
