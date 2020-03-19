@@ -16,10 +16,7 @@ import com.arkivanov.mvikotlin.sample.todo.android.R
 import java.io.Serializable
 
 class TodoDetailsFragment(
-    private val database: TodoDatabase,
-    private val storeFactory: StoreFactory,
-    private val callbacks: Callbacks,
-    private val frameworkType: FrameworkType
+    private val dependencies: Dependencies
 ) : Fragment() {
 
     private lateinit var controller: TodoDetailsController
@@ -28,20 +25,15 @@ class TodoDetailsFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        controller =
-            when (frameworkType) {
-                FrameworkType.REAKTIVE ->
-                    TodoDetailsReaktiveController(
-                        storeFactory = storeFactory,
-                        database = database,
-                        itemId = args.itemId
-                    )
+        val todoDetailsControllerDependencies =
+            object : TodoDetailsController.Dependencies, Dependencies by dependencies {
+                override val itemId: String get() = args.itemId
+            }
 
-                FrameworkType.COROUTINES -> TodoDetailsCoroutinesController(
-                    storeFactory = storeFactory,
-                    database = database,
-                    itemId = args.itemId
-                )
+        controller =
+            when (dependencies.frameworkType) {
+                FrameworkType.REAKTIVE -> TodoDetailsReaktiveController(todoDetailsControllerDependencies)
+                FrameworkType.COROUTINES -> TodoDetailsCoroutinesController(todoDetailsControllerDependencies)
             }
     }
 
@@ -51,7 +43,7 @@ class TodoDetailsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        controller.onViewCreated(TodoDetailsViewImpl(root = view, onFinished = callbacks::onFinished))
+        controller.onViewCreated(TodoDetailsViewImpl(root = view, onFinished = dependencies.onDetailsFinishedListener))
     }
 
     override fun onStart() {
@@ -92,7 +84,10 @@ class TodoDetailsFragment(
         val itemId: String
     ) : Serializable // FIXME: Replace with parcelize
 
-    interface Callbacks {
-        fun onFinished()
+    interface Dependencies {
+        val storeFactory: StoreFactory
+        val database: TodoDatabase
+        val frameworkType: FrameworkType
+        val onDetailsFinishedListener: () -> Unit
     }
 }

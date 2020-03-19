@@ -15,28 +15,17 @@ import com.arkivanov.mvikotlin.sample.todo.coroutines.controller.TodoListCorouti
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoListReaktiveController
 
 class TodoListFragment(
-    database: TodoDatabase,
-    storeFactory: StoreFactory,
-    stateKeeperProvider: StateKeeperProvider<Any>,
-    private val callbacks: Callbacks,
-    frameworkType: FrameworkType
+    private val dependencies: Dependencies
 ) : Fragment() {
 
-    private val controller: TodoListController =
-        when (frameworkType) {
-            FrameworkType.REAKTIVE ->
-                TodoListReaktiveController(
-                    storeFactory = storeFactory,
-                    stateKeeperProvider = stateKeeperProvider,
-                    database = database
-                )
+    private val todoListControllerDependencies =
+        object : TodoListController.Dependencies, Dependencies by dependencies {
+        }
 
-            FrameworkType.COROUTINES ->
-                TodoListCoroutinesController(
-                    storeFactory = storeFactory,
-                    stateKeeperProvider = stateKeeperProvider,
-                    database = database
-                )
+    private val controller: TodoListController =
+        when (dependencies.frameworkType) {
+            FrameworkType.REAKTIVE -> TodoListReaktiveController(todoListControllerDependencies)
+            FrameworkType.COROUTINES -> TodoListCoroutinesController(todoListControllerDependencies)
         }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -46,7 +35,7 @@ class TodoListFragment(
         super.onViewCreated(view, savedInstanceState)
 
         controller.onViewCreated(
-            TodoListViewImpl(root = view, onItemSelected = callbacks::onItemSelected),
+            TodoListViewImpl(root = view, onItemSelected = dependencies.onItemSelectedListener),
             TodoAddViewImpl(root = view)
         )
     }
@@ -75,7 +64,11 @@ class TodoListFragment(
         super.onDestroy()
     }
 
-    interface Callbacks {
-        fun onItemSelected(id: String)
+    interface Dependencies {
+        val storeFactory: StoreFactory
+        val database: TodoDatabase
+        val stateKeeperProvider: StateKeeperProvider<Any>
+        val frameworkType: FrameworkType
+        val onItemSelectedListener: (id: String) -> Unit
     }
 }

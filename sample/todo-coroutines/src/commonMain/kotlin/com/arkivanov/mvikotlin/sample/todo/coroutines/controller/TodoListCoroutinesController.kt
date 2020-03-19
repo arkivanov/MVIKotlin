@@ -1,15 +1,13 @@
 package com.arkivanov.mvikotlin.sample.todo.coroutines.controller
 
 import com.arkivanov.mvikotlin.core.binder.Binder
-import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.utils.statekeeper.get
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.events
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
-import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Dependencies
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toBusEvent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toViewModel
@@ -28,24 +26,20 @@ import kotlinx.coroutines.flow.mapNotNull
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class TodoListCoroutinesController(
-    storeFactory: StoreFactory,
-    stateKeeperProvider: StateKeeperProvider<Any>,
-    database: TodoDatabase
-) : TodoListController {
+class TodoListCoroutinesController(dependencies: Dependencies) : TodoListController {
 
     private val todoListStore =
         TodoListStoreFactory(
-            storeFactory = storeFactory,
-            database = database,
+            storeFactory = dependencies.storeFactory,
+            database = dependencies.database,
             mainContext = mainDispatcher,
             ioContext = ioDispatcher
-        ).create(stateKeeper = stateKeeperProvider.get())
+        ).create(stateKeeper = dependencies.stateKeeperProvider?.get())
 
     private val todoAddStore =
         TodoAddStoreFactory(
-            storeFactory = storeFactory,
-            database = database,
+            storeFactory = dependencies.storeFactory,
+            database = dependencies.database,
             mainContext = mainDispatcher,
             ioContext = ioDispatcher
         ).create()
