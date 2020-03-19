@@ -1,15 +1,13 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
 import com.arkivanov.mvikotlin.core.binder.Binder
-import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.utils.statekeeper.get
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
-import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Dependencies
 import com.arkivanov.mvikotlin.sample.todo.common.internal.BusEvent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toBusEvent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toIntent
@@ -24,22 +22,18 @@ import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoListStoreFactory
 import com.badoo.reaktive.observable.map
 import com.badoo.reaktive.observable.mapNotNull
 
-class TodoListReaktiveController(
-    storeFactory: StoreFactory,
-    stateKeeperProvider: StateKeeperProvider<Any>?,
-    database: TodoDatabase
-) : TodoListController {
+class TodoListReaktiveController(dependencies: Dependencies) : TodoListController {
 
     private val todoListStore =
         TodoListStoreFactory(
-            storeFactory = storeFactory,
-            database = database
-        ).create(stateKeeper = stateKeeperProvider?.get())
+            storeFactory = dependencies.storeFactory,
+            database = dependencies.database
+        ).create(stateKeeper = dependencies.stateKeeperProvider?.get())
 
     private val todoAddStore =
         TodoAddStoreFactory(
-            storeFactory = storeFactory,
-            database = database
+            storeFactory = dependencies.storeFactory,
+            database = dependencies.database
         ).create()
 
     private val storeBinder =

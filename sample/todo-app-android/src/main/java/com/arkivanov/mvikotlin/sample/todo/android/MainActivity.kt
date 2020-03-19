@@ -3,39 +3,22 @@ package com.arkivanov.mvikotlin.sample.todo.android
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentFactory
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.statekeeper.SimpleStateKeeperContainer
 import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.utils.statekeeper.saveAndGet
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
-import com.arkivanov.mvikotlin.sample.todo.android.details.TodoDetailsFragment
-import com.arkivanov.mvikotlin.sample.todo.android.list.TodoListFragment
 
 class MainActivity : AppCompatActivity() {
 
     private val nonConfigurationStateKeeperContainer = SimpleStateKeeperContainer()
-    private lateinit var fragmentFactory: FragmentFactoryImpl
+    private lateinit var fragmentFactory: MainActivityFragmentFactory
 
     @IdRes
     private val contentId: Int = if (BuildConfig.DEBUG) R.id.content else android.R.id.content
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        @Suppress("UNCHECKED_CAST", "DEPRECATION")
-        fragmentFactory =
-            FragmentFactoryImpl(
-                database = app.database,
-                storeFactory = storeFactory,
-                stateKeeperProvider = nonConfigurationStateKeeperContainer.getProvider(
-                    savedState = lastCustomNonConfigurationInstance as MutableMap<String, Any>?
-                ),
-                frameworkType = FrameworkType.COROUTINES,
-                todoListFragmentCallbacks = TodoListFragmentCallbacksImpl(),
-                todoDetailsFragmentCallbacks = TodoDetailsFragmentCallbacksImpl()
-            )
-
-
+        fragmentFactory = MainActivityFragmentFactory(MainActivityFragmentFactoryDependencies())
         supportFragmentManager.fragmentFactory = fragmentFactory
 
         super.onCreate(savedInstanceState)
@@ -54,8 +37,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRetainCustomNonConfigurationInstance(): Any? = nonConfigurationStateKeeperContainer.saveAndGet(HashMap())
 
-    private inner class TodoListFragmentCallbacksImpl : TodoListFragment.Callbacks {
-        override fun onItemSelected(id: String) {
+    private inner class MainActivityFragmentFactoryDependencies : MainActivityFragmentFactory.Dependencies {
+        override val storeFactory: StoreFactory get() = storeFactoryInstance
+        override val database: TodoDatabase get() = app.database
+
+        @Suppress("UNCHECKED_CAST")
+        override val stateKeeperProvider: StateKeeperProvider<Any> =
+            nonConfigurationStateKeeperContainer.getProvider(
+                savedState = lastCustomNonConfigurationInstance as MutableMap<String, Any>?
+            )
+
+        override val frameworkType: FrameworkType = FrameworkType.COROUTINES
+        override val onItemSelectedListener: (id: String) -> Unit = ::onItemSelected
+        override val onDetailsFinishedListener: () -> Unit = ::onDetailsFinished
+
+        private fun onItemSelected(id: String) {
             supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.slide_fade_in_bottom, R.anim.scale_fade_out, R.anim.scale_fade_in, R.anim.slide_fade_out_bottom)
@@ -63,44 +59,9 @@ class MainActivity : AppCompatActivity() {
                 .addToBackStack(null)
                 .commit()
         }
-    }
 
-    private inner class TodoDetailsFragmentCallbacksImpl : TodoDetailsFragment.Callbacks {
-        override fun onFinished() {
+        private fun onDetailsFinished() {
             supportFragmentManager.popBackStack()
         }
-    }
-
-    private class FragmentFactoryImpl(
-        private val database: TodoDatabase,
-        private val storeFactory: StoreFactory,
-        private val stateKeeperProvider: StateKeeperProvider<Any>,
-        private val frameworkType: FrameworkType,
-        private val todoListFragmentCallbacks: TodoListFragment.Callbacks,
-        private val todoDetailsFragmentCallbacks: TodoDetailsFragment.Callbacks
-    ) : FragmentFactory() {
-        override fun instantiate(classLoader: ClassLoader, className: String): Fragment =
-            when (loadFragmentClass(classLoader, className)) {
-                TodoListFragment::class.java -> todoListFragment()
-                TodoDetailsFragment::class.java -> todoDetailsFragment()
-                else -> super.instantiate(classLoader, className)
-            }
-
-        fun todoListFragment(): TodoListFragment =
-            TodoListFragment(
-                database = database,
-                storeFactory = storeFactory,
-                stateKeeperProvider = stateKeeperProvider,
-                callbacks = todoListFragmentCallbacks,
-                frameworkType = frameworkType
-            )
-
-        fun todoDetailsFragment(): TodoDetailsFragment =
-            TodoDetailsFragment(
-                database = database,
-                storeFactory = storeFactory,
-                callbacks = todoDetailsFragmentCallbacks,
-                frameworkType = frameworkType
-            )
     }
 }

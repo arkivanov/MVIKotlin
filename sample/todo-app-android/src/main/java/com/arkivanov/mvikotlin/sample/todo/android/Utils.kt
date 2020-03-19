@@ -10,7 +10,7 @@ import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
 
-val storeFactory =
+val storeFactoryInstance =
     if (BuildConfig.DEBUG) {
         LoggingStoreFactory(delegate = TimeTravelStoreFactory)
     } else {

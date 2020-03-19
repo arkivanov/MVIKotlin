@@ -1,13 +1,12 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
 import com.arkivanov.mvikotlin.core.binder.Binder
-import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
-import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController.Dependencies
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toBusEvent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toViewModel
@@ -17,17 +16,13 @@ import com.arkivanov.mvikotlin.sample.todo.reaktive.eventBus
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoDetailsStoreFactory
 import com.badoo.reaktive.observable.map
 
-class TodoDetailsReaktiveController(
-    storeFactory: StoreFactory,
-    database: TodoDatabase,
-    itemId: String
-) : TodoDetailsController {
+class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsController {
 
     private val todoEditStore =
         TodoDetailsStoreFactory(
-            storeFactory = storeFactory,
-            database = database,
-            itemId = itemId
+            storeFactory = dependencies.storeFactory,
+            database = dependencies.database,
+            itemId = dependencies.itemId
         ).create()
 
     private val storeBinder =
