@@ -26,7 +26,7 @@ import com.badoo.reaktive.observable.mapNotNull
 
 class TodoListReaktiveController(
     storeFactory: StoreFactory,
-    stateKeeperProvider: StateKeeperProvider<Any>,
+    stateKeeperProvider: StateKeeperProvider<Any>?,
     database: TodoDatabase
 ) : TodoListController {
 
@@ -34,7 +34,7 @@ class TodoListReaktiveController(
         TodoListStoreFactory(
             storeFactory = storeFactory,
             database = database
-        ).create(stateKeeper = stateKeeperProvider.get())
+        ).create(stateKeeper = stateKeeperProvider?.get())
 
     private val todoAddStore =
         TodoAddStoreFactory(
