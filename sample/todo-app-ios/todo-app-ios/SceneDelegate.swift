@@ -18,7 +18,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     override init() {
         let storeFactory = LoggingStoreFactory(delegate: TimeTravelStoreFactory(), logger: DefaultLogger(), mode: LoggingMode.full)
         let database = TodoDatabaseImpl()
-        controller = TodoListReaktiveController(storeFactory: storeFactory, stateKeeperProvider: nil, database: database)
+        controller = TodoListReaktiveController(
+            dependencies: TodoListControllerDeps(storeFactory: storeFactory, database: database, stateKeeperProvider: nil)
+        )
     }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
