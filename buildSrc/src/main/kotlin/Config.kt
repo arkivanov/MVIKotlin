@@ -7,6 +7,7 @@ import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.getByType
@@ -241,11 +242,7 @@ fun Project.setupPublication() {
     val metadataPublicationNames = setOf(KotlinMultiplatformPlugin.METADATA_TARGET_NAME, "kotlinMultiplatform")
 
     extensions.getByType<PublishingExtension>().run {
-        publications
-            .withType<MavenPublication>()
-            .filter { (it.name in metadataPublicationNames) == isMetadataBuildType }
-            .withEach {
-
+        publications.withType<MavenPublication>().all {
                 pom {
                     withXml {
                         asNode().apply {
@@ -275,6 +272,12 @@ fun Project.setupPublication() {
                 }
             }
 
+        afterEvaluate {
+            tasks.withType<PublishToMavenRepository>().forEach { task ->
+                task.enabled = (task.publication.name in metadataPublicationNames) == isMetadataBuildType
+            }
+        }
+
         repositories {
             maven {
                 url = uri("https://api.bintray.com/maven/arkivanov/maven/mvikotlin/;publish=0;override=1")
@@ -285,10 +288,6 @@ fun Project.setupPublication() {
             }
         }
     }
-}
-
-private inline fun <T> Iterable<T>.withEach(action: T.() -> Unit) {
-    forEach(action)
 }
 
 fun Project.setupAndroidSdkVersions() {
