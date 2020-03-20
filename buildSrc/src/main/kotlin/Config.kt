@@ -14,10 +14,11 @@ import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 enum class BuildType {
-    ALL, NON_NATIVE, LINUX, IOS
+    ALL, METADATA, NON_NATIVE, LINUX, IOS
 }
 
 val ExtensionAware.buildType: BuildType
@@ -50,22 +51,26 @@ interface BuildTarget {
     object LinuxX64 : Linux
 }
 
-private val buildTypeToBuildTargets: Map<BuildType, Set<BuildTarget>> =
+private val ALL_BUILD_TARGETS =
+    setOf(
+        BuildTarget.Android,
+        BuildTarget.Jvm,
+        BuildTarget.Js,
+        BuildTarget.IosX64,
+        BuildTarget.IosArm64,
+        BuildTarget.LinuxX64
+    )
+
+private val BUILD_TYPE_TO_BUILD_TARGETS: Map<BuildType, Set<BuildTarget>> =
     mapOf(
-        BuildType.ALL to setOf(
-            BuildTarget.Android,
-            BuildTarget.Jvm,
-            BuildTarget.Js,
-            BuildTarget.IosX64,
-            BuildTarget.IosArm64,
-            BuildTarget.LinuxX64
-        ),
+        BuildType.ALL to ALL_BUILD_TARGETS,
+        BuildType.METADATA to ALL_BUILD_TARGETS,
         BuildType.NON_NATIVE to setOf(BuildTarget.Android, BuildTarget.Jvm, BuildTarget.Js),
         BuildType.LINUX to setOf(BuildTarget.LinuxX64),
         BuildType.IOS to setOf(BuildTarget.IosX64, BuildTarget.IosArm64)
     )
 
-val BuildType.buildTargets: Set<BuildTarget> get() = requireNotNull(buildTypeToBuildTargets[this])
+val BuildType.buildTargets: Set<BuildTarget> get() = requireNotNull(BUILD_TYPE_TO_BUILD_TARGETS[this])
 
 inline fun <reified T : BuildTarget> ExtensionAware.isBuildTargetAvailable(): Boolean =
     buildType.buildTargets.any { it is T }
@@ -225,44 +230,50 @@ fun Project.setupPublication() {
     plugins.apply("maven-publish")
 
     group = "com.arkivanov.mvikotlin"
-    version = "2.0.0-preview3"
+    version = "2.0.0-preview4"
 
     val userId = "arkivanov"
     val userName = "Arkadii Ivanov"
     val userEmail = "arkann1985@gmail.com"
     val githubUrl = "https://github.com/arkivanov/MVIKotlin"
     val githubScmUrl = "scm:git:git://github.com/arkivanov/MVIKotlin.git"
+    val isMetadataBuildType = buildType === BuildType.METADATA
+    val metadataPublicationNames = setOf(KotlinMultiplatformPlugin.METADATA_TARGET_NAME, "kotlinMultiplatform")
 
     extensions.getByType<PublishingExtension>().run {
-        publications.withType<MavenPublication>().all {
-            pom {
-                withXml {
-                    asNode().apply {
-                        appendNode("name", "MVIKotlin")
-                        appendNode("description", "Kotlin Multiplatform MVI framework")
-                        appendNode("url", githubUrl)
+        publications
+            .withType<MavenPublication>()
+            .filter { (it.name in metadataPublicationNames) == isMetadataBuildType }
+            .withEach {
+
+                pom {
+                    withXml {
+                        asNode().apply {
+                            appendNode("name", "MVIKotlin")
+                            appendNode("description", "Kotlin Multiplatform MVI framework")
+                            appendNode("url", githubUrl)
+                        }
                     }
-                }
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
                     }
-                }
-                developers {
-                    developer {
-                        id.set(userId)
-                        name.set(userName)
-                        email.set(userEmail)
+                    developers {
+                        developer {
+                            id.set(userId)
+                            name.set(userName)
+                            email.set(userEmail)
+                        }
                     }
-                }
-                scm {
-                    url.set(githubUrl)
-                    connection.set(githubScmUrl)
-                    developerConnection.set(githubScmUrl)
+                    scm {
+                        url.set(githubUrl)
+                        connection.set(githubScmUrl)
+                        developerConnection.set(githubScmUrl)
+                    }
                 }
             }
-        }
 
         repositories {
             maven {
@@ -274,6 +285,10 @@ fun Project.setupPublication() {
             }
         }
     }
+}
+
+private inline fun <T> Iterable<T>.withEach(action: T.() -> Unit) {
+    forEach(action)
 }
 
 fun Project.setupAndroidSdkVersions() {
