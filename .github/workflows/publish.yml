@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Publish JVM, Android, JS
+      - name: Publish Metadata
         run: ./gradlew publish -Pbuild_type=METADATA -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
   non-native-build:
     name: Publish JVM, Android, JS
