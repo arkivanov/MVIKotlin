@@ -2,21 +2,17 @@ import co.touchlab.kotlinxcodesync.SyncExtension
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
-import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
-import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 enum class BuildType {
     ALL, METADATA, NON_NATIVE, LINUX, IOS
@@ -204,26 +200,6 @@ fun Project.setupMultiplatform() {
             iosArm64Main.dependsOn(iosCommonMain)
             iosArm64Test.dependsOn(iosCommonTest)
         }
-
-        doIfBuildTargetAvailable<BuildTarget.IosX64> {
-            val iosX64Test: Task by tasks.creating {
-                val device = findProperty("iosDevice")?.toString() ?: "iPhone 8"
-                val testExecutable = iosX64().binaries.getTest(NativeBuildType.DEBUG)
-                dependsOn(testExecutable.linkTaskName)
-                group = JavaBasePlugin.VERIFICATION_GROUP
-                description = "Runs tests for target 'iosX64' on an iOS simulator"
-
-                println("Path: testExecutable.outputFile.absolutePath")
-
-                doLast {
-                    exec {
-                        commandLine("xcrun", "simctl", "spawn", "--standalone", device, testExecutable.outputFile.absolutePath)
-                    }
-                }
-            }
-
-            tasks.getByName("check").dependsOn(iosX64Test)
-        }
     }
 }
 
@@ -243,34 +219,34 @@ fun Project.setupPublication() {
 
     extensions.getByType<PublishingExtension>().run {
         publications.withType<MavenPublication>().all {
-                pom {
-                    withXml {
-                        asNode().apply {
-                            appendNode("name", "MVIKotlin")
-                            appendNode("description", "Kotlin Multiplatform MVI framework")
-                            appendNode("url", githubUrl)
-                        }
-                    }
-                    licenses {
-                        license {
-                            name.set("The Apache License, Version 2.0")
-                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                        }
-                    }
-                    developers {
-                        developer {
-                            id.set(userId)
-                            name.set(userName)
-                            email.set(userEmail)
-                        }
-                    }
-                    scm {
-                        url.set(githubUrl)
-                        connection.set(githubScmUrl)
-                        developerConnection.set(githubScmUrl)
+            pom {
+                withXml {
+                    asNode().apply {
+                        appendNode("name", "MVIKotlin")
+                        appendNode("description", "Kotlin Multiplatform MVI framework")
+                        appendNode("url", githubUrl)
                     }
                 }
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set(userId)
+                        name.set(userName)
+                        email.set(userEmail)
+                    }
+                }
+                scm {
+                    url.set(githubUrl)
+                    connection.set(githubScmUrl)
+                    developerConnection.set(githubScmUrl)
+                }
             }
+        }
 
         afterEvaluate {
             tasks.withType<PublishToMavenRepository>().forEach { task ->
@@ -299,6 +275,46 @@ fun Project.setupAndroidSdkVersions() {
             minSdkVersion(15)
         }
     }
+}
+
+// Workaround since iosX64() and iosArm64() function are not resolved if used in a module with Kotlin 1.3.70
+fun Project.setupTodoDarwinUmbrellaBinaries() {
+    fun KotlinNativeTarget.setupIosBinaries() {
+        binaries {
+            framework {
+                baseName = "TodoLib"
+                freeCompilerArgs = freeCompilerArgs.plus("-Xobjc-generics").toMutableList()
+
+                export(project(":rx"))
+                export(project(":mvikotlin"))
+                export(project(":mvikotlin-main"))
+                export(project(":mvikotlin-logging"))
+                export(project(":mvikotlin-timetravel"))
+                export(project(":sample:todo-common"))
+                export(project(":sample:todo-reaktive"))
+            }
+        }
+    }
+
+    kotlin {
+        iosX64().setupIosBinaries()
+        iosArm64().setupIosBinaries()
+
+        sourceSets {
+            commonMain {
+                dependencies {
+                    api(project(":rx"))
+                    api(project(":mvikotlin"))
+                    api(project(":mvikotlin-main"))
+                    api(project(":mvikotlin-logging"))
+                    api(project(":mvikotlin-timetravel"))
+                    api(project(":sample:todo-common"))
+                    api(project(":sample:todo-reaktive"))
+                }
+            }
+        }
+    }
+
 }
 
 fun Project.android(block: BaseExtension.() -> Unit) {

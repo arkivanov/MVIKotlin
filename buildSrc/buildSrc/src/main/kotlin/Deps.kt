@@ -2,7 +2,7 @@ object Deps {
 
     object Jetbrains {
         object Kotlin : Group(name = "org.jetbrains.kotlin") {
-            private const val version = "1.3.61"
+            private const val version = "1.3.70"
 
             object Plugin : Dependency(group = Kotlin, name = "kotlin-gradle-plugin", version = version)
 
@@ -27,7 +27,7 @@ object Deps {
 
         object Kotlinx : Group(name = "org.jetbrains.kotlinx") {
             object Coroutines {
-                private const val version = "1.3.3"
+                private const val version = "1.3.5"
 
                 object Core : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core", version = version) {
                     object Common : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-common", version = version)
@@ -72,7 +72,7 @@ object Deps {
 
     object Badoo {
         object Reaktive : Group(name = "com.badoo.reaktive") {
-            private const val version = "1.1.8"
+            private const val version = "1.1.12"
 
             object Reaktive : Dependency(group = Badoo.Reaktive, name = "reaktive", version = version)
             object ReaktiveAnnotations : Dependency(group = Badoo.Reaktive, name = "reaktive-annotations", version = version)

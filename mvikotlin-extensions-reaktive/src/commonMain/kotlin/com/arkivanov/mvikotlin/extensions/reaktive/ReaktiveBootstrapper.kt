@@ -18,7 +18,7 @@ import com.badoo.reaktive.single.Single
  * An abstract implementation of the [Bootstrapper] that provides interoperability with Reaktive.
  * Implements [DisposableScope] which disposes when the [Bootstrapper] is disposed.
  */
-@UseExperimental(ExperimentalReaktiveApi::class)
+@OptIn(ExperimentalReaktiveApi::class)
 abstract class ReaktiveBootstrapper<Action : Any> : Bootstrapper<Action>, DisposableScope {
 
     private val actionConsumer = lateinitAtomicReference<(Action) -> Unit>()
