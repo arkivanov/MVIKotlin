@@ -21,7 +21,7 @@ import com.badoo.reaktive.single.Single
  * An abstract implementation of the [Executor] that provides interoperability with Reaktive.
  * Implements [DisposableScope] which disposes when the [Executor] is disposed.
  */
-@UseExperimental(ExperimentalReaktiveApi::class)
+@OptIn(ExperimentalReaktiveApi::class)
 open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Result : Any, Label : Any> :
     Executor<Intent, Action, State, Result, Label>,
     DisposableScope {
