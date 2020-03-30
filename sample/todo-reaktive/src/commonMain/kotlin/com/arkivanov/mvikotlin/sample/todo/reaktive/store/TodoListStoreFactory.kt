@@ -37,7 +37,7 @@ internal class TodoListStoreFactory(
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
-                is Intent.ToggleDone -> toggleDone(intent.id, getState())
+                is Intent.ToggleDone -> toggleDone(intent.id, getState)
                 is Intent.SelectItem -> dispatch(Result.SelectionChanged(intent.id))
                 is Intent.UnselectItem -> dispatch(Result.SelectionChanged(null))
                 is Intent.HandleAdded -> dispatch(Result.Added(intent.item))
@@ -55,10 +55,10 @@ internal class TodoListStoreFactory(
                 .subscribeScoped()
         }
 
-        private fun toggleDone(id: String, state: State) {
+        private fun toggleDone(id: String, state: () -> State) {
             dispatch(Result.DoneToggled(id))
 
-            val item = state.items.find { it.id == id } ?: return
+            val item = state().items.find { it.id == id } ?: return
 
             completableFromFunction {
                 database.save(id, item.data)
