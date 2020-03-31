@@ -34,20 +34,20 @@ internal class TodoDetailsStoreFactory(
 
         override suspend fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.HandleTextChanged -> handleTextChanged(intent.text, getState())
-                is Intent.ToggleDone -> toggleDone(getState())
+                is Intent.HandleTextChanged -> handleTextChanged(intent.text, getState)
+                is Intent.ToggleDone -> toggleDone(getState)
                 is Intent.Delete -> delete()
             }.let {}
         }
 
-        private suspend fun handleTextChanged(text: String, state: State) {
+        private suspend fun handleTextChanged(text: String, state: () -> State) {
             dispatch(Result.TextChanged(text))
-            save(state)
+            save(state())
         }
 
-        private suspend fun toggleDone(state: State) {
+        private suspend fun toggleDone(state: () -> State) {
             dispatch(Result.DoneToggled)
-            save(state)
+            save(state())
         }
 
         private suspend fun save(state: State) {
