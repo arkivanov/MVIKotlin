@@ -48,6 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let window = UIWindow(windowScene: windowScene)
             window.rootViewController = UIHostingController(rootView:
                 ContentView(
+                    navigationBarTitle: "MVIKotlin",
                     mainView: VStack {
                         todoList
                         todoAdd
