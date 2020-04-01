@@ -24,6 +24,7 @@
 		1F79AF5A2401B54500CC6AEA /* TodoItemExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF592401B54500CC6AEA /* TodoItemExt.swift */; };
 		1F79AF5E2401CAB500CC6AEA /* TodoListViewImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */; };
 		1F79AF602401CB0300CC6AEA /* TodoAddViewImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */; };
+		2E82D5A4243468EA00681937 /* TodoDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E82D5A3243468EA00681937 /* TodoDetail.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,10 +42,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0388B10CE980EDA4BC7C67AE /* TodoDatabaseImpl.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDatabaseImpl.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseImpl.kt"; sourceTree = "<group>"; };
-		0478C47EA0F992BB6BDDE415 /* TodoDetailsView.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDetailsView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoDetailsView.kt"; sourceTree = "<group>"; };
-		101DD62475686998BD7345C6 /* TodoListController.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoListController.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/controller/TodoListController.kt"; sourceTree = "<group>"; };
-		1938554023558B877B0E2E8E /* TodoListView.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoListView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoListView.kt"; sourceTree = "<group>"; };
+		0388B10CE980EDA4BC7C67AE /* TodoDatabaseImpl.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDatabaseImpl.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseImpl.kt"; sourceTree = "<group>"; };
+		0478C47EA0F992BB6BDDE415 /* TodoDetailsView.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDetailsView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoDetailsView.kt"; sourceTree = "<group>"; };
+		101DD62475686998BD7345C6 /* TodoListController.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoListController.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/controller/TodoListController.kt"; sourceTree = "<group>"; };
+		1938554023558B877B0E2E8E /* TodoListView.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoListView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoListView.kt"; sourceTree = "<group>"; };
 		1F38433123FDD21900501F27 /* todo-app-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "todo-app-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F38433423FDD21900501F27 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F38433623FDD21900501F27 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,22 +64,23 @@
 		1F79AF592401B54500CC6AEA /* TodoItemExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemExt.swift; sourceTree = "<group>"; };
 		1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewImpl.swift; sourceTree = "<group>"; };
 		1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAddViewImpl.swift; sourceTree = "<group>"; };
-		2C06C63CD306913ACB7977C1 /* TodoItemExt.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoItemExt.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItemExt.kt"; sourceTree = "<group>"; };
-		32305CAD887469A129CF0A18 /* TodoItem.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoItem.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItem.kt"; sourceTree = "<group>"; };
-		48BCFF0D371F93831EF13C40 /* TodoDetailsController.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDetailsController.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/controller/TodoDetailsController.kt"; sourceTree = "<group>"; };
-		49AEF39F9D14E34D80F687BA /* Dummy.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Dummy.kt; path = "../todo-darwin-umbrella/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/darwin/umbrella/Dummy.kt"; sourceTree = "<group>"; };
-		6BEAF13C5E0725DA97BF5876 /* TodoAddStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoAddStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoAddStoreFactory.kt"; sourceTree = "<group>"; };
-		7EFDD771154571D9E662D6CF /* TodoDatabaseImpl.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDatabaseImpl.kt; path = "../todo-common/src/darwinCommonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseImpl.kt"; sourceTree = "<group>"; };
-		8AE0187E8F297691279648EC /* TodoListReaktiveController.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoListReaktiveController.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/controller/TodoListReaktiveController.kt"; sourceTree = "<group>"; };
-		A8F6903F8143302EA3B52B12 /* TodoDatabase.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDatabase.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabase.kt"; sourceTree = "<group>"; };
-		B9101A3ECF9C65849700DCDE /* TodoDetailsReaktiveController.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDetailsReaktiveController.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/controller/TodoDetailsReaktiveController.kt"; sourceTree = "<group>"; };
-		C73259F17571D5C3D934D1B5 /* TodoItemContract.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoItemContract.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItemContract.kt"; sourceTree = "<group>"; };
-		C97140325D4CDFE699450F65 /* TodoAddView.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoAddView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoAddView.kt"; sourceTree = "<group>"; };
-		D7CA79765AE77857F1B1AAA3 /* TodoDetailsStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDetailsStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoDetailsStoreFactory.kt"; sourceTree = "<group>"; };
-		DF99E95B8A35A3ECAECE231C /* TodoListStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoListStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoListStoreFactory.kt"; sourceTree = "<group>"; };
-		E56C8A08C1894C84632F54F6 /* EventBus.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = EventBus.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/EventBus.kt"; sourceTree = "<group>"; };
-		FC4A3E955C36541B88E4989B /* TodoDatabaseOpenHelper.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = TodoDatabaseOpenHelper.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseOpenHelper.kt"; sourceTree = "<group>"; };
-		FDA63019E0C179407DD80EAC /* Utils.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Utils.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/Utils.kt"; sourceTree = "<group>"; };
+		2C06C63CD306913ACB7977C1 /* TodoItemExt.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoItemExt.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItemExt.kt"; sourceTree = "<group>"; };
+		2E82D5A3243468EA00681937 /* TodoDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDetail.swift; sourceTree = "<group>"; };
+		32305CAD887469A129CF0A18 /* TodoItem.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoItem.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItem.kt"; sourceTree = "<group>"; };
+		48BCFF0D371F93831EF13C40 /* TodoDetailsController.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDetailsController.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/controller/TodoDetailsController.kt"; sourceTree = "<group>"; };
+		49AEF39F9D14E34D80F687BA /* Dummy.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Dummy.kt; path = "../todo-darwin-umbrella/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/darwin/umbrella/Dummy.kt"; sourceTree = "<group>"; };
+		6BEAF13C5E0725DA97BF5876 /* TodoAddStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoAddStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoAddStoreFactory.kt"; sourceTree = "<group>"; };
+		7EFDD771154571D9E662D6CF /* TodoDatabaseImpl.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDatabaseImpl.kt; path = "../todo-common/src/darwinCommonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseImpl.kt"; sourceTree = "<group>"; };
+		8AE0187E8F297691279648EC /* TodoListReaktiveController.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoListReaktiveController.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/controller/TodoListReaktiveController.kt"; sourceTree = "<group>"; };
+		A8F6903F8143302EA3B52B12 /* TodoDatabase.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDatabase.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabase.kt"; sourceTree = "<group>"; };
+		B9101A3ECF9C65849700DCDE /* TodoDetailsReaktiveController.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDetailsReaktiveController.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/controller/TodoDetailsReaktiveController.kt"; sourceTree = "<group>"; };
+		C73259F17571D5C3D934D1B5 /* TodoItemContract.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoItemContract.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItemContract.kt"; sourceTree = "<group>"; };
+		C97140325D4CDFE699450F65 /* TodoAddView.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoAddView.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/view/TodoAddView.kt"; sourceTree = "<group>"; };
+		D7CA79765AE77857F1B1AAA3 /* TodoDetailsStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDetailsStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoDetailsStoreFactory.kt"; sourceTree = "<group>"; };
+		DF99E95B8A35A3ECAECE231C /* TodoListStoreFactory.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoListStoreFactory.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/store/TodoListStoreFactory.kt"; sourceTree = "<group>"; };
+		E56C8A08C1894C84632F54F6 /* EventBus.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = EventBus.kt; path = "../todo-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/reaktive/EventBus.kt"; sourceTree = "<group>"; };
+		FC4A3E955C36541B88E4989B /* TodoDatabaseOpenHelper.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDatabaseOpenHelper.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseOpenHelper.kt"; sourceTree = "<group>"; };
+		FDA63019E0C179407DD80EAC /* Utils.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Utils.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/Utils.kt"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +183,7 @@
 				1F38433C23FDD21B00501F27 /* Preview Content */,
 				1F79AF552401B26900CC6AEA /* TodoRow.swift */,
 				1F79AF572401B4A700CC6AEA /* TodoList.swift */,
+				2E82D5A3243468EA00681937 /* TodoDetail.swift */,
 				1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */,
 				1F79AF592401B54500CC6AEA /* TodoItemExt.swift */,
 				1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */,
@@ -612,6 +615,7 @@
 				1F38433723FDD21900501F27 /* SceneDelegate.swift in Sources */,
 				1F79AF562401B26900CC6AEA /* TodoRow.swift in Sources */,
 				1F79AF5E2401CAB500CC6AEA /* TodoListViewImpl.swift in Sources */,
+				2E82D5A4243468EA00681937 /* TodoDetail.swift in Sources */,
 				1F60093124034D65003AFD12 /* TodoAdd.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
