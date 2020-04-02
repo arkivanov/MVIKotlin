@@ -24,9 +24,8 @@ struct TodoRow: View {
             Text(text)
                 .frame(minWidth: nil, idealWidth: nil, maxWidth: .infinity, minHeight: nil, idealHeight: nil, maxHeight: .infinity, alignment: .leading)
             
-            Button(action: onDeleteClicked) {
-                Image(systemName: "trash")
-            }
+            Image(systemName: "trash")
+                .onTapGesture(perform: self.onDeleteClicked)
         }
     }
 }
