@@ -229,8 +229,8 @@
 			children = (
 				1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */,
 				1F60093024034D65003AFD12 /* TodoAdd.swift */,
-				1F79AF572401B4A700CC6AEA /* TodoList.swift */,
 				1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */,
+				1F79AF572401B4A700CC6AEA /* TodoList.swift */,
 				1F79AF552401B26900CC6AEA /* TodoRow.swift */,
 			);
 			path = list;

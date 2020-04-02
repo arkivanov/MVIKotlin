@@ -19,7 +19,7 @@ struct TodoAdd: View {
         )
         
         return HStack {
-            TextField("Add todo", text: b)
+            TextField("Write ToDo", text: b)
 
             Button(action: { self.addView.dispatch(event: TodoAddViewEvent.AddClicked()) }) {
                 Text("Add")
