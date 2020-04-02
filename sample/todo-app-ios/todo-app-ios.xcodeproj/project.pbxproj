@@ -175,19 +175,15 @@
 		1F38433323FDD21900501F27 /* todo-app-ios */ = {
 			isa = PBXGroup;
 			children = (
+				2E9EA17724365FE6008B2C5A /* details */,
+				2E9EA1782436603E008B2C5A /* list */,
 				1F38433423FDD21900501F27 /* AppDelegate.swift */,
 				1F38433623FDD21900501F27 /* SceneDelegate.swift */,
 				1F38433A23FDD21B00501F27 /* Assets.xcassets */,
 				1F38433F23FDD21B00501F27 /* LaunchScreen.storyboard */,
 				1F38434223FDD21B00501F27 /* Info.plist */,
 				1F38433C23FDD21B00501F27 /* Preview Content */,
-				1F79AF552401B26900CC6AEA /* TodoRow.swift */,
-				1F79AF572401B4A700CC6AEA /* TodoList.swift */,
-				2E82D5A3243468EA00681937 /* TodoDetail.swift */,
-				1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */,
 				1F79AF592401B54500CC6AEA /* TodoItemExt.swift */,
-				1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */,
-				1F60093024034D65003AFD12 /* TodoAdd.swift */,
 				1F6009362403E6E5003AFD12 /* TimeTravelViewController.swift */,
 				1F601886240481980081C459 /* TimeTravelView.swift */,
 				1F601888240483920081C459 /* ContentView.swift */,
@@ -218,6 +214,26 @@
 				C3B8BAE61B89840B6F040172 /* com */,
 			);
 			name = kotlin;
+			sourceTree = "<group>";
+		};
+		2E9EA17724365FE6008B2C5A /* details */ = {
+			isa = PBXGroup;
+			children = (
+				2E82D5A3243468EA00681937 /* TodoDetail.swift */,
+			);
+			path = details;
+			sourceTree = "<group>";
+		};
+		2E9EA1782436603E008B2C5A /* list */ = {
+			isa = PBXGroup;
+			children = (
+				1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */,
+				1F60093024034D65003AFD12 /* TodoAdd.swift */,
+				1F79AF572401B4A700CC6AEA /* TodoList.swift */,
+				1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */,
+				1F79AF552401B26900CC6AEA /* TodoRow.swift */,
+			);
+			path = list;
 			sourceTree = "<group>";
 		};
 		38F3D9EAEA0133B9CF039131 /* Kotlin */ = {
