@@ -14,16 +14,13 @@ struct TodoList: View {
     
     var body: some View {
         List(listView.model?.items ?? []) { item in
-            NavigationLink(
-                destination: ContentView(navigationBarTitle: "Details",
-                                         mainView: TodoDetail())) {
-                TodoRow(
-                    text: item.data.text,
-                    isDone: item.data.isDone,
-                    onDoneClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDoneClicked(id: item.id)) },
-                    onDeleteClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDeleteClicked(id: item.id)) }
-                )
-            }
+            TodoRow(
+                text: item.data.text,
+                isDone: item.data.isDone,
+                onItemClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemClicked(id: item.id)) },
+                onDoneClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDoneClicked(id: item.id)) },
+                onDeleteClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDeleteClicked(id: item.id)) }
+            )
         }
     }
 }

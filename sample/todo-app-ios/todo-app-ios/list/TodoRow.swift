@@ -11,21 +11,25 @@ import TodoLib
 
 struct TodoRow: View {
     var text: String
-    
     var isDone: Bool
+
+    var onItemClicked: () -> Void
     var onDoneClicked: () -> Void
     var onDeleteClicked: () -> Void
     
     var body: some View {
-        HStack {
-            Image(systemName: isDone ? "checkmark.square" : "square")
-                .onTapGesture(perform: self.onDoneClicked)
-            
-            Text(text)
-                .frame(minWidth: nil, idealWidth: nil, maxWidth: .infinity, minHeight: nil, idealHeight: nil, maxHeight: .infinity, alignment: .leading)
-            
-            Button(action: onDeleteClicked) {
-                Image(systemName: "trash")
+        Button(action: self.onItemClicked) {
+            HStack {
+                Image(systemName: isDone ? "checkmark.square" : "square")
+                    .onTapGesture(perform: self.onDoneClicked)
+                
+                Text(text)
+                    .frame(minWidth: nil, idealWidth: nil, maxWidth: .infinity, minHeight: nil, idealHeight: nil, maxHeight: .infinity, alignment: .leading)
+                
+                Button(action: self.onDeleteClicked) {
+                    Image(systemName: "trash")
+                }
+                
             }
         }
     }
@@ -33,6 +37,6 @@ struct TodoRow: View {
 
 struct TodoRow_Previews: PreviewProvider {
     static var previews: some View {
-        TodoRow(text: "Item text", isDone: false, onDoneClicked: {}, onDeleteClicked: {})
+        TodoRow(text: "Item text", isDone: false, onItemClicked: {}, onDoneClicked: {}, onDeleteClicked: {})
     }
 }
