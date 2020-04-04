@@ -10,19 +10,23 @@ import SwiftUI
 import TodoLib
 
 struct TodoList: View {
+    
     @ObservedObject var listView = TodoListViewImpl()
     
     var body: some View {
         List(listView.model?.items ?? []) { item in
-            TodoRow(
-                text: item.data.text,
-                isDone: item.data.isDone,
-                onItemClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemClicked(id: item.id)) },
-                onDoneClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDoneClicked(id: item.id)) },
-                onDeleteClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDeleteClicked(id: item.id)) }
-            )
+            NavigationLink( destination: TodoDetails(id: item.id)) {
+                TodoRow(
+                    text: item.data.text,
+                    isDone: item.data.isDone,
+                    onItemClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemClicked(id: item.id)) },
+                    onDoneClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDoneClicked(id: item.id)) },
+                    onDeleteClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDeleteClicked(id: item.id)) }
+                )
+            }
         }
     }
+
 }
 
 struct TodoList_Previews: PreviewProvider {

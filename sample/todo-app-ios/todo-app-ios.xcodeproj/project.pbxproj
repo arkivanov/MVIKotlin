@@ -24,7 +24,8 @@
 		1F79AF5A2401B54500CC6AEA /* TodoItemExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF592401B54500CC6AEA /* TodoItemExt.swift */; };
 		1F79AF5E2401CAB500CC6AEA /* TodoListViewImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */; };
 		1F79AF602401CB0300CC6AEA /* TodoAddViewImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */; };
-		2E82D5A4243468EA00681937 /* TodoDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E82D5A3243468EA00681937 /* TodoDetail.swift */; };
+		2E82D5A4243468EA00681937 /* TodoDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E82D5A3243468EA00681937 /* TodoDetails.swift */; };
+		2EDB09132439200100503686 /* TodoDetailsViewImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EDB09122439200100503686 /* TodoDetailsViewImpl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,7 +66,8 @@
 		1F79AF5D2401CAB500CC6AEA /* TodoListViewImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewImpl.swift; sourceTree = "<group>"; };
 		1F79AF5F2401CB0300CC6AEA /* TodoAddViewImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAddViewImpl.swift; sourceTree = "<group>"; };
 		2C06C63CD306913ACB7977C1 /* TodoItemExt.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoItemExt.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItemExt.kt"; sourceTree = "<group>"; };
-		2E82D5A3243468EA00681937 /* TodoDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDetail.swift; sourceTree = "<group>"; };
+		2E82D5A3243468EA00681937 /* TodoDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDetails.swift; sourceTree = "<group>"; };
+		2EDB09122439200100503686 /* TodoDetailsViewImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDetailsViewImpl.swift; sourceTree = "<group>"; };
 		32305CAD887469A129CF0A18 /* TodoItem.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoItem.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoItem.kt"; sourceTree = "<group>"; };
 		48BCFF0D371F93831EF13C40 /* TodoDetailsController.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDetailsController.kt; path = "../todo-common/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/controller/TodoDetailsController.kt"; sourceTree = "<group>"; };
 		49AEF39F9D14E34D80F687BA /* Dummy.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Dummy.kt; path = "../todo-darwin-umbrella/src/commonMain/kotlin/com/arkivanov/mvikotlin/sample/todo/darwin/umbrella/Dummy.kt"; sourceTree = "<group>"; };
@@ -219,7 +221,8 @@
 		2E9EA17724365FE6008B2C5A /* details */ = {
 			isa = PBXGroup;
 			children = (
-				2E82D5A3243468EA00681937 /* TodoDetail.swift */,
+				2EDB09122439200100503686 /* TodoDetailsViewImpl.swift */,
+				2E82D5A3243468EA00681937 /* TodoDetails.swift */,
 			);
 			path = details;
 			sourceTree = "<group>";
@@ -631,8 +634,9 @@
 				1F38433723FDD21900501F27 /* SceneDelegate.swift in Sources */,
 				1F79AF562401B26900CC6AEA /* TodoRow.swift in Sources */,
 				1F79AF5E2401CAB500CC6AEA /* TodoListViewImpl.swift in Sources */,
-				2E82D5A4243468EA00681937 /* TodoDetail.swift in Sources */,
+				2E82D5A4243468EA00681937 /* TodoDetails.swift in Sources */,
 				1F60093124034D65003AFD12 /* TodoAdd.swift in Sources */,
+				2EDB09132439200100503686 /* TodoDetailsViewImpl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

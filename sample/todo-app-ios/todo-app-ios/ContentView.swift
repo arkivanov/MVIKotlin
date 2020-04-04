@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct ContentView<V : View>: View {
-    let navigationBarTitle: String
     let mainView: V
     @State var isDrawerOpen: Bool = false
     
@@ -25,7 +24,7 @@ struct ContentView<V : View>: View {
                     DebugDrawer(isOpen: false)
                 }
             }
-            .navigationBarTitle(Text(navigationBarTitle), displayMode: .inline)
+            .navigationBarTitle(Text("MviKotlin"))
             .navigationBarItems(
                 trailing: Button(
                     action: {
@@ -40,6 +39,6 @@ struct ContentView<V : View>: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(navigationBarTitle: "", mainView: Text(""))
+        ContentView(mainView: Text(""))
     }
 }
