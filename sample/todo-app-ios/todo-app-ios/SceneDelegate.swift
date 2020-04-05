@@ -13,13 +13,19 @@ import TodoLib
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
+    private let lifecycle = LifecycleProxy()
     private let controller: TodoListController
     
     override init() {
         let storeFactory = LoggingStoreFactory(delegate: TimeTravelStoreFactory(), logger: DefaultLogger(), mode: LoggingMode.full)
         let database = TodoDatabaseImpl()
         controller = TodoListReaktiveController(
-            dependencies: TodoListControllerDeps(storeFactory: storeFactory, database: database, stateKeeperProvider: nil)
+            dependencies: TodoListControllerDeps(
+                storeFactory: storeFactory,
+                database: database,
+                lifecycle: lifecycle,
+                stateKeeperProvider: nil
+            )
         )
     }
     
@@ -50,7 +56,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let v = todoList.listView
         let a = todoAdd.addView
         
-        controller.onViewCreated(todoListView: v, todoAddView: a)
+        lifecycle.onCreate()
+        controller.onViewCreated(todoListView: v, todoAddView: a, viewLifecycle: lifecycle)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -59,22 +66,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
         
-        controller.onViewDestroyed()
-        controller.onDestroy()
+        lifecycle.onDestroy()
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         
-        controller.onStart()
+        lifecycle.onStart()
+        lifecycle.onResume()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         
-        controller.onStop()
+        lifecycle.onPause()
+        lifecycle.onStop()
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
