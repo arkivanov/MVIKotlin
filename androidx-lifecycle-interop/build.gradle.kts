@@ -1,18 +1,7 @@
-plugins {
-    id("com.android.library")
-    id("kotlin-android")
-}
+buildTargets = setOf(BuildTarget.Android)
 
-setupAndroidSdkVersions()
+setupMultiplatform()
 setupPublication()
-
-afterEvaluate {
-    extensions.getByType<PublishingExtension>().run {
-        publications.create<MavenPublication>("all") {
-            from(components["all"])
-        }
-    }
-}
 
 android {
     compileOptions {
@@ -21,8 +10,13 @@ android {
     }
 }
 
-dependencies {
-    implementation(project(":mvikotlin"))
-    implementation(Deps.Jetbrains.Kotlin.StdLib.Jdk7)
-    implementation(Deps.AndroidX.Lifecycle.LifecycleCommonJava8)
+kotlin {
+    sourceSets {
+        androidMain {
+            dependencies {
+                implementation(project(":mvikotlin"))
+                implementation(Deps.AndroidX.Lifecycle.LifecycleCommonJava8)
+            }
+        }
+    }
 }
