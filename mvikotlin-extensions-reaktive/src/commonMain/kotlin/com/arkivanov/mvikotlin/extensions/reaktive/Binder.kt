@@ -1,6 +1,9 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.binder.Binder
+import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
+import com.arkivanov.mvikotlin.core.binder.attachTo
+import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.core.view.ViewRenderer
@@ -17,7 +20,13 @@ import com.badoo.reaktive.observable.subscribe
  *
  * @return a new instance of the [Binder]
  */
-fun bind(builder: BindingsBuilder.() -> Unit): Binder = BuilderBinder().also(builder)
+fun bind(builder: BindingsBuilder.() -> Unit): Binder =
+    BuilderBinder()
+        .also(builder)
+
+fun bind(lifecycle: Lifecycle, mode: BinderLifecycleMode, builder: BindingsBuilder.() -> Unit): Binder =
+    bind(builder)
+        .attachTo(lifecycle, mode)
 
 interface BindingsBuilder {
 

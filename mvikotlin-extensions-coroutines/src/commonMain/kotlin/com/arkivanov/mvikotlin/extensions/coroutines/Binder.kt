@@ -1,6 +1,9 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.binder.Binder
+import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
+import com.arkivanov.mvikotlin.core.binder.attachTo
+import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.core.view.ViewRenderer
@@ -21,8 +24,17 @@ import kotlin.coroutines.CoroutineContext
  * @return a new instance of the [Binder]
  */
 fun bind(mainContext: CoroutineContext = Dispatchers.Main, builder: BindingsBuilder.() -> Unit): Binder =
-    BuilderBinder(mainContext = mainContext)
+    BuilderBinder(mainContext)
         .also(builder)
+
+fun bind(
+    lifecycle: Lifecycle,
+    binderLifecycleMode: BinderLifecycleMode,
+    mainContext: CoroutineContext = Dispatchers.Main,
+    builder: BindingsBuilder.() -> Unit
+): Binder =
+    bind(mainContext, builder)
+        .attachTo(lifecycle, binderLifecycleMode)
 
 interface BindingsBuilder {
 

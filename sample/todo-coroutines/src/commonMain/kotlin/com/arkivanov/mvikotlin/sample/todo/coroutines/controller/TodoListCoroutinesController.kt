@@ -1,6 +1,8 @@
 package com.arkivanov.mvikotlin.sample.todo.coroutines.controller
 
-import com.arkivanov.mvikotlin.core.binder.Binder
+import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
+import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.core.utils.statekeeper.get
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.events
@@ -44,44 +46,27 @@ class TodoListCoroutinesController(dependencies: Dependencies) : TodoListControl
             ioContext = ioDispatcher
         ).create()
 
-    private val storeBinder =
-        bind(mainDispatcher) {
+    init {
+        bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
             eventBus.asFlow().mapNotNull { it.toIntent() } bindTo todoListStore
             todoAddStore.labels.map { it.toBusEvent() } bindTo { eventBus.send(it) }
         }
 
-    private var viewBinder: Binder? = null
-
-    init {
-        storeBinder.start()
+        dependencies.lifecycle.doOnDestroy {
+            todoListStore.dispose()
+            todoAddStore.dispose()
+        }
     }
 
-    override fun onViewCreated(todoListView: TodoListView, todoAddView: TodoAddView) {
-        viewBinder =
-            bind(mainDispatcher) {
-                todoListView.events.map { it.toIntent() } bindTo todoListStore
-                todoListStore.states.map { it.toViewModel() } bindTo todoListView
+    override fun onViewCreated(todoListView: TodoListView, todoAddView: TodoAddView, viewLifecycle: Lifecycle) {
+        bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
+            todoListView.events.map { it.toIntent() } bindTo todoListStore
+            todoAddView.events.map { it.toIntent() } bindTo todoAddStore
+        }
 
-                todoAddView.events.map { it.toIntent() } bindTo todoAddStore
-                todoAddStore.states.map { it.toViewModel() } bindTo todoAddView
-            }
-    }
-
-    override fun onStart() {
-        viewBinder?.start()
-    }
-
-    override fun onStop() {
-        viewBinder?.stop()
-    }
-
-    override fun onViewDestroyed() {
-        viewBinder = null
-    }
-
-    override fun onDestroy() {
-        storeBinder.stop()
-        todoListStore.dispose()
-        todoAddStore.dispose()
+        bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainDispatcher) {
+            todoListStore.states.map { it.toViewModel() } bindTo todoListView
+            todoAddStore.states.map { it.toViewModel() } bindTo todoAddView
+        }
     }
 }

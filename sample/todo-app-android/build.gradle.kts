@@ -23,6 +23,11 @@ android {
         exclude("META-INF/reaktive_debug.kotlin_module")
         exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -32,12 +37,14 @@ dependencies {
     implementation(Deps.AndroidX.ConstraintLayout.ConstraintLayout)
     implementation(Deps.AndroidX.DrawerLayout.DrawerLayout)
     implementation(Deps.AndroidX.Core.Ktx)
+    implementation(Deps.AndroidX.Lifecycle.LifecycleCommonJava8)
     implementation(Deps.Jetbrains.Kotlinx.Coroutines.Core)
     implementation(Deps.Jetbrains.Kotlinx.Coroutines.Android)
     implementation(project(":mvikotlin"))
     implementation(project(":mvikotlin-main"))
     implementation(project(":mvikotlin-timetravel"))
     implementation(project(":mvikotlin-logging"))
+    implementation(project(":androidx-lifecycle-interop"))
     implementation(project(":sample:todo-reaktive"))
     implementation(project(":sample:todo-coroutines"))
 }

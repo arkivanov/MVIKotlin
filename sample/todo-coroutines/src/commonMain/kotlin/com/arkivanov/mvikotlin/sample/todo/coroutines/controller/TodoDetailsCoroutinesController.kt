@@ -1,6 +1,8 @@
 package com.arkivanov.mvikotlin.sample.todo.coroutines.controller
 
-import com.arkivanov.mvikotlin.core.binder.Binder
+import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
+import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.extensions.coroutines.bind
 import com.arkivanov.mvikotlin.extensions.coroutines.events
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
@@ -30,39 +32,21 @@ class TodoDetailsCoroutinesController(dependencies: Dependencies) : TodoDetailsC
             ioContext = ioDispatcher
         ).create()
 
-    private val storeBinder =
-        bind(mainDispatcher) {
+    init {
+        bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
             todoEditStore.labels.map { it.toBusEvent() } bindTo { eventBus.send(it) }
         }
 
-    private var viewBinder: Binder? = null
-
-    init {
-        storeBinder.start()
+        dependencies.lifecycle.doOnDestroy(todoEditStore::dispose)
     }
 
-    override fun onViewCreated(todoDetailsView: TodoDetailsView) {
-        viewBinder =
-            bind(mainDispatcher) {
-                todoDetailsView.events.map { it.toIntent() } bindTo todoEditStore
-                todoEditStore.states.map { it.toViewModel() } bindTo todoDetailsView
-            }
-    }
+    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
+        bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
+            todoDetailsView.events.map { it.toIntent() } bindTo todoEditStore
+        }
 
-    override fun onStart() {
-        viewBinder?.start()
-    }
-
-    override fun onStop() {
-        viewBinder?.stop()
-    }
-
-    override fun onViewDestroyed() {
-        viewBinder = null
-    }
-
-    override fun onDestroy() {
-        storeBinder.stop()
-        todoEditStore.dispose()
+        bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainDispatcher) {
+            todoEditStore.states.map { it.toViewModel() } bindTo todoDetailsView
+        }
     }
 }
