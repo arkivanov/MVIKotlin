@@ -43,7 +43,7 @@ object Deps {
     object Android {
         object Tools {
             object Build : Group(name = "com.android.tools.build") {
-                object Gradle : Dependency(group = Build, name = "gradle", version = "3.5.2")
+                object Gradle : Dependency(group = Build, name = "gradle", version = "3.6.0")
             }
         }
     }

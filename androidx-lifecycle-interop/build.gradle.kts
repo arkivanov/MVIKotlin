@@ -6,6 +6,14 @@ plugins {
 setupAndroidSdkVersions()
 setupPublication()
 
+afterEvaluate {
+    extensions.getByType<PublishingExtension>().run {
+        publications.create<MavenPublication>("all") {
+            from(components["all"])
+        }
+    }
+}
+
 android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
