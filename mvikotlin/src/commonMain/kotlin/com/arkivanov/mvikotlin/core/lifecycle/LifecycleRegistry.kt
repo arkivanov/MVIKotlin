@@ -1,16 +1,22 @@
 package com.arkivanov.mvikotlin.core.lifecycle
 
-import com.badoo.reaktive.utils.atomic.AtomicReference
-import com.badoo.reaktive.utils.atomic.update
+import com.badoo.reaktive.utils.ensureNeverFrozen
 
-class LifecycleProxy : Lifecycle {
+/**
+ * Implements both [Lifecycle] and [Lifecycle.Callbacks]
+ */
+class LifecycleRegistry : Lifecycle, Lifecycle.Callbacks {
 
-    private val set = AtomicReference(emptySet<Lifecycle.Callbacks>())
-    private val _state = AtomicReference(Lifecycle.State.INITIALIZED)
-    override val state: Lifecycle.State get() = _state.value
+    init {
+        ensureNeverFrozen()
+    }
 
-    override fun register(callbacks: Lifecycle.Callbacks) {
-        set.update { it + callbacks }
+    private var set = emptySet<Lifecycle.Callbacks>()
+    private var _state = Lifecycle.State.INITIALIZED
+    override val state: Lifecycle.State get() = _state
+
+    override fun subscribe(callbacks: Lifecycle.Callbacks) {
+        set = set + callbacks
         driveToCurrentState(callbacks)
     }
 
@@ -26,43 +32,46 @@ class LifecycleProxy : Lifecycle {
         }
     }
 
-    override fun unregister(callbacks: Lifecycle.Callbacks) {
-        set.update { it - callbacks }
+    override fun unsubscribe(callbacks: Lifecycle.Callbacks) {
+        set = set - callbacks
     }
 
-    fun onCreate() {
+    override fun onCreate() {
         setState(required = Lifecycle.State.INITIALIZED, newState = Lifecycle.State.CREATED)
-        set.value.forEach(Lifecycle.Callbacks::onCreate)
+        set.forEach(Lifecycle.Callbacks::onCreate)
     }
 
-    fun onStart() {
+    override fun onStart() {
         setState(required = Lifecycle.State.CREATED, newState = Lifecycle.State.STARTED)
-        set.value.forEach(Lifecycle.Callbacks::onStart)
+        set.forEach(Lifecycle.Callbacks::onStart)
     }
 
-    fun onResume() {
+    override fun onResume() {
         setState(required = Lifecycle.State.STARTED, newState = Lifecycle.State.RESUMED)
-        set.value.forEach(Lifecycle.Callbacks::onResume)
+        set.forEach(Lifecycle.Callbacks::onResume)
     }
 
-    fun onPause() {
+    override fun onPause() {
         setState(required = Lifecycle.State.RESUMED, newState = Lifecycle.State.STARTED)
-        set.value.forEach(Lifecycle.Callbacks::onPause)
+        set.forEach(Lifecycle.Callbacks::onPause)
     }
 
-    fun onStop() {
-        set.value.forEach(Lifecycle.Callbacks::onStop)
+    override fun onStop() {
+        set.forEach(Lifecycle.Callbacks::onStop)
         setState(required = Lifecycle.State.STARTED, newState = Lifecycle.State.CREATED)
     }
 
-    fun onDestroy() {
-        set.value.forEach(Lifecycle.Callbacks::onDestroy)
+    override fun onDestroy() {
+        set.forEach(Lifecycle.Callbacks::onDestroy)
+        set = emptySet()
         setState(required = Lifecycle.State.CREATED, newState = Lifecycle.State.DESTROYED)
     }
 
     private fun setState(required: Lifecycle.State, newState: Lifecycle.State) {
-        require(_state.compareAndSet(required, newState)) {
-            "Expected lifecycle state $required, actual ${_state.value}"
+        check(_state == required) {
+            "Expected lifecycle state $required, actual $_state"
         }
+
+        _state = newState
     }
 }

@@ -24,6 +24,16 @@ fun bind(builder: BindingsBuilder.() -> Unit): Binder =
     BuilderBinder()
         .also(builder)
 
+/**
+ * A builder function for the [Binder]. Also attaches the created [Binder] to the provided [Lifecycle].
+ * See [Binder.attachTo(...)][com.arkivanov.mvikotlin.core.binder.attachTo] for more information.
+ *
+ * @param lifecycle a [Lifecycle] to attach the created [Binder] to
+ * @param mode a [BinderLifecycleMode] to be used when attaching the created [Binder] to the [Lifecycle]
+ * @param builder the DSL block function
+ *
+ * @return a new instance of the [Binder]
+ */
 fun bind(lifecycle: Lifecycle, mode: BinderLifecycleMode, builder: BindingsBuilder.() -> Unit): Binder =
     bind(builder)
         .attachTo(lifecycle, mode)

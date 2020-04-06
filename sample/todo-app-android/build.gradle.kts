@@ -37,7 +37,6 @@ dependencies {
     implementation(Deps.AndroidX.ConstraintLayout.ConstraintLayout)
     implementation(Deps.AndroidX.DrawerLayout.DrawerLayout)
     implementation(Deps.AndroidX.Core.Ktx)
-    implementation(Deps.AndroidX.Lifecycle.LifecycleCommonJava8)
     implementation(Deps.Jetbrains.Kotlinx.Coroutines.Core)
     implementation(Deps.Jetbrains.Kotlinx.Coroutines.Android)
     implementation(project(":mvikotlin"))

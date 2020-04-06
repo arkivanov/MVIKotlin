@@ -6,6 +6,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle as AndroidLifecycle
 
+/**
+ * Converts Androidx [Lifecycle][AndroidLifecycle] to MviKotlin [Lifecycle]
+ */
 fun AndroidLifecycle.toMviLifecycle(): Lifecycle = AndroidxLifecycleInterop(this)
 
 private class AndroidxLifecycleInterop(
@@ -24,13 +27,13 @@ private class AndroidxLifecycleInterop(
                 AndroidLifecycle.State.RESUMED -> Lifecycle.State.RESUMED
             }
 
-    override fun register(callbacks: Lifecycle.Callbacks) {
+    override fun subscribe(callbacks: Lifecycle.Callbacks) {
         val observer = callbacks.toLifecycleObserver()
         callbacksToObserver[callbacks] = observer
         androidLifecycle.addObserver(observer)
     }
 
-    override fun unregister(callbacks: Lifecycle.Callbacks) {
+    override fun unsubscribe(callbacks: Lifecycle.Callbacks) {
         val observer = callbacksToObserver.remove(callbacks) ?: return
         androidLifecycle.removeObserver(observer)
     }

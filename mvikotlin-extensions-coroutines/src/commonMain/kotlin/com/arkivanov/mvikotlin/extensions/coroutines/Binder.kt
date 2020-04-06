@@ -27,14 +27,25 @@ fun bind(mainContext: CoroutineContext = Dispatchers.Main, builder: BindingsBuil
     BuilderBinder(mainContext)
         .also(builder)
 
+/**
+ * A builder function for the [Binder]. Also attaches the created [Binder] to the provided [Lifecycle].
+ * See [Binder.attachTo(...)][com.arkivanov.mvikotlin.core.binder.attachTo] for more information.
+ *
+ * @param lifecycle a [Lifecycle] to attach the created [Binder] to
+ * @param mode a [BinderLifecycleMode] to be used when attaching the created [Binder] to the [Lifecycle]
+ * @param mainContext a main CoroutineContext, the default value is Dispatchers.Main
+ * @param builder the DSL block function
+ *
+ * @return a new instance of the [Binder]
+ */
 fun bind(
     lifecycle: Lifecycle,
-    binderLifecycleMode: BinderLifecycleMode,
+    mode: BinderLifecycleMode,
     mainContext: CoroutineContext = Dispatchers.Main,
     builder: BindingsBuilder.() -> Unit
 ): Binder =
     bind(mainContext, builder)
-        .attachTo(lifecycle, binderLifecycleMode)
+        .attachTo(lifecycle, mode)
 
 interface BindingsBuilder {
 
