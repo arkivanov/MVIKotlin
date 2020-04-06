@@ -13,7 +13,7 @@ import TodoLib
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    private let lifecycle = LifecycleProxy()
+    private let lifecycle = LifecycleRegistry()
     private let controller: TodoListController
     
     override init() {
