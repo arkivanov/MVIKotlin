@@ -214,7 +214,7 @@ fun Project.setupPublication() {
     plugins.apply("maven-publish")
 
     group = "com.arkivanov.mvikotlin"
-    version = "2.0.0-beta"
+    version = "2.0.0-beta1"
 
     val userId = "arkivanov"
     val userName = "Arkadii Ivanov"
