@@ -32,7 +32,7 @@ class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsCon
             todoEditStore.labels.map(TodoDetailsStore.Label::toBusEvent) bindTo eventBus
         }
 
-        dependencies.lifecycle.doOnDestroy { todoEditStore.dispose() }
+        dependencies.lifecycle.doOnDestroy(todoEditStore::dispose)
     }
 
     override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
