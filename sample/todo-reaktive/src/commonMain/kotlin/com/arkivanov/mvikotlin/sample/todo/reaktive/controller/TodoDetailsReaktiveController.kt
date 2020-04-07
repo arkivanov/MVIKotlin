@@ -1,6 +1,8 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
-import com.arkivanov.mvikotlin.core.binder.Binder
+import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
+import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
@@ -25,40 +27,21 @@ class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsCon
             itemId = dependencies.itemId
         ).create()
 
-    private val storeBinder =
-        bind {
+    init {
+        bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY) {
             todoEditStore.labels.map(TodoDetailsStore.Label::toBusEvent) bindTo eventBus
         }
 
-    private var viewBinder: Binder? = null
-
-    init {
-        storeBinder.start()
+        dependencies.lifecycle.doOnDestroy(todoEditStore::dispose)
     }
 
-    override fun onViewCreated(todoDetailsView: TodoDetailsView) {
-        viewBinder =
-            bind {
-                todoDetailsView.events.map(TodoDetailsView.Event::toIntent) bindTo todoEditStore
-                todoEditStore.states.map(TodoDetailsStore.State::toViewModel) bindTo todoDetailsView
-            }
-    }
+    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
+        bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY) {
+            todoDetailsView.events.map(TodoDetailsView.Event::toIntent) bindTo todoEditStore
+        }
 
-    override fun onStart() {
-        viewBinder?.start()
-    }
-
-    override fun onStop() {
-        viewBinder?.stop()
-    }
-
-    override fun onViewDestroyed() {
-        viewBinder = null
-    }
-
-    override fun onDestroy() {
-        storeBinder.stop()
-        todoEditStore.dispose()
+        bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
+            todoEditStore.states.map(TodoDetailsStore.State::toViewModel) bindTo todoDetailsView
+        }
     }
 }
-

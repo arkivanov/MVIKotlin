@@ -43,7 +43,7 @@ object Deps {
     object Android {
         object Tools {
             object Build : Group(name = "com.android.tools.build") {
-                object Gradle : Dependency(group = Build, name = "gradle", version = "3.5.2")
+                object Gradle : Dependency(group = Build, name = "gradle", version = "3.6.0")
             }
         }
     }
@@ -68,6 +68,10 @@ object Deps {
         object DrawerLayout : Group(name = "androidx.drawerlayout") {
             object DrawerLayout : Dependency(group = AndroidX.DrawerLayout, name = "drawerlayout", version = "1.0.0")
         }
+
+        object Lifecycle : Group(name = "androidx.lifecycle") {
+            object LifecycleCommonJava8 : Dependency(group = Lifecycle, name = "lifecycle-common-java8", version = "2.2.0")
+        }
     }
 
     object Badoo {
@@ -85,7 +89,7 @@ object Deps {
         object Json : Dependency(group = Deps.Json, name = "json", version = "20190722")
     }
 
-    object TouchLab : Group(name = "co.touchlab"){
+    object TouchLab : Group(name = "co.touchlab") {
         object KotlinXcodeSync : Dependency(group = TouchLab, name = "kotlinxcodesync", version = "0.2")
     }
 

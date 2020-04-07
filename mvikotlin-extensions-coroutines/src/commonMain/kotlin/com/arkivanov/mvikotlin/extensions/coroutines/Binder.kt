@@ -1,6 +1,9 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.binder.Binder
+import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
+import com.arkivanov.mvikotlin.core.binder.attachTo
+import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.core.view.ViewRenderer
@@ -21,8 +24,28 @@ import kotlin.coroutines.CoroutineContext
  * @return a new instance of the [Binder]
  */
 fun bind(mainContext: CoroutineContext = Dispatchers.Main, builder: BindingsBuilder.() -> Unit): Binder =
-    BuilderBinder(mainContext = mainContext)
+    BuilderBinder(mainContext)
         .also(builder)
+
+/**
+ * A builder function for the [Binder]. Also attaches the created [Binder] to the provided [Lifecycle].
+ * See [Binder.attachTo(...)][com.arkivanov.mvikotlin.core.binder.attachTo] for more information.
+ *
+ * @param lifecycle a [Lifecycle] to attach the created [Binder] to
+ * @param mode a [BinderLifecycleMode] to be used when attaching the created [Binder] to the [Lifecycle]
+ * @param mainContext a main CoroutineContext, the default value is Dispatchers.Main
+ * @param builder the DSL block function
+ *
+ * @return a new instance of the [Binder]
+ */
+fun bind(
+    lifecycle: Lifecycle,
+    mode: BinderLifecycleMode,
+    mainContext: CoroutineContext = Dispatchers.Main,
+    builder: BindingsBuilder.() -> Unit
+): Binder =
+    bind(mainContext, builder)
+        .attachTo(lifecycle, mode)
 
 interface BindingsBuilder {
 

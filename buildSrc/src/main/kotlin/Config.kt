@@ -69,8 +69,15 @@ private val BUILD_TYPE_TO_BUILD_TARGETS: Map<BuildType, Set<BuildTarget>> =
 
 val BuildType.buildTargets: Set<BuildTarget> get() = requireNotNull(BUILD_TYPE_TO_BUILD_TARGETS[this])
 
+@Suppress("UNCHECKED_CAST")
+var ExtensionAware.buildTargets: Set<BuildTarget>
+    get() = if (extra.has("project_build_targets")) extra["project_build_targets"] as Set<BuildTarget> else ALL_BUILD_TARGETS
+    set(value) {
+        extra["project_build_targets"] = value
+    }
+
 inline fun <reified T : BuildTarget> ExtensionAware.isBuildTargetAvailable(): Boolean =
-    buildType.buildTargets.any { it is T }
+    buildType.buildTargets.any { it is T } && buildTargets.any { it is T }
 
 inline fun <reified T : BuildTarget> ExtensionAware.doIfBuildTargetAvailable(block: () -> Unit) {
     if (isBuildTargetAvailable<T>()) {

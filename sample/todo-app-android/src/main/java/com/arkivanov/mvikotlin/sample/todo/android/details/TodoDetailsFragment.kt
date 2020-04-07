@@ -1,23 +1,23 @@
 package com.arkivanov.mvikotlin.sample.todo.android.details
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.arkivanov.mvikotlin.androidxlifecycleinterop.asMviLifecycle
+import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.sample.todo.android.FrameworkType
+import com.arkivanov.mvikotlin.sample.todo.android.R
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.coroutines.controller.TodoDetailsCoroutinesController
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoDetailsReaktiveController
-import com.arkivanov.mvikotlin.sample.todo.android.FrameworkType
-import com.arkivanov.mvikotlin.sample.todo.android.R
 import java.io.Serializable
 
 class TodoDetailsFragment(
     private val dependencies: Dependencies
-) : Fragment() {
+) : Fragment(R.layout.todo_details) {
 
     private lateinit var controller: TodoDetailsController
     private val args: Arguments by lazy { requireArguments().getSerializable(KEY_ARGUMENTS) as Arguments }
@@ -27,7 +27,8 @@ class TodoDetailsFragment(
 
         val todoDetailsControllerDependencies =
             object : TodoDetailsController.Dependencies, Dependencies by dependencies {
-                override val itemId: String get() = args.itemId
+                override val lifecycle: Lifecycle = this@TodoDetailsFragment.lifecycle.asMviLifecycle()
+                override val itemId: String = args.itemId
             }
 
         controller =
@@ -37,37 +38,13 @@ class TodoDetailsFragment(
             }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.todo_details, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        controller.onViewCreated(TodoDetailsViewImpl(root = view, onFinished = dependencies.onDetailsFinishedListener))
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        controller.onStart()
-    }
-
-    override fun onStop() {
-        controller.onStop()
-
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        controller.onViewDestroyed()
-
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        controller.onDestroy()
-
-        super.onDestroy()
+        controller.onViewCreated(
+            TodoDetailsViewImpl(root = view, onFinished = dependencies.onDetailsFinishedListener),
+            viewLifecycleOwner.lifecycle.asMviLifecycle()
+        )
     }
 
     fun setArguments(itemId: String): TodoDetailsFragment {
