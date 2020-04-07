@@ -11,7 +11,7 @@ import androidx.lifecycle.Lifecycle as AndroidLifecycle
  */
 fun AndroidLifecycle.asMviLifecycle(): Lifecycle = AndroidxLifecycleInterop(this)
 
-private class AndroidxLifecycleInterop(
+internal class AndroidxLifecycleInterop(
     private val androidLifecycle: AndroidLifecycle
 ) : Lifecycle {
 

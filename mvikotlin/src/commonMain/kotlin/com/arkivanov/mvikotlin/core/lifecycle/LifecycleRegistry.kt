@@ -16,8 +16,10 @@ class LifecycleRegistry : Lifecycle, Lifecycle.Callbacks {
     override val state: Lifecycle.State get() = _state
 
     override fun subscribe(callbacks: Lifecycle.Callbacks) {
-        set = set + callbacks
-        driveToCurrentState(callbacks)
+        if (_state !== Lifecycle.State.DESTROYED) {
+            set = set + callbacks
+            driveToCurrentState(callbacks)
+        }
     }
 
     private fun driveToCurrentState(callbacks: Lifecycle.Callbacks) {
