@@ -10,14 +10,11 @@ include(":mvikotlin-logging")
 include(":mvikotlin-timetravel")
 include(":mvikotlin-extensions-reaktive")
 include(":mvikotlin-extensions-coroutines")
+include(":androidx-lifecycle-interop")
 include(":sample:todo-common")
 include(":sample:todo-common-internal")
 include(":sample:todo-reaktive")
 include(":sample:todo-coroutines")
-
-doIfBuildTargetAvailable<BuildTarget.Android> {
-    include(":androidx-lifecycle-interop")
-}
 
 //include(":tools:check-publication")
 
