@@ -28,7 +28,7 @@ internal class AndroidxLifecycleInterop(
             }
 
     override fun subscribe(callbacks: Lifecycle.Callbacks) {
-        val observer = callbacks.toLifecycleObserver()
+        val observer = AndroidLifecycleObserverDelegate(callbacks)
         callbacksToObserver[callbacks] = observer
         androidLifecycle.addObserver(observer)
     }
@@ -39,29 +39,31 @@ internal class AndroidxLifecycleInterop(
     }
 }
 
-private fun Lifecycle.Callbacks.toLifecycleObserver(): LifecycleObserver =
-    object : DefaultLifecycleObserver {
-        override fun onCreate(owner: LifecycleOwner) {
-            this@toLifecycleObserver.onCreate()
-        }
+private class AndroidLifecycleObserverDelegate(
+    private val delegate: Lifecycle.Callbacks
+) : DefaultLifecycleObserver {
 
-        override fun onStart(owner: LifecycleOwner) {
-            this@toLifecycleObserver.onStart()
-        }
-
-        override fun onResume(owner: LifecycleOwner) {
-            this@toLifecycleObserver.onResume()
-        }
-
-        override fun onPause(owner: LifecycleOwner) {
-            this@toLifecycleObserver.onPause()
-        }
-
-        override fun onStop(owner: LifecycleOwner) {
-            this@toLifecycleObserver.onStop()
-        }
-
-        override fun onDestroy(owner: LifecycleOwner) {
-            this@toLifecycleObserver.onDestroy()
-        }
+    override fun onCreate(owner: LifecycleOwner) {
+        delegate.onCreate()
     }
+
+    override fun onStart(owner: LifecycleOwner) {
+        delegate.onStart()
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        delegate.onResume()
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        delegate.onPause()
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        delegate.onStop()
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        delegate.onDestroy()
+    }
+}
