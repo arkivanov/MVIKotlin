@@ -3,10 +3,12 @@ buildTargets = setOf(BuildTarget.Android)
 setupMultiplatform()
 setupPublication()
 
-android {
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+doIfBuildTargetAvailable<BuildTarget.Android> {
+    android {
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
     }
 }
 
