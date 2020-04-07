@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle as AndroidLifecycle
 /**
  * Converts Androidx [Lifecycle][AndroidLifecycle] to MviKotlin [Lifecycle]
  */
-fun AndroidLifecycle.toMviLifecycle(): Lifecycle = AndroidxLifecycleInterop(this)
+fun AndroidLifecycle.asMviLifecycle(): Lifecycle = AndroidxLifecycleInterop(this)
 
 private class AndroidxLifecycleInterop(
     private val androidLifecycle: AndroidLifecycle

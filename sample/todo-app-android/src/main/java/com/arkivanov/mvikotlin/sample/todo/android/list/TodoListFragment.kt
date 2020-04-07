@@ -3,7 +3,7 @@ package com.arkivanov.mvikotlin.sample.todo.android.list
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.arkivanov.mvikotlin.androidxlifecycleinterop.toMviLifecycle
+import com.arkivanov.mvikotlin.androidxlifecycleinterop.asMviLifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
@@ -20,7 +20,7 @@ class TodoListFragment(
 
     private val todoListControllerDependencies =
         object : TodoListController.Dependencies, Dependencies by dependencies {
-            override val lifecycle: Lifecycle = this@TodoListFragment.lifecycle.toMviLifecycle()
+            override val lifecycle: Lifecycle = this@TodoListFragment.lifecycle.asMviLifecycle()
         }
 
     private val controller: TodoListController =
@@ -35,7 +35,7 @@ class TodoListFragment(
         controller.onViewCreated(
             TodoListViewImpl(root = view, onItemSelected = dependencies.onItemSelectedListener),
             TodoAddViewImpl(root = view),
-            viewLifecycleOwner.lifecycle.toMviLifecycle()
+            viewLifecycleOwner.lifecycle.asMviLifecycle()
         )
     }
 
