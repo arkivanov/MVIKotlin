@@ -38,6 +38,7 @@ There are a number of modules published:
 - `mvikotlin-extensions-reaktive` - extensions set for Reaktive library (multiplatform)
 - `mvikotlin-extensions-coroutines` - extensions set for coroutines (multiplatform)
 - `rx` - a tiny module with abstractions over rx and coroutines (multiplatform)
+- `androidx-lifecycle-interop` - interoperability between Androidx and MviKotlin Lifecycles
 
 Add required modules to your module`s build.gradle file:
 ```groovy
@@ -79,4 +80,3 @@ Twitter: [@arkann1985](https://twitter.com/arkann1985)
 
 #### Debugging iOS application with MVIKotlin
 [![Debugging iOS application with MVIKotlin](https://img.youtube.com/vi/MJCYQzeL-w8/0.jpg)](https://youtu.be/MJCYQzeL-w8)
-
