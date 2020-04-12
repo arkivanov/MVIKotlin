@@ -30,7 +30,7 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Re
     private val getState: () -> State = { callbacks.requireValue.state }
     private val scope = DisposableScope()
 
-    override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
+    final override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
