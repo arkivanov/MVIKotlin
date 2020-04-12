@@ -36,7 +36,7 @@ class TodoDetailsViewImpl(
                 editText.setTextCompat(it, textWatcher)
             }
 
-            diff(get = Model::isDone, bind = checkBox::setChecked)
+            diff(get = Model::isDone, set = checkBox::setChecked)
 
             diff(Model::isFlowFinished) {
                 if (it) {
