@@ -17,7 +17,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private let controller: TodoListController
     
     override init() {
-        let storeFactory = LoggingStoreFactory(delegate: TimeTravelStoreFactory(), logger: DefaultLogger(), mode: LoggingMode.full)
+        let storeFactory = LoggingStoreFactory(
+            delegate: TimeTravelStoreFactory(fallback: DefaultStoreFactory()),
+            logger: DefaultLogger(),
+            mode: LoggingMode.full
+        )
         let database = TodoDatabaseImpl()
         controller = TodoListReaktiveController(
             dependencies: TodoListControllerDeps(
