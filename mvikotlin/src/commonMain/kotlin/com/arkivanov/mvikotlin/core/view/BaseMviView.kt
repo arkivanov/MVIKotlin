@@ -9,12 +9,13 @@ import com.badoo.reaktive.utils.ensureNeverFrozen
 /**
  * Abstract implementation of the [MviView] that provides ability to dispatch `View Events`
  */
-abstract class AbstractMviView<in Model : Any, Event : Any> : MviView<Model, Event> {
+open class BaseMviView<in Model : Any, Event : Any> : MviView<Model, Event> {
 
     init {
         ensureNeverFrozen()
     }
 
+    protected open val renderer: ViewRenderer<Model>? = null
     private val subject = PublishSubject<Event>()
 
     override fun events(observer: Observer<Event>): Disposable = subject.subscribe(observer)
@@ -27,5 +28,9 @@ abstract class AbstractMviView<in Model : Any, Event : Any> : MviView<Model, Eve
     @MainThread
     protected open fun dispatch(event: Event) {
         subject.onNext(event)
+    }
+
+    override fun render(model: Model) {
+        renderer?.render(model)
     }
 }
