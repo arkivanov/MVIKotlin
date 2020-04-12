@@ -24,12 +24,21 @@ class LoggingStoreFactory(
 ) : StoreFactory {
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
-        name: String,
+        name: String?,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
         reducer: Reducer<State, Result>
     ): Store<Intent, State, Label> {
+        if (name == null) {
+            return delegate.create(
+                initialState = initialState,
+                bootstrapper = bootstrapper,
+                executorFactory = executorFactory,
+                reducer = reducer
+            )
+        }
+
         logger.log(mode) { "$name: created" }
 
         val delegateStore =

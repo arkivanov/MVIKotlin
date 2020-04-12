@@ -12,7 +12,7 @@ import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
 
 val storeFactoryInstance =
     if (BuildConfig.DEBUG) {
-        LoggingStoreFactory(delegate = TimeTravelStoreFactory)
+        LoggingStoreFactory(delegate = TimeTravelStoreFactory(fallback = DefaultStoreFactory))
     } else {
         DefaultStoreFactory
     }
