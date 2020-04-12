@@ -34,7 +34,7 @@ class TodoListViewImpl(
 
     private val renderer =
         diff<Model> {
-            diff(get = Model::items, compare = { a, b -> a === b }, bind = adapter::setItems)
+            diff(get = Model::items, compare = { a, b -> a === b }, set = adapter::setItems)
 
             diff(get = Model::selectedItemId) {
                 if (it != null) {

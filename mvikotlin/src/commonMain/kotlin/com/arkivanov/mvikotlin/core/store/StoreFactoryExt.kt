@@ -4,26 +4,26 @@ import com.arkivanov.mvikotlin.utils.internal.initialize
 import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 
-fun <Intent : Any, State : Any, Label : Any> StoreFactory.create(
+fun <Intent : Any, State : Any> StoreFactory.create(
     name: String,
     initialState: State,
     reducer: Reducer<State, Intent>
-): Store<Intent, State, Label> =
+): Store<Intent, State, Nothing> =
     create(
         name = name,
         initialState = initialState,
-        executorFactory = {
-            object : Executor<Intent, Nothing, State, Intent, Label> {
-                private val callbacks = lateinitAtomicReference<Executor.Callbacks<State, Intent, Label>>()
-
-                override fun init(callbacks: Executor.Callbacks<State, Intent, Label>) {
-                    this.callbacks.initialize(callbacks)
-                }
-
-                override fun handleIntent(intent: Intent) {
-                    callbacks.requireValue.onResult(intent)
-                }
-            }
-        },
+        executorFactory = ::BypassExecutor,
         reducer = reducer
     )
+
+private class BypassExecutor<Intent : Any, in State : Any> : Executor<Intent, Nothing, State, Intent, Nothing> {
+    private val callbacks = lateinitAtomicReference<Executor.Callbacks<State, Intent, Nothing>>()
+
+    override fun init(callbacks: Executor.Callbacks<State, Intent, Nothing>) {
+        this.callbacks.initialize(callbacks)
+    }
+
+    override fun handleIntent(intent: Intent) {
+        callbacks.requireValue.onResult(intent)
+    }
+}
