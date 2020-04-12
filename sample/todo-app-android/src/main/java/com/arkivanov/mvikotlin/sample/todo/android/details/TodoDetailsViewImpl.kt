@@ -6,19 +6,19 @@ import android.widget.CheckBox
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import com.arkivanov.mvikotlin.core.utils.diff
-import com.arkivanov.mvikotlin.core.view.AbstractMviView
-import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
-import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Event
-import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Model
+import com.arkivanov.mvikotlin.core.view.BaseMviView
 import com.arkivanov.mvikotlin.sample.todo.android.R
 import com.arkivanov.mvikotlin.sample.todo.android.SimpleTextWatcher
 import com.arkivanov.mvikotlin.sample.todo.android.getViewById
 import com.arkivanov.mvikotlin.sample.todo.android.setTextCompat
+import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
+import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Event
+import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Model
 
 class TodoDetailsViewImpl(
     root: View,
     private val onFinished: () -> Unit
-) : AbstractMviView<Model, Event>(), TodoDetailsView {
+) : BaseMviView<Model, Event>(), TodoDetailsView {
 
     private val textWatcher =
         object : SimpleTextWatcher() {
@@ -30,7 +30,7 @@ class TodoDetailsViewImpl(
     private val editText = root.getViewById<EditText>(R.id.edit_text)
     private val checkBox = root.getViewById<CheckBox>(R.id.check_completed)
 
-    private val renderer =
+    override val renderer =
         diff<Model> {
             diff(Model::text) {
                 editText.setTextCompat(it, textWatcher)
@@ -53,10 +53,6 @@ class TodoDetailsViewImpl(
 
         editText.addTextChangedListener(textWatcher)
         checkBox.setOnClickListener { dispatch(Event.DoneClicked) }
-    }
-
-    override fun render(model: Model) {
-        renderer.render(model)
     }
 
     private fun onMenuItemClick(item: MenuItem): Boolean =
