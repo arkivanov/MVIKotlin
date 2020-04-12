@@ -16,6 +16,12 @@ internal fun formatLogText(storeName: String, eventType: StoreEventType, value: 
     }
 }
 
+internal fun formatLogText(storeName: String, eventType: StoreEventType, value: Any?, loggingMode: LoggingMode): String? {
+    val deepStringMode = loggingMode.toDeepStringMode() ?: return null
+
+    return formatLogText(storeName, eventType, value, deepStringMode)
+}
+
 internal fun LoggingMode.toDeepStringMode(): DeepStringMode? =
     when (this) {
         LoggingMode.DISABLED -> null

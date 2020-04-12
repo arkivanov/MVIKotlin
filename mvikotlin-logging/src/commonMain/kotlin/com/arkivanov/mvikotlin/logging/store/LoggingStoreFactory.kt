@@ -4,10 +4,12 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.logging.LoggingMode
 import com.arkivanov.mvikotlin.logging.logger.DefaultLogger
 import com.arkivanov.mvikotlin.logging.logger.Logger
+import com.arkivanov.mvikotlin.logging.logger.LoggerWrapper
 import com.arkivanov.mvikotlin.logging.logger.log
 
 /**
@@ -19,9 +21,20 @@ import com.arkivanov.mvikotlin.logging.logger.log
  */
 class LoggingStoreFactory(
     private val delegate: StoreFactory,
-    private val logger: Logger = DefaultLogger,
-    var mode: LoggingMode = LoggingMode.MEDIUM
+    var logger: Logger = DefaultLogger,
+    var mode: LoggingMode = LoggingMode.MEDIUM,
+    var eventTypes: Set<StoreEventType> = StoreEventType.ALL
 ) : StoreFactory {
+
+    private val loggerWrapper: LoggerWrapper =
+        object : LoggerWrapper {
+            override val mode: LoggingMode get() = this@LoggingStoreFactory.mode
+            override val eventTypes: Set<StoreEventType> get() = this@LoggingStoreFactory.eventTypes
+
+            override fun log(text: String) {
+                this@LoggingStoreFactory.logger.log(text)
+            }
+        }
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String?,
@@ -39,7 +52,7 @@ class LoggingStoreFactory(
             )
         }
 
-        logger.log(mode) { "$name: created" }
+        loggerWrapper.log { "$name: created" }
 
         val delegateStore =
             delegate.create(
@@ -52,8 +65,7 @@ class LoggingStoreFactory(
 
         return LoggingStore(
             delegate = delegateStore,
-            logger = logger,
-            loggingMode = ::mode,
+            logger = loggerWrapper,
             name = name
         )
     }
@@ -63,16 +75,14 @@ class LoggingStoreFactory(
     ): Executor<Intent, Action, State, Result, Label> =
         LoggingExecutor(
             delegate = this,
-            logger = logger,
-            loggingMode = ::mode,
+            logger = loggerWrapper,
             storeName = storeName
         )
 
     private fun <State : Any, Result : Any> Reducer<State, Result>.wrap(storeName: String): Reducer<State, Result> =
         LoggingReducer(
             delegate = this,
-            logger = logger,
-            loggingMode = ::mode,
+            logger = loggerWrapper,
             storeName = storeName
         )
 }

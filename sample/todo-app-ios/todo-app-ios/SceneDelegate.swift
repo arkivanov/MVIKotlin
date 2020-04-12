@@ -20,7 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let storeFactory = LoggingStoreFactory(
             delegate: TimeTravelStoreFactory(fallback: DefaultStoreFactory()),
             logger: DefaultLogger(),
-            mode: LoggingMode.full
+            mode: LoggingMode.full,
+            eventTypes: StoreEventType.Companion().ALL
         )
         let database = TodoDatabaseImpl()
         controller = TodoListReaktiveController(
