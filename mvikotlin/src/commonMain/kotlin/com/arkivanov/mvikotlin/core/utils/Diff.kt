@@ -50,12 +50,12 @@ open class DiffBuilder<Model : Any> {
      *
      * @param get a `getter` to extract a piece of data (typically a field value) from the original `Model`
      * @param compare a `comparator` to compare a new value with the old one, default is `equals`
-     * @param bind a `consumer` of the values, receives the new value if it is the first value or if the `comparator` returned `false`
+     * @param set a `consumer` of the values, receives the new value if it is the first value or if the `comparator` returned `false`
      */
     inline fun <T> diff(
         crossinline get: (Model) -> T,
         crossinline compare: (new: T, old: T) -> Boolean = { a, b -> a == b },
-        crossinline bind: (T) -> Unit
+        crossinline set: (T) -> Unit
     ) {
         binders +=
             object : ViewRenderer<Model> {
@@ -67,7 +67,7 @@ open class DiffBuilder<Model : Any> {
                     this.oldValue = newValue
 
                     if ((oldValue == null) || !compare(newValue, oldValue)) {
-                        bind(newValue)
+                        set(newValue)
                     }
                 }
             }
