@@ -87,7 +87,29 @@ class LoggingStoreFactoryTest {
         logger.assertSubString("initial_state_some_result")
     }
 
+    @Test
+    fun does_not_log_without_name() {
+        val bootstrapper = TestBootstrapper()
+        val executor = TestExecutor()
+
+        val store =
+            store(
+                name = null,
+                initialState = "initial_state",
+                bootstrapper = bootstrapper,
+                executorFactory = { executor },
+                reducer = reducer { this },
+                logger = logger
+            )
+
+        bootstrapper.dispatch("action")
+        store.accept("intent")
+
+        logger.assertNoLogs()
+    }
+
     private fun store(
+        name: String? = "name",
         initialState: String = "initial",
         bootstrapper: Bootstrapper<String>? = null,
         executorFactory: () -> Executor<String, String, String, String, String> = { TestExecutor() },
@@ -97,7 +119,7 @@ class LoggingStoreFactoryTest {
         val delegate =
             object : StoreFactory {
                 override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
-                    name: String,
+                    name: String?,
                     initialState: State,
                     bootstrapper: Bootstrapper<Action>?,
                     executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
@@ -118,7 +140,7 @@ class LoggingStoreFactoryTest {
         )
 
         return factory.create(
-            name = "store",
+            name = name,
             initialState = initialState,
             bootstrapper = bootstrapper,
             executorFactory = executorFactory,
@@ -135,6 +157,10 @@ class LoggingStoreFactoryTest {
 
         fun assertSubString(text: String) {
             assertEquals(1, logs.value.count { it.contains(text) })
+        }
+
+        fun assertNoLogs() {
+            assertEquals(emptyList(), logs.value)
         }
     }
 

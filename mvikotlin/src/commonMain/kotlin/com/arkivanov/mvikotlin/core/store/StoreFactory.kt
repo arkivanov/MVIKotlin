@@ -10,7 +10,7 @@ interface StoreFactory {
 
     @MainThread
     fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
-        name: String,
+        name: String? = null,
         initialState: State,
         bootstrapper: Bootstrapper<Action>? = null,
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,

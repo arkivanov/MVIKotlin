@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 
 fun <Intent : Any, State : Any> StoreFactory.create(
-    name: String,
+    name: String? = null,
     initialState: State,
     reducer: Reducer<State, Intent>
 ): Store<Intent, State, Nothing> =

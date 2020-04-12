@@ -12,7 +12,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 object DefaultStoreFactory : StoreFactory {
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
-        name: String,
+        name: String?,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
