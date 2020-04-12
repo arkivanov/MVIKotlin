@@ -4,8 +4,7 @@
 ## MVIDroid to MVIKotlin transition
 The library was recently converted to Kotlin Multiplatform. The name of the library 
 was also changed to MVIKotlin, from my point of view it works better for the new format.
-The previous versions of MVIDroid (Android only) are still available though. You can
-find MVIDroid README [here](docs/mvidroid/README.md), and docs [here](docs/mvidroid/docs/index.md).
+The previous versions of MVIDroid (Android only) are still available.
 
 ## What is MVIKotlin
 MVIKotlin is a Kotlin Multiplatform framework that provides a way of (not only) writing
@@ -15,7 +14,7 @@ reactive nor coroutines library. Extensions for [Reaktive](https://github.com/ba
 and for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) libraries are 
 provided as separate modules.  
 
-![MVI](docs/media/mvi.jpg)
+![MVIKotlin](docs/media/mvikotlin.jpg)
 
 ## Setup
 Recommended minimum Gradle version is 5.3. Please read first the documentation about

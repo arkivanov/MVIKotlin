@@ -24,13 +24,13 @@ import com.arkivanov.mvikotlin.rx.Observer
  * ```kotlin
  * interface MyStore : Store<Intent, State, Label> {
  *     sealed class Intent {
- *         /* Intent entries */
+ *         // Intent entries
  *     }
  *
  *     data class State()
  *
  *     sealed class Label {
- *         /* News entries */
+ *         // News entries
  *     }
  * }
  *
@@ -50,25 +50,25 @@ import com.arkivanov.mvikotlin.rx.Observer
  *         }
  *
  *     private sealed class Action {
- *         /* Action entries */
+ *         // Action entries
  *     }
  *
  *     private sealed class Result {
- *         /* Result entries */
+ *         // Result entries
  *     }
  *
  *     private class BootstrapperImpl: /* Extend either ReaktiveBootstrapper or SuspendBootstrapper */ {
- *         /* Implementation here */
+ *         // Implementation here
  *     }
  *
  *     private class ExecutorImpl: /* Extend either ReaktiveExecutor or SuspendExecutor */ {
- *         /* Implementation here */
+ *         // Implementation here
  *     }
  *
  *     private object ReducerImpl : Reducer<State, Result> {
  *         override fun State.reduce(result: Result): State =
  *             when (result) {
- *                 /* Handle all possible results here and return a new State*/
+ *                 // Handle all possible results here and return a new State
  *             }
  *     }
  * }
