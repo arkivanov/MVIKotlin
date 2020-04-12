@@ -27,7 +27,7 @@ open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Res
     private val getState: () -> State = { callbacks.requireValue.state }
     private val scope = CoroutineScope(mainContext)
 
-    override fun init(callbacks: Callbacks<State, Result, Label>) {
+    final override fun init(callbacks: Callbacks<State, Result, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
