@@ -10,7 +10,7 @@ import com.arkivanov.mvikotlin.utils.internal.requireValue
  *
  * @param actions an array of the `Actions` to be dispatched
  */
-class SimpleBootstrapper<Action : Any>(
+class SimpleBootstrapper<out Action : Any>(
     private vararg val actions: Action
 ) : Bootstrapper<Action> {
 
