@@ -23,7 +23,7 @@ class LoggingStoreFactory(
     private val delegate: StoreFactory,
     var logger: Logger = DefaultLogger,
     var mode: LoggingMode = LoggingMode.MEDIUM,
-    var eventTypes: Set<StoreEventType> = StoreEventType.values().toSet()
+    var eventTypes: Set<StoreEventType> = StoreEventType.ALL
 ) : StoreFactory {
 
     private val loggerWrapper: LoggerWrapper =
