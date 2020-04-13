@@ -1,3 +1,5 @@
+[Overview](index.md) | [Store](store.md) | [View](view.md) | Binding and Lifecycle | [Logging](logging.md) | [Time travel](time_travel.md)
+
 ## Binding
 
 Connecting inputs and outputs sounds like a simple task. And indeed it is. But it can be even easier if you use [`Binder`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/binder/Binder.kt). It provides just two methods: `start()` and `stop()`. When you call `start()` it connects (subscribes) outputs with inputs. And when you call `stop()` it disconnects (unsubscribes).
@@ -90,3 +92,5 @@ class CalculatorController {
 We passed the `viewLifecycle` together with the `CalculatorView` itself and used it for binding. Now `Binder` will automatically connect endpoints when started and disconnect when stopped.
 
 Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
+
+[Overview](index.md) | [Store](store.md) | [View](view.md) | Binding and Lifecycle | [Logging](logging.md) | [Time travel](time_travel.md)

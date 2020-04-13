@@ -1,3 +1,5 @@
+Overview | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+
 ## Overview
 
 ### What is MVI
@@ -40,3 +42,5 @@ MVI loves reactivity, it's all about data streams and transformations. MVIKotlin
 MVIKotlin is Kotlin/Native friendly and supports its tricky memory model (please read about Kotlin/Native [concurrency](https://kotlinlang.org/docs/reference/native/concurrency.html) and [immutability](https://kotlinlang.org/docs/reference/native/immutability.html) if you are unsure).
 
 `Stores` are freezable, however you should be careful not to freeze any dependency that is not intended to be frozen. When you subscribe to a `Store` the subscriber will not be frozen, unless you switch threads somewhere down the stream.
+
+Overview | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)

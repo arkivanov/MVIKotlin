@@ -1,3 +1,5 @@
+[Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | Time travel
+
 ## Time travel
 
 Time travel is a power debugging tool. Basically it allows you to record all events and states from all active `Stores`. When events are recorded you can explore them, replay and debug.
@@ -54,3 +56,5 @@ Check out the following videos that demonstrate time travel:
 - [Debugging iOS application with MVIKotlin](https://youtu.be/MJCYQzeL-w8)
 
 Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
+
+[Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | Time travel

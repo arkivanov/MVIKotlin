@@ -1,3 +1,5 @@
+[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+
 ## Store
 
 `Store` is the place for business logic. In MVIKotlin it is represented by the `Store` interface which is located in the `mvikotlin` module. You can check its definition [here](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Store.kt).
@@ -389,3 +391,5 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
     // ...
 }
 ```
+
+[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
