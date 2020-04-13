@@ -11,26 +11,28 @@ import TodoLib
 
 struct TodoDetails: View {
     var id: String
-    @EnvironmentObject var controllerDeps: ControllerDeps
+
     @ObservedObject var detailsView = TodoDetailsViewImpl()
-    @State var lifecycle = LifecycleRegistry()
+    @EnvironmentObject var controllerDeps: ControllerDeps
+    
     @Environment(\.presentationMode) var presentation
+    @State var lifecycle = LifecycleRegistry()
     
     var body: some View {
-        let b = Binding<String>(
+        let text = Binding<String>(
             get: { self.detailsView.model?.text ?? "" },
             set: { text in self.detailsView.dispatch(event: TodoDetailsViewEvent.TextChanged(text: text)) }
         )
         
-        let s = Binding<Bool>(
+        let isDone = Binding<Bool>(
             get: { self.detailsView.model?.isDone ?? false },
             set: { bool in self.detailsView.dispatch(event: TodoDetailsViewEvent.DoneClicked()) }
         )
         
         return VStack(alignment: .leading, spacing: 20) {
-            TextField("Write ToDo", text: b)
+            TextField("Write ToDo", text: text)
             
-            Toggle(isOn: s) {
+            Toggle(isOn: isDone) {
                 Text("Completed")
             }
             
@@ -61,7 +63,6 @@ struct TodoDetails: View {
             self.lifecycle.onDestroy()
         }
     }
-    
 }
 
 struct TodoDetails_Previews: PreviewProvider {
