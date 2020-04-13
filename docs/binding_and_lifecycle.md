@@ -2,7 +2,7 @@
 
 ## Binding
 
-Connecting inputs and outputs sounds like a simple task. And indeed it is. But it can be even easier if you use [`Binder`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/binder/Binder.kt). It provides just two methods: `start()` and `stop()`. When you call `start()` it connects (subscribes) outputs with inputs. And when you call `stop()` it disconnects (unsubscribes).
+Connecting inputs and outputs sounds like a simple task. And indeed it is. But it can be even easier if you use [Binder](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/binder/Binder.kt). It provides just two methods: `start()` and `stop()`. When you call `start()` it connects (subscribes) outputs with inputs. And when you call `stop()` it disconnects (unsubscribes).
 
 ### Creating a Binder
 
@@ -67,10 +67,10 @@ Same way you can bind any outputs with any inputs. E.g. you can bind `Labels` of
 
 ## Lifecycle
 
-MVIKotlin provides an abstraction over [`Lifecycle`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/Lifecycle.kt) states and events. Pleaser take a look at the following diagram:
+MVIKotlin provides an abstraction over [Lifecycle](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/Lifecycle.kt) states and events. Pleaser take a look at the following diagram:
 ![Lifecycle](media/lifecycle.jpg)
 
-You can subscribe to `Lifecycle` events and unsubscribe from them. You can convert the [AndroidX Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle) to MVIKotlin `Lifecycle` using `androidx-lifecycle-interop` module. Also there is [`LifecycleRegistry`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/LifecycleRegistry.kt) which implements both the `Lifecycle` and `Lifecycle.Callbacks` interfaces, so you can manually control it.
+You can subscribe to `Lifecycle` events and unsubscribe from them. You can convert the [AndroidX Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle) to MVIKotlin `Lifecycle` using `androidx-lifecycle-interop` module. Also there is [LifecycleRegistry](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/LifecycleRegistry.kt) which implements both the `Lifecycle` and `Lifecycle.Callbacks` interfaces, so you can manually control it.
 
 ## Binder + Lifecycle
 

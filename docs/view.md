@@ -5,10 +5,10 @@
 It is not necessary to follow any particular guide when implementing `Views`, however you may find useful what is provided by MVIKotlin.
 
 In MVIKotlin there are two basic interfaces related to `View`:
-- [`ViewRenderer`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/ViewRenderer.kt) - consumes and renders `Models`
-- [`ViewEvents`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/ViewEvents.kt) - produces `Events`
+- [ViewRenderer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/ViewRenderer.kt) - consumes and renders `Models`
+- [ViewEvents](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/ViewEvents.kt) - produces `Events`
 
-There is also the [`MviView`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/MviView.kt) interface which is just a combination of both `ViewRenderer` and `ViewEvents` interfaces. Again you normally don't need to implement the `MviView` interface directly. Instead you can extend the [`BaseMviView`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/AbstractMviView.kt) class.
+There is also the [MviView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/MviView.kt) interface which is just a combination of both `ViewRenderer` and `ViewEvents` interfaces. Again you normally don't need to implement the `MviView` interface directly. Instead you can extend the [BaseMviView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/AbstractMviView.kt) class.
 
 ## Implementing a View
 
@@ -92,7 +92,7 @@ For a more complex UI please refer to the [samples](https://github.com/arkivanov
 
 ### Efficient view updates
 
-Sometimes it may be inefficient to update the entire `View` each time a new `Model` is received. For example, if a `View` contains a text and a list, it may be useful not to update the list if only the text is changed. MVIKotlin provides the [`diff`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/utils/Diff.kt) tool for this.
+Sometimes it may be inefficient to update the entire `View` each time a new `Model` is received. For example, if a `View` contains a text and a list, it may be useful not to update the list if only the text is changed. MVIKotlin provides the [diff](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/utils/Diff.kt) tool for this.
 
 Suppose we have a `UserInfoView` that displays a user's name and a list of friends:
 

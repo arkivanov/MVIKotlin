@@ -2,7 +2,7 @@
 
 ## Logging
 
-Logging is an essential tool for almost every app. MVIKotlin provides logging functionality via the [`LoggingStoreFactory`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-logging/src/commonMain/kotlin/com/arkivanov/mvikotlin/logging/store/LoggingStoreFactory.kt) wrapper located in the `mvikotlin-logging` module. It is possible to configure verboseness, type of logging events and replace the default logger with a custom one.
+Logging is an essential tool for almost every app. MVIKotlin provides logging functionality via the [LoggingStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-logging/src/commonMain/kotlin/com/arkivanov/mvikotlin/logging/store/LoggingStoreFactory.kt) wrapper located in the `mvikotlin-logging` module. It is possible to configure verboseness, type of logging events and replace the default logger with a custom one.
 
 ### Using LoggingStoreFactory
 

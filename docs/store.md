@@ -30,12 +30,12 @@ This component is basically a function that accepts a `Result` from the `Executo
 
 ## Creating a Store
 
-Normally you don't need to implement the `Store` interface directly. Instead you should use [`StoreFactory`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/StoreFactory.kt) which will create a `Store` for you. All you need to do is to provide up to three components (`Bootstrapper`, `Executor` and `Reducer`) and an initial `State`. `StoreFactory` is used to abstract from a `Store` implementation. We can use different factories depending on circumstances and combine them as needed.
+Normally you don't need to implement the `Store` interface directly. Instead you should use [StoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/StoreFactory.kt) which will create a `Store` for you. All you need to do is to provide up to three components (`Bootstrapper`, `Executor` and `Reducer`) and an initial `State`. `StoreFactory` is used to abstract from a `Store` implementation. We can use different factories depending on circumstances and combine them as needed.
 
 There are a number of factories provided by MVIKotlin:
-- [`DefaultStoreFactory`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-main/src/commonMain/kotlin/com/arkivanov/mvikotlin/main/store/DefaultStoreFactory.kt) creates a default implementation of `Store` and is provided by the `mvikotlin-main` module.
-- [`LoggingStoreFactory`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-logging/src/commonMain/kotlin/com/arkivanov/mvikotlin/logging/store/LoggingStoreFactory.kt) wraps another `StoreFactory` and adds logging, it's provided by the `mvikotlin-logging` module.
-- [`TimeTravelStoreFactory`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/commonMain/kotlin/com/arkivanov/mvikotlin/timetravel/store/TimeTravelStoreFactory.kt) is provided by the `mvikotlin-timetravel` module, it creates a `Store` with time travel functionality.
+- [DefaultStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-main/src/commonMain/kotlin/com/arkivanov/mvikotlin/main/store/DefaultStoreFactory.kt) creates a default implementation of `Store` and is provided by the `mvikotlin-main` module.
+- [LoggingStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-logging/src/commonMain/kotlin/com/arkivanov/mvikotlin/logging/store/LoggingStoreFactory.kt) wraps another `StoreFactory` and adds logging, it's provided by the `mvikotlin-logging` module.
+- [TimeTravelStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/commonMain/kotlin/com/arkivanov/mvikotlin/timetravel/store/TimeTravelStoreFactory.kt) is provided by the `mvikotlin-timetravel` module, it creates a `Store` with time travel functionality.
 
 ### Simplest example
 
@@ -139,8 +139,8 @@ There is only one possible `Result.Value(Long)` which just replaces whatever val
 Now it's time for the `Executor`. If you are interested you can find the interface [here](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Executor.kt). Luckily we don't need to implement this entire interface. Instead we can extend a base implementation.
 
 There are two base `Executors` provided by `MVIKotlin`:
-- [`ReaktiveExecutor`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutor.kt) - this implementation is based on the [Reaktive](https://github.com/badoo/Reaktive) library and is provided by `mvikotlin-extensions-reaktive` module
-- [`SuspendExecutor`](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-coroutines/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/coroutines/SuspendExecutor.kt) - this implementation is based on the [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) library and is provided by `mvikotlin-extensions-coroutines` module
+- [ReaktiveExecutor](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutor.kt) - this implementation is based on the [Reaktive](https://github.com/badoo/Reaktive) library and is provided by `mvikotlin-extensions-reaktive` module
+- [SuspendExecutor](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-coroutines/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/coroutines/SuspendExecutor.kt) - this implementation is based on the [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) library and is provided by `mvikotlin-extensions-coroutines` module
 
 Let's try both.
 
@@ -174,7 +174,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
 So we extended the `ReaktiveExecutor` class and implemented the `executeIntent` method. This method gives us an `Intent` and supplier of a current `State` supplier. For `Intent.Increment` and `Intent.Decrement` we simply send the `Result` with a new value using the `dispatch` method. But for `Intent.Sum` we use `Reaktive` for multithreading. We calculate the sum on the `computationScheduler` and then switch to the `mainScheduler` and `dispatch` the `Result`.
 
-> ⚠️ `ReaktiveExecutor` implements Reaktive's [`DisposableScope`](https://github.com/badoo/Reaktive#subscription-management-with-disposablescope) which provides a bunch of additional extension functions. We used one of those functions - `subscribeScoped`. This ensures that the subscription is disposed when the `Store` (and so the `Executor`) is disposed.
+> ⚠️ `ReaktiveExecutor` implements Reaktive's [DisposableScope](https://github.com/badoo/Reaktive#subscription-management-with-disposablescope) which provides a bunch of additional extension functions. We used one of those functions - `subscribeScoped`. This ensures that the subscription is disposed when the `Store` (and so the `Executor`) is disposed.
 
 #### SuspendExecutor
 
