@@ -59,7 +59,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 
 ## Documentation
 
-Coming soon, the code is documented though.
+[https://arkivanov.github.io/MVIKotlin](https://arkivanov.github.io/MVIKotlin)
 
 ## Sample project
 
