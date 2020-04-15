@@ -11,7 +11,7 @@ import TodoLib
 
 struct TodoDetails: View {
     var id: String
-
+    
     @ObservedObject var detailsView = TodoDetailsViewImpl()
     @EnvironmentObject var controllerDeps: ControllerDeps
     
@@ -29,19 +29,23 @@ struct TodoDetails: View {
             set: { bool in self.detailsView.dispatch(event: TodoDetailsViewEvent.DoneClicked()) }
         )
         
-        return VStack(alignment: .leading, spacing: 20) {
+        return VStack() {
+            
             TextField("Write ToDo", text: text)
+            
+            Spacer()
             
             Toggle(isOn: isDone) {
                 Text("Completed")
             }
-            
-            Button(action: {
+                
+            .navigationBarTitle("Details")
+            .navigationBarItems(trailing: Button(action: {
                 self.detailsView.dispatch(event: TodoDetailsViewEvent.DeleteClicked())
                 self.presentation.wrappedValue.dismiss()
             }) {
                 Image(systemName: "trash")
-            }
+            })
             
         }.onAppear() {
             let controller = TodoDetailsReaktiveController(
