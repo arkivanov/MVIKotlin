@@ -19,23 +19,20 @@ struct TodoDetails: View {
     @State var lifecycle = LifecycleRegistry()
     
     var body: some View {
-        let text = Binding<String>(
-            get: { self.detailsView.model?.text ?? "" },
-            set: { text in self.detailsView.dispatch(event: TodoDetailsViewEvent.TextChanged(text: text)) }
-        )
-        
-        let isDone = Binding<Bool>(
-            get: { self.detailsView.model?.isDone ?? false },
-            set: { bool in self.detailsView.dispatch(event: TodoDetailsViewEvent.DoneClicked()) }
-        )
         
         return VStack() {
             
-            TextField("Write ToDo", text: text)
+            TextField("Write ToDo", text: Binding<String>(
+                get: { self.detailsView.model?.text ?? "" },
+                set: { text in self.detailsView.dispatch(event: TodoDetailsViewEvent.TextChanged(text: text)) }
+            ))
             
             Spacer()
             
-            Toggle(isOn: isDone) {
+            Toggle(isOn: Binding<Bool>(
+                get: { self.detailsView.model?.isDone ?? false },
+                set: { bool in self.detailsView.dispatch(event: TodoDetailsViewEvent.DoneClicked()) }
+            )) {
                 Text("Completed")
             }
                 
