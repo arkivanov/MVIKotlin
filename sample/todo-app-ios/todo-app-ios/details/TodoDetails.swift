@@ -35,7 +35,6 @@ struct TodoDetails: View {
             )) {
                 Text("Completed")
             }
-                
             .navigationBarTitle("Details")
             .navigationBarItems(trailing: Button(action: {
                 self.detailsView.dispatch(event: TodoDetailsViewEvent.DeleteClicked())
