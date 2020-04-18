@@ -10,13 +10,8 @@ import SwiftUI
 import TodoLib
 
 struct TodoDetails: View {
-    var id: String
-    
     @ObservedObject var detailsView = TodoDetailsViewImpl()
-    @EnvironmentObject var controllerDeps: ControllerDeps
-    
     @Environment(\.presentationMode) var presentation
-    @State var lifecycle = LifecycleRegistry()
     
     var body: some View {
         
@@ -42,31 +37,12 @@ struct TodoDetails: View {
             }) {
                 Image(systemName: "trash")
             })
-            
-        }.onAppear() {
-            let controller = TodoDetailsReaktiveController(
-                dependencies: TodoDetailsControllerDeps(
-                    storeFactory: self.controllerDeps.storeFactory,
-                    database: self.controllerDeps.database,
-                    lifecycle: self.lifecycle,
-                    itemId: self.id
-                )
-            )
-            
-            self.lifecycle.onCreate()
-            controller.onViewCreated(todoDetailsView: self.detailsView, viewLifecycle: self.lifecycle)
-            self.lifecycle.onStart()
-            self.lifecycle.onResume()
-        }.onDisappear() {
-            self.lifecycle.onPause()
-            self.lifecycle.onStop()
-            self.lifecycle.onDestroy()
         }
     }
 }
 
 struct TodoDetails_Previews: PreviewProvider {
     static var previews: some View {
-        TodoDetails(id: "")
+        TodoDetails()
     }
 }

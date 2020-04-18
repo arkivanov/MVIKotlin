@@ -15,7 +15,7 @@ struct TodoList: View {
     
     var body: some View {
         List(listView.model?.items ?? []) { item in
-            NavigationLink( destination: TodoDetails(id: item.id)) {
+            NavigationLink( destination: TodoDetailsParent(id: item.id)) {
                 TodoRow(
                     text: item.data.text,
                     isDone: item.data.isDone,
