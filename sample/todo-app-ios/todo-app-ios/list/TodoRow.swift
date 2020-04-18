@@ -13,12 +13,11 @@ struct TodoRow: View {
     var text: String
     var isDone: Bool
 
-    var onItemClicked: () -> Void
     var onDoneClicked: () -> Void
     var onDeleteClicked: () -> Void
     
     var body: some View {
-        Button(action: self.onItemClicked) {
+        Button(action: {}) {
             HStack {
                 Image(systemName: isDone ? "checkmark.square" : "square")
                     .onTapGesture(perform: self.onDoneClicked)
@@ -37,6 +36,6 @@ struct TodoRow: View {
 
 struct TodoRow_Previews: PreviewProvider {
     static var previews: some View {
-        TodoRow(text: "Item text", isDone: false, onItemClicked: {}, onDoneClicked: {}, onDeleteClicked: {})
+        TodoRow(text: "Item text", isDone: false, onDoneClicked: {}, onDeleteClicked: {})
     }
 }
