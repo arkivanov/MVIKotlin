@@ -12,24 +12,20 @@ import TodoLib
 struct TodoRow: View {
     var text: String
     var isDone: Bool
-
+    
     var onDoneClicked: () -> Void
     var onDeleteClicked: () -> Void
     
     var body: some View {
-        Button(action: {}) {
-            HStack {
-                Image(systemName: isDone ? "checkmark.square" : "square")
-                    .onTapGesture(perform: self.onDoneClicked)
-                
-                Text(text)
-                    .frame(minWidth: nil, idealWidth: nil, maxWidth: .infinity, minHeight: nil, idealHeight: nil, maxHeight: .infinity, alignment: .leading)
-                
-                Button(action: self.onDeleteClicked) {
-                    Image(systemName: "trash")
-                }
-                
-            }
+        HStack {
+            Image(systemName: isDone ? "checkmark.square" : "square")
+                .onTapGesture(perform: self.onDoneClicked)
+            
+            Text(text)
+                .frame(minWidth: nil, idealWidth: nil, maxWidth: .infinity, minHeight: nil, idealHeight: nil, maxHeight: .infinity, alignment: .leading)
+            
+            Image(systemName: "trash")
+                .onTapGesture(perform: self.onDeleteClicked)
         }
     }
 }
