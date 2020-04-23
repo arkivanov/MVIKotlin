@@ -14,7 +14,6 @@ struct TodoRow: View {
     var isDone: Bool
     
     var onDoneClicked: () -> Void
-    var onDeleteClicked: () -> Void
     
     var body: some View {
         HStack {
@@ -23,15 +22,12 @@ struct TodoRow: View {
             
             Text(text)
                 .frame(minWidth: nil, idealWidth: nil, maxWidth: .infinity, minHeight: nil, idealHeight: nil, maxHeight: .infinity, alignment: .leading)
-            
-            Image(systemName: "trash")
-                .onTapGesture(perform: self.onDeleteClicked)
         }
     }
 }
 
 struct TodoRow_Previews: PreviewProvider {
     static var previews: some View {
-        TodoRow(text: "Item text", isDone: false, onDoneClicked: {}, onDeleteClicked: {})
+        TodoRow(text: "Item text", isDone: false, onDoneClicked: {})
     }
 }
