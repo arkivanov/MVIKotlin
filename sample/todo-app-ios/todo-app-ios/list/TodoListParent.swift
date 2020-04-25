@@ -13,7 +13,7 @@ struct TodoListParent: View {
     
     @EnvironmentObject var controllerDeps: ControllerDeps
     
-    @State var lifecycle = LifecycleRegistry()
+    @State var lifecycle: LifecycleRegistry?
     @State var controller: TodoListReaktiveController?
     
     var body: some View {
@@ -27,27 +27,32 @@ struct TodoListParent: View {
         }
         
         return todoListViews.onAppear() {
-            if (self.controller == nil) {
-                self.controller = TodoListReaktiveController(
-                    dependencies: TodoListControllerDeps(
-                        storeFactory: self.controllerDeps.storeFactory,
-                        database: self.controllerDeps.database,
-                        lifecycle: self.lifecycle,
-                        stateKeeperProvider: nil
+            self.lifecycle = LifecycleRegistry()
+            if let lifecycle = self.lifecycle {
+                
+                if (self.controller == nil) {
+                    self.controller = TodoListReaktiveController(
+                        dependencies: TodoListControllerDeps(
+                            storeFactory: self.controllerDeps.storeFactory,
+                            database: self.controllerDeps.database,
+                            lifecycle: lifecycle,
+                            stateKeeperProvider: nil
+                        )
                     )
-                )
+                }
+                
+                self.controller?.onViewCreated(todoListView: todoList.listView,
+                                               todoAddView: todoAdd.addView,
+                                               viewLifecycle: lifecycle)
+                lifecycle.onCreate()
+                lifecycle.onStart()
+                lifecycle.onResume()
             }
-   
-            self.controller?.onViewCreated(todoListView: todoList.listView,
-                                           todoAddView: todoAdd.addView,
-                                           viewLifecycle: self.lifecycle)
-            self.lifecycle.onCreate()
-            self.lifecycle.onStart()
-            self.lifecycle.onResume()
         }.onDisappear() {
-            self.lifecycle.onPause()
-            self.lifecycle.onStop()
-            self.lifecycle.onDestroy()
+            self.lifecycle?.onPause()
+            self.lifecycle?.onStop()
+            self.lifecycle?.onDestroy()
+            self.lifecycle = nil
         }
     }
 }
