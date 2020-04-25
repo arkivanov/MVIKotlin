@@ -13,8 +13,10 @@ struct TodoListParent: View {
     
     @EnvironmentObject var controllerDeps: ControllerDeps
     
+    @State var lifecycle = LifecycleRegistry()
+    @State var controller: TodoListReaktiveController?
+    
     var body: some View {
-        let lifecycle = LifecycleRegistry()
         
         let todoList = TodoList()
         let todoAdd = TodoAdd()
@@ -25,27 +27,27 @@ struct TodoListParent: View {
         }
         
         return todoListViews.onAppear() {
-            let controller = TodoListReaktiveController(
-                dependencies: TodoListControllerDeps(
-                    storeFactory: self.controllerDeps.storeFactory,
-                    database: self.controllerDeps.database,
-                    lifecycle: lifecycle,
-                    stateKeeperProvider: nil
+            if (self.controller == nil) {
+                self.controller = TodoListReaktiveController(
+                    dependencies: TodoListControllerDeps(
+                        storeFactory: self.controllerDeps.storeFactory,
+                        database: self.controllerDeps.database,
+                        lifecycle: self.lifecycle,
+                        stateKeeperProvider: nil
+                    )
                 )
-            )
-            
-            lifecycle.onCreate()
-            controller.onViewCreated(todoListView: todoList.listView,
-                                     todoAddView: todoAdd.addView,
-                                     viewLifecycle: lifecycle)
-            
-            lifecycle.onStart()
-            lifecycle.onResume()
+            }
+   
+            self.controller?.onViewCreated(todoListView: todoList.listView,
+                                           todoAddView: todoAdd.addView,
+                                           viewLifecycle: self.lifecycle)
+            self.lifecycle.onCreate()
+            self.lifecycle.onStart()
+            self.lifecycle.onResume()
         }.onDisappear() {
-            lifecycle.onPause()
-            lifecycle.onStop()
-            lifecycle.onDestroy()
-            
+            self.lifecycle.onPause()
+            self.lifecycle.onStop()
+            self.lifecycle.onDestroy()
         }
     }
 }
