@@ -12,9 +12,8 @@ import TodoLib
 struct TodoListParent: View {
     
     @EnvironmentObject var controllerDeps: ControllerDeps
-    
-    @State var lifecycle = LifecycleRegistry()
     @State var controller: TodoListReaktiveController?
+    @State var viewLifecycle = ViewLifecycle()
     
     var body: some View {
         
@@ -32,22 +31,21 @@ struct TodoListParent: View {
                     dependencies: TodoListControllerDeps(
                         storeFactory: self.controllerDeps.storeFactory,
                         database: self.controllerDeps.database,
-                        lifecycle: self.lifecycle,
+                        lifecycle: self.viewLifecycle.lifecycle,
                         stateKeeperProvider: nil
                     )
                 )
+                self.controller?.onViewCreated(todoListView: todoList.listView,
+                                               todoAddView: todoAdd.addView,
+                                               viewLifecycle: self.viewLifecycle.lifecycle)
             }
-   
-            self.controller?.onViewCreated(todoListView: todoList.listView,
-                                           todoAddView: todoAdd.addView,
-                                           viewLifecycle: self.lifecycle)
-            self.lifecycle.onCreate()
-            self.lifecycle.onStart()
-            self.lifecycle.onResume()
+            
+            self.viewLifecycle.lifecycle.onStart()
+            self.viewLifecycle.lifecycle.onResume()
+            
         }.onDisappear() {
-            self.lifecycle.onPause()
-            self.lifecycle.onStop()
-            self.lifecycle.onDestroy()
+            self.viewLifecycle.lifecycle.onPause()
+            self.viewLifecycle.lifecycle.onStop()
         }
     }
 }

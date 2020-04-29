@@ -16,8 +16,8 @@ struct TodoDetailsParent: View {
     
     var body: some View {
         
-        let lifecycle = LifecycleRegistry()
         let todoDetails = TodoDetails()
+        let lifecycle = LifecycleRegistry()
         
         return todoDetails.onAppear() {
             let controller = TodoDetailsReaktiveController(
@@ -28,11 +28,11 @@ struct TodoDetailsParent: View {
                     itemId: self.id
                 )
             )
-            
-            lifecycle.onCreate()
             controller.onViewCreated(todoDetailsView: todoDetails.detailsView, viewLifecycle: lifecycle)
+            lifecycle.onCreate()
             lifecycle.onStart()
             lifecycle.onResume()
+            
         }.onDisappear() {
             lifecycle.onPause()
             lifecycle.onStop()
