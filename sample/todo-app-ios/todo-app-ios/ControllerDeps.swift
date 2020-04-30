@@ -14,8 +14,8 @@ class ControllerDeps {
     let storeFactory = LoggingStoreFactory(
         delegate: TimeTravelStoreFactory(fallback: DefaultStoreFactory()),
         logger: DefaultLogger(),
-        mode: LoggingMode.full,
-        eventTypes: StoreEventType.Companion().ALL
+        maxLength: LoggingStoreFactory.Companion().DEFAULT_MAX_LENGTH,
+        eventTypes: StoreEventType.Companion().VALUES
     )
 
     let database = TodoDatabaseImpl()
