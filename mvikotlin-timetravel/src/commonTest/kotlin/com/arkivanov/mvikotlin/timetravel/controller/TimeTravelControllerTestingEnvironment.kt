@@ -4,88 +4,64 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.store.TestTimeTravelStore
+import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 
 internal class TimeTravelControllerTestingEnvironment {
 
-    val store1 = TestTimeTravelStore(name = "store1")
-    val store2 = TestTimeTravelStore(name = "store2")
+    val store1 = TestTimeTravelStore()
+    val store2 = TestTimeTravelStore()
 
     val controller = TimeTravelControllerImpl()
     val state: TimeTravelState get() = controller.state
     val events: List<TimeTravelEvent> get() = controller.state.events
 
     init {
-        controller.attachStore(store1)
-        controller.attachStore(store2)
+        controller.attachStore(store1, "store1")
+        controller.attachStore(store2, "store2")
     }
 
-    fun createIntentEventForStore1(value: String = "intent1", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store1", StoreEventType.INTENT, value, state)
+    fun createIntentEvent(value: String = "intent1", state: String = "state1"): Event =
+        Event(StoreEventType.INTENT, value, state)
 
-    fun createActionEventForStore1(value: String = "action1", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store1", StoreEventType.ACTION, value, state)
+    fun createActionEvent(value: String = "action1", state: String = "state1"): Event =
+        Event(StoreEventType.ACTION, value, state)
 
-    fun createResultEventForStore1(value: String = "result1", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store1", StoreEventType.RESULT, value, state)
+    fun createResultEvent(value: String = "result1", state: String = "state1"): Event =
+        Event(StoreEventType.RESULT, value, state)
 
-    fun createStateEventForStore1(value: String = "state1", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store1", StoreEventType.STATE, value, state)
+    fun createStateEvent(value: String = "state1", state: String = "state1"): Event =
+        Event(StoreEventType.STATE, value, state)
 
-    fun createLabelEventForStore1(value: String = "label1", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store1", StoreEventType.LABEL, value, state)
+    fun createLabelEvent(value: String = "label1", state: String = "state1"): Event =
+        Event(StoreEventType.LABEL, value, state)
 
-    fun createIntentEventForStore2(value: String = "intent2", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store2", StoreEventType.INTENT, value, state)
+    fun produceIntentEventForStore1(value: String = "intent1", state: String = "state1"): Event =
+        createIntentEvent(value, state).also(store1::sendEvent)
 
-    fun createActionEventForStore2(value: String = "action2", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store2", StoreEventType.ACTION, value, state)
+    fun produceActionEventForStore1(value: String = "action1", state: String = "state1"): Event =
+        createActionEvent(value, state).also(store1::sendEvent)
 
-    fun createResultEventForStore2(value: String = "result2", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store2", StoreEventType.RESULT, value, state)
+    fun produceResultEventForStore1(value: String = "result1", state: String = "state1"): Event =
+        createResultEvent(value, state).also(store1::sendEvent)
 
-    fun createStateEventForStore2(value: String = "state2", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store2", StoreEventType.STATE, value, state)
+    fun produceStateEventForStore1(value: String = "state1", state: String = "state1"): Event =
+        createStateEvent(value, state).also(store1::sendEvent)
 
-    fun createLabelEventForStore2(value: String = "label2", state: String = "state1"): TimeTravelEvent =
-        TimeTravelEvent("store2", StoreEventType.LABEL, value, state)
+    fun produceLabelEventForStore1(value: String = "label1", state: String = "state1"): Event =
+        createLabelEvent(value, state).also(store1::sendEvent)
 
-    fun produceIntentEventForStore1(value: String = "intent1", state: String = "state1") {
-        store1.sendEvent(createIntentEventForStore1(value, state))
-    }
+    fun produceIntentEventForStore2(value: String = "intent2", state: String = "state2"): Event =
+        createIntentEvent(value, state).also(store2::sendEvent)
 
-    fun produceActionEventForStore1(value: String = "action1", state: String = "state1") {
-        store1.sendEvent(createActionEventForStore1(value, state))
-    }
+    fun produceActionEventForStore2(value: String = "action2", state: String = "state2"): Event =
+        createActionEvent(value, state).also(store2::sendEvent)
 
-    fun produceResultEventForStore1(value: String = "result1", state: String = "state1") {
-        store1.sendEvent(createResultEventForStore1(value, state))
-    }
+    fun produceResultEventForStore2(value: String = "result2", state: String = "state2"): Event =
+        createResultEvent(value, state).also(store2::sendEvent)
 
-    fun produceStateEventForStore1(value: String = "state1", state: String = "state1") {
-        store1.sendEvent(createStateEventForStore1(value, state))
-    }
+    fun produceStateEventForStore2(value: String = "state2", state: String = "state2"): Event =
+        createStateEvent(value, state).also(store2::sendEvent)
 
-    fun produceLabelEventForStore1(value: String = "label1", state: String = "state1") {
-        store1.sendEvent(createLabelEventForStore1(value, state))
-    }
-
-    fun produceIntentEventForStore2(value: String = "intent2", state: String = "state2") {
-        store2.sendEvent(createIntentEventForStore2(value, state))
-    }
-
-    fun produceActionEventForStore2(value: String = "action2", state: String = "state2") {
-        store2.sendEvent(createActionEventForStore2(value, state))
-    }
-
-    fun produceResultEventForStore2(value: String = "result2", state: String = "state2") {
-        store2.sendEvent(createResultEventForStore2(value, state))
-    }
-
-    fun produceStateEventForStore2(value: String = "state2", state: String = "state2") {
-        store2.sendEvent(createStateEventForStore2(value, state))
-    }
-
-    fun produceLabelEventForStore2(value: String = "label2", state: String = "state2") {
-        store2.sendEvent(createLabelEventForStore2(value, state))
-    }
+    fun produceLabelEventForStore2(value: String = "label2", state: String = "state2"): Event =
+        createLabelEvent(value, state).also(store2::sendEvent)
 }

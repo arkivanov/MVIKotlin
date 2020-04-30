@@ -10,16 +10,13 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
-import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
-import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.EventDebugger
-import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.EventProcessor
+import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 import com.badoo.reaktive.utils.atomic.AtomicReference
 import com.badoo.reaktive.utils.atomic.getAndSet
 import com.badoo.reaktive.utils.atomic.update
 import com.badoo.reaktive.utils.atomic.updateAndGet
 
 internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
-    override val name: String,
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
     private val executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
@@ -36,10 +33,10 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
-    private val eventSubject = PublishSubject<TimeTravelEvent>()
+    private val eventSubject = PublishSubject<Event>()
     private val debuggingExecutor = AtomicReference<Executor<*, *, *, *, *>?>(null)
-    override val eventProcessor: EventProcessor = EventProcessorImpl()
-    override val eventDebugger: EventDebugger = EventDebuggerImpl()
+    private val eventProcessor = EventProcessor()
+    private val eventDebugger = EventDebugger()
 
     override fun states(observer: Observer<State>): Disposable {
         assertOnMainThread()
@@ -53,7 +50,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         return labelSubject.subscribe(observer)
     }
 
-    override fun events(observer: Observer<TimeTravelEvent>): Disposable {
+    override fun events(observer: Observer<Event>): Disposable {
         assertOnMainThread()
 
         return eventSubject.subscribe(observer)
@@ -112,11 +109,19 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         }
     }
 
+    override fun process(type: StoreEventType, value: Any) {
+        eventProcessor.process(type, value)
+    }
+
+    override fun debug(type: StoreEventType, value: Any, state: Any) {
+        eventDebugger.debug(type, value, state)
+    }
+
     private fun onEvent(type: StoreEventType, value: Any, state: State) {
         assertOnMainThread()
 
         doIfNotDisposed {
-            eventSubject.onNext(TimeTravelEvent(name, type, value, state))
+            eventSubject.onNext(Event(type = type, value = value, state = state))
         }
     }
 
@@ -130,9 +135,9 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         }
     }
 
-    private inner class EventProcessorImpl : EventProcessor {
+    private inner class EventProcessor {
         @Suppress("UNCHECKED_CAST")
-        override fun process(type: StoreEventType, value: Any) {
+        fun process(type: StoreEventType, value: Any) {
             assertOnMainThread()
 
             doIfNotDisposed {
@@ -158,18 +163,18 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         }
     }
 
-    private inner class EventDebuggerImpl : EventDebugger {
+    private inner class EventDebugger {
         @Suppress("UNCHECKED_CAST")
-        override fun debug(event: TimeTravelEvent) {
+        fun debug(type: StoreEventType, value: Any, state: Any) {
             assertOnMainThread()
 
             doIfNotDisposed {
-                when (event.type) {
-                    StoreEventType.INTENT -> debugIntent(event.value as Intent, event.state as State)
-                    StoreEventType.ACTION -> debugAction(event.value as Action, event.state as State)
-                    StoreEventType.RESULT -> debugResult(event.value as Result, event.state as State)
-                    StoreEventType.STATE -> throw IllegalArgumentException("Can't debug event: $event")
-                    StoreEventType.LABEL -> debugLabel(event.value as Label)
+                when (type) {
+                    StoreEventType.INTENT -> debugIntent(value as Intent, state as State)
+                    StoreEventType.ACTION -> debugAction(value as Action, state as State)
+                    StoreEventType.RESULT -> debugResult(value as Result, state as State)
+                    StoreEventType.STATE -> throw IllegalArgumentException("Can't debug event of type: $type")
+                    StoreEventType.LABEL -> debugLabel(value as Label)
                 }.let {}
             }
         }

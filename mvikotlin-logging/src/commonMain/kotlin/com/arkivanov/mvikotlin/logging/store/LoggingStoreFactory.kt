@@ -6,7 +6,6 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.logging.LoggingMode
 import com.arkivanov.mvikotlin.logging.logger.DefaultLogger
 import com.arkivanov.mvikotlin.logging.logger.Logger
 import com.arkivanov.mvikotlin.logging.logger.LoggerWrapper
@@ -17,22 +16,25 @@ import com.arkivanov.mvikotlin.logging.logger.log
  *
  * @param delegate a [StoreFactory] that will be wrapped by this factory
  * @param logger a [Logger], by default the [DefaultLogger] is used
- * @param mode logging mode, see [LoggingMode] for more information
+ * @param maxLength specifies the maximum log message length
+ * @param eventTypes specifies types of logged events
  */
 class LoggingStoreFactory(
     private val delegate: StoreFactory,
     var logger: Logger = DefaultLogger,
-    var mode: LoggingMode = LoggingMode.MEDIUM,
-    var eventTypes: Set<StoreEventType> = StoreEventType.ALL
+    var maxLength: Int = DEFAULT_MAX_LENGTH,
+    var eventTypes: Set<StoreEventType> = StoreEventType.VALUES
 ) : StoreFactory {
 
     private val loggerWrapper: LoggerWrapper =
         object : LoggerWrapper {
-            override val mode: LoggingMode get() = this@LoggingStoreFactory.mode
+            override val isEnabled: Boolean get() = this@LoggingStoreFactory.maxLength > 0
             override val eventTypes: Set<StoreEventType> get() = this@LoggingStoreFactory.eventTypes
 
             override fun log(text: String) {
-                this@LoggingStoreFactory.logger.log(text)
+                if (isEnabled) {
+                    logger.log(text.take(maxLength))
+                }
             }
         }
 
@@ -85,4 +87,8 @@ class LoggingStoreFactory(
             logger = loggerWrapper,
             storeName = storeName
         )
+
+    companion object {
+        const val DEFAULT_MAX_LENGTH = 256
+    }
 }

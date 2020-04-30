@@ -13,12 +13,14 @@ class TimeTravelSerializerTest {
         val events =
             listOf(
                 TimeTravelEvent(
+                    id = 1L,
                     storeName = "store1",
                     type = StoreEventType.INTENT,
                     value = 100,
                     state = "state1"
                 ),
                 TimeTravelEvent(
+                    id = 2L,
                     storeName = "store2",
                     type = StoreEventType.STATE,
                     value = 200,
