@@ -9,13 +9,14 @@
 import Foundation
 import TodoLib
 
-class ControllerDeps: ObservableObject {
-    @Published var storeFactory = LoggingStoreFactory(
+class ControllerDeps {
+
+    let storeFactory = LoggingStoreFactory(
         delegate: TimeTravelStoreFactory(fallback: DefaultStoreFactory()),
         logger: DefaultLogger(),
         mode: LoggingMode.full,
         eventTypes: StoreEventType.Companion().ALL
     )
-    
-    @Published var database = TodoDatabaseImpl()
+
+    let database = TodoDatabaseImpl()
 }
