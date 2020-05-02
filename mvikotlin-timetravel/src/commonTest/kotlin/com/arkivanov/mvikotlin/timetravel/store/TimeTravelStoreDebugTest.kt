@@ -1,13 +1,12 @@
 package com.arkivanov.mvikotlin.timetravel.store
 
-import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.test.internal.TestExecutor
 import com.arkivanov.mvikotlin.core.test.internal.reducer
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
-import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
+import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.utils.internal.AtomicList
 import com.arkivanov.mvikotlin.utils.internal.add
 import com.arkivanov.mvikotlin.utils.internal.clear
@@ -52,7 +51,7 @@ class TimeTravelStoreDebugTest {
             }
         val store = store(executorFactory = executors::next)
 
-        store.eventDebugger.debug(intentEvent())
+        store.debug(type = StoreEventType.INTENT, value = "intent", state = "")
 
         assertEquals("intent", intent.requireValue)
     }
@@ -70,7 +69,7 @@ class TimeTravelStoreDebugTest {
             }
         val store = store(executorFactory = executors::next)
 
-        store.eventDebugger.debug(intentEvent())
+        store.debug(type = StoreEventType.INTENT, value = "", state = "")
 
         assertFalse(isCalled.value)
     }
@@ -88,7 +87,7 @@ class TimeTravelStoreDebugTest {
             }
         val store = store(executorFactory = executors::next)
 
-        store.eventDebugger.debug(actionEvent())
+        store.debug(type = StoreEventType.ACTION, value = "action", state = "")
 
         assertEquals("action", action.requireValue)
     }
@@ -106,7 +105,7 @@ class TimeTravelStoreDebugTest {
             }
         val store = store(executorFactory = executors::next)
 
-        store.eventDebugger.debug(actionEvent())
+        store.debug(type = StoreEventType.ACTION, value = "", state = "")
 
         assertFalse(isCalled.value)
     }
@@ -116,7 +115,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
 
-        store.eventDebugger.debug(intentEvent(state = "old_state"))
+        store.debug(type = StoreEventType.INTENT, value = "", state = "old_state")
 
         assertEquals("old_state", executors[1].state)
     }
@@ -126,7 +125,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
 
-        store.eventDebugger.debug(actionEvent(state = "old_state"))
+        store.debug(type = StoreEventType.ACTION, value = "", state = "old_state")
 
         assertEquals("old_state", executors[1].state)
     }
@@ -136,7 +135,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
 
-        store.eventDebugger.debug(intentEvent())
+        store.debug(type = StoreEventType.INTENT, value = "", state = "state")
         executors[1].dispatch("result")
 
         assertEquals("state_result", executors[1].state)
@@ -147,7 +146,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
 
-        store.eventDebugger.debug(actionEvent())
+        store.debug(type = StoreEventType.ACTION, value = "", state = "state")
         executors[1].dispatch("result")
 
         assertEquals("state_result", executors[1].state)
@@ -158,7 +157,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
-        store.eventDebugger.debug(intentEvent())
+        store.debug(type = StoreEventType.INTENT, value = "", state = "")
         executors[1].dispatch("result")
 
         assertEquals("initial_state", executors[0].state)
@@ -169,7 +168,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
-        store.eventDebugger.debug(actionEvent())
+        store.debug(type = StoreEventType.ACTION, value = "", state = "")
         executors[1].dispatch("result")
 
         assertEquals("initial_state", executors[0].state)
@@ -183,7 +182,7 @@ class TimeTravelStoreDebugTest {
         store.states(observer(onNext = states::add))
         states.clear()
 
-        store.eventDebugger.debug(intentEvent())
+        store.debug(type = StoreEventType.INTENT, value = "", state = "")
         executors[1].dispatch("result")
 
         assertTrue(states.isEmpty)
@@ -197,7 +196,7 @@ class TimeTravelStoreDebugTest {
         store.states(observer(onNext = states::add))
         states.clear()
 
-        store.eventDebugger.debug(actionEvent())
+        store.debug(type = StoreEventType.ACTION, value = "", state = "")
         executors[1].dispatch("result")
 
         assertTrue(states.isEmpty)
@@ -208,7 +207,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
-        store.eventDebugger.debug(intentEvent())
+        store.debug(type = StoreEventType.INTENT, value = "", state = "")
         executors[1].dispatch("result")
 
         assertEquals("initial_state", store.state)
@@ -219,7 +218,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
-        store.eventDebugger.debug(actionEvent())
+        store.debug(type = StoreEventType.ACTION, value = "", state = "")
         executors[1].dispatch("result")
 
         assertEquals("initial_state", store.state)
@@ -232,7 +231,7 @@ class TimeTravelStoreDebugTest {
         val labels = AtomicList<String>()
         store.labels(observer(onNext = labels::add))
 
-        store.eventDebugger.debug(intentEvent())
+        store.debug(type = StoreEventType.INTENT, value = "", state = "")
         executors[1].publish("label")
 
         assertTrue(labels.isEmpty)
@@ -245,7 +244,7 @@ class TimeTravelStoreDebugTest {
         val labels = AtomicList<String>()
         store.labels(observer(onNext = labels::add))
 
-        store.eventDebugger.debug(actionEvent())
+        store.debug(type = StoreEventType.ACTION, value = "", state = "")
         executors[1].publish("label")
 
         assertTrue(labels.isEmpty)
@@ -265,7 +264,7 @@ class TimeTravelStoreDebugTest {
                 }
             )
 
-        store.eventDebugger.debug(resultEvent(state = "old_state"))
+        store.debug(type = StoreEventType.RESULT, value = "result", state = "old_state")
 
         assertEquals("old_state", state.requireValue)
         assertEquals("result", result.requireValue)
@@ -276,7 +275,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
-        store.eventDebugger.debug(resultEvent(state = "old_state"))
+        store.debug(type = StoreEventType.RESULT, value = "", state = "old_state")
 
         assertEquals("initial_state", executors[0].state)
     }
@@ -289,7 +288,7 @@ class TimeTravelStoreDebugTest {
         store.states(observer(onNext = states::add))
         states.clear()
 
-        store.eventDebugger.debug(resultEvent(state = "old_state"))
+        store.debug(type = StoreEventType.RESULT, value = "", state = "old_state")
 
         assertTrue(states.isEmpty)
     }
@@ -299,7 +298,7 @@ class TimeTravelStoreDebugTest {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
-        store.eventDebugger.debug(resultEvent(state = "old_state"))
+        store.debug(type = StoreEventType.RESULT, value = "", state = "old_state")
 
         assertEquals("initial_state", store.state)
     }
@@ -309,7 +308,7 @@ class TimeTravelStoreDebugTest {
         val store = store()
 
         assertFailsWith<Exception> {
-            store.eventDebugger.debug(stateEvent())
+            store.debug(type = StoreEventType.STATE, value = "", state = "")
         }
     }
 
@@ -319,7 +318,7 @@ class TimeTravelStoreDebugTest {
         val labels = AtomicList<String>()
         store.labels(observer(onNext = labels::add))
 
-        store.eventDebugger.debug(labelEvent())
+        store.debug(type = StoreEventType.LABEL, value = "label", state = "")
 
         assertEquals(listOf("label"), labels.value)
     }
@@ -330,7 +329,6 @@ class TimeTravelStoreDebugTest {
         reducer: Reducer<String, String> = reducer()
     ): TimeTravelStore<String, String, String> =
         TimeTravelStoreImpl(
-            name = "store",
             initialState = initialState,
             bootstrapper = null,
             executorFactory = executorFactory,
@@ -339,21 +337,6 @@ class TimeTravelStoreDebugTest {
             freeze()
             init()
         }
-
-    private fun intentEvent(value: String = "intent", state: String = "state"): TimeTravelEvent =
-        TimeTravelEvent("store", StoreEventType.INTENT, value, state)
-
-    private fun actionEvent(value: String = "action", state: String = "state"): TimeTravelEvent =
-        TimeTravelEvent("store", StoreEventType.ACTION, value, state)
-
-    private fun resultEvent(value: String = "result", state: String = "state"): TimeTravelEvent =
-        TimeTravelEvent("store", StoreEventType.RESULT, value, state)
-
-    private fun stateEvent(value: String = "state", state: String = "state"): TimeTravelEvent =
-        TimeTravelEvent("store", StoreEventType.STATE, value, state)
-
-    private fun labelEvent(value: String = "label", state: String = "state"): TimeTravelEvent =
-        TimeTravelEvent("store", StoreEventType.LABEL, value, state)
 
     private class ExecutorQueue(
         private val factory: (index: Int) -> TestExecutor = { TestExecutor() }

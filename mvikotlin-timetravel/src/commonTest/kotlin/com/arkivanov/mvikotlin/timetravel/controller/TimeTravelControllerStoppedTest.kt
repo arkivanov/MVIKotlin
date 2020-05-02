@@ -2,6 +2,7 @@ package com.arkivanov.mvikotlin.timetravel.controller
 
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
+import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -252,21 +253,28 @@ class TimeTravelControllerStoppedTest {
 
     @Test
     fun contains_events_in_order_WHEN_recorded() {
-        env.produceIntentEventForStore1()
-        env.produceActionEventForStore1()
-        env.produceResultEventForStore1()
-        env.produceStateEventForStore1()
-        env.produceLabelEventForStore1()
+        val events =
+            listOf(
+                env.produceIntentEventForStore1(),
+                env.produceActionEventForStore1(),
+                env.produceResultEventForStore1(),
+                env.produceStateEventForStore1(),
+                env.produceLabelEventForStore1()
+            )
+
         env.controller.stopRecording()
 
         assertEquals(
-            listOf(
-                env.createIntentEventForStore1(),
-                env.createActionEventForStore1(),
-                env.createResultEventForStore1(),
-                env.createStateEventForStore1(),
-                env.createLabelEventForStore1()
-            ),
+            events.mapIndexed { index, event ->
+                TimeTravelEvent(
+                    id = index + 1L,
+                    storeName = "store1",
+                    type = event.type,
+                    value = event.value,
+                    state = event.state
+                )
+
+            },
             env.events
         )
     }

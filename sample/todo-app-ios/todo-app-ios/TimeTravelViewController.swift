@@ -259,7 +259,7 @@ class TimeTravelViewController : UIViewController, UITableViewDelegate, UITableV
         
         @objc private func onDebugClick() {
             guard let event = self.event else { return }
-            TimeTravelControllerProviderKt.timeTravelController.debugEvent(event: event)
+            TimeTravelControllerProviderKt.timeTravelController.debugEvent(eventId: event.id)
         }
     }
 }

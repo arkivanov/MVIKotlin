@@ -4,7 +4,9 @@ object Deps {
         object Kotlin : Group(name = "org.jetbrains.kotlin") {
             private const val version = "1.3.70"
 
-            object Plugin : Dependency(group = Kotlin, name = "kotlin-gradle-plugin", version = version)
+            object Plugin {
+                object Gradle : Dependency(group = Kotlin, name = "kotlin-gradle-plugin", version = version)
+            }
 
             object StdLib {
                 object Common : Dependency(group = Kotlin, name = "kotlin-stdlib-common", version = version)
@@ -83,10 +85,6 @@ object Deps {
             object ReaktiveTesting : Dependency(group = Badoo.Reaktive, name = "reaktive-testing", version = version)
             object Utils : Dependency(group = Badoo.Reaktive, name = "utils", version = version)
         }
-    }
-
-    object Json : Group(name = "org.json") {
-        object Json : Dependency(group = Deps.Json, name = "json", version = "20190722")
     }
 
     object TouchLab : Group(name = "co.touchlab") {

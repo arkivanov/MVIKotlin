@@ -21,6 +21,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         ensureNeverFrozen()
     }
 
+    private var eventId = 1L
     private val stateSubject = BehaviorSubject(TimeTravelState())
     override val state: TimeTravelState get() = stateSubject.value
     private val postponedEvents = ArrayList<TimeTravelEvent>()
@@ -29,17 +30,16 @@ internal class TimeTravelControllerImpl : TimeTravelController {
     override fun states(observer: Observer<TimeTravelState>): Disposable = stateSubject.subscribe(observer)
 
     @MainThread
-    fun attachStore(store: TimeTravelStore<*, *, *>) {
+    fun attachStore(store: TimeTravelStore<*, *, *>, name: String) {
         assertOnMainThread()
 
-        val storeName = store.name
-        check(!stores.containsKey(storeName)) { "Duplicate store: $storeName" }
+        check(!stores.containsKey(name)) { "Duplicate store: $name" }
 
-        stores[storeName] = store
+        stores[name] = store
 
         val observerThreadLocalHolder = ThreadLocalHolder(
             observer(
-                onComplete = { stores -= storeName },
+                onComplete = { stores -= name },
                 onNext = ::onEvent
             )
         )
@@ -50,7 +50,10 @@ internal class TimeTravelControllerImpl : TimeTravelController {
                     observerThreadLocalHolder.get()?.onComplete()
                     observerThreadLocalHolder.dispose()
                 },
-                onNext = { observerThreadLocalHolder.get()?.onNext(it) }
+                onNext = {
+                    val event = TimeTravelEvent(id = eventId++, storeName = name, type = it.type, value = it.value, state = it.state)
+                    observerThreadLocalHolder.get()?.onNext(event)
+                }
             )
         )
 
@@ -130,11 +133,12 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         }
     }
 
-    override fun debugEvent(event: TimeTravelEvent) {
+    override fun debugEvent(eventId: Long) {
         assertOnMainThread()
 
         if (state.mode === Mode.STOPPED) {
-            stores[event.storeName]?.eventDebugger?.debug(event)
+            val event = state.events.firstOrNull { it.id == eventId } ?: return
+            stores[event.storeName]?.debug(type = event.type, value = event.value, state = event.state)
         }
     }
 
@@ -214,7 +218,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
     }
 
     private fun process(event: TimeTravelEvent, previousValue: Any? = null) {
-        stores[event.storeName]?.eventProcessor?.process(event.type, previousValue ?: event.value)
+        stores[event.storeName]?.process(type = event.type, value = previousValue ?: event.value)
     }
 
     private inline fun swapState(reducer: (TimeTravelState) -> TimeTravelState) {

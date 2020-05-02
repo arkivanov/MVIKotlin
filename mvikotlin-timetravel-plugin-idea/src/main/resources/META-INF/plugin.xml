@@ -1,0 +1,12 @@
+<idea-plugin>
+    <id>org.arkivanov.mvikotlin.plugin.idea.timetravel</id>
+    <name>MVIKotlin Time Travel</name>
+    <vendor url="http://github.com/arkivanov">Arkadii Ivanov</vendor>
+    <description>MVIKotlin time travel client for Android</description>
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow anchor="right" factoryClass="com.arkivanov.mvikotlin.plugin.idea.timetravel.TimeTravelToolWindowFactory"
+            id="MVIKotlin Time Travel" />
+    </extensions>
+</idea-plugin>

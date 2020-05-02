@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    implementation(Deps.Jetbrains.Kotlin.Plugin)
+    implementation(Deps.Jetbrains.Kotlin.Plugin.Gradle)
     implementation(Deps.Android.Tools.Build.Gradle)
     implementation(Deps.TouchLab.KotlinXcodeSync)
 }

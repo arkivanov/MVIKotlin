@@ -4,9 +4,7 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
-import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
-import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.EventDebugger
-import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.EventProcessor
+import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 import com.arkivanov.mvikotlin.utils.internal.AtomicList
 import com.arkivanov.mvikotlin.utils.internal.clear
 import com.arkivanov.mvikotlin.utils.internal.isEmpty
@@ -16,13 +14,11 @@ import com.badoo.reaktive.utils.freeze
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal class TestTimeTravelStore(
-    override val name: String
-) : TimeTravelStore<String, String, String> {
+internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
 
-    override val eventProcessor = TestEventProcessor()
-    override val eventDebugger = TestEventDebugger()
-    private val _events = PublishSubject<TimeTravelEvent>()
+    val eventProcessor = TestEventProcessor()
+    val eventDebugger = TestEventDebugger()
+    private val _events = PublishSubject<Event>()
     private val isStateRestored = AtomicBoolean()
     override val state: String get() = TODO()
 
@@ -33,9 +29,9 @@ internal class TestTimeTravelStore(
         freeze()
     }
 
-    override fun events(observer: Observer<TimeTravelEvent>): Disposable = _events.subscribe(observer)
+    override fun events(observer: Observer<Event>): Disposable = _events.subscribe(observer)
 
-    fun sendEvent(event: TimeTravelEvent) {
+    fun sendEvent(event: Event) {
         _events.onNext(event)
     }
 
@@ -45,7 +41,6 @@ internal class TestTimeTravelStore(
     override fun restoreState() {
         isStateRestored.value = true
     }
-
 
     override fun states(observer: Observer<String>): Disposable = TODO()
 
@@ -59,14 +54,22 @@ internal class TestTimeTravelStore(
         _events.onComplete()
     }
 
+    override fun process(type: StoreEventType, value: Any) {
+        eventProcessor.process(type, value)
+    }
+
+    override fun debug(type: StoreEventType, value: Any, state: Any) {
+        eventDebugger.debug(type, value, state)
+    }
+
     fun assertStateRestored() {
         assertTrue(isStateRestored.value)
     }
 
-    class TestEventProcessor : EventProcessor {
+    class TestEventProcessor {
         private val events = AtomicList<Pair<StoreEventType, Any>>()
 
-        override fun process(type: StoreEventType, value: Any) {
+        fun process(type: StoreEventType, value: Any) {
             events += type to value
         }
 
@@ -88,14 +91,14 @@ internal class TestTimeTravelStore(
         }
     }
 
-    class TestEventDebugger : EventDebugger {
-        private val events = AtomicList<TimeTravelEvent>()
+    class TestEventDebugger {
+        private val events = AtomicList<Event>()
 
-        override fun debug(event: TimeTravelEvent) {
-            events += event
+        fun debug(type: StoreEventType, value: Any, state: Any) {
+            events += Event(type, value, state)
         }
 
-        fun assertSingleDebuggedEvent(event: TimeTravelEvent) {
+        fun assertSingleDebuggedEvent(event: Event) {
             assertEquals(listOf(event), events.value)
         }
 

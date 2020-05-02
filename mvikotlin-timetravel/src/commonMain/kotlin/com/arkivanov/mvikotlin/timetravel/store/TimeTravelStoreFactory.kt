@@ -32,12 +32,10 @@ class TimeTravelStoreFactory(
             )
         } else {
             TimeTravelStoreImpl(
-                name = name,
                 initialState = initialState,
                 bootstrapper = bootstrapper,
                 executorFactory = executorFactory,
                 reducer = reducer
-            )
-                .also(::attachTimeTravelStore)
+            ).also { attachTimeTravelStore(store = it, name = name) }
         }
 }

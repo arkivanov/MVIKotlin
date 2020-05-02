@@ -2,6 +2,7 @@ package com.arkivanov.mvikotlin.timetravel.controller
 
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
+import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -67,12 +68,8 @@ class TimeTravelControllerIdleTest {
     fun restores_events() {
         val events =
             listOf(
-                env.createIntentEventForStore1(),
-                env.createStateEventForStore1(value = "state_1_2", state = "state_1_1"),
-                env.createIntentEventForStore2(),
-                env.createStateEventForStore2(value = "state_2_2", state = "state_2_1"),
-                env.createStateEventForStore1(value = "state_1_3", state = "state_1_2"),
-                env.createStateEventForStore2(value = "state_2_3", state = "state_2_2")
+                TimeTravelEvent(id = 1L, storeName = "store1", type = StoreEventType.INTENT, value = "intent_1", state = "state_1"),
+                TimeTravelEvent(id = 2L, storeName = "store1", type = StoreEventType.STATE, value = "state_1", state = "state_2")
             )
 
         env.controller.restoreEvents(events)
@@ -85,12 +82,12 @@ class TimeTravelControllerIdleTest {
     fun switched_to_last_state_for_all_stores_WHEN_restore_events() {
         env.controller.restoreEvents(
             listOf(
-                env.createIntentEventForStore1(),
-                env.createStateEventForStore1(value = "state_1_2", state = "state_1_1"),
-                env.createIntentEventForStore2(),
-                env.createStateEventForStore2(value = "state_2_2", state = "state_2_1"),
-                env.createStateEventForStore1(value = "state_1_3", state = "state_1_2"),
-                env.createStateEventForStore2(value = "state_2_3", state = "state_2_2")
+                TimeTravelEvent(id = 1L, storeName = "store1", type = StoreEventType.INTENT, value = "intent_1_1", state = "state_1_1"),
+                TimeTravelEvent(id = 2L, storeName = "store1", type = StoreEventType.STATE, value = "state_1_2", state = "state_1_1"),
+                TimeTravelEvent(id = 3L, storeName = "store2", type = StoreEventType.INTENT, value = "intent_2_1", state = "state_2_1"),
+                TimeTravelEvent(id = 4L, storeName = "store2", type = StoreEventType.STATE, value = "state_2_2", state = "state_2_1"),
+                TimeTravelEvent(id = 5L, storeName = "store1", type = StoreEventType.STATE, value = "state_1_3", state = "state_1_2"),
+                TimeTravelEvent(id = 6L, storeName = "store2", type = StoreEventType.STATE, value = "state_2_3", state = "state_2_2")
             )
         )
 

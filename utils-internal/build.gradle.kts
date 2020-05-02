@@ -8,11 +8,5 @@ kotlin {
                 implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
-
-        jvmMain {
-            dependencies {
-                implementation(Deps.Json.Json)
-            }
-        }
     }
 }

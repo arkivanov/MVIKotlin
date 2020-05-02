@@ -4,7 +4,9 @@ enum class StoreEventType {
 
     INTENT, ACTION, RESULT, STATE, LABEL;
 
+    val title: String = name.toLowerCase().capitalize()
+
     companion object {
-        val ALL: Set<StoreEventType> = values().toSet()
+        val VALUES: Set<StoreEventType> = values().toSet()
     }
 }

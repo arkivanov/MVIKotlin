@@ -82,7 +82,7 @@ interface TimeTravelController {
     fun cancel()
 
     /**
-     * Fires the provided event allowing its debugging.
+     * Fires a [TimeTravelEvent] allowing its debugging.
      * Please note that events of type [StoreEventType.STATE] can not be debugged.
      * - If event type is [StoreEventType.INTENT] or [StoreEventType.ACTION], executes the [Executor] of the appropriate Store.
      * A new temporary instance of the [Executor] will be created, its `State` will be same as when original event was recorded,
@@ -92,7 +92,9 @@ interface TimeTravelController {
      * - If event type is [StoreEventType.RESULT], executes the [Reducer] of the appropriate [Store]. Resulting `State` will be dropped.
      * - If event type is [StoreEventType.STATE], throws an exception as events of type [StoreEventType.STATE] can not be debugged
      * - If event type is [StoreEventType.LABEL], emits the `Label` from the appropriate [Store]
+     *
+     * @param eventId id of the [TimeTravelEvent] to be debugged
      */
     @MainThread
-    fun debugEvent(event: TimeTravelEvent)
+    fun debugEvent(eventId: Long)
 }

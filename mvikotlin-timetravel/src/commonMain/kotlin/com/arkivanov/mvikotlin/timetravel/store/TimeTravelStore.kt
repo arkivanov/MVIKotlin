@@ -5,16 +5,11 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 
 internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label : Any> : Store<Intent, State, Label> {
 
-    val name: String
-    val eventProcessor: EventProcessor
-    val eventDebugger: EventDebugger
-
     @MainThread
-    fun events(observer: Observer<TimeTravelEvent>): Disposable
+    fun events(observer: Observer<Event>): Disposable
 
     @MainThread
     fun init()
@@ -22,13 +17,15 @@ internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label :
     @MainThread
     fun restoreState()
 
-    interface EventProcessor {
-        @MainThread
-        fun process(type: StoreEventType, value: Any)
-    }
+    @MainThread
+    fun process(type: StoreEventType, value: Any)
 
-    interface EventDebugger {
-        @MainThread
-        fun debug(event: TimeTravelEvent)
-    }
+    @MainThread
+    fun debug(type: StoreEventType, value: Any, state: Any)
+
+    data class Event(
+        val type: StoreEventType,
+        val value: Any,
+        val state: Any
+    )
 }
