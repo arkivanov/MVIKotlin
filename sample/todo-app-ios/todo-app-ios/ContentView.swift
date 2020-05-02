@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ContentView<V : View>: View {
     let mainView: V
+    @EnvironmentObject var controllerDeps: ControllerDeps
     @State var isDrawerOpen: Bool = false
     
     var body: some View {
@@ -24,7 +25,7 @@ struct ContentView<V : View>: View {
                     DebugDrawer(isOpen: false)
                 }
             }
-            .navigationBarTitle(Text("SwiftUI"), displayMode: .inline)
+            .navigationBarTitle(Text("MviKotlin"))
             .navigationBarItems(
                 trailing: Button(
                     action: {
