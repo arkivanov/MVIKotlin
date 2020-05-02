@@ -8,8 +8,9 @@
 
 import TodoLib
 
-class ViewLifecycle {
-    var lifecycle = LifecycleRegistry()
+class LifecycleWrapper {
+
+    let lifecycle = LifecycleRegistry()
     
     init() {
         self.lifecycle.onCreate()
@@ -17,5 +18,15 @@ class ViewLifecycle {
     
     deinit {
         self.lifecycle.onDestroy()
+    }
+    
+    func start() {
+        lifecycle.onStart()
+        lifecycle.onResume()
+    }
+    
+    func stop() {
+        lifecycle.onPause()
+        lifecycle.onStop()
     }
 }

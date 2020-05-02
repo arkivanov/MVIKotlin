@@ -10,7 +10,6 @@ import SwiftUI
 
 struct ContentView<V : View>: View {
     let mainView: V
-    @EnvironmentObject var controllerDeps: ControllerDeps
     @State var isDrawerOpen: Bool = false
     
     var body: some View {

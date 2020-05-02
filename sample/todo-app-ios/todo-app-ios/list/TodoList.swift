@@ -9,14 +9,14 @@
 import SwiftUI
 import TodoLib
 
-struct TodoList: View {
-    
+struct TodoList<Details: View>: View {
     @ObservedObject var listView = TodoListViewImpl()
+    var details: (String) -> Details
     
     var body: some View {
         List() {
             ForEach(listView.model?.items ?? []) { item in
-                NavigationLink( destination: TodoDetailsParent(id: item.id)) {
+                NavigationLink(destination: LazyView(self.details(item.id))) {
                     TodoRow(
                         text: item.data.text,
                         isDone: item.data.isDone,
@@ -37,6 +37,6 @@ struct TodoList: View {
 
 struct TodoList_Previews: PreviewProvider {
     static var previews: some View {
-        TodoList()
+        TodoList(details: { id in Text("") })
     }
 }
