@@ -7,8 +7,8 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
-import com.arkivanov.mvikotlin.timetravel.proto.DEFAULT_PORT
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelCommand
 import java.io.IOException
 
 class TimeTravelServer(

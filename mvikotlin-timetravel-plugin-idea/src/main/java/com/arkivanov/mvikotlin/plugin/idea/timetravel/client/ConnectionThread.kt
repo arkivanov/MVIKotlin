@@ -1,10 +1,10 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel.client
 
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelCommand
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelStateUpdate
-import com.arkivanov.mvikotlin.utils.internal.io.ReaderThread
-import com.arkivanov.mvikotlin.utils.internal.io.WriterThread
-import com.arkivanov.mvikotlin.utils.internal.io.closeSafe
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelStateUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
+import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
+import com.arkivanov.mvikotlin.timetravel.proto.internal.io.closeSafe
 import java.io.IOException
 import java.net.Socket
 import java.util.concurrent.BlockingQueue

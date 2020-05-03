@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.utils.internal.io
+package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 
 import java.io.Closeable
 import java.net.ServerSocket

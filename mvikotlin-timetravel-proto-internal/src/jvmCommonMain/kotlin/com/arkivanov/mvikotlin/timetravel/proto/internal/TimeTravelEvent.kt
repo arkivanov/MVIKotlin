@@ -1,6 +1,6 @@
-package com.arkivanov.mvikotlin.timetravel.proto
+package com.arkivanov.mvikotlin.timetravel.proto.internal
 
-import com.arkivanov.mvikotlin.utils.internal.Value
+import com.arkivanov.mvikotlin.timetravel.proto.internal.value.Value
 import java.io.Serializable
 
 data class TimeTravelEvent(
