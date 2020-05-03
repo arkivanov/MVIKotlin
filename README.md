@@ -79,3 +79,6 @@ Twitter: [@arkann1985](https://twitter.com/arkann1985)
 
 #### Debugging iOS application with MVIKotlin
 [![Debugging iOS application with MVIKotlin](https://img.youtube.com/vi/MJCYQzeL-w8/0.jpg)](https://youtu.be/MJCYQzeL-w8)
+
+#### Debugging Android application with IntelliJ IDEA time travel plugin
+[![Debugging Android application with IntelliJ IDEA time travel plugin](https://img.youtube.com/vi/Tr2ayOcVU34/0.jpg)](https://youtu.be/Tr2ayOcVU34)
