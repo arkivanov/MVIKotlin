@@ -31,6 +31,7 @@ kotlin {
 
         androidMain {
             dependencies {
+                implementation(project(":mvikotlin-timetravel-proto-internal"))
                 implementation(Deps.AndroidX.Core.Ktx)
                 implementation(Deps.AndroidX.AppCompat.AppCompat)
                 implementation(Deps.AndroidX.RecyclerView.RecyclerView)

@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install nodejs chromium-browser
       - name: Build JVM, Android, JS
-        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-timetravel-proto-internal:build :mvikotlin-timetravel-server:build :mvikotlin-timetravel-plugin-idea:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :androidx-lifecycle-interop:build :sample:todo-app-android:assembleDebug -Pbuild_type=NON_NATIVE
+        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-timetravel-proto-internal:build :mvikotlin-timetravel-plugin-idea:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :androidx-lifecycle-interop:build :sample:todo-app-android:assembleDebug -Pbuild_type=NON_NATIVE
   linux-build:
     name: Build Linux
     runs-on: ubuntu-latest
