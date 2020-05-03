@@ -95,11 +95,11 @@ class TimeTravelToolWindow {
 
     private inner class TimeTravelClientCallbacks : TimeTravelClient.Callbacks {
         override fun onConnecting() {
-            updateViewState { copy(connectionStatus = TimeTravelView.ConnectionStatus.CONNECTING) }
+            updateViewState { copy(connectionStatus = ConnectionStatus.CONNECTING) }
         }
 
         override fun onConnected() {
-            updateViewState { copy(connectionStatus = TimeTravelView.ConnectionStatus.CONNECTED) }
+            updateViewState { copy(connectionStatus = ConnectionStatus.CONNECTED) }
         }
 
         override fun onDisconnected() {

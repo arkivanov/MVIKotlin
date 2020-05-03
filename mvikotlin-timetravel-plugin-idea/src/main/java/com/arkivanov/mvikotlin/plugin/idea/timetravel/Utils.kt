@@ -43,8 +43,6 @@ internal inline fun anAction(
         templatePresentation.apply {
             this.text = text
             this.icon = icon
-            this.isEnabled = false
-            this.isEnabledAndVisible = false
         }
     }
 
