@@ -1,8 +1,8 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
-import com.arkivanov.mvikotlin.timetravel.proto.StoreEventType
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelEvent
-import com.arkivanov.mvikotlin.utils.internal.type
+import com.arkivanov.mvikotlin.timetravel.proto.internal.StoreEventType
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEvent
+import com.arkivanov.mvikotlin.timetravel.proto.internal.value.type
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import java.io.BufferedReader

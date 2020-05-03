@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.timetravel.proto
+package com.arkivanov.mvikotlin.timetravel.proto.internal
 
 enum class StoreEventType {
 
