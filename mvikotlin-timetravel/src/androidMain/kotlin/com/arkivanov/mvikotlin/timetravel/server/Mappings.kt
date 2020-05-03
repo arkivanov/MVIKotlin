@@ -3,10 +3,10 @@ package com.arkivanov.mvikotlin.timetravel.server
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
-import com.arkivanov.mvikotlin.utils.internal.parseObject
-import com.arkivanov.mvikotlin.timetravel.proto.StoreEventType as StoreEventTypeProto
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelEvent as TimeTravelEventProto
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelStateUpdate as TimeTravelStateUpdateProto
+import com.arkivanov.mvikotlin.timetravel.proto.internal.value.parseObject
+import com.arkivanov.mvikotlin.timetravel.proto.internal.StoreEventType as StoreEventTypeProto
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEvent as TimeTravelEventProto
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelStateUpdate as TimeTravelStateUpdateProto
 
 internal fun List<TimeTravelEvent>.toProto(): List<TimeTravelEventProto> = map { it.toProto() }
 

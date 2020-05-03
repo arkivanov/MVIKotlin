@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.utils.internal
+package com.arkivanov.mvikotlin.timetravel.proto.internal.value
 
 val Value.type: String
     get() =

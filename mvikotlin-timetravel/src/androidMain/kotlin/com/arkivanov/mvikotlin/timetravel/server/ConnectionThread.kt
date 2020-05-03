@@ -2,12 +2,12 @@ package com.arkivanov.mvikotlin.timetravel.server
 
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelCommand
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelEventsUpdate
-import com.arkivanov.mvikotlin.timetravel.proto.TimeTravelStateUpdate
-import com.arkivanov.mvikotlin.utils.internal.io.ReaderThread
-import com.arkivanov.mvikotlin.utils.internal.io.WriterThread
-import com.arkivanov.mvikotlin.utils.internal.io.closeSafe
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEventsUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelStateUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
+import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
+import com.arkivanov.mvikotlin.timetravel.proto.internal.io.closeSafe
 import java.io.IOException
 import java.net.ServerSocket
 
