@@ -20,8 +20,7 @@ struct TodoListParent: View {
             dependencies: TodoListControllerDeps(
                 storeFactory: controllerDeps.storeFactory,
                 database: controllerDeps.database,
-                lifecycle: lifecycle.lifecycle,
-                stateKeeperProvider: nil
+                lifecycle: lifecycle.lifecycle
             )
         )
 
