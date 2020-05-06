@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.androidxlifecycleinterop.asMviLifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
+import com.arkivanov.mvikotlin.core.utils.statekeeper.retainInstance
 import com.arkivanov.mvikotlin.sample.todo.android.FrameworkType
 import com.arkivanov.mvikotlin.sample.todo.android.R
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
@@ -18,16 +19,22 @@ class TodoListFragment(
     private val dependencies: Dependencies
 ) : Fragment(R.layout.todo_list) {
 
-    private val todoListControllerDependencies =
-        object : TodoListController.Dependencies, Dependencies by dependencies {
-            override val lifecycle: Lifecycle = this@TodoListFragment.lifecycle.asMviLifecycle()
-        }
+    private val controller =
+        dependencies
+            .stateKeeperProvider
+            .retainInstance(lifecycle = lifecycle.asMviLifecycle(), factory = ::createController)
 
-    private val controller: TodoListController =
-        when (dependencies.frameworkType) {
+    private fun createController(lifecycle: Lifecycle): TodoListController {
+        val todoListControllerDependencies =
+            object : TodoListController.Dependencies, Dependencies by dependencies {
+                override val lifecycle: Lifecycle = lifecycle
+            }
+
+        return when (dependencies.frameworkType) {
             FrameworkType.REAKTIVE -> TodoListReaktiveController(todoListControllerDependencies)
             FrameworkType.COROUTINES -> TodoListCoroutinesController(todoListControllerDependencies)
         }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

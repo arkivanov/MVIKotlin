@@ -6,7 +6,6 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
-import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeper
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.arkivanov.mvikotlin.sample.todo.common.database.update
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.Intent
@@ -17,17 +16,16 @@ abstract class TodoListStoreAbstractFactory(
     private val storeFactory: StoreFactory
 ) {
 
-    fun create(stateKeeper: StateKeeper<State>?): TodoListStore =
+    fun create(): TodoListStore =
         object : TodoListStore, Store<Intent, State, Nothing> by storeFactory.create(
             name = "ListStore",
-            initialState = stateKeeper?.state ?: State(),
+            initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = ::createExecutor,
             reducer = ReducerImpl
         ) {
             init {
                 ensureNeverFrozen()
-                stateKeeper?.register { state }
             }
         }
 

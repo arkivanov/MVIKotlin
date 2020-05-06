@@ -3,7 +3,6 @@ package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
-import com.arkivanov.mvikotlin.core.utils.statekeeper.get
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
@@ -30,7 +29,7 @@ class TodoListReaktiveController(dependencies: Dependencies) : TodoListControlle
         TodoListStoreFactory(
             storeFactory = dependencies.storeFactory,
             database = dependencies.database
-        ).create(stateKeeper = dependencies.stateKeeperProvider?.get())
+        ).create()
 
     private val todoAddStore =
         TodoAddStoreFactory(
