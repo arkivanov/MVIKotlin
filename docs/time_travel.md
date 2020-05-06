@@ -63,6 +63,10 @@ There is a more convenient tool for Android - Time travel plugin. This can be us
 
 Check out the [video](https://youtu.be/Tr2ayOcVU34) demonstrating the time travel plugin.
 
+#### How to install
+
+You can find the plugin in the IntelliJ IDEA [Marketplace](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel). It can be installed directly from IntelliJ IDEA or Android Studio. Please navigate to Settings -> Plugins -> Marketplace and type "MVIKotlin" in the search field.
+
 Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
 
 [Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | Time travel
