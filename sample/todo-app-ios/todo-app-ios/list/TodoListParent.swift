@@ -10,48 +10,35 @@ import SwiftUI
 import TodoLib
 
 struct TodoListParent: View {
-    
-    @EnvironmentObject var controllerDeps: ControllerDeps
-    @State var controller: TodoListReaktiveController?
-    @State var viewLifecycle = ViewLifecycle()
+
+    var controllerDeps: ControllerDeps
     
     var body: some View {
-        
-        let todoList = TodoList()
+        let lifecycle = LifecycleWrapper()
+
+        let controller = TodoListReaktiveController(
+            dependencies: TodoListControllerDeps(
+                storeFactory: controllerDeps.storeFactory,
+                database: controllerDeps.database,
+                lifecycle: lifecycle.lifecycle,
+                stateKeeperProvider: nil
+            )
+        )
+
+        let todoList = TodoList<TodoDetailsParent>(details: { id in TodoDetailsParent(id: id, controllerDeps: self.controllerDeps) })
         let todoAdd = TodoAdd()
+
+        let lv = todoList.listView
+        let av = todoAdd.addView
+        controller.onViewCreated(todoListView: lv, todoAddView: av, viewLifecycle: lifecycle.lifecycle)
         
         let todoListViews = VStack {
             todoList
             todoAdd
         }
         
-        return todoListViews.onAppear() {
-            if (self.controller == nil) {
-                self.controller = TodoListReaktiveController(
-                    dependencies: TodoListControllerDeps(
-                        storeFactory: self.controllerDeps.storeFactory,
-                        database: self.controllerDeps.database,
-                        lifecycle: self.viewLifecycle.lifecycle,
-                        stateKeeperProvider: nil
-                    )
-                )
-                self.controller?.onViewCreated(todoListView: todoList.listView,
-                                               todoAddView: todoAdd.addView,
-                                               viewLifecycle: self.viewLifecycle.lifecycle)
-            }
-            
-            self.viewLifecycle.lifecycle.onStart()
-            self.viewLifecycle.lifecycle.onResume()
-            
-        }.onDisappear() {
-            self.viewLifecycle.lifecycle.onPause()
-            self.viewLifecycle.lifecycle.onStop()
-        }
-    }
-}
-
-struct TodoListParent_Previews: PreviewProvider {
-    static var previews: some View {
-        TodoListParent()
+        return todoListViews
+            .onAppear(perform: lifecycle.start)
+            .onDisappear(perform: lifecycle.stop)
     }
 }
