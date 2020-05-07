@@ -23,12 +23,12 @@ inline fun <T : Any, reified S : T> StateKeeperProvider<T>.get(): StateKeeper<S>
  * when the original [Lifecycle] is destroyed and the `instance` is not retained.
  *
  * @param lifecycle an original [Lifecycle] to be used
- * @param key an optional key that should be used for `instance` preservation, see [StateKeeperProvider.get] for more information
+ * @param key a key that should be used for `instance` preservation, see [StateKeeperProvider.get] for more information
  * @param factory a factory function that accepts the special [Lifecycle] and returns an `instance` to be retained later
  * @return either a retained `instance` or a new `instance` created by the `factory` function if there is no retained one
  */
-fun <T : Any> StateKeeperProvider<Any>.retainInstance(lifecycle: Lifecycle, key: String? = null, factory: (Lifecycle) -> T): T {
-    val stateKeeper: StateKeeper<RetainedInstance<T>> = if (key == null) get() else get(key)
+fun <T : Any> StateKeeperProvider<Any>.retainInstance(lifecycle: Lifecycle, key: String, factory: (Lifecycle) -> T): T {
+    val stateKeeper = get<RetainedInstance<T>>(key)
 
     val retainedInstance: RetainedInstance<T>? = stateKeeper.state
     val lifecycleRegistry = retainedInstance?.lifecycleRegistry ?: LifecycleRegistry()
@@ -58,6 +58,9 @@ fun <T : Any> StateKeeperProvider<Any>.retainInstance(lifecycle: Lifecycle, key:
 
     return instance
 }
+
+inline fun <reified T : Any> StateKeeperProvider<Any>.retainInstance(lifecycle: Lifecycle, noinline factory: (Lifecycle) -> T): T =
+    retainInstance(lifecycle = lifecycle, key = T::class.toString(), factory = factory)
 
 private class RetainedInstance<out T : Any>(
     val lifecycleRegistry: LifecycleRegistry,
