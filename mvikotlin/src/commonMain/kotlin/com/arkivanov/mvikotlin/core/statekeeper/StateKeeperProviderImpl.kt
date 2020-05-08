@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.core.utils.statekeeper
+package com.arkivanov.mvikotlin.core.statekeeper
 
 internal class StateKeeperProviderImpl<State : Any, in T : Any>(
     private val savedState: State?,

@@ -3,7 +3,7 @@ package com.arkivanov.mvikotlin.sample.todo.android
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
+import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.sample.todo.android.details.TodoDetailsFragment
 import com.arkivanov.mvikotlin.sample.todo.android.list.TodoListFragment
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase

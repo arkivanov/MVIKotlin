@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.core.utils
 
-import com.arkivanov.mvikotlin.core.utils.statekeeper.SimpleStateKeeperContainer
+import com.arkivanov.mvikotlin.core.statekeeper.SimpleStateKeeperContainer
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
