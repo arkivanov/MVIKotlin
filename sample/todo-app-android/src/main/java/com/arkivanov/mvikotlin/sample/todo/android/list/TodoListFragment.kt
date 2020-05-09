@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import com.arkivanov.mvikotlin.androidxlifecycleinterop.asMviLifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
-import com.arkivanov.mvikotlin.core.utils.statekeeper.retainInstance
+import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
+import com.arkivanov.mvikotlin.core.statekeeper.retainInstance
 import com.arkivanov.mvikotlin.sample.todo.android.FrameworkType
 import com.arkivanov.mvikotlin.sample.todo.android.R
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController

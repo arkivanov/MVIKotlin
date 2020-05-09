@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.core.utils.statekeeper
+package com.arkivanov.mvikotlin.core.statekeeper
 
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry

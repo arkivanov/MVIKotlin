@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.core.utils.statekeeper
+package com.arkivanov.mvikotlin.core.statekeeper
 
 import android.os.Bundle
 import android.os.Parcelable

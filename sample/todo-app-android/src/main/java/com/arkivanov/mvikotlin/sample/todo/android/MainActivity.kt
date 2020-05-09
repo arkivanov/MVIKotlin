@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.statekeeper.SimpleStateKeeperContainer
-import com.arkivanov.mvikotlin.core.utils.statekeeper.StateKeeperProvider
-import com.arkivanov.mvikotlin.core.utils.statekeeper.saveAndGet
+import com.arkivanov.mvikotlin.core.statekeeper.SimpleStateKeeperContainer
+import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
+import com.arkivanov.mvikotlin.core.statekeeper.saveAndGet
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 
 class MainActivity : AppCompatActivity() {
