@@ -39,11 +39,13 @@ class TodoListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        controller.onViewCreated(
-            TodoListViewImpl(root = view, onItemSelected = dependencies.onItemSelectedListener),
-            TodoAddViewImpl(root = view),
-            viewLifecycleOwner.lifecycle.asMviLifecycle()
-        )
+        controller.onViewCreated(TodoListViewImpl(view), TodoAddViewImpl(view), viewLifecycleOwner.lifecycle.asMviLifecycle(), ::onOutput)
+    }
+
+    private fun onOutput(output: TodoListController.Output) {
+        when (output) {
+            is TodoListController.Output.ItemSelected -> dependencies.onItemSelectedListener(output.id)
+        }.let {}
     }
 
     interface Dependencies {

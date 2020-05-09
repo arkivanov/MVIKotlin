@@ -12,13 +12,13 @@ fun State.toViewModel(): Model =
         text = text
     )
 
-fun Event.toIntent(): Intent =
+fun Event.toIntent(): Intent? =
     when (this) {
         is Event.TextChanged -> Intent.HandleTextChanged(text)
         is Event.AddClicked -> Intent.Add
     }
 
-fun TodoAddStore.Label.toBusEvent(): BusEvent =
+fun TodoAddStore.Label.toBusEvent(): BusEvent? =
     when (this) {
         is TodoAddStore.Label.Added -> BusEvent.TodoItemAdded(item)
     }
