@@ -21,8 +21,9 @@ struct TodoRow: View {
                 .onTapGesture(perform: self.onDoneClicked)
             
             Text(text)
-                .frame(minWidth: nil, idealWidth: nil, maxWidth: .infinity, minHeight: nil, idealHeight: nil, maxHeight: .infinity, alignment: .leading)
         }
+        .frame(minWidth: nil, maxWidth: .infinity, alignment: .leading)
+        .background(Color.white)
     }
 }
 

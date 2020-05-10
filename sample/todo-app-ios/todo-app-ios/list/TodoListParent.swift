@@ -8,44 +8,61 @@
 
 import SwiftUI
 import TodoLib
+import Combine
 
-struct TodoListParent: View {
+private class ControllerHolder {
     
-    var controllerDeps: ControllerDeps
+    let lifecycle: LifecycleWrapper
+    let controller: TodoListReaktiveController
+    private let cancellable: AutoCancellable
     
-    var body: some View {
-        let lifecycle = LifecycleWrapper()
+    init(deps: ControllerDeps, input: AnyPublisher<TodoListControllerInput, Never>) {
+        self.lifecycle = LifecycleWrapper()
         
         let controller = TodoListReaktiveController(
             dependencies: TodoListControllerDeps(
-                storeFactory: controllerDeps.storeFactory,
-                database: controllerDeps.database,
+                storeFactory: deps.storeFactory,
+                database: deps.database,
                 lifecycle: lifecycle.lifecycle
             )
         )
+        self.controller = controller
         
-        let todoList = TodoList<TodoDetailsParent>(details: { id in TodoDetailsParent(id: id, controllerDeps: self.controllerDeps) })
-        let todoAdd = TodoAdd()
-        
-        let lv = todoList.listView
-        let av = todoAdd.addView
-        controller.onViewCreated(todoListView: lv, todoAddView: av, viewLifecycle: lifecycle.lifecycle, output: handleOutput)
-        
-        let todoListViews = VStack {
-            todoList
-            todoAdd
-        }
-        
-        return todoListViews
-            .onAppear(perform: lifecycle.start)
-            .onDisappear(perform: lifecycle.stop)
+        self.cancellable = AutoCancellable(cancellable: input.sink(receiveValue: self.controller.input))
     }
+}
+
+struct TodoListParent: View {
     
-    private func handleOutput(output: TodoListControllerOutput) {
-        switch (output) {
-        case is TodoListControllerOutput.ItemSelected:
-        break // Could not find a way to push the details view programmatically, so it's handled by the NavigationLink in TodoList
-        default: break
+    let deps: ControllerDeps
+    let input: AnyPublisher<TodoListControllerInput, Never>
+    let output: (TodoListControllerOutput) -> Void
+    @State private var controller: ControllerHolder?
+    @State private var viewLifecycle: LifecycleRegistry?
+    @State private var listView = TodoListViewProxy()
+    @State private var addView = TodoAddViewProxy()
+    
+    var body: some View {
+        VStack {
+            TodoList(proxy: listView)
+            TodoAdd(proxy: addView)
+        }.onAppear {
+            if (self.controller == nil) {
+                self.controller = ControllerHolder(deps: self.deps, input: self.input)
+            }
+            let viewLifecycle = LifecycleRegistry()
+            self.viewLifecycle = viewLifecycle
+            self.controller?.controller.onViewCreated(
+                todoListView: self.listView,
+                todoAddView: self.addView,
+                viewLifecycle: viewLifecycle,
+                output: self.output
+            )
+            self.controller?.lifecycle.start()
+            viewLifecycle.resume()
+        }.onDisappear {
+            self.viewLifecycle?.destroy()
+            self.controller?.lifecycle.stop()
         }
     }
 }
