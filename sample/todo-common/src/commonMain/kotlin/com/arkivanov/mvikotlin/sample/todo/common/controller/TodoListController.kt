@@ -8,11 +8,20 @@ import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 
 interface TodoListController {
 
-    fun onViewCreated(todoListView: TodoListView, todoAddView: TodoAddView, viewLifecycle: Lifecycle)
+    fun onViewCreated(
+        todoListView: TodoListView,
+        todoAddView: TodoAddView,
+        viewLifecycle: Lifecycle,
+        output: (Output) -> Unit
+    )
 
     interface Dependencies {
         val storeFactory: StoreFactory
         val database: TodoDatabase
         val lifecycle: Lifecycle
+    }
+
+    sealed class Output {
+        data class ItemSelected(val id: String) : Output()
     }
 }

@@ -9,8 +9,10 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Dependencies
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Output
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toBusEvent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toOutput
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toViewModel
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
@@ -48,7 +50,7 @@ class TodoListCoroutinesController(dependencies: Dependencies) : TodoListControl
     init {
         bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
             eventBus.asFlow().mapNotNull { it.toIntent() } bindTo todoListStore
-            todoAddStore.labels.map { it.toBusEvent() } bindTo { eventBus.send(it) }
+            todoAddStore.labels.mapNotNull { it.toBusEvent() } bindTo { eventBus.send(it) }
         }
 
         dependencies.lifecycle.doOnDestroy {
@@ -57,15 +59,21 @@ class TodoListCoroutinesController(dependencies: Dependencies) : TodoListControl
         }
     }
 
-    override fun onViewCreated(todoListView: TodoListView, todoAddView: TodoAddView, viewLifecycle: Lifecycle) {
+    override fun onViewCreated(
+        todoListView: TodoListView,
+        todoAddView: TodoAddView,
+        viewLifecycle: Lifecycle,
+        output: (Output) -> Unit
+    ) {
         bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
-            todoListView.events.map { it.toIntent() } bindTo todoListStore
-            todoAddView.events.map { it.toIntent() } bindTo todoAddStore
+            todoListView.events.mapNotNull { it.toIntent() } bindTo todoListStore
+            todoAddView.events.mapNotNull { it.toIntent() } bindTo todoAddStore
         }
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainDispatcher) {
             todoListStore.states.map { it.toViewModel() } bindTo todoListView
             todoAddStore.states.map { it.toViewModel() } bindTo todoAddView
+            todoListView.events.mapNotNull { it.toOutput() } bindTo { output(it) }
         }
     }
 }

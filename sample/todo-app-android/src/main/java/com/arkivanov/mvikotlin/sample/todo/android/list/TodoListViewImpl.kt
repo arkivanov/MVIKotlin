@@ -10,10 +10,7 @@ import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView.Model
 
-class TodoListViewImpl(
-    root: View,
-    private val onItemSelected: (id: String) -> Unit
-) : BaseMviView<Model, Event>(), TodoListView {
+class TodoListViewImpl(root: View) : BaseMviView<Model, Event>(), TodoListView {
 
     private val adapter =
         TodoListAdapter(
@@ -35,13 +32,6 @@ class TodoListViewImpl(
     override val renderer =
         diff<Model> {
             diff(get = Model::items, compare = { a, b -> a === b }, set = adapter::setItems)
-
-            diff(get = Model::selectedItemId) {
-                if (it != null) {
-                    dispatch(Event.ItemSelectionHandled)
-                    onItemSelected(it)
-                }
-            }
         }
 
     init {
