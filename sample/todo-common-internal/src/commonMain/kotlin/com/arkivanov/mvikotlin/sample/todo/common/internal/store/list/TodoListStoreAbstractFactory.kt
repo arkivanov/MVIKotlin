@@ -12,6 +12,10 @@ import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListSt
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.State
 import com.badoo.reaktive.utils.ensureNeverFrozen
 
+/**
+ * Abstract factories are normally not needed. Just create a normal factory as described [here][Store].
+ * In MVIKotlin samples abstract factories are used because each `Store` has two implementations: using Reaktive and coroutines.
+ */
 abstract class TodoListStoreAbstractFactory(
     private val storeFactory: StoreFactory
 ) {

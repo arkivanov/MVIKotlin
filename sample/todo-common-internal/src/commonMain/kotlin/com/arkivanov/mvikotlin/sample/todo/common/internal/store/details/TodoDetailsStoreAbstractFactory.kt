@@ -13,6 +13,10 @@ import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDet
 import com.badoo.reaktive.utils.atomic.AtomicInt
 import com.badoo.reaktive.utils.ensureNeverFrozen
 
+/**
+ * Abstract factories are normally not needed. Just create a normal factory as described [here][Store].
+ * In MVIKotlin samples abstract factories are used because each `Store` has two implementations: using Reaktive and coroutines.
+ */
 abstract class TodoDetailsStoreAbstractFactory(
     private val storeFactory: StoreFactory
 ) {
