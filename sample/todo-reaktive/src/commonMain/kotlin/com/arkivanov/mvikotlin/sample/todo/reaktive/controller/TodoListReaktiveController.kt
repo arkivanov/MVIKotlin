@@ -10,19 +10,18 @@ import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Dependencies
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Output
-import com.arkivanov.mvikotlin.sample.todo.common.internal.BusEvent
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toBusEvent
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toIntent
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toOutput
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toViewModel
-import com.arkivanov.mvikotlin.sample.todo.common.internal.store.add.TodoAddStore
-import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addEventToAddIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addLabelToListIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addStateToAddModel
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.busEventToListIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listEventToListIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listEventToOutput
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listStateToListModel
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 import com.arkivanov.mvikotlin.sample.todo.reaktive.eventBus
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoAddStoreFactory
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoListStoreFactory
-import com.badoo.reaktive.observable.map
 import com.badoo.reaktive.observable.mapNotNull
 
 class TodoListReaktiveController(dependencies: Dependencies) : TodoListController {
@@ -41,8 +40,8 @@ class TodoListReaktiveController(dependencies: Dependencies) : TodoListControlle
 
     init {
         bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY) {
-            eventBus.mapNotNull(BusEvent::toIntent) bindTo todoListStore
-            todoAddStore.labels.mapNotNull(TodoAddStore.Label::toBusEvent) bindTo eventBus
+            eventBus.mapNotNull(busEventToListIntent) bindTo todoListStore
+            todoAddStore.labels.mapNotNull(addLabelToListIntent) bindTo todoListStore
         }
 
         dependencies.lifecycle.doOnDestroy {
@@ -58,14 +57,14 @@ class TodoListReaktiveController(dependencies: Dependencies) : TodoListControlle
         output: (Output) -> Unit
     ) {
         bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY) {
-            todoListView.events.mapNotNull(TodoListView.Event::toIntent) bindTo todoListStore
-            todoAddView.events.mapNotNull(TodoAddView.Event::toIntent) bindTo todoAddStore
+            todoListView.events.mapNotNull(listEventToListIntent) bindTo todoListStore
+            todoAddView.events.mapNotNull(addEventToAddIntent) bindTo todoAddStore
         }
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
-            todoListStore.states.map(TodoListStore.State::toViewModel) bindTo todoListView
-            todoAddStore.states.map(TodoAddStore.State::toViewModel) bindTo todoAddView
-            todoListView.events.mapNotNull(TodoListView.Event::toOutput) bindTo output
+            todoListStore.states.mapNotNull(listStateToListModel) bindTo todoListView
+            todoAddStore.states.mapNotNull(addStateToAddModel) bindTo todoAddView
+            todoListView.events.mapNotNull(listEventToOutput) bindTo output
         }
     }
 }

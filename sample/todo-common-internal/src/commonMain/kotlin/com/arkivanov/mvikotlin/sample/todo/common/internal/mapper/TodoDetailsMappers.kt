@@ -7,23 +7,28 @@ import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDet
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Model
 
-fun State.toViewModel(): Model =
-    Model(
-        text = data?.text ?: "",
-        isDone = data?.isDone ?: false,
-        isFlowFinished = isFinished
-    )
-
-fun Event.toIntent(): Intent =
-    when (this) {
-        is Event.TextChanged -> Intent.HandleTextChanged(text = text)
-        is Event.DoneClicked -> Intent.ToggleDone
-        is Event.DeleteClicked -> Intent.Delete
+val detailsStateToModel: State.() -> Model? =
+    {
+        Model(
+            text = data?.text ?: "",
+            isDone = data?.isDone ?: false,
+            isFlowFinished = isFinished
+        )
     }
 
-fun Label.toBusEvent(): BusEvent =
-    when (this) {
-        is Label.Changed -> BusEvent.TodoItemChanged(id = id, data = data)
-        is Label.Deleted -> BusEvent.TodoItemDeleted(id = id)
+val detailsEventToIntent: Event.() -> Intent? =
+    {
+        when (this) {
+            is Event.TextChanged -> Intent.HandleTextChanged(text = text)
+            is Event.DoneClicked -> Intent.ToggleDone
+            is Event.DeleteClicked -> Intent.Delete
+        }
     }
 
+val detailsLabelToBusEvent: Label.() -> BusEvent? =
+    {
+        when (this) {
+            is Label.Changed -> BusEvent.TodoItemChanged(id = id, data = data)
+            is Label.Deleted -> BusEvent.TodoItemDeleted(id = id)
+        }
+    }

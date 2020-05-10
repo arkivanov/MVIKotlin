@@ -9,14 +9,13 @@ import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController.Dependencies
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toBusEvent
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toIntent
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.toViewModel
-import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsEventToIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsLabelToBusEvent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsStateToModel
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
 import com.arkivanov.mvikotlin.sample.todo.reaktive.eventBus
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoDetailsStoreFactory
-import com.badoo.reaktive.observable.map
+import com.badoo.reaktive.observable.mapNotNull
 
 class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsController {
 
@@ -29,7 +28,7 @@ class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsCon
 
     init {
         bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY) {
-            todoEditStore.labels.map(TodoDetailsStore.Label::toBusEvent) bindTo eventBus
+            todoEditStore.labels.mapNotNull(detailsLabelToBusEvent) bindTo eventBus
         }
 
         dependencies.lifecycle.doOnDestroy(todoEditStore::dispose)
@@ -37,11 +36,11 @@ class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsCon
 
     override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
         bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY) {
-            todoDetailsView.events.map(TodoDetailsView.Event::toIntent) bindTo todoEditStore
+            todoDetailsView.events.mapNotNull(detailsEventToIntent) bindTo todoEditStore
         }
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
-            todoEditStore.states.map(TodoDetailsStore.State::toViewModel) bindTo todoDetailsView
+            todoEditStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
         }
     }
 }
