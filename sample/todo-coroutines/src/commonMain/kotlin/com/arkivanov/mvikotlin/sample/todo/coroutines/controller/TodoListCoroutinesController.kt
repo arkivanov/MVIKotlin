@@ -9,17 +9,17 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Dependencies
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Input
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Output
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addEventToAddIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addLabelToListIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addStateToAddModel
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.busEventToListIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.inputToListIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listEventToListIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listEventToOutput
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listStateToListModel
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
-import com.arkivanov.mvikotlin.sample.todo.coroutines.eventBus
 import com.arkivanov.mvikotlin.sample.todo.coroutines.ioDispatcher
 import com.arkivanov.mvikotlin.sample.todo.coroutines.mainDispatcher
 import com.arkivanov.mvikotlin.sample.todo.coroutines.mapNotNull
@@ -27,6 +27,8 @@ import com.arkivanov.mvikotlin.sample.todo.coroutines.store.TodoAddStoreFactory
 import com.arkivanov.mvikotlin.sample.todo.coroutines.store.TodoListStoreFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
 
 @ExperimentalCoroutinesApi
@@ -49,9 +51,12 @@ class TodoListCoroutinesController(dependencies: Dependencies) : TodoListControl
             ioContext = ioDispatcher
         ).create()
 
+    private val inputChannel = BroadcastChannel<Input>(Channel.BUFFERED)
+    override val input: (Input) -> Unit = { inputChannel.offer(it) }
+
     init {
         bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
-            eventBus.asFlow().mapNotNull(busEventToListIntent) bindTo todoListStore
+            inputChannel.asFlow().mapNotNull(inputToListIntent) bindTo todoListStore
             todoAddStore.labels.mapNotNull(addLabelToListIntent) bindTo todoListStore
         }
 

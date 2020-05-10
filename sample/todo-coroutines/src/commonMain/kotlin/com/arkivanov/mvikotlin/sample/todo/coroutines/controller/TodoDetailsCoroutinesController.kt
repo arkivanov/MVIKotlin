@@ -10,10 +10,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController.Dependencies
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsEventToIntent
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsLabelToBusEvent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsLabelToOutput
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsStateToModel
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
-import com.arkivanov.mvikotlin.sample.todo.coroutines.eventBus
 import com.arkivanov.mvikotlin.sample.todo.coroutines.ioDispatcher
 import com.arkivanov.mvikotlin.sample.todo.coroutines.mainDispatcher
 import com.arkivanov.mvikotlin.sample.todo.coroutines.mapNotNull
@@ -33,20 +32,17 @@ class TodoDetailsCoroutinesController(dependencies: Dependencies) : TodoDetailsC
         ).create()
 
     init {
-        bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
-            todoDetailsStore.labels.mapNotNull(detailsLabelToBusEvent) bindTo { eventBus.send(it) }
-        }
-
         dependencies.lifecycle.doOnDestroy(todoDetailsStore::dispose)
     }
 
-    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
+    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle, output: (TodoDetailsController.Output) -> Unit) {
         bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
             todoDetailsView.events.mapNotNull(detailsEventToIntent) bindTo todoDetailsStore
         }
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainDispatcher) {
             todoDetailsStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
+            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput) bindTo { output(it) }
         }
     }
 }

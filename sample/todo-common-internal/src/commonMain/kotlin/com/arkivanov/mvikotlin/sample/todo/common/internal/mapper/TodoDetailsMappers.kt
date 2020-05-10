@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.sample.todo.common.internal.mapper
 
-import com.arkivanov.mvikotlin.sample.todo.common.internal.BusEvent
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController.Output
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Label
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.State
@@ -11,8 +11,7 @@ val detailsStateToModel: State.() -> Model? =
     {
         Model(
             text = data?.text ?: "",
-            isDone = data?.isDone ?: false,
-            isFlowFinished = isFinished
+            isDone = data?.isDone ?: false
         )
     }
 
@@ -25,10 +24,10 @@ val detailsEventToIntent: Event.() -> Intent? =
         }
     }
 
-val detailsLabelToBusEvent: Label.() -> BusEvent? =
+val detailsLabelToOutput: Label.() -> Output? =
     {
         when (this) {
-            is Label.Changed -> BusEvent.TodoItemChanged(id = id, data = data)
-            is Label.Deleted -> BusEvent.TodoItemDeleted(id = id)
+            is Label.Changed -> Output.ItemChanged(id = id, data = data)
+            is Label.Deleted -> Output.ItemDeleted(id = id)
         }
     }

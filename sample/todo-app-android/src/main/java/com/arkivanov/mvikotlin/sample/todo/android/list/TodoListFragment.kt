@@ -5,10 +5,11 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.arkivanov.mvikotlin.androidxlifecycleinterop.asMviLifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
-import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.statekeeper.retainInstance
+import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.sample.todo.android.FrameworkType
+import com.arkivanov.mvikotlin.sample.todo.android.LifecycledConsumer
 import com.arkivanov.mvikotlin.sample.todo.android.R
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
@@ -17,12 +18,14 @@ import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoListReaktiveC
 
 class TodoListFragment(
     private val dependencies: Dependencies
-) : Fragment(R.layout.todo_list) {
+) : Fragment(R.layout.todo_list), LifecycledConsumer<TodoListController.Input> {
 
     private val controller =
         dependencies
             .stateKeeperProvider
             .retainInstance(lifecycle = lifecycle.asMviLifecycle(), factory = ::createController)
+
+    override val input: (TodoListController.Input) -> Unit = controller.input
 
     private fun createController(lifecycle: Lifecycle): TodoListController {
         val todoListControllerDependencies =
@@ -39,13 +42,12 @@ class TodoListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        controller.onViewCreated(TodoListViewImpl(view), TodoAddViewImpl(view), viewLifecycleOwner.lifecycle.asMviLifecycle(), ::onOutput)
-    }
-
-    private fun onOutput(output: TodoListController.Output) {
-        when (output) {
-            is TodoListController.Output.ItemSelected -> dependencies.onItemSelectedListener(output.id)
-        }.let {}
+        controller.onViewCreated(
+            TodoListViewImpl(view),
+            TodoAddViewImpl(view),
+            viewLifecycleOwner.lifecycle.asMviLifecycle(),
+            dependencies.listOutput
+        )
     }
 
     interface Dependencies {
@@ -53,6 +55,6 @@ class TodoListFragment(
         val database: TodoDatabase
         val stateKeeperProvider: StateKeeperProvider<Any>
         val frameworkType: FrameworkType
-        val onItemSelectedListener: (id: String) -> Unit
+        val listOutput: (TodoListController.Output) -> Unit
     }
 }

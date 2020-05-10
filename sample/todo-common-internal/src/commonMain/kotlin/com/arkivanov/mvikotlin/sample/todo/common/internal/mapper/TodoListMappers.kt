@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.sample.todo.common.internal.mapper
 
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Input
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Output
-import com.arkivanov.mvikotlin.sample.todo.common.internal.BusEvent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.add.TodoAddStore
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.State
@@ -28,11 +28,11 @@ val listEventToOutput: Event.() -> Output? =
         }
     }
 
-val busEventToListIntent: BusEvent.() -> Intent? =
+val inputToListIntent: Input.() -> Intent? =
     {
         when (this) {
-            is BusEvent.TodoItemChanged -> Intent.HandleItemChanged(id = id, data = data)
-            is BusEvent.TodoItemDeleted -> Intent.HandleDeleted(id = id)
+            is Input.ItemChanged -> Intent.HandleItemChanged(id = id, data = data)
+            is Input.ItemDeleted -> Intent.HandleDeleted(id = id)
         }
     }
 

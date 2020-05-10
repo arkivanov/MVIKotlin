@@ -3,22 +3,24 @@ package com.arkivanov.mvikotlin.sample.todo.android
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import com.arkivanov.mvikotlin.core.store.StoreFactory
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentFactory
 import com.arkivanov.mvikotlin.core.statekeeper.SimpleStateKeeperContainer
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.statekeeper.saveAndGet
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.sample.todo.android.root.RootFragment
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 
 class MainActivity : AppCompatActivity() {
 
     private val nonConfigurationStateKeeperContainer = SimpleStateKeeperContainer()
-    private lateinit var fragmentFactory: MainActivityFragmentFactory
+    private val fragmentFactory = MainActivityFragmentFactoryImpl()
 
     @IdRes
     private val contentId: Int = if (BuildConfig.DEBUG) R.id.content else android.R.id.content
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        fragmentFactory = MainActivityFragmentFactory(MainActivityFragmentFactoryDependencies())
         supportFragmentManager.fragmentFactory = fragmentFactory
 
         super.onCreate(savedInstanceState)
@@ -30,38 +32,46 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(contentId, fragmentFactory.todoListFragment())
+                .add(contentId, fragmentFactory.rootFragment())
                 .commit()
         }
     }
 
     override fun onRetainCustomNonConfigurationInstance(): Any? = nonConfigurationStateKeeperContainer.saveAndGet(HashMap())
 
-    private inner class MainActivityFragmentFactoryDependencies : MainActivityFragmentFactory.Dependencies {
-        override val storeFactory: StoreFactory get() = storeFactoryInstance
-        override val database: TodoDatabase get() = app.database
+    override fun onBackPressed() {
+        supportFragmentManager
+            .fragments
+            .forEach {
+                if ((it as? RootFragment)?.onBackPressed() == true) {
+                    return
+                }
+            }
 
-        @Suppress("UNCHECKED_CAST")
-        override val stateKeeperProvider: StateKeeperProvider<Any> =
-            nonConfigurationStateKeeperContainer.getProvider(
-                savedState = lastCustomNonConfigurationInstance as MutableMap<String, Any>?
+        super.onBackPressed()
+    }
+
+    private inner class MainActivityFragmentFactoryImpl : FragmentFactory() {
+        override fun instantiate(classLoader: ClassLoader, className: String): Fragment =
+            when (loadFragmentClass(classLoader, className)) {
+                RootFragment::class.java -> rootFragment()
+                else -> super.instantiate(classLoader, className)
+            }
+
+        fun rootFragment(): RootFragment =
+            RootFragment(
+                object : RootFragment.Dependencies {
+                    override val storeFactory: StoreFactory get() = storeFactoryInstance
+                    override val database: TodoDatabase get() = app.database
+
+                    @Suppress("UNCHECKED_CAST")
+                    override val stateKeeperProvider: StateKeeperProvider<Any> =
+                        nonConfigurationStateKeeperContainer.getProvider(
+                            savedState = lastCustomNonConfigurationInstance as MutableMap<String, Any>?
+                        )
+
+                    override val frameworkType: FrameworkType = FrameworkType.COROUTINES
+                }
             )
-
-        override val frameworkType: FrameworkType = FrameworkType.COROUTINES
-        override val onItemSelectedListener: (id: String) -> Unit = ::onItemSelected
-        override val onDetailsFinishedListener: () -> Unit = ::onDetailsFinished
-
-        private fun onItemSelected(id: String) {
-            supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.slide_fade_in_bottom, R.anim.scale_fade_out, R.anim.scale_fade_in, R.anim.slide_fade_out_bottom)
-                .replace(contentId, fragmentFactory.todoDetailsFragment().setArguments(itemId = id))
-                .addToBackStack(null)
-                .commit()
-        }
-
-        private fun onDetailsFinished() {
-            supportFragmentManager.popBackStack()
-        }
     }
 }
