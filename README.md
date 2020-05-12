@@ -1,10 +1,12 @@
 [![Download](https://api.bintray.com/packages/arkivanov/maven/mvikotlin/images/download.svg)](https://bintray.com/badoo/maven/reaktive/_latestVersion)
 [![License](https://img.shields.io/badge/License-Apache/2.0-blue.svg)](https://github.com/arkivanov/MVIKotlin/blob/master/LICENSE)
 
-## MVIDroid to MVIKotlin transition
-The library was recently converted to Kotlin Multiplatform. The name of the library 
-was also changed to MVIKotlin, from my point of view it works better for the new format.
-The previous versions of MVIDroid (Android only) are still available.
+## Overview
+
+### What is MVI
+MVI stands for Model-View-Intent. It is an architectural pattern that utilizes unidirectional data flow. The data circulates between `Model` and `View` only in one direction - from `Model` to `View` and from `View` to `Model`.
+
+<img src="docs/media/mvi.jpg" alt="MVI" width="300"/>
 
 ## What is MVIKotlin
 MVIKotlin is a Kotlin Multiplatform framework that provides a way of (not only) writing
@@ -14,7 +16,7 @@ reactive nor coroutines library. Extensions for [Reaktive](https://github.com/ba
 and for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) libraries are 
 provided as separate modules.  
 
-![MVIKotlin](docs/media/mvikotlin.jpg)
+<img src="docs/media/mvikotlin.jpg" alt="MVIKotlin" width="600"/>
 
 ## Setup
 Recommended minimum Gradle version is 5.3. Please read first the documentation about
