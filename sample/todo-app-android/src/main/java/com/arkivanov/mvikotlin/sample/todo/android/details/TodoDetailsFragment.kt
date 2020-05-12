@@ -41,10 +41,7 @@ class TodoDetailsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        controller.onViewCreated(
-            TodoDetailsViewImpl(root = view, onFinished = dependencies.onDetailsFinishedListener),
-            viewLifecycleOwner.lifecycle.asMviLifecycle()
-        )
+        controller.onViewCreated(TodoDetailsViewImpl(view), viewLifecycleOwner.lifecycle.asMviLifecycle(), dependencies.detailsOutput)
     }
 
     fun setArguments(itemId: String): TodoDetailsFragment {
@@ -65,6 +62,6 @@ class TodoDetailsFragment(
         val storeFactory: StoreFactory
         val database: TodoDatabase
         val frameworkType: FrameworkType
-        val onDetailsFinishedListener: () -> Unit
+        val detailsOutput: (TodoDetailsController.Output) -> Unit
     }
 }

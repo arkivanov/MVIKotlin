@@ -9,17 +9,17 @@ import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController.Dependencies
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController.Output
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsEventToIntent
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsLabelToBusEvent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsLabelToOutput
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsStateToModel
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
-import com.arkivanov.mvikotlin.sample.todo.reaktive.eventBus
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoDetailsStoreFactory
 import com.badoo.reaktive.observable.mapNotNull
 
 class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsController {
 
-    private val todoEditStore =
+    private val todoDetailsStore =
         TodoDetailsStoreFactory(
             storeFactory = dependencies.storeFactory,
             database = dependencies.database,
@@ -27,20 +27,17 @@ class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsCon
         ).create()
 
     init {
-        bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY) {
-            todoEditStore.labels.mapNotNull(detailsLabelToBusEvent) bindTo eventBus
-        }
-
-        dependencies.lifecycle.doOnDestroy(todoEditStore::dispose)
+        dependencies.lifecycle.doOnDestroy(todoDetailsStore::dispose)
     }
 
-    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
+    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle, output: (Output) -> Unit) {
         bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY) {
-            todoDetailsView.events.mapNotNull(detailsEventToIntent) bindTo todoEditStore
+            todoDetailsView.events.mapNotNull(detailsEventToIntent) bindTo todoDetailsStore
         }
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
-            todoEditStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
+            todoDetailsStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
+            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput) bindTo output
         }
     }
 }

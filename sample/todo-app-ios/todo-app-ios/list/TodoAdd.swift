@@ -10,18 +10,18 @@ import SwiftUI
 import TodoLib
 
 struct TodoAdd: View {
-    @ObservedObject var addView = TodoAddViewImpl()
+    @ObservedObject var proxy: TodoAddViewProxy
 
     var body: some View {
         let b = Binding<String>(
-            get: { self.addView.model?.text ?? "" },
-            set: { text in self.addView.dispatch(event: TodoAddViewEvent.TextChanged(text: text)) }
+            get: { self.proxy.model?.text ?? "" },
+            set: { text in self.proxy.dispatch(event: TodoAddViewEvent.TextChanged(text: text)) }
         )
         
         return HStack {
             TextField("Write ToDo", text: b)
 
-            Button(action: { self.addView.dispatch(event: TodoAddViewEvent.AddClicked()) }) {
+            Button(action: { self.proxy.dispatch(event: TodoAddViewEvent.AddClicked()) }) {
                 Text("Add")
             }
         }.padding(16)
@@ -30,6 +30,6 @@ struct TodoAdd: View {
 
 struct TodoAdd_Previews: PreviewProvider {
     static var previews: some View {
-        TodoAdd()
+        TodoAdd(proxy: TodoAddViewProxy())
     }
 }

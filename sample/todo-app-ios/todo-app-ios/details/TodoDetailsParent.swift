@@ -9,29 +9,54 @@
 import SwiftUI
 import TodoLib
 
-struct TodoDetailsParent: View {
-    var id: String
-    var controllerDeps: ControllerDeps
+private class ControllerHolder {
+    
+    let lifecycle: LifecycleWrapper
+    let controller: TodoDetailsReaktiveController
+    
+    init(deps: ControllerDeps, itemId: String) {
+        self.lifecycle = LifecycleWrapper()
         
-    var body: some View {
-        let lifecycle = LifecycleWrapper()
-
         let controller = TodoDetailsReaktiveController(
             dependencies: TodoDetailsControllerDeps(
-                storeFactory: controllerDeps.storeFactory,
-                database: controllerDeps.database,
+                storeFactory: deps.storeFactory,
+                database: deps.database,
                 lifecycle: lifecycle.lifecycle,
-                itemId: id
+                itemId: itemId
             )
         )
+        self.controller = controller
+    }
+}
 
-        let todoDetails = TodoDetails()
-
-        let dv = todoDetails.detailsView
-        controller.onViewCreated(todoDetailsView: dv, viewLifecycle: lifecycle.lifecycle)
-        
-        return todoDetails
-            .onAppear(perform: lifecycle.start)
-            .onDisappear(perform: lifecycle.stop)
+struct TodoDetailsParent: View {
+    
+    let deps: ControllerDeps
+    let itemId: String
+    let output: (TodoDetailsControllerOutput) -> Void
+    @State private var controller: ControllerHolder?
+    @State private var viewLifecycle: LifecycleRegistry?
+    @State private var detailsView = TodoDetailsViewProxy()
+    
+    var body: some View {
+        TodoDetails(proxy: detailsView)
+            .onAppear {
+                if (self.controller == nil) {
+                    self.controller = ControllerHolder(deps: self.deps, itemId: self.itemId)
+                }
+                let viewLifecycle = LifecycleRegistry()
+                self.viewLifecycle = viewLifecycle
+                self.controller?.controller.onViewCreated(
+                    todoDetailsView: self.detailsView,
+                    viewLifecycle: viewLifecycle,
+                    output: self.output
+                )
+                self.controller?.lifecycle.start()
+                viewLifecycle.resume()
+        }
+        .onDisappear {
+            self.viewLifecycle?.destroy()
+            self.controller?.lifecycle.stop()
+        }
     }
 }

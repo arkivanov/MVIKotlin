@@ -9,19 +9,18 @@
 import SwiftUI
 import TodoLib
 
-struct TodoList<Details: View>: View {
-    @ObservedObject var listView = TodoListViewImpl()
-    var details: (String) -> Details
-    
+struct TodoList: View {
+    @ObservedObject var proxy: TodoListViewProxy
+
     var body: some View {
         List() {
-            ForEach(listView.model?.items ?? []) { item in
-                NavigationLink(destination: LazyView(self.details(item.id))) {
-                    TodoRow(
-                        text: item.data.text,
-                        isDone: item.data.isDone,
-                        onDoneClicked: { self.listView.dispatch(event: TodoListViewEvent.ItemDoneClicked(id: item.id)) }
-                    )
+            ForEach(proxy.model?.items ?? []) { item in
+                TodoRow(
+                    text: item.data.text,
+                    isDone: item.data.isDone,
+                    onDoneClicked: { self.proxy.dispatch(event: TodoListViewEvent.ItemDoneClicked(id: item.id)) }
+                ).onTapGesture {
+                    self.proxy.dispatch(event: TodoListViewEvent.ItemClicked(id: item.id))
                 }
             }.onDelete(perform: delete)
         }
@@ -29,14 +28,14 @@ struct TodoList<Details: View>: View {
     
     func delete(at offsets: IndexSet) {
         offsets.forEach { index in
-            guard let id = listView.model?.items[index].id else { return }
-            self.listView.dispatch(event: TodoListViewEvent.ItemDeleteClicked(id: id))
+            guard let id = proxy.model?.items[index].id else { return }
+            self.proxy.dispatch(event: TodoListViewEvent.ItemDeleteClicked(id: id))
         }
     }
 }
 
 struct TodoList_Previews: PreviewProvider {
     static var previews: some View {
-        TodoList(details: { id in Text("") })
+        TodoList(proxy: TodoListViewProxy())
     }
 }

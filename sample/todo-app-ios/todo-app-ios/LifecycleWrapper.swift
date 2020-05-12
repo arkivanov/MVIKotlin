@@ -21,12 +21,10 @@ class LifecycleWrapper {
     }
     
     func start() {
-        lifecycle.onStart()
-        lifecycle.onResume()
+        lifecycle.resume()
     }
     
     func stop() {
-        lifecycle.onPause()
-        lifecycle.onStop()
+        lifecycle.stop()
     }
 }

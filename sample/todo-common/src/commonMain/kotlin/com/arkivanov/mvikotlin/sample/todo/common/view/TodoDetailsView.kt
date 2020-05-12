@@ -8,8 +8,7 @@ interface TodoDetailsView : MviView<Model, Event> {
 
     data class Model(
         val text: String,
-        val isDone: Boolean,
-        val isFlowFinished: Boolean
+        val isDone: Boolean
     )
 
     sealed class Event {

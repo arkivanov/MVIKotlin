@@ -15,10 +15,7 @@ import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Event
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView.Model
 
-class TodoDetailsViewImpl(
-    root: View,
-    private val onFinished: () -> Unit
-) : BaseMviView<Model, Event>(), TodoDetailsView {
+class TodoDetailsViewImpl(root: View) : BaseMviView<Model, Event>(), TodoDetailsView {
 
     private val textWatcher =
         object : SimpleTextWatcher() {
@@ -37,12 +34,6 @@ class TodoDetailsViewImpl(
             }
 
             diff(get = Model::isDone, set = checkBox::setChecked)
-
-            diff(Model::isFlowFinished) {
-                if (it) {
-                    onFinished()
-                }
-            }
         }
 
     init {

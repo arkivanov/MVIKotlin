@@ -9,20 +9,22 @@ import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Dependencies
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Input
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Output
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addEventToAddIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addLabelToListIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addStateToAddModel
-import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.busEventToListIntent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.inputToListIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listEventToListIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listEventToOutput
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listStateToListModel
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
-import com.arkivanov.mvikotlin.sample.todo.reaktive.eventBus
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoAddStoreFactory
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoListStoreFactory
 import com.badoo.reaktive.observable.mapNotNull
+import com.badoo.reaktive.subject.Relay
+import com.badoo.reaktive.subject.publish.PublishSubject
 
 class TodoListReaktiveController(dependencies: Dependencies) : TodoListController {
 
@@ -38,9 +40,12 @@ class TodoListReaktiveController(dependencies: Dependencies) : TodoListControlle
             database = dependencies.database
         ).create()
 
+    private val inputRelay: Relay<Input> = PublishSubject()
+    override val input: (Input) -> Unit = inputRelay::onNext
+
     init {
         bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY) {
-            eventBus.mapNotNull(busEventToListIntent) bindTo todoListStore
+            inputRelay.mapNotNull(inputToListIntent) bindTo todoListStore
             todoAddStore.labels.mapNotNull(addLabelToListIntent) bindTo todoListStore
         }
 

@@ -9,7 +9,7 @@
 import Foundation
 import TodoLib
 
-class TodoListViewImpl: BaseMviView<TodoListViewModel, TodoListViewEvent>, TodoListView, ObservableObject {
+class TodoListViewProxy: BaseMviView<TodoListViewModel, TodoListViewEvent>, TodoListView, ObservableObject {
     
     @Published var model: TodoListViewModel?
     
