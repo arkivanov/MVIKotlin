@@ -8,7 +8,7 @@ MVI stands for Model-View-Intent. It is an architectural pattern that utilizes u
 
 <img src="docs/media/mvi.jpg" alt="MVI" width="300"/>
 
-## What is MVIKotlin
+### What is MVIKotlin
 MVIKotlin is a Kotlin Multiplatform framework that provides a way of (not only) writing
 shared code using MVI pattern. It also includes powerful debug tools like
 logging and time travel. The main functionality of the framework does not depend on any
