@@ -1,4 +1,4 @@
-[Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | Logging | [Time travel](time_travel.md)
+[Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | Logging | [Time travel](time_travel.md)
 
 ## Logging
 
@@ -34,4 +34,4 @@ Normally you should define a global `StoreFactory` somewhere in the main app and
 
 Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
 
-[Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | Logging | [Time travel](time_travel.md)
+[Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | Logging | [Time travel](time_travel.md)

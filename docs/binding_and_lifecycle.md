@@ -1,4 +1,4 @@
-[Overview](index.md) | [Store](store.md) | [View](view.md) | Binding and Lifecycle | [Logging](logging.md) | [Time travel](time_travel.md)
+[Overview](index.md) | [Store](store.md) | [View](view.md) | Binding and Lifecycle | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
 
 ## Binding
 
@@ -93,4 +93,4 @@ We passed the `viewLifecycle` together with the `CalculatorView` itself and used
 
 Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
 
-[Overview](index.md) | [Store](store.md) | [View](view.md) | Binding and Lifecycle | [Logging](logging.md) | [Time travel](time_travel.md)
+[Overview](index.md) | [Store](store.md) | [View](view.md) | Binding and Lifecycle | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)

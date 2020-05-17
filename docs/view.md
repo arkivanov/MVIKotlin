@@ -1,4 +1,4 @@
-[Overview](index.md) | [Store](store.md) | View | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+[Overview](index.md) | [Store](store.md) | View | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
 
 ## View
 
@@ -123,4 +123,4 @@ class UserInfoViewImpl : BaseMviView<Model, Nothing>(), UserInfoView {
 
 Every `diff` statement accepts a `getter` that extracts a value from the `Model`, a `setter` that sets the value to the view and an optional `comparator` of values.
 
-[Overview](index.md) | [Store](store.md) | View | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+[Overview](index.md) | [Store](store.md) | View | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)

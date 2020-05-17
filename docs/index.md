@@ -1,4 +1,4 @@
-Overview | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+Overview | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
 
 ## Overview
 
@@ -58,4 +58,4 @@ MVIKotlin is Kotlin/Native friendly and supports its tricky memory model (please
 
 `Stores` are freezable, however you should be careful not to freeze any dependency that is not intended to be frozen. When you subscribe to a `Store` the subscriber will not be frozen, unless you switch threads somewhere down the stream.
 
-Overview | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+Overview | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
