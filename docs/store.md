@@ -1,4 +1,4 @@
-[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
 
 ## Store
 
@@ -392,4 +392,4 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
