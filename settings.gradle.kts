@@ -17,6 +17,7 @@ include(":sample:todo-common")
 include(":sample:todo-common-internal")
 include(":sample:todo-reaktive")
 include(":sample:todo-coroutines")
+include(":sample:todo-app-js")
 
 //include(":tools:check-publication")
 
@@ -27,3 +28,4 @@ doIfBuildTargetAvailable<BuildTarget.Darwin> {
 doIfBuildTargetAvailable<BuildTarget.Android> {
     include(":sample:todo-app-android")
 }
+
