@@ -3,6 +3,7 @@ package com.arkivanov.mvikotlin.core.store
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
+import kotlin.js.JsName
 
 /**
  * `Store` is a place for business logic, it consumes `Intents` and produces `States`.
@@ -100,6 +101,7 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      *
      * @param observer an [Observer] that will receive the `States`
      */
+    @JsName("states")
     @MainThread
     fun states(observer: Observer<State>): Disposable
 
@@ -109,6 +111,7 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      *
      * @param observer an [Observer] that will receive the `Labels`
      */
+    @JsName("labels")
     @MainThread
     fun labels(observer: Observer<Label>): Disposable
 
@@ -117,6 +120,7 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      *
      * @param intent an `Intent`
      */
+    @JsName("accept")
     @MainThread
     fun accept(intent: Intent)
 

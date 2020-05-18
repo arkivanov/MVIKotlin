@@ -3,6 +3,7 @@ package com.arkivanov.mvikotlin.core.view
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
+import kotlin.js.JsName
 
 /**
  * Represents a source of the `View Events`
@@ -17,6 +18,7 @@ interface ViewEvents<out Event : Any> {
      *
      * @param observer an [Observer] that will receive the `View Events`
      */
+    @JsName("events")
     @MainThread
     fun events(observer: Observer<Event>): Disposable
 }

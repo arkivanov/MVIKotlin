@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.core.lifecycle
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import kotlin.js.JsName
 
 /**
  * Represents an object that has a lifecycle. Provides a way to subscribe for lifecycle events.
@@ -29,6 +30,7 @@ interface Lifecycle {
      *
      * @param callbacks a [Callbacks] that will receive lifecycle events
      */
+    @JsName("subscribe")
     @MainThread
     fun subscribe(callbacks: Callbacks)
 
@@ -37,6 +39,7 @@ interface Lifecycle {
      *
      * @param callbacks a [Callbacks] to be unsubscribed
      */
+    @JsName("unsubscribe")
     @MainThread
     fun unsubscribe(callbacks: Callbacks)
 

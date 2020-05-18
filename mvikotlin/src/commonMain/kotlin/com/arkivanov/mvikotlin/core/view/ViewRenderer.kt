@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.core.view
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import kotlin.js.JsName
 
 /**
  * Represents a consumer of the `View Models`
@@ -14,6 +15,7 @@ interface ViewRenderer<in Model : Any> {
      *
      * @param model a `View Model` to be rendered (displayed)
      */
+    @JsName("render")
     @MainThread
     fun render(model: Model)
 }

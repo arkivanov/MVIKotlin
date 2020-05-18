@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import kotlin.js.JsName
 
 /**
  * Used for [Store] bootstrapping. Dispatch initial `Actions`, subscribe to data sources or do any other initializations.
@@ -18,6 +19,7 @@ interface Bootstrapper<out Action : Any> {
      *
      * @param actionConsumer a consumer of Actions to be used by the Bootstrapper, must be invoked on the main thread
      */
+    @JsName("init")
     @MainThread
     fun init(actionConsumer: (Action) -> Unit)
 
