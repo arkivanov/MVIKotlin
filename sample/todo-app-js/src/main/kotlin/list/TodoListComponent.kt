@@ -1,22 +1,29 @@
+package list
+
+import TodoDatabaseImpl
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListControllerDeps
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoListReaktiveController
+import com.ccfraser.muirwik.components.MTypographyVariant
 import com.ccfraser.muirwik.components.mContainer
-import com.ccfraser.muirwik.components.mCssBaseline
 import com.ccfraser.muirwik.components.mTypography
 import com.ccfraser.muirwik.components.spacingUnits
 import kotlinx.css.*
+import list.TodoListParentComponent.TodoComponentStyles.listCss
 import react.*
+import root.LifecycleWrapper
+import root.debugLog
+import styled.StyleSheet
 import styled.css
 import styled.styledDiv
 
 class TodoListParentComponent : RComponent<TodoListParentProps, TodoListParentState>() {
 
-    private val listViewDelegate = TodoListViewImpl(updateState = ::updateState)
-    private val addViewDelegate = TodoAddViewImpl(updateState = ::updateState)
-    private val lifecycleWrapper = TodoLifecycleWrapper()
+    private val listViewDelegate = TodoListViewProxy(updateState = ::updateState)
+    private val addViewDelegate = TodoAddViewProxy(updateState = ::updateState)
+    private val lifecycleWrapper = LifecycleWrapper()
     private val controller = TodoListReaktiveController(
         dependencies = TodoListControllerDeps(
             DefaultStoreFactory,
@@ -51,7 +58,6 @@ class TodoListParentComponent : RComponent<TodoListParentProps, TodoListParentSt
 
     override fun RBuilder.render() {
         debugLog(state.listModel.toString())
-        mCssBaseline()
         mContainer {
             attrs {
                 component = "main"
@@ -64,7 +70,24 @@ class TodoListParentComponent : RComponent<TodoListParentProps, TodoListParentSt
                     flexDirection = FlexDirection.column
                     alignItems = Align.center
                 }
-                mTypography("todo here")
+                mTypography("Todos", variant = MTypographyVariant.h2)
+                styledDiv {
+                    css(TodoComponentStyles.addCss)
+                    addTodo(
+                        textValue = state.addModel.text,
+                        onTextChanged = { addViewDelegate.dispatchEvent(TodoAddView.Event.TextChanged(it)) },
+                        onAddClick = { addViewDelegate.dispatchEvent(TodoAddView.Event.AddClicked) }
+                    )
+                }
+                styledDiv {
+                    css(listCss)
+                    listTodo(
+                        todos = state.listModel.items,
+                        onClick = { listViewDelegate.dispatchEvent(TodoListView.Event.ItemClicked(it)) },
+                        onDoneClick = { listViewDelegate.dispatchEvent(TodoListView.Event.ItemDoneClicked(it)) },
+                        onDeleteClick = { listViewDelegate.dispatchEvent(TodoListView.Event.ItemDeleteClicked(it)) }
+                    )
+                }
             }
         }
 
@@ -72,6 +95,18 @@ class TodoListParentComponent : RComponent<TodoListParentProps, TodoListParentSt
 
     override fun componentWillUnmount() {
         lifecycleWrapper.stop()
+    }
+
+    private object TodoComponentStyles : StyleSheet("TodoComponentStyles", isStatic = true) {
+        val addCss by css {
+            display = Display.inlineFlex
+            width = 100.pct
+            padding(2.spacingUnits)
+        }
+
+        val listCss by css {
+            width = 100.pct
+        }
     }
 
 }

@@ -1,6 +1,8 @@
+package root
+
 import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
 
-class TodoLifecycleWrapper {
+class LifecycleWrapper {
 
     val lifecycle = LifecycleRegistry()
 

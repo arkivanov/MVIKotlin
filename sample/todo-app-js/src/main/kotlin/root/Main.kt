@@ -1,4 +1,4 @@
-
+package root
 import react.dom.render
 import kotlin.browser.document
 import kotlin.browser.window
