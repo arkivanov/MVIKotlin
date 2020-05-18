@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import kotlin.js.JsName
 
 /**
  * Applies `Results` to `States`. Normally should be a singleton.
@@ -19,6 +20,7 @@ interface Reducer<State, in Result> {
      *
      * @return a new `State`
      */
+    @JsName("reduce")
     @MainThread
     fun State.reduce(result: Result): State
 }
