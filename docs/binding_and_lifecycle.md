@@ -58,12 +58,18 @@ class CalculatorController {
     fun onViewDestroyed() {
         binder = null
     }
+    
+    fun onDestroy() {
+        store.dispose()
+    }
 }
 ```
 
 The controller is supposed to be used by platforms. We are creating the `Binder` in `onViewCreated(CalculatorView)` callback which is called by a platform when the `CalculatorView` is created. The `Binder` will bind `CalculatorStore` with `CalculatorView` in `onStart()` and will unbind them in `onStop()`.
 
 Same way you can bind any outputs with any inputs. E.g. you can bind `Labels` of a `StoreA` with `Intents` of a `StoreB`, or `View Events` with an analytics tracker.
+
+Please note that you must dispose `Stores` at the end of life cycle. In this example the `CalculatorStore` is disposed in `onDestroy` callback.
 
 ## Lifecycle
 
@@ -77,8 +83,12 @@ You can subscribe to `Lifecycle` events and unsubscribe from them. You can conve
 Work with the `Binder` can be simplified if you use the `Lifecycle`. Let's simplify our previous binding example::
 
 ```kotlin
-class CalculatorController {
+class CalculatorController(lifecycle: Lifecycle) {
     private val store = CalculatorStoreFactory(DefaultStoreFactory).create()
+
+    init {
+        lifecycle.doOnDestroy(store::dispose)
+    }
 
     fun onViewCreated(view: CalculatorView, viewLifecycle: Lifecycle) {
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
@@ -90,6 +100,8 @@ class CalculatorController {
 ```
 
 We passed the `viewLifecycle` together with the `CalculatorView` itself and used it for binding. Now `Binder` will automatically connect endpoints when started and disconnect when stopped.
+
+Same as before we dispose the `CalculatorStore` at the end of `CalculatorController` life cycle.
 
 Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
 
