@@ -13,6 +13,8 @@ internal class StateKeeperProviderImpl<State : Any, in T : Any>(
                 get() = savedState?.let { get(it, key) } as S?
 
             override fun register(supplier: () -> S) {
+                check(key !in suppliers) { "The supplier is already register with this key: $key" }
+
                 suppliers[key] = supplier
             }
         }
