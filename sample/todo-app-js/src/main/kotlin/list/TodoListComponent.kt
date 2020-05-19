@@ -1,78 +1,108 @@
 package list
 
-import TodoDatabaseImpl
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListControllerDeps
+import FrameworkType
+import LifecycleConsumer
+import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
+import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
+import com.arkivanov.mvikotlin.sample.todo.coroutines.controller.TodoListCoroutinesController
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoListReaktiveController
 import com.ccfraser.muirwik.components.MTypographyVariant
 import com.ccfraser.muirwik.components.mContainer
 import com.ccfraser.muirwik.components.mTypography
-import com.ccfraser.muirwik.components.spacingUnits
-import kotlinx.css.*
-import list.TodoListParentComponent.TodoComponentStyles.listCss
 import react.*
+import root.App
+import root.App.TodoStyles.addCss
+import root.App.TodoStyles.columnCss
+import root.App.TodoStyles.listCss
 import root.LifecycleWrapper
 import root.debugLog
-import styled.StyleSheet
 import styled.css
 import styled.styledDiv
 
-class TodoListParentComponent : RComponent<TodoListParentProps, TodoListParentState>() {
+class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListParentProps, TodoListParentState>(props),
+    LifecycleConsumer<TodoListController.Input> {
 
     private val listViewDelegate = TodoListViewProxy(updateState = ::updateState)
     private val addViewDelegate = TodoAddViewProxy(updateState = ::updateState)
     private val lifecycleWrapper = LifecycleWrapper()
-    private val controller = TodoListReaktiveController(
-        dependencies = TodoListControllerDeps(
-            DefaultStoreFactory,
-            TodoDatabaseImpl(),
-            lifecycleWrapper.lifecycle
-        )
-    )
+    private lateinit var controller: TodoListController
+    override lateinit var input: (TodoListController.Input) -> Unit
+    override val lifecycle: Lifecycle = lifecycleWrapper.lifecycle
 
     init {
+        debugLog("init")
         state = TodoListParentState(TodoListView.Model(listOf()), TodoAddView.Model(""))
     }
 
+    override fun componentWillReceiveProps(nextProps: TodoListParentProps) {
+        debugLog("componentWillReceiveProps")
+        if (nextProps != props) {
+            nextProps.dependencies.input?.let(input)
+        }
+    }
+
     override fun componentWillMount() {
-        lifecycleWrapper.start()
+        debugLog("componentWillMount")
     }
 
     override fun componentDidMount() {
+        lifecycleWrapper.start()
+        controller = createController()
+        input = controller.input
+        debugLog("componentDidMount")
         controller.onViewCreated(
             listViewDelegate,
             addViewDelegate,
-            lifecycleWrapper.lifecycle,
-            output = { debugLog("output income") })
+            lifecycle,
+            props.dependencies.output
+        )
+    }
+
+    private fun createController(): TodoListController {
+        val dependencies = props.dependencies
+        val todoListControllerDependencies =
+            object : TodoListController.Dependencies, Dependencies by dependencies {
+                override val lifecycle: Lifecycle = lifecycleWrapper.lifecycle
+            }
+
+        return when (dependencies.frameworkType) {
+            FrameworkType.REAKTIVE -> TodoListReaktiveController(todoListControllerDependencies)
+            FrameworkType.COROUTINES -> TodoListCoroutinesController(todoListControllerDependencies)
+        }
+    }
+
+    override fun componentWillUpdate(nextProps: TodoListParentProps, nextState: TodoListParentState) {
+        debugLog("componentWillUpdate")
     }
 
     private fun updateState(newModel: TodoListView.Model) {
+        debugLog("updateState List")
         setState { listModel = newModel }
     }
 
     private fun updateState(newModel: TodoAddView.Model) {
+        debugLog("updateState Add")
         setState { addModel = newModel }
     }
 
     override fun RBuilder.render() {
-        debugLog(state.listModel.toString())
+        debugLog("List render")
         mContainer {
             attrs {
                 component = "main"
                 maxWidth = "xs"
             }
             styledDiv {
-                css {
-                    marginTop = 9.spacingUnits
-                    display = Display.flex
-                    flexDirection = FlexDirection.column
-                    alignItems = Align.center
+                css(columnCss)
+                mTypography("Todos", variant = MTypographyVariant.h2) {
+                    css(App.TodoStyles.headerMarginCss)
                 }
-                mTypography("Todos", variant = MTypographyVariant.h2)
                 styledDiv {
-                    css(TodoComponentStyles.addCss)
+                    css(addCss)
                     addTodo(
                         textValue = state.addModel.text,
                         onTextChanged = { addViewDelegate.dispatchEvent(TodoAddView.Event.TextChanged(it)) },
@@ -94,28 +124,32 @@ class TodoListParentComponent : RComponent<TodoListParentProps, TodoListParentSt
     }
 
     override fun componentWillUnmount() {
+        debugLog("componentWillUnmount")
         lifecycleWrapper.stop()
     }
 
-    private object TodoComponentStyles : StyleSheet("TodoComponentStyles", isStatic = true) {
-        val addCss by css {
-            display = Display.inlineFlex
-            width = 100.pct
-            padding(2.spacingUnits)
-        }
-
-        val listCss by css {
-            width = 100.pct
-        }
+    interface Dependencies {
+        val storeFactory: StoreFactory
+        val database: TodoDatabase
+        val frameworkType: FrameworkType
+        val output: (TodoListController.Output) -> Unit
+        val input: TodoListController.Input?
     }
 
 }
 
-interface TodoListParentProps : RProps
+interface TodoListParentProps : RProps {
+    var dependencies: TodoListParentComponent.Dependencies
+}
 
 class TodoListParentState(
     var listModel: TodoListView.Model,
     var addModel: TodoAddView.Model
 ) : RState
 
-fun RBuilder.todoContainer() = child(TodoListParentComponent::class) {}
+fun RBuilder.todoContainer(
+    dependencies: TodoListParentComponent.Dependencies
+) =
+    child(TodoListParentComponent::class) {
+        attrs.dependencies = dependencies
+    }

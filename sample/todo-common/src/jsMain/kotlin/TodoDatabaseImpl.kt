@@ -2,11 +2,11 @@ import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.badoo.reaktive.utils.atomic.AtomicReference
 import com.badoo.reaktive.utils.atomic.update
+import kotlin.random.Random
 
 class TodoDatabaseImpl : TodoDatabase {
 
     private val map = AtomicReference<Map<String, TodoItem>>(emptyMap())
-    private var counter = 0
 
     init {
         create(TodoItem.Data(text = "Item 1"))
@@ -17,7 +17,7 @@ class TodoDatabaseImpl : TodoDatabase {
     override fun get(id: String): TodoItem? = map.value[id]
 
     override fun create(data: TodoItem.Data): TodoItem {
-        val item = TodoItem(id = counter++.toString(), data = data)
+        val item = TodoItem(id = Random.nextInt().toString(), data = data)
         map.update { it.plus(item.id to item) }
 
         return item

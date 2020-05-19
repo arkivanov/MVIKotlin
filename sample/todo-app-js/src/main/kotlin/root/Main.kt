@@ -1,19 +1,32 @@
 package root
+
+import FrameworkType
+import TodoDatabaseImpl
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
+import frameWorkType
 import react.dom.render
+import storeFactoryInstance
 import kotlin.browser.document
 import kotlin.browser.window
 
 private class Application {
+
     fun start() {
         window.onload = {
             render(document.getElementById("app")) {
-                app()
+                app(object : App.Dependencies {
+                    override val storeFactory: StoreFactory = storeFactoryInstance
+                    override val database: TodoDatabase = TodoDatabaseImpl()
+                    override val frameworkType: FrameworkType = frameWorkType
+                })
             }
         }
     }
+
 }
 
-fun main(){
+fun main() {
     Application().start()
 }
 

@@ -20,14 +20,16 @@ fun RBuilder.listTodo(
         todos.forEach { todoItem ->
             val id = todoItem.id
 
-            mListItem(onClick = { onClick(id) }) {
+            mListItem {
                 mCheckbox(
                     checked = todoItem.data.isDone,
                     onChange = { _, _ -> onDoneClick(id) }
                 )
                 mListItemText(
                     primary = builder2.mTypography(text = todoItem.data.text, noWrap = true)
-                )
+                ) {
+                    attrs.onClick = { onClick(id) }
+                }
                 mIconButton(
                     iconName = "delete",
                     onClick = { onDeleteClick(id) }

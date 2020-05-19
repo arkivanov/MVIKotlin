@@ -43,5 +43,5 @@ dependencies {
     implementation(npm("@material-ui/icons", "4.9.1"))
 }
 
-kotlin.target.browser { }
-kotlin.target.nodejs {}
+kotlin.target.useCommonJs()
+kotlin.target.browser {}
