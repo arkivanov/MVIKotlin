@@ -29,7 +29,6 @@ internal class TodoDetailsStoreFactory(
     private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Result, Label>() {
         override fun executeAction(action: Unit, getState: () -> State) {
             singleFromFunction {
-                println("executeAction, id = $itemId")
                 database.get(itemId)
             }
                 .subscribeOn(ioScheduler)
