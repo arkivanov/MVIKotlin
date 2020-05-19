@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.badoo.reaktive.utils.ensureNeverFrozen
+import kotlin.js.JsName
 
 /**
  * Abstract implementation of the [MviView] that provides ability to dispatch `View Events`
@@ -25,6 +26,7 @@ open class BaseMviView<in Model : Any, Event : Any> : MviView<Model, Event> {
      *
      * @param event a `View Event` to be dispatched
      */
+    @JsName("dispatch")
     @MainThread
     protected open fun dispatch(event: Event) {
         subject.onNext(event)

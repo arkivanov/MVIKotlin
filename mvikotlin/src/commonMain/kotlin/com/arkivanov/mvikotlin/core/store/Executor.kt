@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import kotlin.js.JsName
 
 /**
  * `Executor` is the place for business logic.
@@ -18,6 +19,7 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
      *
      * @param callbacks an instance of [Callbacks] created by the [Store]
      */
+    @JsName("init")
     @MainThread
     fun init(callbacks: Callbacks<State, Result, Label>)
 
@@ -26,6 +28,7 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
      *
      * @param intent an `Intent` received by the [Store]
      */
+    @JsName("handleIntent")
     @MainThread
     fun handleIntent(intent: Intent) {
     }
@@ -33,6 +36,7 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
     /**
      * Called by the [Store] for every `Action` produced by the [Bootstrapper]
      */
+    @JsName("handleAction")
     @MainThread
     fun handleAction(action: Action) {
     }
@@ -59,6 +63,7 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
          *
          * @param result a `Result` to be dispatched
          */
+        @JsName("onResult")
         @MainThread
         fun onResult(result: Result)
 
@@ -67,6 +72,7 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
          *
          * @param label a `Label` to be published
          */
+        @JsName("onLabel")
         @MainThread
         fun onLabel(label: Label)
     }

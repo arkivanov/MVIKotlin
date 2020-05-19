@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import kotlin.js.JsName
 
 /**
  * Creates instances of [Store]s using the provided components.
@@ -8,6 +9,7 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
  */
 interface StoreFactory {
 
+    @JsName("create")
     @MainThread
     fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String? = null,
