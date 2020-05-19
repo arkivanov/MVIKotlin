@@ -14,9 +14,9 @@ import com.ccfraser.muirwik.components.MTypographyVariant
 import com.ccfraser.muirwik.components.mContainer
 import com.ccfraser.muirwik.components.mTypography
 import react.*
-import root.App
 import root.App.TodoStyles.addCss
 import root.App.TodoStyles.columnCss
+import root.App.TodoStyles.headerMarginCss
 import root.App.TodoStyles.listCss
 import root.LifecycleWrapper
 import root.debugLog
@@ -40,7 +40,7 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
 
     override fun componentWillReceiveProps(nextProps: TodoListParentProps) {
         debugLog("componentWillReceiveProps")
-        if (nextProps != props) {
+        if (nextProps.dependencies.input != props.dependencies.input) {
             nextProps.dependencies.input?.let(input)
         }
     }
@@ -99,7 +99,7 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
             styledDiv {
                 css(columnCss)
                 mTypography("Todos", variant = MTypographyVariant.h2) {
-                    css(App.TodoStyles.headerMarginCss)
+                    css(headerMarginCss)
                 }
                 styledDiv {
                     css(addCss)

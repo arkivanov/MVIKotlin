@@ -16,10 +16,11 @@ import com.ccfraser.muirwik.components.form.MFormControlVariant
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.css.*
 import list.SlideUpTransitionComponent
 import react.*
 import root.App.TodoStyles.columnCss
+import root.App.TodoStyles.detailsButtonsCss
+import root.App.TodoStyles.detailsInputCss
 import root.App.TodoStyles.headerMarginCss
 import root.LifecycleWrapper
 import root.debugLog
@@ -87,23 +88,22 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
                     mTypography(text = "Details", variant = MTypographyVariant.h2) {
                         css(headerMarginCss)
                     }
-                    mTextFieldMultiLine(
-                        variant = MFormControlVariant.outlined,
-                        value = model.text,
-                        label = "add todo text here",
-                        onChange = {
-                            detailsViewProxy.dispatchEvent(
-                                TodoDetailsView.Event.TextChanged(it.targetInputValue)
-                            )
-                        }
-                    )
                     styledDiv {
-                        css {
-                            display = Display.flex
-                            flexDirection = FlexDirection.row
-                            justifyContent = JustifyContent.spaceBetween
-                            alignItems = Align.center
-                        }
+                        css(detailsInputCss)
+                        mTextFieldMultiLine(
+                            variant = MFormControlVariant.outlined,
+                            value = model.text,
+                            label = "add todo text here",
+                            fullWidth = true,
+                            onChange = {
+                                detailsViewProxy.dispatchEvent(
+                                    TodoDetailsView.Event.TextChanged(it.targetInputValue)
+                                )
+                            }
+                        )
+                    }
+                    styledDiv {
+                        css (detailsButtonsCss)
                         mCheckboxWithLabel(
                             label = "complete",
                             checked = model.isDone,

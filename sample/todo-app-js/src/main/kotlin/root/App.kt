@@ -105,6 +105,20 @@ abstract class App : RComponent<AppProps, AppState>() {
         val headerMarginCss by css {
             marginTop = 9.spacingUnits
         }
+
+        val detailsButtonsCss by css {
+            display = Display.flex
+            flexDirection = FlexDirection.row
+            justifyContent = JustifyContent.spaceBetween
+            alignItems = Align.center
+            width = 100.pct
+            paddingLeft = 2.spacingUnits
+        }
+
+        val detailsInputCss by css{
+            width = 100.pct
+            padding(2.spacingUnits)
+        }
     }
 
     interface Dependencies {
