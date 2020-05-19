@@ -103,7 +103,6 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      */
     @JsName("states")
     @MainThread
-    @JsName("states")
     fun states(observer: Observer<State>): Disposable
 
     /**
@@ -114,7 +113,6 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      */
     @JsName("labels")
     @MainThread
-    @JsName("labels")
     fun labels(observer: Observer<Label>): Disposable
 
     /**
@@ -124,7 +122,6 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      */
     @JsName("accept")
     @MainThread
-    @JsName("accept")
     fun accept(intent: Intent)
 
     /**
