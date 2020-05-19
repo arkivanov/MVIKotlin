@@ -23,7 +23,7 @@ import root.App.TodoStyles.detailsButtonsCss
 import root.App.TodoStyles.detailsInputCss
 import root.App.TodoStyles.headerMarginCss
 import root.LifecycleWrapper
-import root.debugLog
+
 import styled.css
 import styled.styledDiv
 
@@ -35,12 +35,10 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
     private lateinit var controller: TodoDetailsController
 
     init {
-        debugLog("init")
         state = TodoDetailsParentState(TodoDetailsView.Model("", false), true)
     }
 
     override fun componentDidMount() {
-        debugLog("componentDidMount")
         lifecycleWrapper.start()
         controller = createController()
         controller.onViewCreated(
@@ -59,8 +57,10 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
             }
 
         return when (dependencies.frameworkType) {
-            FrameworkType.REAKTIVE -> TodoDetailsReaktiveController(todoDetailsControllerDependencies)
-            FrameworkType.COROUTINES -> TodoDetailsCoroutinesController(todoDetailsControllerDependencies)
+            FrameworkType.REAKTIVE ->
+                TodoDetailsReaktiveController(todoDetailsControllerDependencies)
+            FrameworkType.COROUTINES ->
+                TodoDetailsCoroutinesController(todoDetailsControllerDependencies)
         }
     }
 
@@ -69,15 +69,14 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
     }
 
     override fun RBuilder.render() {
-        debugLog("Details render")
         val model = state.model
         mDialog(
             open = state.open,
             fullScreen = true,
             transitionComponent = SlideUpTransitionComponent::class,
-            onClose = { _, _ -> setState { open = false } }
+            onClose = { _, _ -> handleClose() }
         ) {
-            debugLog(model.toString())
+            appBarWithButton(icon = "close", onIconClick = ::handleClose)
             mContainer {
                 attrs {
                     component = "main"
@@ -103,18 +102,22 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
                         )
                     }
                     styledDiv {
-                        css (detailsButtonsCss)
+                        css(detailsButtonsCss)
                         mCheckboxWithLabel(
                             label = "complete",
                             checked = model.isDone,
                             onChange = { _, _ ->
-                                detailsViewProxy.dispatchEvent(TodoDetailsView.Event.DoneClicked)
+                                detailsViewProxy.dispatchEvent(
+                                    TodoDetailsView.Event.DoneClicked
+                                )
                             }
                         )
                         mIconButton(
                             iconName = "delete",
                             onClick = {
-                                detailsViewProxy.dispatchEvent(TodoDetailsView.Event.DeleteClicked)
+                                detailsViewProxy.dispatchEvent(
+                                    TodoDetailsView.Event.DeleteClicked
+                                )
                             }
                         )
                     }
@@ -133,8 +136,11 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
 
     }
 
+    private fun handleClose() {
+        setState { open = false }
+    }
+
     override fun componentWillUnmount() {
-        debugLog("componentWillUnmount")
         lifecycleWrapper.stop()
     }
 

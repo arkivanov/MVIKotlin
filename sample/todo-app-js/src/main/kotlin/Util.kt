@@ -11,6 +11,7 @@ val storeFactoryInstance =
     } else {
         DefaultStoreFactory
     }
+
 val frameWorkType = FrameworkType.REAKTIVE
 
 enum class FrameworkType {

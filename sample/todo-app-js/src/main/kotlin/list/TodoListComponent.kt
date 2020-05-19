@@ -19,7 +19,6 @@ import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.headerMarginCss
 import root.App.TodoStyles.listCss
 import root.LifecycleWrapper
-import root.debugLog
 import styled.css
 import styled.styledDiv
 
@@ -34,26 +33,19 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
     override val lifecycle: Lifecycle = lifecycleWrapper.lifecycle
 
     init {
-        debugLog("init")
         state = TodoListParentState(TodoListView.Model(listOf()), TodoAddView.Model(""))
     }
 
     override fun componentWillReceiveProps(nextProps: TodoListParentProps) {
-        debugLog("componentWillReceiveProps")
         if (nextProps.dependencies.input != props.dependencies.input) {
             nextProps.dependencies.input?.let(input)
         }
-    }
-
-    override fun componentWillMount() {
-        debugLog("componentWillMount")
     }
 
     override fun componentDidMount() {
         lifecycleWrapper.start()
         controller = createController()
         input = controller.input
-        debugLog("componentDidMount")
         controller.onViewCreated(
             listViewDelegate,
             addViewDelegate,
@@ -75,22 +67,15 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
         }
     }
 
-    override fun componentWillUpdate(nextProps: TodoListParentProps, nextState: TodoListParentState) {
-        debugLog("componentWillUpdate")
-    }
-
     private fun updateState(newModel: TodoListView.Model) {
-        debugLog("updateState List")
         setState { listModel = newModel }
     }
 
     private fun updateState(newModel: TodoAddView.Model) {
-        debugLog("updateState Add")
         setState { addModel = newModel }
     }
 
     override fun RBuilder.render() {
-        debugLog("List render")
         mContainer {
             attrs {
                 component = "main"
@@ -124,7 +109,6 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
     }
 
     override fun componentWillUnmount() {
-        debugLog("componentWillUnmount")
         lifecycleWrapper.stop()
     }
 

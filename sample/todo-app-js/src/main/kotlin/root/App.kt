@@ -23,13 +23,10 @@ abstract class App : RComponent<AppProps, AppState>() {
     private var themeColor = "light"
 
     init {
-        debugLog("init")
         state = AppState(todoId = "", listInput = null)
     }
 
     override fun RBuilder.render() {
-        debugLog("App render")
-
         mCssBaseline()
         @Suppress("UnsafeCastFromDynamic")
         val themeOptions: ThemeOptions = js("({palette: { type: 'placeholder', primary: {main: 'placeholder'}}})")
@@ -57,25 +54,20 @@ abstract class App : RComponent<AppProps, AppState>() {
     }
 
     private fun listOutput(output: TodoListController.Output) {
-        debugLog("listOutput")
         when (output) {
             is TodoListController.Output.ItemSelected -> setState { todoId = output.id }
         }
     }
 
     private fun closeDetails() {
-        debugLog("closeDetails")
         setState { todoId = "" }
     }
 
     private fun updateListInput(input: TodoListController.Input) {
-        debugLog("updateListInput")
         setState { listInput = input }
     }
 
     private fun detailsOutput(output: TodoDetailsController.Output) {
-        debugLog("detailsOutput")
-
         when (output) {
             TodoDetailsController.Output.Finished -> closeDetails()
             is TodoDetailsController.Output.ItemChanged ->
@@ -115,7 +107,7 @@ abstract class App : RComponent<AppProps, AppState>() {
             paddingLeft = 2.spacingUnits
         }
 
-        val detailsInputCss by css{
+        val detailsInputCss by css {
             width = 100.pct
             padding(2.spacingUnits)
         }
