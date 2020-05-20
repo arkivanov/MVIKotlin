@@ -24,10 +24,10 @@ val detailsEventToIntent: Event.() -> Intent? =
         }
     }
 
-val detailsLabelToOutput: Label.() -> Output? =
+val detailsLabelToOutput: Label.() -> List<Output> =
     {
         when (this) {
-            is Label.Changed -> Output.ItemChanged(id = id, data = data)
-            is Label.Deleted -> Output.ItemDeleted(id = id)
+            is Label.Changed -> listOf(Output.ItemChanged(id = id, data = data))
+            is Label.Deleted -> listOf(Output.ItemDeleted(id = id), Output.Finished)
         }
     }
