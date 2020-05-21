@@ -18,6 +18,8 @@ import com.arkivanov.mvikotlin.sample.todo.coroutines.mainDispatcher
 import com.arkivanov.mvikotlin.sample.todo.coroutines.mapNotNull
 import com.arkivanov.mvikotlin.sample.todo.coroutines.store.TodoDetailsStoreFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flatMapConcat
 
 @ExperimentalCoroutinesApi
 class TodoDetailsCoroutinesController(dependencies: Dependencies) : TodoDetailsController {
@@ -42,7 +44,7 @@ class TodoDetailsCoroutinesController(dependencies: Dependencies) : TodoDetailsC
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainDispatcher) {
             todoDetailsStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
-            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput) bindTo { output(it) }
+            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput).flatMapConcat { it.asFlow() } bindTo { output(it) }
         }
     }
 }

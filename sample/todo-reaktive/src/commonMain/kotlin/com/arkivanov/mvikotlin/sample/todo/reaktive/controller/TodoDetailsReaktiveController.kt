@@ -15,6 +15,7 @@ import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsLabelTo
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsStateToModel
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoDetailsStoreFactory
+import com.badoo.reaktive.observable.flatten
 import com.badoo.reaktive.observable.mapNotNull
 
 class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsController {
@@ -37,7 +38,7 @@ class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsCon
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
             todoDetailsStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
-            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput) bindTo output
+            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput).flatten() bindTo output
         }
     }
 }
