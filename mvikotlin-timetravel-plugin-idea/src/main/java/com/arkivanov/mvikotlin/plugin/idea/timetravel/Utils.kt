@@ -3,11 +3,8 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 import com.arkivanov.mvikotlin.timetravel.proto.internal.StoreEventType
 import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.value.type
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
 import java.io.BufferedReader
 import java.io.IOException
-import javax.swing.Icon
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
@@ -25,33 +22,11 @@ internal fun runOnUiThread(block: () -> Unit) {
     }
 }
 
-internal inline fun anAction(
-    text: String? = null,
-    icon: Icon? = null,
-    crossinline onUpdate: (AnActionEvent) -> Unit = {},
-    crossinline onAction: (AnActionEvent) -> Unit
-): AnAction =
-    object : AnAction() {
-        override fun update(ev: AnActionEvent) {
-            onUpdate(ev)
-        }
-
-        override fun actionPerformed(event: AnActionEvent) {
-            onAction(event)
-        }
-    }.apply {
-        templatePresentation.apply {
-            this.text = text
-            this.icon = icon
-        }
-    }
-
 internal fun log(text: String) {
     println("[MVIKotlin]: $text")
 }
 
 internal val TimeTravelEvent.description: String
-    @Suppress("DefaultLocale")
     get() = "[$storeName]: ${type.title}.${value.type}"
 
 internal val StoreEventType.isDebuggable: Boolean

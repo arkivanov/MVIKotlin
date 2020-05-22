@@ -45,6 +45,21 @@ public class TimeTravelToolbar {
         return toolbar.getComponent();
     }
 
+    public void setConnectionStatus(@NotNull ConnectionStatus connectionStatus) {
+        this.connectionStatus = connectionStatus;
+        toolbar.updateActionsImmediately();
+    }
+
+    public void setMode(@NotNull TimeTravelStateUpdate.Mode mode) {
+        this.mode = mode;
+        toolbar.updateActionsImmediately();
+    }
+
+    public void setDebugEnabled(boolean isDebugEnabled) {
+        this.isDebugEnabled = isDebugEnabled;
+        toolbar.updateActionsImmediately();
+    }
+
     public void update(@NotNull ConnectionStatus connectionStatus, @NotNull TimeTravelStateUpdate.Mode mode, boolean isDebugEnabled) {
         this.connectionStatus = connectionStatus;
         this.mode = mode;

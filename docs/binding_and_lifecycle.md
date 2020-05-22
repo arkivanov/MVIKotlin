@@ -11,24 +11,24 @@ Let's bind our `CalculatorStore` with `CalculatorView` which we created earlier.
 First of all we will need to map `CalculatorStore.State` to `CalculatorView.Model`:
 
 ```kotlin
-internal object StateToModel {
-    fun map(state: CalculatorStore.State): CalculatorView.Model =
+internal val stateToModel: CalculatorStore.State.() -> CalculatorView.Model =
+    {
         CalculatorView.Model(
-            value = state.value.toString()
+            value = value.toString()
         )
-}
+    }
 ```
 
 We also need to map `CalculatorView.Event` to `CalculatorStore.Intent`:
 
 ```kotlin
-internal object EventToIntent {
-    fun map(event: CalculatorView.Event): CalculatorStore.Intent =
-        when (event) {
+internal val eventToIntent: CalculatorView.Event.() -> CalculatorStore.Intent =
+    {
+        when (this) {
             is CalculatorView.Event.IncrementClicked -> CalculatorStore.Intent.Increment
             is CalculatorView.Event.DecrementClicked -> CalculatorStore.Intent.Decrement
         }
-}
+    }
 ```
 
 As mentioned earlier you can avoid separate `View Models` and `View Events` and just render `State` and/or produce `Intents`. In this case you will not need mappers, but you might get extra logic in your `Views`. In addition your `Stores` and `Views` will become coupled.
@@ -42,8 +42,8 @@ class CalculatorController {
 
     fun onViewCreated(view: CalculatorView) {
         binder = bind {
-            store.states.map(StateToModel::map) bindTo view
-            view.events.map(EventToIntent::map) bindTo store
+            store.states.map(stateToModel) bindTo view
+            view.events.map(eventToIntent) bindTo store
         }
     }
 
@@ -58,12 +58,18 @@ class CalculatorController {
     fun onViewDestroyed() {
         binder = null
     }
+    
+    fun onDestroy() {
+        store.dispose()
+    }
 }
 ```
 
 The controller is supposed to be used by platforms. We are creating the `Binder` in `onViewCreated(CalculatorView)` callback which is called by a platform when the `CalculatorView` is created. The `Binder` will bind `CalculatorStore` with `CalculatorView` in `onStart()` and will unbind them in `onStop()`.
 
 Same way you can bind any outputs with any inputs. E.g. you can bind `Labels` of a `StoreA` with `Intents` of a `StoreB`, or `View Events` with an analytics tracker.
+
+Please note that you must dispose `Stores` at the end of life cycle. In this example the `CalculatorStore` is disposed in `onDestroy` callback.
 
 ## Lifecycle
 
@@ -77,19 +83,25 @@ You can subscribe to `Lifecycle` events and unsubscribe from them. You can conve
 Work with the `Binder` can be simplified if you use the `Lifecycle`. Let's simplify our previous binding example::
 
 ```kotlin
-class CalculatorController {
+class CalculatorController(lifecycle: Lifecycle) {
     private val store = CalculatorStoreFactory(DefaultStoreFactory).create()
+
+    init {
+        lifecycle.doOnDestroy(store::dispose)
+    }
 
     fun onViewCreated(view: CalculatorView, viewLifecycle: Lifecycle) {
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
-            store.states.map(StateToModel::map) bindTo view
-            view.events.map(EventToIntent::map) bindTo store
+            store.states.map(stateToModel) bindTo view
+            view.events.map(eventToIntent) bindTo store
         }
     }
 }
 ```
 
 We passed the `viewLifecycle` together with the `CalculatorView` itself and used it for binding. Now `Binder` will automatically connect endpoints when started and disconnect when stopped.
+
+Same as before we dispose the `CalculatorStore` at the end of `CalculatorController` life cycle.
 
 Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
 
