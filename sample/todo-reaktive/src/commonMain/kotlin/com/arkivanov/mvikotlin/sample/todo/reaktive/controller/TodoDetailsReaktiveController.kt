@@ -9,7 +9,6 @@ import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController.Dependencies
-import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController.Output
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsEventToIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsLabelToOutput
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.detailsStateToModel
@@ -18,7 +17,9 @@ import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoDetailsStoreFactor
 import com.badoo.reaktive.observable.flatten
 import com.badoo.reaktive.observable.mapNotNull
 
-class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsController {
+class TodoDetailsReaktiveController(
+    private val dependencies: Dependencies
+) : TodoDetailsController {
 
     private val todoDetailsStore =
         TodoDetailsStoreFactory(
@@ -31,14 +32,14 @@ class TodoDetailsReaktiveController(dependencies: Dependencies) : TodoDetailsCon
         dependencies.lifecycle.doOnDestroy(todoDetailsStore::dispose)
     }
 
-    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle, output: (Output) -> Unit) {
+    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
         bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY) {
             todoDetailsView.events.mapNotNull(detailsEventToIntent) bindTo todoDetailsStore
         }
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
             todoDetailsStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
-            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput).flatten() bindTo output
+            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput).flatten() bindTo dependencies.detailsOutput
         }
     }
 }
