@@ -128,6 +128,5 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      * Disposes the [Store] and all its components
      */
     @MainThread
-    @JsName("dispose")
     fun dispose()
 }

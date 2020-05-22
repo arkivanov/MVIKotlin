@@ -1,6 +1,5 @@
 package details
 
-import ANIMATION_DURATION
 import FrameworkType
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -9,21 +8,25 @@ import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoDetailsView
 import com.arkivanov.mvikotlin.sample.todo.coroutines.controller.TodoDetailsCoroutinesController
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoDetailsReaktiveController
-import com.ccfraser.muirwik.components.*
+import com.ccfraser.muirwik.components.MTypographyVariant
 import com.ccfraser.muirwik.components.button.mIconButton
 import com.ccfraser.muirwik.components.dialog.mDialog
 import com.ccfraser.muirwik.components.form.MFormControlVariant
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import list.SlideUpTransitionComponent
-import react.*
+import com.ccfraser.muirwik.components.mCheckboxWithLabel
+import com.ccfraser.muirwik.components.mContainer
+import com.ccfraser.muirwik.components.mTextFieldMultiLine
+import com.ccfraser.muirwik.components.mTypography
+import com.ccfraser.muirwik.components.targetInputValue
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.RState
+import react.setState
 import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.detailsButtonsCss
 import root.App.TodoStyles.detailsInputCss
 import root.App.TodoStyles.headerMarginCss
 import root.LifecycleWrapper
-
 import styled.css
 import styled.styledDiv
 
@@ -35,15 +38,15 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
     private lateinit var controller: TodoDetailsController
 
     init {
-        state = TodoDetailsParentState(TodoDetailsView.Model("", false), true)
+        state = TodoDetailsParentState(TodoDetailsView.Model("", false))
     }
 
     override fun componentDidMount() {
         lifecycleWrapper.start()
         controller = createController()
         controller.onViewCreated(
-            detailsViewProxy,
-            lifecycleWrapper.lifecycle,
+            todoDetailsView = detailsViewProxy,
+            viewLifecycle = lifecycleWrapper.lifecycle,
             output = props.dependencies.output
         )
     }
@@ -71,9 +74,8 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
     override fun RBuilder.render() {
         val model = state.model
         mDialog(
-            open = state.open,
+            open = true,
             fullScreen = true,
-            transitionComponent = SlideUpTransitionComponent::class,
             onClose = { _, _ -> handleClose() }
         ) {
             appBarWithButton(icon = "close", onIconClick = ::handleClose)
@@ -95,7 +97,7 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
                             label = "add todo text here",
                             fullWidth = true,
                             onChange = {
-                                detailsViewProxy.dispatchEvent(
+                                detailsViewProxy.dispatch(
                                     TodoDetailsView.Event.TextChanged(it.targetInputValue)
                                 )
                             }
@@ -107,7 +109,7 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
                             label = "complete",
                             checked = model.isDone,
                             onChange = { _, _ ->
-                                detailsViewProxy.dispatchEvent(
+                                detailsViewProxy.dispatch(
                                     TodoDetailsView.Event.DoneClicked
                                 )
                             }
@@ -115,29 +117,19 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
                         mIconButton(
                             iconName = "delete",
                             onClick = {
-                                detailsViewProxy.dispatchEvent(
+                                detailsViewProxy.dispatch(
                                     TodoDetailsView.Event.DeleteClicked
                                 )
                             }
                         )
                     }
-
-
                 }
             }
         }
-        if (state.open.not()) {
-            GlobalScope.launch {
-                //hack for fade transition
-                delay(ANIMATION_DURATION.toLong())
-                props.dependencies.onClose()
-            }
-        }
-
     }
 
     private fun handleClose() {
-        setState { open = false }
+        props.dependencies.output(TodoDetailsController.Output.Finished)
     }
 
     override fun componentWillUnmount() {
@@ -150,14 +142,12 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
         val frameworkType: FrameworkType
         val output: (TodoDetailsController.Output) -> Unit
         val todoId: String
-        val onClose: () -> Unit
     }
 
 }
 
 class TodoDetailsParentState(
-    var model: TodoDetailsView.Model,
-    var open: Boolean
+    var model: TodoDetailsView.Model
 ) : RState
 
 interface TodoDetailsParentProps : RProps {

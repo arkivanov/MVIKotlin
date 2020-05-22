@@ -26,7 +26,6 @@ dependencies {
 
     implementation(project(":mvikotlin"))
     implementation(project(":mvikotlin-main"))
-    implementation(project(":mvikotlin-timetravel"))
     implementation(project(":mvikotlin-logging"))
     implementation(project(":sample:todo-reaktive"))
     implementation(project(":sample:todo-coroutines"))

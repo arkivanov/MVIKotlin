@@ -16,19 +16,19 @@ fun RBuilder.addTodo(
     onTextChanged: (String) -> Unit,
     onAddClick: () -> Unit
 ) {
-        mTextField(
-            label = "Write ToDo",
-            value = textValue,
-            onChange = { event -> onTextChanged(event.targetInputValue) },
-            fullWidth = true
-        ) { css { margin(1.spacingUnits) } }
-        mButton(
-            caption = "Add",
-            variant = MButtonVariant.outlined,
-            onClick = { onAddClick() },
-            size = MButtonSize.small,
-            color = MColor.primary
-        ) {
-            css { margin(1.spacingUnits) }
-        }
+    mTextField(
+        label = "Write ToDo",
+        value = textValue,
+        onChange = { event -> onTextChanged(event.targetInputValue) },
+        fullWidth = true
+    ) { css { margin(1.spacingUnits) } }
+    mButton(
+        caption = "Add",
+        variant = MButtonVariant.outlined,
+        onClick = { onAddClick() },
+        size = MButtonSize.small,
+        color = MColor.primary
+    ) {
+        css { margin(1.spacingUnits) }
+    }
 }

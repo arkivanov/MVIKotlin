@@ -4,7 +4,7 @@ import FrameworkType
 import TodoDatabaseImpl
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
-import frameWorkType
+import mFrameworkType
 import react.dom.render
 import storeFactoryInstance
 import kotlin.browser.document
@@ -18,7 +18,7 @@ private class Application {
                 app(object : App.Dependencies {
                     override val storeFactory: StoreFactory = storeFactoryInstance
                     override val database: TodoDatabase = TodoDatabaseImpl()
-                    override val frameworkType: FrameworkType = frameWorkType
+                    override val frameworkType: FrameworkType = mFrameworkType
                 })
             }
         }

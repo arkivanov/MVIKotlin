@@ -11,7 +11,7 @@ class TodoDetailsViewProxy(
         updateState(model)
     }
 
-    fun dispatchEvent(event: TodoDetailsView.Event) {
+    public override fun dispatch(event: TodoDetailsView.Event) {
         super.dispatch(event)
     }
 }

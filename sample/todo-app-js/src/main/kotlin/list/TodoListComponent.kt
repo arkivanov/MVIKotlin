@@ -1,7 +1,7 @@
 package list
 
 import FrameworkType
-import LifecycleConsumer
+import LifecycledConsumer
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
@@ -13,24 +13,31 @@ import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoListReaktiveC
 import com.ccfraser.muirwik.components.MTypographyVariant
 import com.ccfraser.muirwik.components.mContainer
 import com.ccfraser.muirwik.components.mTypography
-import react.*
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.RState
+import react.setState
 import root.App.TodoStyles.addCss
 import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.headerMarginCss
 import root.App.TodoStyles.listCss
 import root.LifecycleWrapper
+import root.debugLog
 import styled.css
 import styled.styledDiv
 
 class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListParentProps, TodoListParentState>(props),
-    LifecycleConsumer<TodoListController.Input> {
+    LifecycledConsumer<TodoListController.Input> {
 
     private val listViewDelegate = TodoListViewProxy(updateState = ::updateState)
     private val addViewDelegate = TodoAddViewProxy(updateState = ::updateState)
+
     private val lifecycleWrapper = LifecycleWrapper()
+    override val lifecycle: Lifecycle = lifecycleWrapper.lifecycle
+
     private lateinit var controller: TodoListController
     override lateinit var input: (TodoListController.Input) -> Unit
-    override val lifecycle: Lifecycle = lifecycleWrapper.lifecycle
 
     init {
         state = TodoListParentState(TodoListView.Model(listOf()), TodoAddView.Model(""))
@@ -90,17 +97,17 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
                     css(addCss)
                     addTodo(
                         textValue = state.addModel.text,
-                        onTextChanged = { addViewDelegate.dispatchEvent(TodoAddView.Event.TextChanged(it)) },
-                        onAddClick = { addViewDelegate.dispatchEvent(TodoAddView.Event.AddClicked) }
+                        onTextChanged = { addViewDelegate.dispatch(TodoAddView.Event.TextChanged(it)) },
+                        onAddClick = { addViewDelegate.dispatch(TodoAddView.Event.AddClicked) }
                     )
                 }
                 styledDiv {
                     css(listCss)
                     listTodo(
                         todos = state.listModel.items,
-                        onClick = { listViewDelegate.dispatchEvent(TodoListView.Event.ItemClicked(it)) },
-                        onDoneClick = { listViewDelegate.dispatchEvent(TodoListView.Event.ItemDoneClicked(it)) },
-                        onDeleteClick = { listViewDelegate.dispatchEvent(TodoListView.Event.ItemDeleteClicked(it)) }
+                        onClick = { listViewDelegate.dispatch(TodoListView.Event.ItemClicked(it)) },
+                        onDoneClick = { listViewDelegate.dispatch(TodoListView.Event.ItemDoneClicked(it)) },
+                        onDeleteClick = { listViewDelegate.dispatch(TodoListView.Event.ItemDeleteClicked(it)) }
                     )
                 }
             }
@@ -109,6 +116,7 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
     }
 
     override fun componentWillUnmount() {
+        debugLog("componentWillUnmount")
         lifecycleWrapper.stop()
     }
 

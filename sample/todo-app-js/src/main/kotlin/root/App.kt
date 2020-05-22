@@ -12,10 +12,26 @@ import com.ccfraser.muirwik.components.styles.ThemeOptions
 import com.ccfraser.muirwik.components.styles.createMuiTheme
 import details.TodoDetailsComponent
 import details.todoDetails
-import kotlinx.css.*
+import kotlinx.css.Align
+import kotlinx.css.Display
+import kotlinx.css.FlexDirection
+import kotlinx.css.JustifyContent
+import kotlinx.css.alignItems
+import kotlinx.css.display
+import kotlinx.css.flexDirection
+import kotlinx.css.justifyContent
+import kotlinx.css.marginTop
+import kotlinx.css.padding
+import kotlinx.css.paddingLeft
+import kotlinx.css.pct
+import kotlinx.css.width
 import list.TodoListParentComponent
 import list.todoContainer
-import react.*
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.RState
+import react.setState
 import styled.StyleSheet
 
 abstract class App : RComponent<AppProps, AppState>() {
@@ -46,7 +62,6 @@ abstract class App : RComponent<AppProps, AppState>() {
                     dependencies = object : TodoDetailsComponent.Dependencies, Dependencies by props.dependecies {
                         override val todoId: String = state.todoId
                         override val output: (TodoDetailsController.Output) -> Unit = ::detailsOutput
-                        override val onClose: () -> Unit = ::closeDetails
                     }
                 )
         }
