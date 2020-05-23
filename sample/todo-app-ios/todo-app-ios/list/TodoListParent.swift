@@ -16,14 +16,16 @@ private class ControllerHolder {
     let controller: TodoListReaktiveController
     private let cancellable: AutoCancellable
     
-    init(deps: ControllerDeps, input: AnyPublisher<TodoListControllerInput, Never>) {
+    init(deps: ControllerDeps, input: AnyPublisher<TodoListControllerInput, Never>, output: @escaping (TodoListControllerOutput) -> Void) {
         self.lifecycle = LifecycleWrapper()
         
         let controller = TodoListReaktiveController(
             dependencies: TodoListControllerDeps(
                 storeFactory: deps.storeFactory,
                 database: deps.database,
-                lifecycle: lifecycle.lifecycle
+                lifecycle: lifecycle.lifecycle,
+                stateKeeperProvider: nil,
+                listOutput: output
             )
         )
         self.controller = controller
@@ -48,16 +50,11 @@ struct TodoListParent: View {
             TodoAdd(proxy: addView)
         }.onAppear {
             if (self.controller == nil) {
-                self.controller = ControllerHolder(deps: self.deps, input: self.input)
+                self.controller = ControllerHolder(deps: self.deps, input: self.input, output: self.output)
             }
             let viewLifecycle = LifecycleRegistry()
             self.viewLifecycle = viewLifecycle
-            self.controller?.controller.onViewCreated(
-                todoListView: self.listView,
-                todoAddView: self.addView,
-                viewLifecycle: viewLifecycle,
-                output: self.output
-            )
+            self.controller?.controller.onViewCreated(todoListView: self.listView, todoAddView: self.addView, viewLifecycle: viewLifecycle)
             self.controller?.lifecycle.start()
             viewLifecycle.resume()
         }.onDisappear {

@@ -14,7 +14,7 @@ private class ControllerHolder {
     let lifecycle: LifecycleWrapper
     let controller: TodoDetailsReaktiveController
     
-    init(deps: ControllerDeps, itemId: String) {
+    init(deps: ControllerDeps, itemId: String, output: @escaping (TodoDetailsControllerOutput) -> Void) {
         self.lifecycle = LifecycleWrapper()
         
         let controller = TodoDetailsReaktiveController(
@@ -22,7 +22,8 @@ private class ControllerHolder {
                 storeFactory: deps.storeFactory,
                 database: deps.database,
                 lifecycle: lifecycle.lifecycle,
-                itemId: itemId
+                itemId: itemId,
+                detailsOutput: output
             )
         )
         self.controller = controller
@@ -42,15 +43,11 @@ struct TodoDetailsParent: View {
         TodoDetails(proxy: detailsView)
             .onAppear {
                 if (self.controller == nil) {
-                    self.controller = ControllerHolder(deps: self.deps, itemId: self.itemId)
+                    self.controller = ControllerHolder(deps: self.deps, itemId: self.itemId, output: self.output)
                 }
                 let viewLifecycle = LifecycleRegistry()
                 self.viewLifecycle = viewLifecycle
-                self.controller?.controller.onViewCreated(
-                    todoDetailsView: self.detailsView,
-                    viewLifecycle: viewLifecycle,
-                    output: self.output
-                )
+                self.controller?.controller.onViewCreated(todoDetailsView: self.detailsView, viewLifecycle: viewLifecycle)
                 self.controller?.lifecycle.start()
                 viewLifecycle.resume()
         }
