@@ -33,14 +33,16 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
             reducer = ReducerImpl
         ) {
         }.also {
-            stateKeeper.register { it.state }
+            stateKeeper.register { 
+                it.state.copy(isLoading = false) // We can reset any transient state here
+            }
         }
 
     // Omitted code
 }
 ```
 
-#### Retaining a whole Store
+#### Retaining a whole Store without Lifecycle
 
 ```kotlin
 class CalculatorController(stateKeeperProvider: StateKeeperProvider<Any>) {
@@ -54,6 +56,48 @@ class CalculatorController(stateKeeperProvider: StateKeeperProvider<Any>) {
     }
     
     private fun calculatorStore(): CalculatorStore = // Create the Store
+    
+    fun dispose() {
+        store.dispose()
+    }
+}
+```
+
+#### Retaining a whole Store with Lifecycle
+
+```kotlin
+class CalculatorController(
+    stateKeeperProvider: StateKeeperProvider<Any>,
+    lifecycle: Lifecycle
+) {
+
+    private val store: CalculatorStore = 
+        stateKeeperProvider.retainStore(lifecycle) { calculatorStore() }
+
+    private fun calculatorStore(): CalculatorStore = // Create the Store
+}
+```
+
+#### Retaining an arbitrary object with Lifecycle
+
+```kotlin
+class MyFragment(
+    private val stateKeeperProvider: StateKeeperProvider<Any>
+) : Fragment() {
+
+    private lateinit var controller: CalculatorController
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        controller = stateKeeperProvider.retainInstance(lifecycle.asMviLifecycle(), ::calculatorController)
+    }
+
+    /*
+     * Create the controller.
+     * The provided Lifecycle will not be destroyed when the instance is retained.
+     */
+    private fun calculatorController(lifecycle: Lifecycle): CalculatorController = 
 }
 ```
 
