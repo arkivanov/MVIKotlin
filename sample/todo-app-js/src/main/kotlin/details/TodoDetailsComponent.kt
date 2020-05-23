@@ -2,6 +2,9 @@ package details
 
 import FrameworkType
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
+import com.arkivanov.mvikotlin.core.lifecycle.destroy
+import com.arkivanov.mvikotlin.core.lifecycle.resume
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
@@ -26,7 +29,6 @@ import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.detailsButtonsCss
 import root.App.TodoStyles.detailsInputCss
 import root.App.TodoStyles.headerMarginCss
-import root.LifecycleWrapper
 import styled.css
 import styled.styledDiv
 
@@ -34,7 +36,7 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
     RComponent<TodoDetailsParentProps, TodoDetailsParentState>(props) {
 
     private val detailsViewProxy = TodoDetailsViewProxy(::updateState)
-    private val lifecycleWrapper = LifecycleWrapper()
+    private val lifecycleRegistry = LifecycleRegistry()
     private lateinit var controller: TodoDetailsController
 
     init {
@@ -42,20 +44,16 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
     }
 
     override fun componentDidMount() {
-        lifecycleWrapper.start()
+        lifecycleRegistry.resume()
         controller = createController()
-        controller.onViewCreated(
-            todoDetailsView = detailsViewProxy,
-            viewLifecycle = lifecycleWrapper.lifecycle,
-            output = props.dependencies.output
-        )
+        controller.onViewCreated(detailsViewProxy, lifecycleRegistry)
     }
 
     private fun createController(): TodoDetailsController {
         val dependencies = props.dependencies
         val todoDetailsControllerDependencies =
             object : TodoDetailsController.Dependencies, Dependencies by dependencies {
-                override val lifecycle: Lifecycle = lifecycleWrapper.lifecycle
+                override val lifecycle: Lifecycle = lifecycleRegistry
                 override val itemId: String = dependencies.todoId
             }
 
@@ -129,18 +127,18 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
     }
 
     private fun handleClose() {
-        props.dependencies.output(TodoDetailsController.Output.Finished)
+        props.dependencies.detailsOutput(TodoDetailsController.Output.Finished)
     }
 
     override fun componentWillUnmount() {
-        lifecycleWrapper.stop()
+        lifecycleRegistry.destroy()
     }
 
     interface Dependencies {
         val storeFactory: StoreFactory
         val database: TodoDatabase
         val frameworkType: FrameworkType
-        val output: (TodoDetailsController.Output) -> Unit
+        val detailsOutput: (TodoDetailsController.Output) -> Unit
         val todoId: String
     }
 

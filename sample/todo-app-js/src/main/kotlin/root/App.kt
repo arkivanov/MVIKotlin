@@ -1,7 +1,10 @@
 package root
 
+import Disposable
 import FrameworkType
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.rx.Disposable
+import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
@@ -36,10 +39,14 @@ import styled.StyleSheet
 
 abstract class App : RComponent<AppProps, AppState>() {
 
-    private var themeColor = "light"
+    private val themeColor = "light"
+    private var listInputObserver: Observer<TodoListController.Input>? = null
+    private val listInput: (Observer<TodoListController.Input>) -> Disposable = ::listInput
+    private val listOutput: (TodoListController.Output) -> Unit = ::listOutput
+    private val detailsOutput: (TodoDetailsController.Output) -> Unit = ::detailsOutput
 
     init {
-        state = AppState(todoId = "", listInput = null)
+        state = AppState(todoId = "")
     }
 
     override fun RBuilder.render() {
@@ -53,19 +60,25 @@ abstract class App : RComponent<AppProps, AppState>() {
         mThemeProvider(createMuiTheme(themeOptions)) {
             todoContainer(
                 dependencies = object : TodoListParentComponent.Dependencies, Dependencies by props.dependecies {
-                    override val output = ::listOutput
-                    override val input = state.listInput
+                    override val listInput: (Observer<TodoListController.Input>) -> Disposable = this@App.listInput
+                    override val listOutput: (TodoListController.Output) -> Unit = this@App.listOutput
                 }
             )
             if (state.todoId.isNotEmpty())
                 todoDetails(
                     dependencies = object : TodoDetailsComponent.Dependencies, Dependencies by props.dependecies {
                         override val todoId: String = state.todoId
-                        override val output: (TodoDetailsController.Output) -> Unit = ::detailsOutput
+                        override val detailsOutput: (TodoDetailsController.Output) -> Unit = this@App.detailsOutput
                     }
                 )
         }
 
+    }
+
+    private fun listInput(observer: Observer<TodoListController.Input>): Disposable {
+        listInputObserver = observer
+
+        return Disposable { listInputObserver = null }
     }
 
     private fun listOutput(output: TodoListController.Output) {
@@ -78,17 +91,13 @@ abstract class App : RComponent<AppProps, AppState>() {
         setState { todoId = "" }
     }
 
-    private fun updateListInput(input: TodoListController.Input) {
-        setState { listInput = input }
-    }
-
     private fun detailsOutput(output: TodoDetailsController.Output) {
         when (output) {
             TodoDetailsController.Output.Finished -> closeDetails()
             is TodoDetailsController.Output.ItemChanged ->
-                updateListInput(TodoListController.Input.ItemChanged(id = output.id, data = output.data))
+                listInputObserver?.onNext(TodoListController.Input.ItemChanged(id = output.id, data = output.data))
             is TodoDetailsController.Output.ItemDeleted ->
-                updateListInput(TodoListController.Input.ItemDeleted(id = output.id))
+                listInputObserver?.onNext(TodoListController.Input.ItemDeleted(id = output.id))
         }
     }
 
@@ -136,8 +145,7 @@ abstract class App : RComponent<AppProps, AppState>() {
 }
 
 class AppState(
-    var todoId: String,
-    var listInput: TodoListController.Input?
+    var todoId: String
 ) : RState
 
 interface AppProps : RProps {
