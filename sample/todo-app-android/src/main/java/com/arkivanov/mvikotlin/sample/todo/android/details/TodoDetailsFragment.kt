@@ -41,7 +41,7 @@ class TodoDetailsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        controller.onViewCreated(TodoDetailsViewImpl(view), viewLifecycleOwner.lifecycle.asMviLifecycle(), dependencies.detailsOutput)
+        controller.onViewCreated(TodoDetailsViewImpl(view), viewLifecycleOwner.lifecycle.asMviLifecycle())
     }
 
     fun setArguments(itemId: String): TodoDetailsFragment {

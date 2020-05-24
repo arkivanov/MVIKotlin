@@ -3,6 +3,7 @@ package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
+import com.arkivanov.mvikotlin.core.statekeeper.retainStore
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
@@ -10,7 +11,6 @@ import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Dependencies
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Input
-import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Output
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addEventToAddIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addLabelToListIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.addStateToAddModel
@@ -26,13 +26,17 @@ import com.badoo.reaktive.observable.mapNotNull
 import com.badoo.reaktive.subject.Relay
 import com.badoo.reaktive.subject.publish.PublishSubject
 
-class TodoListReaktiveController(dependencies: Dependencies) : TodoListController {
+class TodoListReaktiveController(
+    private val dependencies: Dependencies
+) : TodoListController {
 
     private val todoListStore =
-        TodoListStoreFactory(
-            storeFactory = dependencies.storeFactory,
-            database = dependencies.database
-        ).create()
+        dependencies.stateKeeperProvider.retainStore(dependencies.lifecycle) {
+            TodoListStoreFactory(
+                storeFactory = dependencies.storeFactory,
+                database = dependencies.database
+            ).create()
+        }
 
     private val todoAddStore =
         TodoAddStoreFactory(
@@ -49,17 +53,13 @@ class TodoListReaktiveController(dependencies: Dependencies) : TodoListControlle
             todoAddStore.labels.mapNotNull(addLabelToListIntent) bindTo todoListStore
         }
 
-        dependencies.lifecycle.doOnDestroy {
-            todoListStore.dispose()
-            todoAddStore.dispose()
-        }
+        dependencies.lifecycle.doOnDestroy(todoAddStore::dispose)
     }
 
     override fun onViewCreated(
         todoListView: TodoListView,
         todoAddView: TodoAddView,
-        viewLifecycle: Lifecycle,
-        output: (Output) -> Unit
+        viewLifecycle: Lifecycle
     ) {
         bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY) {
             todoListView.events.mapNotNull(listEventToListIntent) bindTo todoListStore
@@ -69,7 +69,7 @@ class TodoListReaktiveController(dependencies: Dependencies) : TodoListControlle
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
             todoListStore.states.mapNotNull(listStateToListModel) bindTo todoListView
             todoAddStore.states.mapNotNull(addStateToAddModel) bindTo todoAddView
-            todoListView.events.mapNotNull(listEventToOutput) bindTo output
+            todoListView.events.mapNotNull(listEventToOutput) bindTo dependencies.listOutput
         }
     }
 }

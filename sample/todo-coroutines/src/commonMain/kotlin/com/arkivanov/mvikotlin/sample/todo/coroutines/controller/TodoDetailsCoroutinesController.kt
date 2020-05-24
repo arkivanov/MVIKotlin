@@ -22,7 +22,9 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapConcat
 
 @ExperimentalCoroutinesApi
-class TodoDetailsCoroutinesController(dependencies: Dependencies) : TodoDetailsController {
+class TodoDetailsCoroutinesController(
+    private val dependencies: Dependencies
+) : TodoDetailsController {
 
     private val todoDetailsStore =
         TodoDetailsStoreFactory(
@@ -37,14 +39,14 @@ class TodoDetailsCoroutinesController(dependencies: Dependencies) : TodoDetailsC
         dependencies.lifecycle.doOnDestroy(todoDetailsStore::dispose)
     }
 
-    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle, output: (TodoDetailsController.Output) -> Unit) {
+    override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
         bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
             todoDetailsView.events.mapNotNull(detailsEventToIntent) bindTo todoDetailsStore
         }
 
         bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainDispatcher) {
             todoDetailsStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
-            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput).flatMapConcat { it.asFlow() } bindTo { output(it) }
+            todoDetailsStore.labels.mapNotNull(detailsLabelToOutput).flatMapConcat { it.asFlow() } bindTo { dependencies.detailsOutput(it) }
         }
     }
 }

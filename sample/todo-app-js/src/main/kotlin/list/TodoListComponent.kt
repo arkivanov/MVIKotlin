@@ -1,9 +1,16 @@
 package list
 
 import FrameworkType
-import LifecycledConsumer
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
+import com.arkivanov.mvikotlin.core.lifecycle.destroy
+import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
+import com.arkivanov.mvikotlin.core.lifecycle.resume
+import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.rx.Disposable
+import com.arkivanov.mvikotlin.rx.Observer
+import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
@@ -22,50 +29,36 @@ import root.App.TodoStyles.addCss
 import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.headerMarginCss
 import root.App.TodoStyles.listCss
-import root.LifecycleWrapper
 import root.debugLog
 import styled.css
 import styled.styledDiv
 
-class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListParentProps, TodoListParentState>(props),
-    LifecycledConsumer<TodoListController.Input> {
+class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListParentProps, TodoListParentState>(props) {
 
     private val listViewDelegate = TodoListViewProxy(updateState = ::updateState)
     private val addViewDelegate = TodoAddViewProxy(updateState = ::updateState)
-
-    private val lifecycleWrapper = LifecycleWrapper()
-    override val lifecycle: Lifecycle = lifecycleWrapper.lifecycle
-
+    private val lifecycleRegistry = LifecycleRegistry()
     private lateinit var controller: TodoListController
-    override lateinit var input: (TodoListController.Input) -> Unit
 
     init {
         state = TodoListParentState(TodoListView.Model(listOf()), TodoAddView.Model(""))
     }
 
-    override fun componentWillReceiveProps(nextProps: TodoListParentProps) {
-        if (nextProps.dependencies.input != props.dependencies.input) {
-            nextProps.dependencies.input?.let(input)
-        }
-    }
-
     override fun componentDidMount() {
-        lifecycleWrapper.start()
+        lifecycleRegistry.resume()
         controller = createController()
-        input = controller.input
-        controller.onViewCreated(
-            listViewDelegate,
-            addViewDelegate,
-            lifecycle,
-            props.dependencies.output
-        )
+        val dependencies = props.dependencies
+        val disposable = dependencies.listInput(observer(onNext = controller.input))
+        lifecycleRegistry.doOnDestroy(disposable::dispose)
+        controller.onViewCreated(listViewDelegate, addViewDelegate, lifecycleRegistry)
     }
 
     private fun createController(): TodoListController {
         val dependencies = props.dependencies
         val todoListControllerDependencies =
             object : TodoListController.Dependencies, Dependencies by dependencies {
-                override val lifecycle: Lifecycle = lifecycleWrapper.lifecycle
+                override val lifecycle: Lifecycle = lifecycleRegistry
+                override val stateKeeperProvider: StateKeeperProvider<Any>? = null
             }
 
         return when (dependencies.frameworkType) {
@@ -117,17 +110,16 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
 
     override fun componentWillUnmount() {
         debugLog("componentWillUnmount")
-        lifecycleWrapper.stop()
+        lifecycleRegistry.destroy()
     }
 
     interface Dependencies {
         val storeFactory: StoreFactory
         val database: TodoDatabase
         val frameworkType: FrameworkType
-        val output: (TodoListController.Output) -> Unit
-        val input: TodoListController.Input?
+        val listInput: (Observer<TodoListController.Input>) -> Disposable
+        val listOutput: (TodoListController.Output) -> Unit
     }
-
 }
 
 interface TodoListParentProps : RProps {
