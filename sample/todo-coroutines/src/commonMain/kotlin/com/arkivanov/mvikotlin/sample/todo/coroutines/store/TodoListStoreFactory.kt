@@ -32,10 +32,9 @@ internal class TodoListStoreFactory(
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
                 is Intent.ToggleDone -> toggleDone(intent.id, getState)
-                is Intent.HandleAdded -> dispatch(Result.Added(intent.item))
-                is Intent.HandleTextChanged -> dispatch(Result.TextChanged(intent.id, intent.text))
-                is Intent.HandleDeleted -> dispatch(Result.Deleted(intent.id))
-                is Intent.HandleItemChanged -> dispatch(Result.Changed(intent.id, intent.data))
+                is Intent.AddToState -> dispatch(Result.Added(intent.item))
+                is Intent.DeleteFromState -> dispatch(Result.Deleted(intent.id))
+                is Intent.UpdateInState -> dispatch(Result.Changed(intent.id, intent.data))
             }.let {}
         }
 

@@ -10,7 +10,7 @@ import com.arkivanov.mvikotlin.sample.todo.common.internal.store.add.TodoAddStor
 interface TodoAddStore : Store<Intent, State, Label> {
 
     sealed class Intent : JvmSerializable {
-        data class HandleTextChanged(val text: String) : Intent()
+        data class SetText(val text: String) : Intent()
         object Add : Intent()
     }
 

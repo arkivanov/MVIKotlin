@@ -38,7 +38,6 @@ abstract class TodoListStoreAbstractFactory(
         data class Deleted(val id: String) : Result()
         data class DoneToggled(val id: String) : Result()
         data class Added(val item: TodoItem) : Result()
-        data class TextChanged(val id: String, val text: String) : Result()
         data class Changed(val id: String, val data: TodoItem.Data) : Result()
     }
 
@@ -51,7 +50,6 @@ abstract class TodoListStoreAbstractFactory(
                 is Result.Deleted -> copy(items = items.filterNot { it.id == result.id })
                 is Result.DoneToggled -> copy(items = items.update(result.id) { copy(isDone = !isDone) })
                 is Result.Added -> copy(items = items + result.item)
-                is Result.TextChanged -> copy(items = items.update(result.id) { copy(text = result.text) })
                 is Result.Changed -> copy(items = items.update(result.id) { result.data })
             }
     }

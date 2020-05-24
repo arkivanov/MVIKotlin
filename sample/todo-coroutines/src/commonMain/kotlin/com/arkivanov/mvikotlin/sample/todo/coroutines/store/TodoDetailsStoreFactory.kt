@@ -34,7 +34,7 @@ internal class TodoDetailsStoreFactory(
 
         override suspend fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.HandleTextChanged -> handleTextChanged(intent.text, getState)
+                is Intent.SetText -> handleTextChanged(intent.text, getState)
                 is Intent.ToggleDone -> toggleDone(getState)
                 is Intent.Delete -> delete()
             }.let {}

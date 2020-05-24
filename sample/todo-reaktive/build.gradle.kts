@@ -13,5 +13,12 @@ kotlin {
                 implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
+
+        commonTest {
+            dependencies {
+                implementation(project(":mvikotlin-main"))
+                implementation(Deps.Badoo.Reaktive.ReaktiveTesting)
+            }
+        }
     }
 }

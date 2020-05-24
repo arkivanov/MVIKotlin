@@ -18,7 +18,7 @@ val detailsStateToModel: State.() -> Model? =
 val detailsEventToIntent: Event.() -> Intent? =
     {
         when (this) {
-            is Event.TextChanged -> Intent.HandleTextChanged(text = text)
+            is Event.TextChanged -> Intent.SetText(text = text)
             is Event.DoneClicked -> Intent.ToggleDone
             is Event.DeleteClicked -> Intent.Delete
         }

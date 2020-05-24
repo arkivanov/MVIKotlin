@@ -31,14 +31,14 @@ val listEventToOutput: Event.() -> Output? =
 val inputToListIntent: Input.() -> Intent? =
     {
         when (this) {
-            is Input.ItemChanged -> Intent.HandleItemChanged(id = id, data = data)
-            is Input.ItemDeleted -> Intent.HandleDeleted(id = id)
+            is Input.ItemChanged -> Intent.UpdateInState(id = id, data = data)
+            is Input.ItemDeleted -> Intent.DeleteFromState(id = id)
         }
     }
 
 val addLabelToListIntent: TodoAddStore.Label.() -> Intent? =
     {
         when (this) {
-            is TodoAddStore.Label.Added -> Intent.HandleAdded(item)
+            is TodoAddStore.Label.Added -> Intent.AddToState(item)
         }
     }

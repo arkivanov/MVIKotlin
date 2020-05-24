@@ -10,7 +10,7 @@ val addStateToAddModel: State.() -> Model? = { Model(text = text) }
 val addEventToAddIntent: Event.() -> Intent? =
     {
         when (this) {
-            is Event.TextChanged -> Intent.HandleTextChanged(text)
+            is Event.TextChanged -> Intent.SetText(text)
             is Event.AddClicked -> Intent.Add
         }
     }

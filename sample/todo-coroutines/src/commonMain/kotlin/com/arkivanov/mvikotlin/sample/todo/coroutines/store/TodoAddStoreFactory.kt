@@ -26,7 +26,7 @@ internal class TodoAddStoreFactory(
     private inner class ExecutorImpl : SuspendExecutor<Intent, Nothing, State, Result, Label>(mainContext = mainContext) {
         override suspend fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.HandleTextChanged -> dispatch(Result.TextChanged(intent.text))
+                is Intent.SetText -> dispatch(Result.TextChanged(intent.text))
                 is Intent.Add -> addItem(getState())
             }.let {}
         }

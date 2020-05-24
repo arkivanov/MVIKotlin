@@ -11,10 +11,9 @@ interface TodoListStore : Store<Intent, State, Nothing> {
     sealed class Intent : JvmSerializable {
         data class Delete(val id: String) : Intent()
         data class ToggleDone(val id: String) : Intent()
-        data class HandleAdded(val item: TodoItem) : Intent()
-        data class HandleTextChanged(val id: String, val text: String) : Intent()
-        data class HandleDeleted(val id: String) : Intent()
-        data class HandleItemChanged(val id: String, val data: TodoItem.Data) : Intent()
+        data class AddToState(val item: TodoItem) : Intent()
+        data class DeleteFromState(val id: String) : Intent()
+        data class UpdateInState(val id: String, val data: TodoItem.Data) : Intent()
     }
 
     data class State(
