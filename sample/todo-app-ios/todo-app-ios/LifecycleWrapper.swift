@@ -17,7 +17,7 @@ class LifecycleWrapper {
     }
     
     deinit {
-        self.lifecycle.onDestroy()
+        self.lifecycle.destroy()
     }
     
     func start() {

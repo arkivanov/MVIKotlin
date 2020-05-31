@@ -18,7 +18,11 @@ struct RootView: View {
     @State private var listInput = PassthroughSubject<TodoListControllerInput, Never>()
     
     var body: some View {
-        VStack {
+        if (!isDetails) {
+            ensureDetailsDestroyed()
+        }
+
+        return VStack {
             TodoListParent(deps: controllerDeps, input: listInput.eraseToAnyPublisher(), output: listOutput)
 
             NavigationLink(
