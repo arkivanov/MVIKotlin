@@ -1,4 +1,4 @@
-package details
+package root
 
 import com.ccfraser.muirwik.components.button.mIconButton
 import com.ccfraser.muirwik.components.mToolbar

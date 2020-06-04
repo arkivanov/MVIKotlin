@@ -28,7 +28,5 @@ fun RBuilder.addTodo(
         onClick = { onAddClick() },
         size = MButtonSize.small,
         color = MColor.primary
-    ) {
-        css { margin(1.spacingUnits) }
-    }
+    ) { css { margin(1.spacingUnits) } }
 }
