@@ -12,7 +12,6 @@ import TodoLib
 struct TodoDetails: View {
 
     @ObservedObject var proxy: TodoDetailsViewProxy
-    @Environment(\.presentationMode) var presentation
     
     var body: some View {
         VStack() {
@@ -32,7 +31,6 @@ struct TodoDetails: View {
             .navigationBarTitle("Details")
             .navigationBarItems(trailing: Button(action: {
                 self.proxy.dispatch(event: TodoDetailsViewEvent.DeleteClicked())
-                self.presentation.wrappedValue.dismiss()
             }) {
                 Image(systemName: "trash")
             })
