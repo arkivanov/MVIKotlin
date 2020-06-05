@@ -134,10 +134,24 @@ abstract class App : RComponent<AppProps, AppState>() {
             justifyContent = JustifyContent.spaceBetween
         }
 
-        val debugButtonsStyle by css {
+        val debugButtonsContainerStyle by css {
             display = Display.flex
             flexDirection = FlexDirection.row
             justifyContent = JustifyContent.spaceAround
+        }
+
+        val eventItemCss by css {
+            overflow = Overflow.hidden
+            textOverflow = TextOverflow.ellipsis
+            put("-webkit-line-clamp", "3")
+            put("display", "-webkit-box")
+            put("-webkit-box-orient", "vertical")
+        }
+
+        val eventsContainerStyle by css {
+            height = 100.pct
+            overflow = Overflow.auto
+            width = 320.px
         }
     }
 
