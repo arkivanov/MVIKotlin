@@ -9,6 +9,19 @@
 import SwiftUI
 import TodoLib
 
+private weak var lifecycleToDestroy: LifecycleWrapper?
+
+/*
+ Hack to prevent duplicated Stores in memory.
+ For some reason SwiftUI does not deinit TodoDetailsParent view when it's closed.
+ When a new details screen is open, its previous instance is deinitialized AFTER the one is initialized.
+ This breaks time travel.
+*/
+public func ensureDetailsDestroyed() {
+    lifecycleToDestroy?.lifecycle.destroy()
+    lifecycleToDestroy = nil
+}
+
 private class ControllerHolder {
     
     let lifecycle: LifecycleWrapper
@@ -16,7 +29,9 @@ private class ControllerHolder {
     
     init(deps: ControllerDeps, itemId: String, output: @escaping (TodoDetailsControllerOutput) -> Void) {
         self.lifecycle = LifecycleWrapper()
-        
+        ensureDetailsDestroyed()
+        lifecycleToDestroy = self.lifecycle
+
         let controller = TodoDetailsReaktiveController(
             dependencies: TodoDetailsControllerDeps(
                 storeFactory: deps.storeFactory,

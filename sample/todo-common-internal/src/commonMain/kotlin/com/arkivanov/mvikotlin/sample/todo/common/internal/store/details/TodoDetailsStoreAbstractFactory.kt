@@ -10,7 +10,6 @@ import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Label
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.State
-import com.badoo.reaktive.utils.atomic.AtomicInt
 import com.badoo.reaktive.utils.ensureNeverFrozen
 
 /**
@@ -23,7 +22,7 @@ abstract class TodoDetailsStoreAbstractFactory(
 
     fun create(): TodoDetailsStore =
         object : TodoDetailsStore, Store<Intent, State, Label> by storeFactory.create(
-            name = "TodoDetailsStore${storeIndex.addAndGet(1)}",
+            name = "TodoDetailsStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = ::createExecutor,
@@ -33,10 +32,6 @@ abstract class TodoDetailsStoreAbstractFactory(
                 ensureNeverFrozen()
             }
         }
-
-    private companion object {
-        private val storeIndex = AtomicInt(0)
-    }
 
     protected abstract fun createExecutor(): Executor<Intent, Unit, State, Result, Label>
 

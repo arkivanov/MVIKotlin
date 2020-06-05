@@ -75,6 +75,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
   * Plug-and-play UI for Android
   * Plug-and-play UI for iOS (copy-paste from the sample app)
   * Export/import events for JVM and Android
+  * IDEA and Android Studio plugin for Android
 
 ## Documentation
 
