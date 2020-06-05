@@ -62,9 +62,7 @@ class TimeTravelEventsView(prps: TimeTravelEventsProps) :
                 }
             }
         }
-
     }
-
 }
 
 interface TimeTravelEventsProps : RProps {
@@ -74,7 +72,7 @@ interface TimeTravelEventsProps : RProps {
     var onItemClick: (TimeTravelEvent) -> Unit
 }
 
-class TimeTravelEventsState() : RState
+class TimeTravelEventsState : RState
 
 fun RBuilder.timeTravelEventsView(
     events: List<TimeTravelEvent>,
