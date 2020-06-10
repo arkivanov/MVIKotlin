@@ -5,8 +5,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.utils.internal.initialize
 import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
-import com.badoo.reaktive.annotations.ExperimentalReaktiveApi
-import com.badoo.reaktive.base.CompleteCallback
 import com.badoo.reaktive.completable.Completable
 import com.badoo.reaktive.disposable.Disposable
 import com.badoo.reaktive.disposable.scope.DisposableScope
@@ -18,7 +16,6 @@ import com.badoo.reaktive.single.Single
  * An abstract implementation of the [Bootstrapper] that provides interoperability with Reaktive.
  * Implements [DisposableScope] which disposes when the [Bootstrapper] is disposed.
  */
-@OptIn(ExperimentalReaktiveApi::class)
 abstract class ReaktiveBootstrapper<Action : Any> : Bootstrapper<Action>, DisposableScope {
 
     private val actionConsumer = lateinitAtomicReference<(Action) -> Unit>()
@@ -49,7 +46,7 @@ abstract class ReaktiveBootstrapper<Action : Any> : Bootstrapper<Action>, Dispos
 
     final override fun <T : Disposable> T.scope(): T = scope.run { this@scope.scope() }
 
-    final override fun <T : CompleteCallback> T.scope(): T = scope.run { this@scope.scope() }
+    final override fun <T> T.scope(onDispose: (T) -> Unit): T = scope.run { this@scope.scope(onDispose) }
 
     final override fun <T> Observable<T>.subscribeScoped(
         isThreadLocal: Boolean,

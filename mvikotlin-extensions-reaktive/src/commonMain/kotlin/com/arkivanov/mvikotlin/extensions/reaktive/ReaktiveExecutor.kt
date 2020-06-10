@@ -8,8 +8,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.utils.internal.initialize
 import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
-import com.badoo.reaktive.annotations.ExperimentalReaktiveApi
-import com.badoo.reaktive.base.CompleteCallback
 import com.badoo.reaktive.completable.Completable
 import com.badoo.reaktive.disposable.Disposable
 import com.badoo.reaktive.disposable.scope.DisposableScope
@@ -21,7 +19,6 @@ import com.badoo.reaktive.single.Single
  * An abstract implementation of the [Executor] that provides interoperability with Reaktive.
  * Implements [DisposableScope] which disposes when the [Executor] is disposed.
  */
-@OptIn(ExperimentalReaktiveApi::class)
 open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Result : Any, Label : Any> :
     Executor<Intent, Action, State, Result, Label>,
     DisposableScope {
@@ -93,9 +90,9 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Re
 
     final override val isDisposed: Boolean get() = scope.isDisposed
 
-    final override fun <T : CompleteCallback> T.scope(): T = scope.run { this@scope.scope() }
-
     final override fun <T : Disposable> T.scope(): T = scope.run { this@scope.scope() }
+
+    final override fun <T> T.scope(onDispose: (T) -> Unit): T = scope.run { this@scope.scope(onDispose) }
 
     final override fun Completable.subscribeScoped(
         isThreadLocal: Boolean,
