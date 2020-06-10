@@ -1,5 +1,6 @@
 package root
 
+import DEBUG
 import Disposable
 import FrameworkType
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -15,27 +16,12 @@ import com.ccfraser.muirwik.components.styles.ThemeOptions
 import com.ccfraser.muirwik.components.styles.createMuiTheme
 import details.TodoDetailsComponent
 import details.todoDetails
-import kotlinx.css.Align
-import kotlinx.css.Display
-import kotlinx.css.FlexDirection
-import kotlinx.css.JustifyContent
-import kotlinx.css.alignItems
-import kotlinx.css.display
-import kotlinx.css.flexDirection
-import kotlinx.css.justifyContent
-import kotlinx.css.marginTop
-import kotlinx.css.padding
-import kotlinx.css.paddingLeft
-import kotlinx.css.pct
-import kotlinx.css.width
+import kotlinx.css.*
 import list.TodoListParentComponent
 import list.todoContainer
-import react.RBuilder
-import react.RComponent
-import react.RProps
-import react.RState
-import react.setState
+import react.*
 import styled.StyleSheet
+import timetravel.timeTravel
 
 abstract class App : RComponent<AppProps, AppState>() {
 
@@ -46,7 +32,7 @@ abstract class App : RComponent<AppProps, AppState>() {
     private val detailsOutput: (TodoDetailsController.Output) -> Unit = ::detailsOutput
 
     init {
-        state = AppState(todoId = "")
+        state = AppState(todoId = "", showDebugDrawer = false)
     }
 
     override fun RBuilder.render() {
@@ -58,19 +44,24 @@ abstract class App : RComponent<AppProps, AppState>() {
         themeOptions.spacing = 1
 
         mThemeProvider(createMuiTheme(themeOptions)) {
+            appBarWithButton("menu", onIconClick = { setState { showDebugDrawer = true } })
             todoContainer(
                 dependencies = object : TodoListParentComponent.Dependencies, Dependencies by props.dependecies {
                     override val listInput: (Observer<TodoListController.Input>) -> Disposable = this@App.listInput
                     override val listOutput: (TodoListController.Output) -> Unit = this@App.listOutput
                 }
             )
-            if (state.todoId.isNotEmpty())
+            if (state.todoId.isNotEmpty()) {
                 todoDetails(
                     dependencies = object : TodoDetailsComponent.Dependencies, Dependencies by props.dependecies {
                         override val todoId: String = state.todoId
                         override val detailsOutput: (TodoDetailsController.Output) -> Unit = this@App.detailsOutput
                     }
                 )
+            }
+            if (DEBUG && state.showDebugDrawer) {
+                timeTravel(onClose = ::closeDebug)
+            }
         }
 
     }
@@ -87,9 +78,9 @@ abstract class App : RComponent<AppProps, AppState>() {
         }
     }
 
-    private fun closeDetails() {
-        setState { todoId = "" }
-    }
+    private fun closeDebug() = setState { showDebugDrawer = false }
+    private fun closeDetails() = setState { todoId = "" }
+
 
     private fun detailsOutput(output: TodoDetailsController.Output) {
         when (output) {
@@ -135,6 +126,33 @@ abstract class App : RComponent<AppProps, AppState>() {
             width = 100.pct
             padding(2.spacingUnits)
         }
+
+        val debugDrawerStyle by css {
+            height = 100.pct
+            display = Display.flex
+            flexDirection = FlexDirection.column
+            justifyContent = JustifyContent.spaceBetween
+        }
+
+        val debugButtonsContainerStyle by css {
+            display = Display.flex
+            flexDirection = FlexDirection.row
+            justifyContent = JustifyContent.spaceAround
+        }
+
+        val eventItemCss by css {
+            overflow = Overflow.hidden
+            textOverflow = TextOverflow.ellipsis
+            put("-webkit-line-clamp", "3")
+            put("display", "-webkit-box")
+            put("-webkit-box-orient", "vertical")
+        }
+
+        val eventsContainerStyle by css {
+            height = 100.pct
+            overflow = Overflow.auto
+            width = 320.px
+        }
     }
 
     interface Dependencies {
@@ -145,8 +163,10 @@ abstract class App : RComponent<AppProps, AppState>() {
 }
 
 class AppState(
-    var todoId: String
-) : RState
+    var todoId: String,
+    var showDebugDrawer: Boolean
+) : RState {
+}
 
 interface AppProps : RProps {
     var dependecies: App.Dependencies

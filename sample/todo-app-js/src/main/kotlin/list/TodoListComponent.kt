@@ -1,11 +1,7 @@
 package list
 
 import FrameworkType
-import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
-import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
-import com.arkivanov.mvikotlin.core.lifecycle.destroy
-import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
-import com.arkivanov.mvikotlin.core.lifecycle.resume
+import com.arkivanov.mvikotlin.core.lifecycle.*
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.rx.Disposable
@@ -20,11 +16,7 @@ import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoListReaktiveC
 import com.ccfraser.muirwik.components.MTypographyVariant
 import com.ccfraser.muirwik.components.mContainer
 import com.ccfraser.muirwik.components.mTypography
-import react.RBuilder
-import react.RComponent
-import react.RProps
-import react.RState
-import react.setState
+import react.*
 import root.App.TodoStyles.addCss
 import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.headerMarginCss
@@ -33,7 +25,8 @@ import root.debugLog
 import styled.css
 import styled.styledDiv
 
-class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListParentProps, TodoListParentState>(props) {
+class TodoListParentComponent(props: TodoListParentProps) :
+    RComponent<TodoListParentProps, TodoListParentState>(props) {
 
     private val listViewDelegate = TodoListViewProxy(updateState = ::updateState)
     private val addViewDelegate = TodoAddViewProxy(updateState = ::updateState)
@@ -105,7 +98,6 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
                 }
             }
         }
-
     }
 
     override fun componentWillUnmount() {
@@ -131,9 +123,6 @@ class TodoListParentState(
     var addModel: TodoAddView.Model
 ) : RState
 
-fun RBuilder.todoContainer(
-    dependencies: TodoListParentComponent.Dependencies
-) =
-    child(TodoListParentComponent::class) {
-        attrs.dependencies = dependencies
-    }
+fun RBuilder.todoContainer(dependencies: TodoListParentComponent.Dependencies) = child(TodoListParentComponent::class) {
+    attrs.dependencies = dependencies
+}
