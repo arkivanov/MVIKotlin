@@ -32,7 +32,7 @@ fun RBuilder.timeTravelButtons(
                 onMoveToEndClick = onMoveToEndClick,
                 onCancelClick = onCancelClick
             )
-    }
+    }.let {}
 }
 
 fun RBuilder.defaultButtons(onRecordClick: () -> Unit) {
