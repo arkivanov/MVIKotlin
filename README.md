@@ -87,7 +87,8 @@ The sample project is a todo list with details view.
 * Shared module using Reaktive is [here](sample/todo-reaktive)   
 * Shared module using coroutines is [here](sample/todo-coroutines)
 * Sample Android application with both Reaktive and coroutines implementations, plus logging and time travel is [here](sample/todo-app-android)
-* Sample iOS application with Reaktive implementation only, plus logging and time travel is [here](sample/todo-app-ios)   
+* Sample iOS application with Reaktive implementation only, plus logging and time travel is [here](sample/todo-app-ios)
+* Sample JavaScript application with both Reaktive and coroutines implementations, plus logging and time travel is [here](sample/todo-app-js)
 
 ## Author
 Twitter: [@arkann1985](https://twitter.com/arkann1985)
