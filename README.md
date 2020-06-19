@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/arkivanov/MVIKotlin/master/docs/media/logo/landscape/png/mvikotlin_coloured.png" height="64">
+<img src="https://raw.githubusercontent.com/arkivanov/MVIKotlin/master/docs/media/logo/landscape/png/mvikotlin_coloured.png" height="64">
 
 [![Download](https://api.bintray.com/packages/arkivanov/maven/mvikotlin/images/download.svg)](https://bintray.com/arkivanov/maven/mvikotlin/_latestVersion)
 [![License](https://img.shields.io/badge/License-Apache/2.0-blue.svg)](https://github.com/arkivanov/MVIKotlin/blob/master/LICENSE)
