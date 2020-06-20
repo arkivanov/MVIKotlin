@@ -4,6 +4,8 @@
 [![License](https://img.shields.io/badge/License-Apache/2.0-blue.svg)](https://github.com/arkivanov/MVIKotlin/blob/master/LICENSE)
 [![kotlinlang|MVIKotlin](https://img.shields.io/badge/kotlinlang-mvikotlin-blue?logo=slack)](https://kotlinlang.slack.com/archives/C01403U1ZGW)
 
+Should you have any questions or ideas please welcome to the Slack channel: [#mvikotlin](https://kotlinlang.slack.com/archives/C01403U1ZGW)
+
 ## Overview
 
 ### What is MVI
