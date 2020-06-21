@@ -1,8 +1,8 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel.client
 
 import com.arkivanov.mvikotlin.plugin.idea.timetravel.runOnUiThread
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelCommand
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelStateUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import org.jetbrains.annotations.CalledInAny
 import org.jetbrains.annotations.CalledInAwt
 import org.jetbrains.annotations.CalledInBackground

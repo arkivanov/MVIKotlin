@@ -1,5 +1,7 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.value
 
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.type
 import java.lang.reflect.Field
 import java.lang.reflect.TypeVariable
 
