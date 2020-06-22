@@ -1,8 +1,8 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.StoreEventType
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEvent
-import com.arkivanov.mvikotlin.timetravel.proto.internal.value.type
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.storeeventtype.StoreEventType
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.type
 import java.io.BufferedReader
 import java.io.IOException
 import javax.swing.JFrame

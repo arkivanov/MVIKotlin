@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEvent
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import org.jdesktop.swingx.renderer.CellContext
 import org.jdesktop.swingx.renderer.ComponentProvider
 import org.jdesktop.swingx.renderer.JRendererLabel

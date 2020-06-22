@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel.client
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelCommand
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelStateUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.closeSafe

@@ -2,9 +2,9 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
 import com.arkivanov.mvikotlin.plugin.idea.timetravel.client.TimeTravelClient
 import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelCommand
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEventsUpdate
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelStateUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventsupdate.TimeTravelEventsUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import java.io.IOException
 import javax.swing.JComponent
 

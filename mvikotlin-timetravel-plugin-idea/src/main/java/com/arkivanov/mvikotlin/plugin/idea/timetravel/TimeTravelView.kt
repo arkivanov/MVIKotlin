@@ -1,9 +1,9 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEvent
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelEventsUpdate
-import com.arkivanov.mvikotlin.timetravel.proto.internal.TimeTravelStateUpdate
-import com.arkivanov.mvikotlin.timetravel.proto.internal.value.ValueTextTreeBuilder
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventsupdate.TimeTravelEventsUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueTextTreeBuilder
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
