@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.timetravel.widget
 
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueTextTreeBuilder
-import com.arkivanov.mvikotlin.timetravel.proto.internal.value.parseObject
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.parseObject
 import java.lang.ref.WeakReference
 import java.util.concurrent.Executors
 

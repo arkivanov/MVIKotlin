@@ -26,9 +26,7 @@ internal fun DataWriter.writeChar(value: Char) {
     writeInt(value.toInt())
 }
 
-internal fun DataWriter.writeFloat(value: Float) {
-    writeInt(value.toRawBits())
-}
+internal expect fun DataWriter.writeFloat(value: Float)
 
 internal fun DataWriter.writeDouble(value: Double) {
     writeLong(value.toRawBits())

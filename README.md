@@ -68,7 +68,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 ```
 
 ## Features
-* Multiplatform: Android, JVM, JavaScript, iosX64, iosArm64, linuxX64
+* Multiplatform: Android, JVM, JavaScript, iosX64, iosArm64, macosX64, linuxX64
 * Does not depend on any reactive library or coroutines
 * Extensions for [Reaktive](https://github.com/badoo/Reaktive) library
 * Extensions for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -79,7 +79,8 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
   * Plug-and-play UI for Android
   * Plug-and-play UI for iOS (copy-paste from the sample app)
   * Export/import events for JVM and Android
-  * IDEA and Android Studio plugin for Android
+  * IDEA and Android Studio [plugin](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel) for Android apps
+  * MacOS [client application](mvikotlin-timetravel-client/app-macos) for iOS and macOS apps
 
 ## Documentation
 
@@ -107,3 +108,6 @@ Twitter: [@arkann1985](https://twitter.com/arkann1985)
 
 #### Debugging Android application with IntelliJ IDEA time travel plugin
 [![Debugging Android application with IntelliJ IDEA time travel plugin](https://img.youtube.com/vi/Tr2ayOcVU34/0.jpg)](https://youtu.be/Tr2ayOcVU34)
+
+#### Debugging iOS application using MVIKotlin time travel client app
+[![Debugging iOS application using MVIKotlin time travel client app](https://img.youtube.com/vi/rj6GwA2ZQkk/0.jpg)](https://youtu.be/rj6GwA2ZQkk)

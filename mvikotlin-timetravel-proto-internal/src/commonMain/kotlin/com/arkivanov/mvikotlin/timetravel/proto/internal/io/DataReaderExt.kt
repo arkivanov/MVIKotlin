@@ -20,7 +20,7 @@ internal fun DataReader.readShort(): Short = readInt().toShort()
 
 internal fun DataReader.readChar(): Char = readInt().toChar()
 
-internal fun DataReader.readFloat(): Float = Float.fromBits(readInt())
+internal expect fun DataReader.readFloat(): Float
 
 internal fun DataReader.readDouble(): Double = Double.fromBits(readLong())
 

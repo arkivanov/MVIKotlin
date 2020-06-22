@@ -59,14 +59,30 @@ Alternatively you can create your own time travel UI. Please refer to [TimeTrave
 
 ### Time travel plugin for IntelliJ IDEA and Android Studio
 
-There is a more convenient tool for Android - Time travel plugin. This can be used directly from IDE so there is no need to integrate any additional UI.
+There is a more convenient tool for Android - time travel IDEA plugin. This can be used directly from IDE so there is no need to integrate any additional UI.
 
-Check out the [video](https://youtu.be/Tr2ayOcVU34) demonstrating the time travel plugin.
+You will need to run the [TimeTravelServer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/androidMain/kotlin/com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer.kt) in your Android app so the plugin could connect to it. Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample/todo-app-android) for more examples.
+
+Check out the video demonstrating the time travel IDEA plugin:
+
+[![Debugging Android application with IntelliJ IDEA time travel plugin](https://img.youtube.com/vi/Tr2ayOcVU34/0.jpg)](https://youtu.be/Tr2ayOcVU34)
 
 #### How to install
 
 You can find the plugin in the IntelliJ IDEA [Marketplace](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel). It can be installed directly from IntelliJ IDEA or Android Studio. Please navigate to Settings -> Plugins -> Marketplace and type "MVIKotlin" in the search field.
 
-Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
+### Time travel client app for macOS
+
+This is a standalone time travel client for macOS that can connect to iOS and macOS apps.
+
+Same as with the IDEA plugin you will need to run the [TimeTravelServer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/darwinCommonMain/kotlin/com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer.kt) in your iOS or macOS app, so the client app could connect to it. Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample/todo-app-ios) for more examples.
+
+Check out the video demonstrating the time travel client app for macOS:
+
+[![Debugging iOS application using MVIKotlin time travel client app](https://img.youtube.com/vi/rj6GwA2ZQkk/0.jpg)](https://youtu.be/rj6GwA2ZQkk)
+
+#### How to install
+
+The time travel client application for macOS is not published yet so you will need to build it from [sources](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel-client/app-macos).
 
 [Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | Time travel

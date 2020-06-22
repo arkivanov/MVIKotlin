@@ -7,12 +7,17 @@
 //
 
 import UIKit
+import TodoLib
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    private let s = TimeTravelServer()
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        s.start()
+        
         return true
     }
 
