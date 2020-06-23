@@ -1,13 +1,13 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel.client
 
 import com.arkivanov.mvikotlin.plugin.idea.timetravel.runOnUiThread
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import org.jetbrains.annotations.CalledInAny
 import org.jetbrains.annotations.CalledInAwt
 import org.jetbrains.annotations.CalledInBackground
 import java.io.IOException
-import java.util.concurrent.BlockingQueue
 
 internal class TimeTravelClient(
     private val host: String,
@@ -63,17 +63,17 @@ internal class TimeTravelClient(
         when (val state = state) {
             is State.Disconnected,
             is State.Connecting -> null
-            is State.Connected -> state.commandQueue
+            is State.Connected -> state.writer
         }
-            ?.offer(command)
+            ?.invoke(command)
     }
 
     @CalledInBackground
-    private fun onConnected(queue: BlockingQueue<TimeTravelCommand>) {
+    private fun onConnected(writer: (ProtoObject) -> Unit) {
         runOnUiThreadIfNotDisconnected {
             state =
                 when (val state = state) {
-                    is State.Connecting -> State.Connected(state.connectionThread, queue)
+                    is State.Connecting -> State.Connected(state.connectionThread, writer)
                     is State.Disconnected,
                     is State.Connected -> state
                 }
@@ -123,6 +123,6 @@ internal class TimeTravelClient(
     private sealed class State {
         object Disconnected : State()
         class Connecting(val connectionThread: ConnectionThread) : State()
-        class Connected(val connectionThread: ConnectionThread, val commandQueue: BlockingQueue<TimeTravelCommand>) : State()
+        class Connected(val connectionThread: ConnectionThread, val writer: (ProtoObject) -> Unit) : State()
     }
 }

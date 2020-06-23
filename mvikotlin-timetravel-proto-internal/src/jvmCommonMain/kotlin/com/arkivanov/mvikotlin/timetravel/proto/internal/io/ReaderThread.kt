@@ -7,7 +7,8 @@ import java.net.Socket
 
 class ReaderThread<T : ProtoObject>(
     private val socket: Socket,
-    private val onObjectReceived: (T) -> Unit,
+    private val onRead: (T) -> Unit,
+    private val onDisconnected: () -> Unit = {},
     private val onError: (IOException) -> Unit = {}
 ) : Thread() {
 
@@ -18,7 +19,7 @@ class ReaderThread<T : ProtoObject>(
             ProtoFrameDecoder { data ->
                 val protoObject = protoDecoder.decode(data)
                 @Suppress("UNCHECKED_CAST")
-                onObjectReceived(protoObject as T)
+                onRead(protoObject as T)
             }
 
         try {
@@ -36,6 +37,7 @@ class ReaderThread<T : ProtoObject>(
             onError(e)
         } finally {
             socket.closeSafe()
+            onDisconnected()
         }
     }
 }
