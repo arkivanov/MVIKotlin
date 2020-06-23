@@ -1,21 +1,19 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel.client
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.closeSafe
 import java.io.IOException
 import java.net.Socket
-import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal class ConnectionThread(
     private val host: String,
     private val port: Int,
-    private val onConnected: (BlockingQueue<TimeTravelCommand>) -> Unit,
+    private val onConnected: (writer: (ProtoObject) -> Unit) -> Unit,
     private val onStateUpdateReceived: (TimeTravelStateUpdate) -> Unit,
     private val onError: (IOException) -> Unit
 ) : Thread() {
@@ -32,13 +30,13 @@ internal class ConnectionThread(
                 return
             }
 
-        val queue = LinkedBlockingQueue<TimeTravelCommand>()
-        onConnected(queue)
+        val reader = ReaderThread(socket = socket, onRead = onStateUpdateReceived, onError = ::handleError)
+        val writer = WriterThread(socket = socket, onError = ::handleError)
+        onConnected(writer::write)
 
-        val reader = ReaderThread(socket, onStateUpdateReceived, ::handleError)
         reader.start()
-        val writer = WriterThread(socket, queue::take, ::handleError)
         writer.start()
+
         try {
             closeLatch.await()
         } finally {
