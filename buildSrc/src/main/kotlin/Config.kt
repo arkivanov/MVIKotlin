@@ -15,7 +15,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 enum class BuildType {
-    ALL, METADATA, NON_NATIVE, LINUX, IOS
+    ALL, METADATA, NON_NATIVE, LINUX, IOS, MAC_OS
 }
 
 val ExtensionAware.buildType: BuildType
@@ -45,6 +45,7 @@ interface BuildTarget {
     object Js : NonNative
     object IosX64 : Ios
     object IosArm64 : Ios
+    object MacOsX64 : Darwin
     object LinuxX64 : Linux
 }
 
@@ -55,6 +56,7 @@ private val ALL_BUILD_TARGETS =
         BuildTarget.Js,
         BuildTarget.IosX64,
         BuildTarget.IosArm64,
+        BuildTarget.MacOsX64,
         BuildTarget.LinuxX64
     )
 
@@ -64,7 +66,8 @@ private val BUILD_TYPE_TO_BUILD_TARGETS: Map<BuildType, Set<BuildTarget>> =
         BuildType.METADATA to ALL_BUILD_TARGETS,
         BuildType.NON_NATIVE to setOf(BuildTarget.Android, BuildTarget.Jvm, BuildTarget.Js),
         BuildType.LINUX to setOf(BuildTarget.LinuxX64),
-        BuildType.IOS to setOf(BuildTarget.IosX64, BuildTarget.IosArm64)
+        BuildType.IOS to setOf(BuildTarget.IosX64, BuildTarget.IosArm64),
+        BuildType.MAC_OS to setOf(BuildTarget.MacOsX64)
     )
 
 val BuildType.buildTargets: Set<BuildTarget> get() = requireNotNull(BUILD_TYPE_TO_BUILD_TARGETS[this])
@@ -132,6 +135,10 @@ fun Project.setupMultiplatform() {
 
         doIfBuildTargetAvailable<BuildTarget.IosArm64> {
             iosArm64()
+        }
+
+        doIfBuildTargetAvailable<BuildTarget.MacOsX64> {
+            macosX64()
         }
 
         sourceSets {
@@ -206,6 +213,9 @@ fun Project.setupMultiplatform() {
 
             iosArm64Main.dependsOn(iosCommonMain)
             iosArm64Test.dependsOn(iosCommonTest)
+
+            macosX64Main.dependsOn(darwinCommonMain)
+            macosX64Test.dependsOn(darwinCommonTest)
         }
     }
 }
@@ -515,4 +525,18 @@ val SourceSets.iosArm64Test: KotlinSourceSet get() = getOrCreate("iosArm64Test")
 
 fun SourceSets.iosArm64Test(block: KotlinSourceSet.() -> Unit) {
     iosArm64Test.apply(block)
+}
+
+// macosX64
+
+val SourceSets.macosX64Main: KotlinSourceSet get() = getOrCreate("macosX64Main")
+
+fun SourceSets.macosX64Main(block: KotlinSourceSet.() -> Unit) {
+    macosX64Main.apply(block)
+}
+
+val SourceSets.macosX64Test: KotlinSourceSet get() = getOrCreate("macosX64Test")
+
+fun SourceSets.macosX64Test(block: KotlinSourceSet.() -> Unit) {
+    macosX64Test.apply(block)
 }
