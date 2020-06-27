@@ -1,0 +1,18 @@
+{
+  "images" : [
+    {
+      "filename" : "outline_cancel_black_18pt_1x-1.png",
+      "idiom" : "mac",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "outline_cancel_black_18pt_2x-1.png",
+      "idiom" : "mac",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

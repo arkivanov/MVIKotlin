@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install nodejs chromium-browser
       - name: Build JVM, Android, JS
-        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-timetravel-proto-internal:build :mvikotlin-timetravel-client:client-internal:build :mvikotlin-timetravel-client:plugin-idea:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :androidx-lifecycle-interop:build :sample:todo-app-android:assembleDebug :sample:todo-app-js:build -Pbuild_type=NON_NATIVE
+        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel-proto-internal:build :mvikotlin-timetravel:build :mvikotlin-timetravel-client:client-internal:build :mvikotlin-timetravel-client:plugin-idea:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :androidx-lifecycle-interop:build :sample:todo-app-android:assembleDebug :sample:todo-app-js:build -Pbuild_type=NON_NATIVE
   linux-build:
     name: Build Linux
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build Linux
-        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build -Pbuild_type=LINUX
+        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel-proto-internal:build :mvikotlin-timetravel:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build -Pbuild_type=LINUX
   ios-build:
     name: Build iOS
     runs-on: macos-latest
@@ -42,7 +42,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build iOS
-        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :sample:todo-darwin-umbrella:iosX64MainBinaries :sample:todo-darwin-umbrella:iosArm64MainBinaries -Pbuild_type=IOS
+        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel-proto-internal:build :mvikotlin-timetravel:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :sample:todo-darwin-umbrella:iosX64MainBinaries :sample:todo-darwin-umbrella:iosArm64MainBinaries -Pbuild_type=IOS
   macos-build:
     name: Build macOS
     runs-on: macos-latest
@@ -54,4 +54,4 @@ jobs:
         with:
           java-version: 1.8
       - name: Build macOS
-        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :sample:todo-darwin-umbrella:macosX64MainBinaries -Pbuild_type=MAC_OS
+        run: ./gradlew :utils-internal:build :rx:build :rx-internal:build :mvikotlin:build :mvikotlin-test-internal:build :mvikotlin-main:build :mvikotlin-logging:build :mvikotlin-timetravel-proto-internal:build :mvikotlin-timetravel:build :mvikotlin-timetravel-client:client-internal:build :mvikotlin-extensions-reaktive:build :mvikotlin-extensions-coroutines:build :sample:todo-darwin-umbrella:macosX64MainBinaries -Pbuild_type=MAC_OS

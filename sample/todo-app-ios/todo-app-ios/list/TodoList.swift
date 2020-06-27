@@ -18,7 +18,8 @@ struct TodoList: View {
                 TodoRow(
                     text: item.data.text,
                     isDone: item.data.isDone,
-                    onDoneClicked: { self.proxy.dispatch(event: TodoListViewEvent.ItemDoneClicked(id: item.id)) }
+                    onDoneClicked: { self.proxy.dispatch(event: .ItemDoneClicked(id: item.id)) },
+                    onDeleteClicked: { self.proxy.dispatch(event: .ItemDeleteClicked(id: item.id)) }
                 ).onTapGesture {
                     self.proxy.dispatch(event: TodoListViewEvent.ItemClicked(id: item.id))
                 }

@@ -13,7 +13,7 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.timetravel.R
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
-import com.arkivanov.mvikotlin.timetravel.proto.internal.value.getFullTypeName
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.getFullTypeName
 
 internal class TimeTravelEventAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

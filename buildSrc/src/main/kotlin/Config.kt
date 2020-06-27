@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithSimulatorTests
 
 enum class BuildType {
     ALL, METADATA, NON_NATIVE, LINUX, IOS, MAC_OS
@@ -158,8 +159,11 @@ fun Project.setupMultiplatform() {
             jsNativeCommonMain.dependsOn(commonMain)
             jsNativeCommonTest.dependsOn(commonTest)
 
+            jvmNativeCommonMain.dependsOn(commonMain)
+            jvmNativeCommonTest.dependsOn(commonTest)
+
             jvmCommonMain {
-                dependsOn(commonMain)
+                dependsOn(jvmNativeCommonMain)
 
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.StdLib.Jdk7)
@@ -167,7 +171,7 @@ fun Project.setupMultiplatform() {
             }
 
             jvmCommonTest {
-                dependsOn(commonTest)
+                dependsOn(jvmNativeCommonTest)
 
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.Test.Junit)
@@ -196,8 +200,15 @@ fun Project.setupMultiplatform() {
                 }
             }
 
-            nativeCommonMain.dependsOn(jsNativeCommonMain)
-            nativeCommonTest.dependsOn(jsNativeCommonTest)
+            nativeCommonMain {
+                dependsOn(jsNativeCommonMain)
+                dependsOn(jvmNativeCommonMain)
+            }
+
+            nativeCommonTest {
+                dependsOn(jsNativeCommonTest)
+                dependsOn(jvmNativeCommonTest)
+            }
 
             linuxX64Main.dependsOn(nativeCommonMain)
             linuxX64Test.dependsOn(nativeCommonTest)
@@ -294,45 +305,14 @@ fun Project.setupAndroidSdkVersions() {
     }
 }
 
-// Workaround since iosX64() and iosArm64() function are not resolved if used in a module with Kotlin 1.3.70
-fun Project.setupTodoDarwinUmbrellaBinaries() {
-    fun KotlinNativeTarget.setupIosBinaries() {
-        binaries {
-            framework {
-                baseName = "TodoLib"
-                freeCompilerArgs = freeCompilerArgs.plus("-Xobjc-generics").toMutableList()
+// Workaround since iosX64() function is not resolved if used in a module with Kotlin 1.3.70
+fun KotlinMultiplatformExtension.iosX64Compat(): KotlinNativeTarget = iosX64()
 
-                export(project(":rx"))
-                export(project(":mvikotlin"))
-                export(project(":mvikotlin-main"))
-                export(project(":mvikotlin-logging"))
-                export(project(":mvikotlin-timetravel"))
-                export(project(":sample:todo-common"))
-                export(project(":sample:todo-reaktive"))
-            }
-        }
-    }
+// Workaround since iosArm64() function is not resolved if used in a module with Kotlin 1.3.70
+fun KotlinMultiplatformExtension.iosArm64Compat(): KotlinNativeTarget = iosArm64()
 
-    kotlin {
-        iosX64().setupIosBinaries()
-        iosArm64().setupIosBinaries()
-
-        sourceSets {
-            commonMain {
-                dependencies {
-                    api(project(":rx"))
-                    api(project(":mvikotlin"))
-                    api(project(":mvikotlin-main"))
-                    api(project(":mvikotlin-logging"))
-                    api(project(":mvikotlin-timetravel"))
-                    api(project(":sample:todo-common"))
-                    api(project(":sample:todo-reaktive"))
-                }
-            }
-        }
-    }
-
-}
+// Workaround since macosX64() function is not resolved if used in a module with Kotlin 1.3.70
+fun KotlinMultiplatformExtension.macosX64Compat(): KotlinNativeTarget = macosX64()
 
 fun Project.android(block: BaseExtension.() -> Unit) {
     extensions.getByType<BaseExtension>().block()
@@ -385,6 +365,20 @@ val SourceSets.jsNativeCommonTest: KotlinSourceSet get() = getOrCreate("jsNative
 
 fun SourceSets.jsNativeCommonTest(block: KotlinSourceSet.() -> Unit) {
     jsNativeCommonTest.apply(block)
+}
+
+// jvmNativeCommon
+
+val SourceSets.jvmNativeCommonMain: KotlinSourceSet get() = getOrCreate("jvmNativeCommonMain")
+
+fun SourceSets.jvmNativeCommonMain(block: KotlinSourceSet.() -> Unit) {
+    jvmNativeCommonMain.apply(block)
+}
+
+val SourceSets.jvmNativeCommonTest: KotlinSourceSet get() = getOrCreate("jvmNativeCommonTest")
+
+fun SourceSets.jvmNativeCommonTest(block: KotlinSourceSet.() -> Unit) {
+    jvmNativeCommonTest.apply(block)
 }
 
 // jvmCommon

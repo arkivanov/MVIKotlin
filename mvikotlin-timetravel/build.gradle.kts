@@ -19,6 +19,7 @@ kotlin {
                 implementation(project(":rx"))
                 implementation(project(":rx-internal"))
                 implementation(project(":utils-internal"))
+                implementation(project(":mvikotlin-timetravel-proto-internal"))
                 implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
@@ -31,7 +32,6 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(project(":mvikotlin-timetravel-proto-internal"))
                 implementation(Deps.AndroidX.Core.Ktx)
                 implementation(Deps.AndroidX.AppCompat.AppCompat)
                 implementation(Deps.AndroidX.RecyclerView.RecyclerView)

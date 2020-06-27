@@ -1,0 +1,18 @@
+{
+  "images" : [
+    {
+      "filename" : "outline_fiber_manual_record_black_18pt_1x.png",
+      "idiom" : "mac",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "outline_fiber_manual_record_black_18pt_2x.png",
+      "idiom" : "mac",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

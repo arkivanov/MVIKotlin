@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.timetravel.proto.internal.value
+package com.arkivanov.mvikotlin.timetravel.proto.internal.data.value
 
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.type
@@ -7,8 +7,8 @@ import java.lang.reflect.TypeVariable
 
 private val BLACK_LIST_FIELDS = hashSetOf("serialVersionUID", "INSTANCE")
 
-fun parseObject(obj: Any?, clazz: Class<*>? = null): Value =
-    valueObject(value = obj, clazz = clazz, visitedObjects = HashSet())
+actual fun parseObject(obj: Any?): Value =
+    valueObject(value = obj, visitedObjects = HashSet())
 
 private fun valueObject(value: Any? = null, clazz: Class<*>? = null, visitedObjects: MutableSet<Any>): Value.Object =
     when {

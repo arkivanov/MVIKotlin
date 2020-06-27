@@ -88,16 +88,19 @@ internal class TimeTravelClientStoreFactory(
             dispatch(Result.Disconnected)
         }
 
-        private inline fun sendIfNeeded(state: State, command: State.Connected.() -> TimeTravelCommand): Unit =
+        private inline fun sendIfNeeded(state: State, command: State.Connected.() -> TimeTravelCommand?): Unit =
             when (state) {
                 is State.Disconnected,
                 is State.Connecting -> Unit
-                is State.Connected -> state.writer(state.command())
+                is State.Connected -> {
+                    state.command()?.also(state.writer)
+                    Unit
+                }
             }
 
         private fun debugEventIfNeeded(state: State) {
             sendIfNeeded(state) {
-                TimeTravelCommand.DebugEvent(eventId = events[currentEventIndex].id)
+                selectedEvent?.event?.id?.let(TimeTravelCommand::DebugEvent)
             }
         }
 

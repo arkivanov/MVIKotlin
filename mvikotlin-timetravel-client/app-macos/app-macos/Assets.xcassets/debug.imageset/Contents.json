@@ -1,0 +1,18 @@
+{
+  "images" : [
+    {
+      "filename" : "outline_bug_report_black_18pt_1x.png",
+      "idiom" : "mac",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "outline_bug_report_black_18pt_2x.png",
+      "idiom" : "mac",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

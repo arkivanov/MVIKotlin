@@ -3,7 +3,7 @@ package com.arkivanov.mvikotlin.timetravel.server
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
-import com.arkivanov.mvikotlin.timetravel.proto.internal.value.parseObject
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.parseObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.storeeventtype.StoreEventType as StoreEventTypeProto
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent as TimeTravelEventProto
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate as TimeTravelStateUpdateProto
