@@ -18,9 +18,7 @@ kotlin {
         }
     }
 
-    doIfBuildTargetAvailable<BuildTarget.MacOsX64> {
-        macosX64Compat().setupBinaries()
-    }
+    macosX64Compat()?.setupBinaries()
 }
 
 fun KotlinNativeTarget.setupBinaries() {
@@ -58,9 +56,9 @@ doIfBuildTargetAvailable<BuildTarget.MacOsX64> {
             val gradlew = File(targetDir, "gradlew")
             gradlew.writeText(
                 "#!/bin/bash\n"
-                        + "export 'JAVA_HOME=${System.getProperty("java.home")}'\n"
-                        + "cd '${rootProject.rootDir}'\n"
-                        + "./gradlew \$@\n"
+                    + "export 'JAVA_HOME=${System.getProperty("java.home")}'\n"
+                    + "cd '${rootProject.rootDir}'\n"
+                    + "./gradlew \$@\n"
             )
             gradlew.setExecutable(true)
         }
