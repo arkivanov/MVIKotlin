@@ -11,9 +11,12 @@ import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithSimulatorTests
+import org.jetbrains.kotlin.gradle.targets.js.KotlinJsTarget
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 enum class BuildType {
     ALL, METADATA, NON_NATIVE, LINUX, IOS, MAC_OS
@@ -305,17 +308,55 @@ fun Project.setupAndroidSdkVersions() {
     }
 }
 
-// Workaround since iosX64() function is not resolved if used in a module with Kotlin 1.3.70
-fun KotlinMultiplatformExtension.iosX64Compat(): KotlinNativeTarget = iosX64()
+fun KotlinMultiplatformExtension.jsCompat(): KotlinJsTarget? = findTargetByName("js")
 
-// Workaround since iosArm64() function is not resolved if used in a module with Kotlin 1.3.70
-fun KotlinMultiplatformExtension.iosArm64Compat(): KotlinNativeTarget = iosArm64()
+fun KotlinMultiplatformExtension.jsCompat(block: KotlinJsTarget.() -> Unit) {
+    jsCompat()?.apply(block)
+}
 
-// Workaround since macosX64() function is not resolved if used in a module with Kotlin 1.3.70
-fun KotlinMultiplatformExtension.macosX64Compat(): KotlinNativeTarget = macosX64()
+fun KotlinMultiplatformExtension.androidCompat(): KotlinAndroidTarget? = findTargetByName("android")
+
+fun KotlinMultiplatformExtension.androidCompat(block: KotlinAndroidTarget.() -> Unit) {
+    androidCompat()?.apply(block)
+}
+
+fun KotlinMultiplatformExtension.jvmCompat(): KotlinJvmTarget? = findTargetByName("jvm")
+
+fun KotlinMultiplatformExtension.jvmCompat(block: KotlinJvmTarget.() -> Unit) {
+    jvmCompat()?.apply(block)
+}
+
+fun KotlinMultiplatformExtension.linuxX64Compat(): KotlinNativeTarget? = findTargetByName("linuxX64")
+
+fun KotlinMultiplatformExtension.linuxX64Compat(block: KotlinNativeTarget.() -> Unit) {
+    linuxX64Compat()?.also(block)
+}
+
+fun KotlinMultiplatformExtension.iosX64Compat(): KotlinNativeTarget? = findTargetByName("iosX64")
+
+fun KotlinMultiplatformExtension.iosX64Compat(block: KotlinNativeTarget.() -> Unit) {
+    iosX64Compat()?.apply(block)
+}
+
+fun KotlinMultiplatformExtension.iosArm64Compat(): KotlinNativeTarget? = findTargetByName("iosArm64")
+
+fun KotlinMultiplatformExtension.iosArm64Compat(block: KotlinNativeTarget.() -> Unit) {
+    iosArm64Compat()?.apply(block)
+}
+
+fun KotlinMultiplatformExtension.macosX64Compat(): KotlinNativeTarget? = findTargetByName("macosX64")
+
+fun KotlinMultiplatformExtension.macosX64Compat(block: KotlinNativeTarget.() -> Unit) {
+    macosX64Compat()?.also(block)
+}
+
+private inline fun <reified T : KotlinTarget> KotlinMultiplatformExtension.findTargetByName(name: String): T? =
+    targets.findByName(name) as T?
 
 fun Project.android(block: BaseExtension.() -> Unit) {
-    extensions.getByType<BaseExtension>().block()
+    if (isBuildTargetAvailable<BuildTarget.Android>()) {
+        extensions.getByType<BaseExtension>().block()
+    }
 }
 
 fun Project.kotlin(block: KotlinMultiplatformExtension.() -> Unit) {

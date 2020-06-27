@@ -17,8 +17,8 @@ kotlin {
         }
     }
 
-    iosX64Compat().setupBinaries()
-    iosArm64Compat().setupBinaries()
+    iosX64Compat()?.setupBinaries()
+    iosArm64Compat()?.setupBinaries()
 }
 
 fun KotlinNativeTarget.setupBinaries() {
