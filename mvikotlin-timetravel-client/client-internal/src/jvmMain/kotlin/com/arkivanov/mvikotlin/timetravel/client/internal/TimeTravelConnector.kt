@@ -1,6 +1,8 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal
 
 import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStoreFactory.Connector
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
@@ -35,9 +37,20 @@ internal class TimeTravelConnector(
         }
 
         val reader =
-            ReaderThread<TimeTravelStateUpdate>(
+            ReaderThread<ProtoObject>(
                 socket = socket,
-                onRead = { onNext(Connector.Event.StateUpdate(it)) },
+                onRead = {
+                    onNext(
+                        when (it) {
+                            is TimeTravelStateUpdate -> Connector.Event.StateUpdate(it)
+                            is TimeTravelExport -> Connector.Event.ExportEvents(it.data)
+                            else -> {
+                                onError(UnsupportedOperationException("Unsupported proto object type: $it"))
+                                return@ReaderThread
+                            }
+                        }
+                    )
+                },
                 onError = ::onError
             )
 

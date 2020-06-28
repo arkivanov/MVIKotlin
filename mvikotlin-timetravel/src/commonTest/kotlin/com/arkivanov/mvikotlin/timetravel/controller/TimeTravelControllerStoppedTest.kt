@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
+import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -288,5 +289,33 @@ class TimeTravelControllerStoppedTest {
 
         assertEquals(emptyList(), env.events)
         assertEquals(-1, env.state.selectedEventIndex)
+    }
+
+    @Test
+    fun exports_WHEN_stopped() {
+        env = TimeTravelControllerTestingEnvironment()
+        env.store1.state = "store1_state1"
+        env.store2.state = "store2_state1"
+        env.controller.startRecording()
+
+        val store2Event = env.produceResultEventForStore2(value = "store2_result", state = "store2_state1")
+        env.controller.stopRecording()
+        val export = env.controller.export()
+
+        assertEquals(
+            TimeTravelExport(
+                recordedEvents = listOf(
+                    TimeTravelEvent(
+                        id = 1L,
+                        storeName = "store2",
+                        type = store2Event.type,
+                        value = store2Event.value,
+                        state = store2Event.state
+                    )
+                ),
+                unusedStoreStates = mapOf("store1" to "store1_state1")
+            ),
+            export
+        )
     }
 }

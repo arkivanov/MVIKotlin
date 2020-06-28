@@ -10,6 +10,7 @@ import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
+import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore
 import com.badoo.reaktive.utils.ThreadLocalHolder
 import com.badoo.reaktive.utils.ensureNeverFrozen
@@ -58,15 +59,6 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         )
 
         store.init()
-    }
-
-    override fun restoreEvents(events: List<TimeTravelEvent>) {
-        assertOnMainThread()
-
-        if (events.isNotEmpty()) {
-            swapState { it.copy(events = events, selectedEventIndex = -1, mode = Mode.STOPPED) }
-            moveToEnd()
-        }
     }
 
     override fun startRecording() {
@@ -139,6 +131,32 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         if (state.mode === Mode.STOPPED) {
             val event = state.events.firstOrNull { it.id == eventId } ?: return
             stores[event.storeName]?.debug(type = event.type, value = event.value, state = event.state)
+        }
+    }
+
+    override fun export(): TimeTravelExport {
+        assertOnMainThread()
+        require(state.mode === Mode.STOPPED)
+
+        val usedStoreNames = state.events.mapTo(HashSet(), TimeTravelEvent::storeName)
+
+        return TimeTravelExport(
+            recordedEvents = state.events,
+            unusedStoreStates = stores.mapValues { it.value.state }.filterKeys { it !in usedStoreNames }
+        )
+    }
+
+    override fun import(export: TimeTravelExport) {
+        assertOnMainThread()
+
+        if (state.mode === Mode.IDLE) {
+            swapState { it.copy(events = export.recordedEvents, selectedEventIndex = -1, mode = Mode.STOPPED) }
+
+            export.unusedStoreStates.forEach { (name, state) ->
+                stores[name]?.process(type = StoreEventType.STATE, value = state)
+            }
+
+            moveToEnd()
         }
     }
 

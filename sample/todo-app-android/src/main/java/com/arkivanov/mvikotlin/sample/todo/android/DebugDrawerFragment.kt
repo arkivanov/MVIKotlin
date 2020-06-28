@@ -4,6 +4,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +12,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import com.arkivanov.mvikotlin.timetravel.TimeTravelSerializer
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
+import com.arkivanov.mvikotlin.timetravel.export.DefaultTimeTravelExportSerializer
+import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExportSerializer
 import com.arkivanov.mvikotlin.timetravel.widget.TimeTravelView
 
 class DebugDrawerFragment : Fragment() {
 
-    private val serializer = TimeTravelSerializer()
+    private val serializer = DefaultTimeTravelExportSerializer
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         TimeTravelView(requireContext()).apply {
@@ -27,14 +29,10 @@ class DebugDrawerFragment : Fragment() {
         }
 
     private fun exportEvents() {
-        shareEvents(
-            try {
-                serializer.serialize(timeTravelController.state.events)
-            } catch (e: Exception) {
-                showError(R.string.time_travel_serialize_error, e)
-                return
-            }
-        )
+        when (val result = serializer.serialize(timeTravelController.export())) {
+            is TimeTravelExportSerializer.Result.Success -> shareEvents(Base64.encodeToString(result.data, Base64.DEFAULT))
+            is TimeTravelExportSerializer.Result.Error -> showError(R.string.time_travel_serialize_error, result.exception)
+        }.let {}
     }
 
     private fun shareEvents(data: String) {
@@ -50,14 +48,10 @@ class DebugDrawerFragment : Fragment() {
         if (text == null) {
             showError(R.string.time_travel_clipboard_empty)
         } else {
-            timeTravelController.restoreEvents(
-                try {
-                    serializer.deserialize(text)
-                } catch (e: Exception) {
-                    showError(R.string.time_travel_deserialize_error, e)
-                    return
-                }
-            )
+            when (val result = serializer.deserialize(Base64.decode(text, Base64.DEFAULT))) {
+                is TimeTravelExportSerializer.Result.Success -> timeTravelController.import(result.data)
+                is TimeTravelExportSerializer.Result.Error -> showError(R.string.time_travel_deserialize_error, result.exception)
+            }.let {}
         }
     }
 

@@ -61,7 +61,9 @@ struct TimeTravelView_Previews: PreviewProvider {
                         isStepForwardEnabled: true,
                         isMoveToEndEnabled: false,
                         isCancelEnabled: true,
-                        isDebugEventEnabled: false
+                        isDebugEventEnabled: false,
+                        isExportEventsEnabled: false,
+                        isImportEventsEnabled: false
                     ),
                     selectedEventIndex: 0,
                     selectedEventValue: Value.ObjectUnparsed(type: "String", value: "Value")

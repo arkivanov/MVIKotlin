@@ -44,7 +44,9 @@ private fun State.toButtons(): Model.Buttons =
         isStepForwardEnabled = isModeStopped(),
         isMoveToEndEnabled = isModeStopped(),
         isCancelEnabled = isModeRecording() || isModeStopped(),
-        isDebugEventEnabled = isDebuggableEventSelected()
+        isDebugEventEnabled = isDebuggableEventSelected(),
+        isExportEventsEnabled = isModeStopped(),
+        isImportEventsEnabled = isModeIdle()
     )
 
 private fun State.isModeIdle(): Boolean =

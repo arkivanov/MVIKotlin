@@ -37,6 +37,8 @@ public class TimeTravelToolbar {
                     false,
                     false,
                     false,
+                    false,
+                    false,
                     false
             );
 
@@ -72,6 +74,9 @@ public class TimeTravelToolbar {
         );
         group.addSeparator();
         group.add(debugAction());
+        group.addSeparator();
+        group.add(exportAction());
+        group.add(importAction());
 
         return group;
     }
@@ -169,10 +174,30 @@ public class TimeTravelToolbar {
     @NotNull
     private AnAction debugAction() {
         return anAction(
-                "Debug",
+                "Debug selected event",
                 AllIcons.Actions.StartDebugger,
                 (event) -> event.getPresentation().setEnabled(buttons.isDebugEventEnabled()),
                 listener::onDebug
+        );
+    }
+
+    @NotNull
+    private AnAction exportAction() {
+        return anAction(
+                "Export events",
+                AllIcons.ToolbarDecorator.Export,
+                (event) -> event.getPresentation().setEnabled(buttons.isExportEventsEnabled()),
+                listener::onExport
+        );
+    }
+
+    @NotNull
+    private AnAction importAction() {
+        return anAction(
+                "Import events",
+                AllIcons.ToolbarDecorator.Import,
+                (event) -> event.getPresentation().setEnabled(buttons.isImportEventsEnabled()),
+                listener::onImport
         );
     }
 
@@ -225,5 +250,9 @@ public class TimeTravelToolbar {
         void onCancel();
 
         void onDebug();
+
+        void onExport();
+
+        void onImport();
     }
 }

@@ -11,7 +11,9 @@ import javax.swing.SwingUtilities
 class TimeTravelToolWindowFactory : ToolWindowFactory {
 
     init {
-        initMainScheduler(SwingUtilities::invokeLater)
+        initMainScheduler {
+            SwingUtilities.invokeLater(Runnable(it))
+        }
     }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {

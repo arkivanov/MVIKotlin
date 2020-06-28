@@ -31,7 +31,9 @@ class TimeTravelViewProxy: BaseMviView<TimeTravelClientViewModel, TimeTravelClie
                 isStepForwardEnabled: false,
                 isMoveToEndEnabled: false,
                 isCancelEnabled: false,
-                isDebugEventEnabled: false
+                isDebugEventEnabled: false,
+                isExportEventsEnabled: false,
+                isImportEventsEnabled: false
             ),
             selectedEventIndex: -1,
             selectedEventValue: nil
@@ -40,6 +42,13 @@ class TimeTravelViewProxy: BaseMviView<TimeTravelClientViewModel, TimeTravelClie
     
     override func render(model: TimeTravelClientViewModel) {
         self.model = model
+    }
+    
+    func execute(action: TimeTravelClientViewAction) {
+        switch action {
+        case let showError as TimeTravelClientViewAction.ShowError: errorMessage = showError.text
+        default: break
+        }
     }
     
     func showError(text: String) {

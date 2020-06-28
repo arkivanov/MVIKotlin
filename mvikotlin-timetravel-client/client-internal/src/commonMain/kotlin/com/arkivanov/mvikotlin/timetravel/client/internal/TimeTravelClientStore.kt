@@ -23,6 +23,8 @@ internal interface TimeTravelClientStore : Store<Intent, State, Label> {
         object Cancel : Intent()
         object DebugEvent : Intent()
         data class SelectEvent(val index: Int) : Intent()
+        object ExportEvents : Intent()
+        class ImportEvents(val data: ByteArray) : Intent()
     }
 
     sealed class State {
@@ -48,6 +50,7 @@ internal interface TimeTravelClientStore : Store<Intent, State, Label> {
     }
 
     sealed class Label {
+        class ExportEvents(val data: ByteArray) : Label()
         data class Error(val text: String?) : Label()
     }
 }

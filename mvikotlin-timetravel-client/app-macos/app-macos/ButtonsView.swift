@@ -43,7 +43,9 @@ struct ButtonsView_Previews: PreviewProvider {
                 isStepForwardEnabled: true,
                 isMoveToEndEnabled: false,
                 isCancelEnabled: true,
-                isDebugEventEnabled: false
+                isDebugEventEnabled: false,
+                isExportEventsEnabled: true,
+                isImportEventsEnabled: false
             )
         ) { _ in }
     }

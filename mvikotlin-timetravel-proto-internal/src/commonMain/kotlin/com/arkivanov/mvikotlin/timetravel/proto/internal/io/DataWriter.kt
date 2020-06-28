@@ -18,9 +18,10 @@ internal class DataWriter {
     }
 
     fun write(array: ByteArray, startIndex: Int = 0, endIndex: Int = array.size) {
-        ensureFreeSpace(size)
+        val dataSize = endIndex - startIndex
+        ensureFreeSpace(dataSize)
         array.copyInto(destination = data, destinationOffset = size, startIndex = startIndex, endIndex = endIndex)
-        size += endIndex - startIndex
+        size += dataSize
     }
 
     private fun ensureFreeSpace(size: Int) {

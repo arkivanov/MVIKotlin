@@ -2,8 +2,10 @@ package com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand
 
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.DataReader
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.DataWriter
+import com.arkivanov.mvikotlin.timetravel.proto.internal.io.readByteArray
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.readEnum
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.readLong
+import com.arkivanov.mvikotlin.timetravel.proto.internal.io.writeByteArray
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.writeEnum
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.writeLong
 
@@ -21,6 +23,13 @@ internal fun DataWriter.writeTimeTravelCommand(timeTravelCommand: TimeTravelComm
             writeEnum(Type.DEBUG_EVENT)
             writeLong(timeTravelCommand.eventId)
         }
+
+        is TimeTravelCommand.ExportEvents -> writeEnum(Type.EXPORT_EVENTS)
+
+        is TimeTravelCommand.ImportEvents -> {
+            writeEnum(Type.IMPORT_EVENTS)
+            writeByteArray(timeTravelCommand.data)
+        }
     }.let {}
 }
 
@@ -34,6 +43,8 @@ internal fun DataReader.readTimeTravelCommand(): TimeTravelCommand =
         Type.MOVE_TO_END -> TimeTravelCommand.MoveToEnd
         Type.CANCEL -> TimeTravelCommand.Cancel
         Type.DEBUG_EVENT -> TimeTravelCommand.DebugEvent(eventId = readLong())
+        Type.EXPORT_EVENTS -> TimeTravelCommand.ExportEvents
+        Type.IMPORT_EVENTS -> TimeTravelCommand.ImportEvents(data = readByteArray()!!)
     }
 
 private enum class Type {
@@ -44,5 +55,7 @@ private enum class Type {
     STEP_FORWARD,
     MOVE_TO_END,
     CANCEL,
-    DEBUG_EVENT
+    DEBUG_EVENT,
+    EXPORT_EVENTS,
+    IMPORT_EVENTS
 }

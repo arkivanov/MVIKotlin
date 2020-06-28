@@ -7,8 +7,12 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
+import com.arkivanov.mvikotlin.timetravel.export.DefaultTimeTravelExportSerializer
+import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExportSerializer
 import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.closeSafe
@@ -19,7 +23,8 @@ import kotlin.concurrent.thread
 class TimeTravelServer(
     private val controller: TimeTravelController = timeTravelController,
     private val port: Int = DEFAULT_PORT,
-    private val onError: (IOException) -> Unit = {}
+    private val exportSerializer: TimeTravelExportSerializer = DefaultTimeTravelExportSerializer,
+    private val onError: (Throwable) -> Unit = {}
 ) {
 
     private val handler = Handler(Looper.getMainLooper())
@@ -52,9 +57,9 @@ class TimeTravelServer(
     private fun onClientConnected(socket: Socket) {
         runOnMainThreadIfNotDisposed {
             val reader =
-                ReaderThread(
+                ReaderThread<TimeTravelCommand>(
                     socket = socket,
-                    onRead = ::onCommandReceived,
+                    onRead = { onCommandReceived(it, socket) },
                     onDisconnected = { onClientDisconnected(socket) }
                 )
 
@@ -92,7 +97,7 @@ class TimeTravelServer(
         }
     }
 
-    private fun onCommandReceived(command: TimeTravelCommand) {
+    private fun onCommandReceived(command: TimeTravelCommand, sender: Socket) {
         runOnMainThreadIfNotDisposed {
             when (command) {
                 is TimeTravelCommand.StartRecording -> controller.startRecording()
@@ -103,7 +108,35 @@ class TimeTravelServer(
                 is TimeTravelCommand.MoveToEnd -> controller.moveToEnd()
                 is TimeTravelCommand.Cancel -> controller.cancel()
                 is TimeTravelCommand.DebugEvent -> controller.debugEvent(eventId = command.eventId)
+                is TimeTravelCommand.ExportEvents -> exportEvents(sender)
+                is TimeTravelCommand.ImportEvents -> importEvents(command.data)
             }.let {}
+        }
+    }
+
+    private fun exportEvents(sender: Socket) {
+        val export = controller.export()
+
+        thread {
+            val result = exportSerializer.serialize(export)
+            runOnMainThreadIfNotDisposed {
+                when (result) {
+                    is TimeTravelExportSerializer.Result.Success -> sendData(sender, TimeTravelExport(result.data))
+                    is TimeTravelExportSerializer.Result.Error -> onError(result.exception)
+                }.let {}
+            }
+        }
+    }
+
+    private fun importEvents(data: ByteArray) {
+        thread {
+            val result = exportSerializer.deserialize(data)
+            runOnMainThreadIfNotDisposed {
+                when (result) {
+                    is TimeTravelExportSerializer.Result.Success -> controller.import(result.data)
+                    is TimeTravelExportSerializer.Result.Error -> onError(result.exception)
+                }
+            }
         }
     }
 
@@ -120,6 +153,10 @@ class TimeTravelServer(
                 block()
             }
         }
+    }
+
+    private fun sendData(clientSocket: Socket, protoObject: ProtoObject) {
+        clients[clientSocket]?.writer?.write(protoObject)
     }
 
     private class Client(

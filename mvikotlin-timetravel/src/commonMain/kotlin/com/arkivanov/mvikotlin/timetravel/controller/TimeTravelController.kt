@@ -9,6 +9,7 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
+import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
 
 /**
  * Provides methods to control time travel feature.
@@ -28,14 +29,6 @@ interface TimeTravelController {
      * Subscribes the provided [Observer] for time travel states, see [TimeTravelState] for more information
      */
     fun states(observer: Observer<TimeTravelState>): Disposable
-
-    /**
-     * Sets current mode to [TimeTravelState.Mode.STOPPED] and replaces any existing events with the provided ones
-     *
-     * @param events new time travel events to apply
-     */
-    @MainThread
-    fun restoreEvents(events: List<TimeTravelEvent>)
 
     /**
      * Starts event recording
@@ -97,4 +90,18 @@ interface TimeTravelController {
      */
     @MainThread
     fun debugEvent(eventId: Long)
+
+    /**
+     * Exports all recorded events and [Store] states into a serializable format
+     */
+    @MainThread
+    fun export(): TimeTravelExport
+
+    /**
+     * Sets current mode to [TimeTravelState.Mode.STOPPED] and applies the exported data
+     *
+     * @param export a previously exported data to by applied
+     */
+    @MainThread
+    fun import(export: TimeTravelExport)
 }
