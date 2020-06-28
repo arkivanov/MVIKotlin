@@ -26,7 +26,7 @@ abstract class TodoAddStoreAbstractFactory(
             reducer = ReducerImpl
         ) {
             init {
-                ensureNeverFrozen()
+                ensureNeverFrozen() // Optional, just a matter of preference, Stores are freezable
             }
         }
 
