@@ -29,7 +29,7 @@ abstract class TodoListStoreAbstractFactory(
             reducer = ReducerImpl
         ) {
             init {
-                ensureNeverFrozen()
+                ensureNeverFrozen() // Optional, just a matter of preference, Stores are freezable
             }
         }
 
