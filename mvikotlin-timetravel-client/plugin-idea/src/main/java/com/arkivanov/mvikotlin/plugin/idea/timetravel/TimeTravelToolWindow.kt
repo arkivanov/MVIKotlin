@@ -6,9 +6,8 @@ import javax.swing.JComponent
 
 class TimeTravelToolWindow {
 
-    private val view = TimeTravelView(::onConnect)
+    private val view = TimeTravelView(onConnect = ::onConnect, export = Exporter::export, import = Importer::import)
     private val client = TimeTravelClient(host = "localhost", port = DEFAULT_PORT, view = view)
-    private val adbPathProvider = AdbPathProvider()
 
     val content: JComponent = view.content
 
@@ -18,7 +17,7 @@ class TimeTravelToolWindow {
 
     private fun forwardPort(): Boolean {
         try {
-            val adbPath = adbPathProvider.get() ?: return false
+            val adbPath = AdbPathProvider.get() ?: return false
             val params = listOf(adbPath, "forward", "tcp:$DEFAULT_PORT", "tcp:$DEFAULT_PORT")
             val process = exec(params)
             if (process.waitFor() == 0) {

@@ -10,5 +10,5 @@ data class TodoItem(
     data class Data(
         val text: String,
         val isDone: Boolean = false
-    )
+    ) : JvmSerializable
 }

@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DCA7D64B24A7BD1F00EC2FFC /* TimeTravelClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC158ADC24A6A19400877D27 /* TimeTravelClient.framework */; };
-		DCA7D64C24A7BD1F00EC2FFC /* TimeTravelClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DC158ADC24A6A19400877D27 /* TimeTravelClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DC287FCE24A92486009E55A3 /* TimeTravelClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC158ADC24A6A19400877D27 /* TimeTravelClient.framework */; };
+		DC287FCF24A92486009E55A3 /* TimeTravelClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DC158ADC24A6A19400877D27 /* TimeTravelClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DCBD455824A5003F00655FE7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBD455724A5003F00655FE7 /* AppDelegate.swift */; };
 		DCBD455C24A5004200655FE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCBD455B24A5004200655FE7 /* Assets.xcassets */; };
 		DCBD455F24A5004200655FE7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCBD455E24A5004200655FE7 /* Preview Assets.xcassets */; };
@@ -25,13 +25,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		DCA7D64D24A7BD1F00EC2FFC /* Embed Frameworks */ = {
+		DC287FD024A92486009E55A3 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				DCA7D64C24A7BD1F00EC2FFC /* TimeTravelClient.framework in Embed Frameworks */,
+				DC287FCF24A92486009E55A3 /* TimeTravelClient.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCA7D64B24A7BD1F00EC2FFC /* TimeTravelClient.framework in Frameworks */,
+				DC287FCE24A92486009E55A3 /* TimeTravelClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +138,7 @@
 				DCBD455024A5003F00655FE7 /* Sources */,
 				DCBD455124A5003F00655FE7 /* Frameworks */,
 				DCBD455224A5003F00655FE7 /* Resources */,
-				DCA7D64D24A7BD1F00EC2FFC /* Embed Frameworks */,
+				DC287FD024A92486009E55A3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

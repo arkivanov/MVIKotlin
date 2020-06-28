@@ -52,6 +52,8 @@ internal class TimeTravelClientStoreFactory(
                 is Intent.Cancel -> sendIfNeeded(getState()) { TimeTravelCommand.Cancel }
                 is Intent.DebugEvent -> debugEventIfNeeded(getState())
                 is Intent.SelectEvent -> selectEventIfNeeded(getState(), intent.index)
+                is Intent.ExportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ExportEvents }
+                is Intent.ImportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ImportEvents(intent.data) }
             }
 
         private fun connectIfNeeded(state: State): Unit =
@@ -73,6 +75,7 @@ internal class TimeTravelClientStoreFactory(
             when (event) {
                 is Connector.Event.Connected -> dispatch(Result.Connected(event.writer))
                 is Connector.Event.StateUpdate -> dispatch(Result.StateUpdate(event.stateUpdate))
+                is Connector.Event.ExportEvents -> publish(Label.ExportEvents(event.data))
                 is Connector.Event.Error -> publish(Label.Error(event.text))
             }
 
@@ -182,6 +185,7 @@ internal class TimeTravelClientStoreFactory(
         sealed class Event {
             class Connected(val writer: (TimeTravelCommand) -> Unit) : Event()
             class StateUpdate(val stateUpdate: TimeTravelStateUpdate) : Event()
+            class ExportEvents(val data: ByteArray) : Event()
             class Error(val text: String?) : Event()
         }
     }

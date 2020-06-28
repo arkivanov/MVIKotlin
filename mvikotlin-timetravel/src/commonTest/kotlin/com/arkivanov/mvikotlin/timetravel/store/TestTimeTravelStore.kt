@@ -10,6 +10,7 @@ import com.arkivanov.mvikotlin.utils.internal.clear
 import com.arkivanov.mvikotlin.utils.internal.isEmpty
 import com.arkivanov.mvikotlin.utils.internal.plusAssign
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
+import com.badoo.reaktive.utils.atomic.AtomicReference
 import com.badoo.reaktive.utils.freeze
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -20,7 +21,13 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     val eventDebugger = TestEventDebugger()
     private val _events = PublishSubject<Event>()
     private val isStateRestored = AtomicBoolean()
-    override val state: String get() = TODO()
+
+    private val _state = AtomicReference("state")
+    override var state: String
+        get() = _state.value
+        set(value) {
+            _state.value = value
+        }
 
     private val _isDisposed = AtomicBoolean()
     override val isDisposed: Boolean get() = _isDisposed.value

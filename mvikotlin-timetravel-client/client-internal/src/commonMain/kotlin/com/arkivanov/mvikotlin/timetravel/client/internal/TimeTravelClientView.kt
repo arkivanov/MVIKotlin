@@ -7,7 +7,7 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
 
 interface TimeTravelClientView : MviView<Model, Event> {
 
-    fun showError(text: String)
+    fun execute(action: Action)
 
     data class Model(
         val events: List<String>,
@@ -26,7 +26,9 @@ interface TimeTravelClientView : MviView<Model, Event> {
             val isStepForwardEnabled: Boolean,
             val isMoveToEndEnabled: Boolean,
             val isCancelEnabled: Boolean,
-            val isDebugEventEnabled: Boolean
+            val isDebugEventEnabled: Boolean,
+            val isExportEventsEnabled: Boolean,
+            val isImportEventsEnabled: Boolean
         )
     }
 
@@ -42,5 +44,14 @@ interface TimeTravelClientView : MviView<Model, Event> {
         object CancelClicked : Event()
         object DebugEventClicked : Event()
         data class EventSelected(val index: Int) : Event()
+        object ExportEventsClicked : Event()
+        object ImportEventsClicked : Event()
+        class ImportEventsConfirmed(val data: ByteArray) : Event()
+    }
+
+    sealed class Action {
+        class ExportEvents(val data: ByteArray) : Action()
+        object ImportEvents : Action()
+        data class ShowError(val text: String) : Action()
     }
 }

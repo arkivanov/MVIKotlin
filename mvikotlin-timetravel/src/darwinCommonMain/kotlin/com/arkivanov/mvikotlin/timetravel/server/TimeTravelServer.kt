@@ -94,6 +94,8 @@ class TimeTravelServer(
                 is TimeTravelCommand.MoveToEnd -> holder.controller.moveToEnd()
                 is TimeTravelCommand.Cancel -> holder.controller.cancel()
                 is TimeTravelCommand.DebugEvent -> holder.controller.debugEvent(eventId = command.eventId)
+                is TimeTravelCommand.ExportEvents -> Unit // Not supported
+                is TimeTravelCommand.ImportEvents -> Unit // Not supported
             }.let {}
         }
     }

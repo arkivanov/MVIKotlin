@@ -21,7 +21,9 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 
 internal class TimeTravelView(
-    private val onConnect: () -> Boolean
+    private val onConnect: () -> Boolean,
+    private val export: (ByteArray) -> Unit,
+    private val import: () -> ByteArray?
 ) : BaseMviView<Model, Event>(), TimeTravelClientView {
 
     private val toolbar = TimeTravelToolbar(ToolbarListenerImpl())
@@ -60,8 +62,17 @@ internal class TimeTravelView(
             diff(get = Model::selectedEventValue, set = ::renderSelectedEventValue)
         }
 
-    override fun showError(text: String) {
-        showErrorDialog(text)
+    override fun execute(action: TimeTravelClientView.Action): Unit =
+        when (action) {
+            is TimeTravelClientView.Action.ExportEvents -> export(action.data)
+            is TimeTravelClientView.Action.ImportEvents -> importEvents()
+            is TimeTravelClientView.Action.ShowError -> showErrorDialog(text = action.text)
+        }
+
+    private fun importEvents() {
+        import()
+            ?.let(Event::ImportEventsConfirmed)
+            ?.also(::dispatch)
     }
 
     private fun renderEvents(events: List<String>) {
@@ -131,6 +142,14 @@ internal class TimeTravelView(
 
         override fun onDebug() {
             dispatch(Event.DebugEventClicked)
+        }
+
+        override fun onExport() {
+            dispatch(Event.ExportEventsClicked)
+        }
+
+        override fun onImport() {
+            dispatch(Event.ImportEventsClicked)
         }
     }
 }

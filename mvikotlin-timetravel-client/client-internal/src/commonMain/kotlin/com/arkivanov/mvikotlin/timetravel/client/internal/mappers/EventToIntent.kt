@@ -3,7 +3,7 @@ package com.arkivanov.mvikotlin.timetravel.client.internal.mappers
 import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStore.Intent
 import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientView.Event
 
-internal val eventToIntent: Event.() -> Intent =
+internal val eventToIntent: Event.() -> Intent? =
     {
         when (this) {
             is Event.ConnectClicked -> Intent.Connect
@@ -17,5 +17,8 @@ internal val eventToIntent: Event.() -> Intent =
             is Event.CancelClicked -> Intent.Cancel
             is Event.DebugEventClicked -> Intent.DebugEvent
             is Event.EventSelected -> Intent.SelectEvent(index = index)
+            is Event.ExportEventsClicked -> Intent.ExportEvents
+            is Event.ImportEventsConfirmed -> Intent.ImportEvents(data = data)
+            is Event.ImportEventsClicked -> null
         }
     }
