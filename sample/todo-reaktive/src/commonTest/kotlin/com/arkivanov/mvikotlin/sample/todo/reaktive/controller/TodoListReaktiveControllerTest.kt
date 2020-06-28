@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
 import com.arkivanov.mvikotlin.core.lifecycle.resume
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController
 import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoListController.Dependencies
@@ -48,11 +49,14 @@ class TodoListReaktiveControllerTest {
     fun before() {
         overrideSchedulers(main = { TestScheduler() }, io = { TestScheduler() })
         reaktiveUncaughtErrorHandler = { throw it }
+        isAssertOnMainThreadEnabled = false
     }
 
     @AfterTest
     fun after() {
+        overrideSchedulers()
         resetReaktiveUncaughtErrorHandler()
+        isAssertOnMainThreadEnabled = true
     }
 
     @Test

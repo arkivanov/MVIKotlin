@@ -1,3 +1,5 @@
+buildTargets = setOf(BuildTarget.Android, BuildTarget.Js, BuildTarget.IosX64, BuildTarget.IosArm64)
+
 setupMultiplatform()
 setupXcodeSync()
 

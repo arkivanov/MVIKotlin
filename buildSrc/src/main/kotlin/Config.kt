@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.gradle.targets.js.KotlinJsTarget
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 enum class BuildType {
-    ALL, METADATA, NON_NATIVE, LINUX, IOS, MAC_OS
+    ALL, METADATA, NON_NATIVE, ANDROID, JVM, JS, LINUX, IOS, MAC_OS
 }
 
 val ExtensionAware.buildType: BuildType
@@ -69,6 +69,9 @@ private val BUILD_TYPE_TO_BUILD_TARGETS: Map<BuildType, Set<BuildTarget>> =
         BuildType.ALL to ALL_BUILD_TARGETS,
         BuildType.METADATA to ALL_BUILD_TARGETS,
         BuildType.NON_NATIVE to setOf(BuildTarget.Android, BuildTarget.Jvm, BuildTarget.Js),
+        BuildType.ANDROID to setOf(BuildTarget.Android),
+        BuildType.JVM to setOf(BuildTarget.Jvm),
+        BuildType.JS to setOf(BuildTarget.Js),
         BuildType.LINUX to setOf(BuildTarget.LinuxX64),
         BuildType.IOS to setOf(BuildTarget.IosX64, BuildTarget.IosArm64),
         BuildType.MAC_OS to setOf(BuildTarget.MacOsX64)
