@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
+buildTargets = setOf(BuildTarget.IosX64, BuildTarget.IosArm64)
+
 setupMultiplatform()
 
 kotlin {
