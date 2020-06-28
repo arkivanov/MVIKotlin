@@ -10,7 +10,7 @@ include(":mvikotlin-logging")
 include(":mvikotlin-timetravel")
 include(":mvikotlin-timetravel-proto-internal")
 include(":mvikotlin-timetravel-client:client-internal")
-doIfBuildTargetAvailable<BuildTarget.Darwin> {
+doIfBuildTargetAvailable<BuildTarget.Jvm> {
     include(":mvikotlin-timetravel-client:plugin-idea")
 }
 include(":mvikotlin-extensions-reaktive")
@@ -20,9 +20,7 @@ include(":sample:todo-common")
 include(":sample:todo-common-internal")
 include(":sample:todo-reaktive")
 include(":sample:todo-coroutines")
-doIfBuildTargetAvailable<BuildTarget.Darwin> {
-    include(":sample:todo-darwin-umbrella")
-}
+include(":sample:todo-darwin-umbrella")
 doIfBuildTargetAvailable<BuildTarget.Android> {
     include(":sample:todo-app-android")
 }
