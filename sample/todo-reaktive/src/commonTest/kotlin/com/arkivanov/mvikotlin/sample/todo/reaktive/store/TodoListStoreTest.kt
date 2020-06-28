@@ -1,5 +1,6 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive.store
 
+import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore
@@ -27,12 +28,14 @@ class TodoListStoreTest {
     fun before() {
         overrideSchedulers(main = { TestScheduler() }, io = { TestScheduler() })
         reaktiveUncaughtErrorHandler = { throw it }
+        isAssertOnMainThreadEnabled = false
     }
 
     @AfterTest
     fun after() {
         overrideSchedulers()
         resetReaktiveUncaughtErrorHandler()
+        isAssertOnMainThreadEnabled = true
     }
 
     @Test
