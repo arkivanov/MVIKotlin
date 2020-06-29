@@ -1,8 +1,8 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
 import com.intellij.ide.util.PropertiesComponent
-import org.apache.commons.io.filefilter.NameFileFilter
-import java.awt.FileDialog
+import com.intellij.openapi.fileChooser.FileChooser.chooseFile
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory.createSingleFileDescriptor
 import java.io.File
 
 internal object AdbPathProvider {
@@ -12,7 +12,15 @@ internal object AdbPathProvider {
     fun get(): String? {
         var path: String? = props.getValue(KEY_ADB_PATH)
         if ((path == null) || !File(path).exists()) {
-            path = fileDialog(title = "Select ADB executable", mode = FileDialog.LOAD, filenameFilter = NameFileFilter("adb"))
+            path =
+                chooseFile(
+                    createSingleFileDescriptor()
+                        .withFileFilter { it.name == "adb" }
+                        .withTitle("Select ADB executable"),
+                    null,
+                    null
+                )?.path
+
             if (path != null) {
                 props.setValue(KEY_ADB_PATH, path)
             }
