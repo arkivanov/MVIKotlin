@@ -1,14 +1,23 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
-import org.apache.commons.io.filefilter.WildcardFileFilter
-import java.awt.FileDialog
+import com.intellij.openapi.fileChooser.FileChooserFactory
+import com.intellij.openapi.fileChooser.FileSaverDescriptor
+import com.intellij.openapi.project.Project
 import java.io.FileOutputStream
 import java.io.IOException
 
 internal object Exporter {
 
     fun export(data: ByteArray) {
-        var path = fileDialog(title = "Save file", mode = FileDialog.SAVE, filenameFilter = WildcardFileFilter("*.tte")) ?: return
+        var path =
+            FileChooserFactory
+                .getInstance()
+                .createSaveFileDialog(FileSaverDescriptor("Save file", "MVIKotlin time travel export", "tte"), null as Project?)
+                .save(null, null)
+                ?.file
+                ?.absolutePath
+                ?: return
+
         if (!path.endsWith(".tte")) {
             path += ".tte"
         }
