@@ -67,6 +67,10 @@ Check out the video demonstrating the time travel IDEA plugin:
 
 [![Debugging Android application with IntelliJ IDEA time travel plugin](https://img.youtube.com/vi/Tr2ayOcVU34/0.jpg)](https://youtu.be/Tr2ayOcVU34)
 
+Check out the video demonstrating how you can export/import the time travel data using the IDEA plugin:
+
+[![Export/import time travel data in Android with MVIKotlin IDEA plugin](https://img.youtube.com/vi/SIxfSgBkHS0/0.jpg)](https://youtu.be/SIxfSgBkHS0)
+
 #### How to install
 
 You can find the plugin in the IntelliJ IDEA [Marketplace](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel). It can be installed directly from IntelliJ IDEA or Android Studio. Please navigate to Settings -> Plugins -> Marketplace and type "MVIKotlin" in the search field.

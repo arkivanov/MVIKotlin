@@ -78,7 +78,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
   * Multiplatform for all supported targets
   * Plug-and-play UI for Android
   * Plug-and-play UI for iOS (copy-paste from the sample app)
-  * Export/import events for JVM and Android
+  * Export/import events for Android
   * IDEA and Android Studio [plugin](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel) for Android apps
   * MacOS [client application](mvikotlin-timetravel-client/app-macos) for iOS and macOS apps
 
