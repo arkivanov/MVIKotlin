@@ -73,7 +73,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 * Extensions for [Reaktive](https://github.com/badoo/Reaktive) library
 * Extensions for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 * Multithreading friendly (freezable in Kotlin Native if needed)
-* Logging functionality with adjustable verboseness and ability to provide custom logger
+* Logging functionality with customizable logger and formatter
 * Time travel feature:
   * Multiplatform for all supported targets
   * Plug-and-play UI for Android
