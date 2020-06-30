@@ -1,11 +1,6 @@
 package com.arkivanov.mvikotlin.logging.logger
 
-import com.arkivanov.mvikotlin.core.store.StoreEventType
-
-internal interface LoggerWrapper {
-
-    val isEnabled: Boolean
-    val eventTypes: Set<StoreEventType>
-
-    fun log(text: String)
-}
+internal class LoggerWrapper(
+    private val logger: Logger,
+    private val logFormatter: LogFormatter
+) : Logger by logger, LogFormatter by logFormatter
