@@ -4,39 +4,44 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.logging.logger.DefaultLogFormatter
 import com.arkivanov.mvikotlin.logging.logger.DefaultLogger
+import com.arkivanov.mvikotlin.logging.logger.LogFormatter
 import com.arkivanov.mvikotlin.logging.logger.Logger
 import com.arkivanov.mvikotlin.logging.logger.LoggerWrapper
-import com.arkivanov.mvikotlin.logging.logger.log
+import com.badoo.reaktive.utils.atomic.AtomicReference
 
 /**
  * An implementation of the [StoreFactory] that wraps another [StoreFactory] and provides logging
  *
  * @param delegate a [StoreFactory] that will be wrapped by this factory
  * @param logger a [Logger], by default the [DefaultLogger] is used
- * @param maxLength specifies the maximum log message length
- * @param eventTypes specifies types of logged events
+ * @param logFormatter a [LogFormatter], by default the [DefaultLogFormatter] with default arguments is used
  */
 class LoggingStoreFactory(
     private val delegate: StoreFactory,
-    var logger: Logger = DefaultLogger,
-    var maxLength: Int = DEFAULT_MAX_LENGTH,
-    var eventTypes: Set<StoreEventType> = StoreEventType.VALUES
+    logger: Logger = DefaultLogger,
+    logFormatter: LogFormatter = DefaultLogFormatter()
 ) : StoreFactory {
 
-    private val loggerWrapper: LoggerWrapper =
-        object : LoggerWrapper {
-            override val isEnabled: Boolean get() = this@LoggingStoreFactory.maxLength > 0
-            override val eventTypes: Set<StoreEventType> get() = this@LoggingStoreFactory.eventTypes
+    constructor(delegate: StoreFactory) : this(delegate, DefaultLogger, DefaultLogFormatter())
 
-            override fun log(text: String) {
-                if (isEnabled) {
-                    logger.log(text.take(maxLength))
-                }
-            }
+    private val _logger = AtomicReference(logger)
+    var logger: Logger
+        get() = _logger.value
+        set(value) {
+            _logger.value = value
         }
+
+    private val _logFormatter = AtomicReference(logFormatter)
+    var logFormatter: LogFormatter
+        get() = _logFormatter.value
+        set(value) {
+            _logFormatter.value = value
+        }
+
+    private val loggerWrapper = LoggerWrapper(logger, logFormatter)
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String?,
@@ -54,7 +59,7 @@ class LoggingStoreFactory(
             )
         }
 
-        loggerWrapper.log { "$name: created" }
+        loggerWrapper.log("$name: created")
 
         val delegateStore =
             delegate.create(
@@ -87,8 +92,4 @@ class LoggingStoreFactory(
             logger = loggerWrapper,
             storeName = storeName
         )
-
-    companion object {
-        const val DEFAULT_MAX_LENGTH = 256
-    }
 }
