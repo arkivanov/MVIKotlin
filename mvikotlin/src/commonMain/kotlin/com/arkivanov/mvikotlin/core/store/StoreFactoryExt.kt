@@ -26,4 +26,10 @@ private class BypassExecutor<Intent : Any, in State : Any> : Executor<Intent, No
     override fun handleIntent(intent: Intent) {
         callbacks.requireValue.onResult(intent)
     }
+
+    override fun handleAction(action: Nothing) {
+    }
+
+    override fun dispose() {
+    }
 }
