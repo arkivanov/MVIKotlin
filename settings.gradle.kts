@@ -10,7 +10,7 @@ include(":mvikotlin-logging")
 include(":mvikotlin-timetravel")
 include(":mvikotlin-timetravel-proto-internal")
 include(":mvikotlin-timetravel-client:client-internal")
-doIfBuildTargetAvailable<BuildTarget.Jvm> {
+doIfJvmTargetAvailable {
     include(":mvikotlin-timetravel-client:plugin-idea")
 }
 include(":mvikotlin-extensions-reaktive")
@@ -21,11 +21,43 @@ include(":sample:todo-common-internal")
 include(":sample:todo-reaktive")
 include(":sample:todo-coroutines")
 include(":sample:todo-darwin-umbrella")
-doIfBuildTargetAvailable<BuildTarget.Android> {
+doIfAndroidTargetAvailable {
     include(":sample:todo-app-android")
 }
-doIfBuildTargetAvailable<BuildTarget.Js> {
+doIfJsTargetAvailable {
     include(":sample:todo-app-js")
 }
 
 //include(":tools:check-publication")
+
+enum class BuildType {
+    ALL, METADATA, NON_NATIVE, ANDROID, JVM, JS, LINUX, IOS, MAC_OS
+}
+
+val ExtensionAware.buildType: BuildType
+    get() =
+        find("build_type")
+            ?.toString()
+            ?.let(BuildType::valueOf)
+            ?: BuildType.ALL
+
+fun ExtensionAware.find(key: String) =
+    if (extra.has(key)) extra.get(key) else null
+
+fun doIfJvmTargetAvailable(block: () -> Unit) {
+    if (buildType in setOf(BuildType.ALL, BuildType.METADATA, BuildType.NON_NATIVE, BuildType.JVM)) {
+        block()
+    }
+}
+
+fun doIfAndroidTargetAvailable(block: () -> Unit) {
+    if (buildType in setOf(BuildType.ALL, BuildType.METADATA, BuildType.NON_NATIVE, BuildType.ANDROID)) {
+        block()
+    }
+}
+
+fun doIfJsTargetAvailable(block: () -> Unit) {
+    if (buildType in setOf(BuildType.ALL, BuildType.METADATA, BuildType.NON_NATIVE, BuildType.JS)) {
+        block()
+    }
+}
