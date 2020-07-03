@@ -30,23 +30,20 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
      */
     @JsName("handleIntent")
     @MainThread
-    fun handleIntent(intent: Intent) {
-    }
+    fun handleIntent(intent: Intent)
 
     /**
      * Called by the [Store] for every `Action` produced by the [Bootstrapper]
      */
     @JsName("handleAction")
     @MainThread
-    fun handleAction(action: Action) {
-    }
+    fun handleAction(action: Action)
 
     /**
      * Disposes the [Executor], called by the [Store] when disposed
      */
     @MainThread
-    fun dispose() {
-    }
+    fun dispose()
 
     /**
      * A set of callbacks used for communication between the [Bootstrapper] and the [Store]
