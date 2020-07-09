@@ -23,7 +23,3 @@ val <K, V> AtomicMap<K, V>.values: Collection<V> get() = value.values
 operator fun <K, V> AtomicMap<K, V>.get(key: K): V? = value[key]
 
 val <K, V> AtomicMap<K, V>.size: Int get() = value.size
-
-//fun <K, V> AtomicMap<K, V>.foo()
-
-//val <K, V> AtomicMap<K, V>
