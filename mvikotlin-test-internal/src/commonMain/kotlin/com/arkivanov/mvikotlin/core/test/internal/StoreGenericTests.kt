@@ -1,19 +1,19 @@
 package com.arkivanov.mvikotlin.core.test.internal
 
-import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.utils.internal.AtomicList
 import com.arkivanov.mvikotlin.utils.internal.add
-import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.plusAssign
-import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
 import com.badoo.reaktive.utils.freeze
+import com.badoo.reaktive.utils.isFrozen
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @Suppress("FunctionName")
@@ -95,10 +95,16 @@ interface StoreGenericTests {
     fun store_isDisposed_returns_true_WHEN_store_disposed()
 
     @Test
-    fun executor_can_read_new_state_WHEN_recursive_intent_on_label()
+    fun states_subscriber_not_frozen_WHEN_store_frozen_and_subscribed()
 
     @Test
-    fun executor_can_read_new_state_WHEN_recursive_intent_on_state()
+    fun labels_subscriber_not_frozen_WHEN_store_frozen_and_subscribed()
+
+    @Test
+    fun executor_not_called_WHEN_recursive_intent_on_label()
+
+    @Test
+    fun executor_called_WHEN_recursive_intent_on_label_and_first_intent_processed()
 }
 
 @Suppress("FunctionName")
@@ -387,20 +393,39 @@ fun StoreGenericTests(
             assertTrue(store.isDisposed)
         }
 
-        override fun executor_can_read_new_state_WHEN_recursive_intent_on_label() {
-            val stateRef = lateinitAtomicReference<String>()
+        override fun states_subscriber_not_frozen_WHEN_store_frozen_and_subscribed() {
+            val store = store()
+
+            val list = ArrayList<String>()
+            store.states(observer { list += it })
+
+            assertFalse(list.isFrozen)
+        }
+
+        override fun labels_subscriber_not_frozen_WHEN_store_frozen_and_subscribed() {
+            val store = store()
+
+            val list = ArrayList<String>()
+            store.labels(observer { list += it })
+
+            assertFalse(list.isFrozen)
+        }
+
+        override fun executor_not_called_WHEN_recursive_intent_on_label() {
+            val isProcessingIntent = AtomicBoolean()
+            val isCalledRecursively = AtomicBoolean()
 
             val store =
                 store(
                     executorFactory = {
                         TestExecutor(
-                            handleIntent = { intent ->
-                                when (intent) {
-                                    "intent1" -> {
-                                        dispatch("result")
-                                        publish("label")
-                                    }
-                                    "intent2" -> stateRef.value = state
+                            handleIntent = {
+                                if (it == "intent1") {
+                                    isProcessingIntent.value = true
+                                    publish("label")
+                                    isProcessingIntent.value = false
+                                } else {
+                                    isCalledRecursively.value = isProcessingIntent.value
                                 }
                             }
                         )
@@ -411,20 +436,24 @@ fun StoreGenericTests(
             store.labels(observer { store.accept("intent2") })
             store.accept("intent1")
 
-            assertEquals("result", stateRef.requireValue)
+            assertFalse(isCalledRecursively.value)
         }
 
-        override fun executor_can_read_new_state_WHEN_recursive_intent_on_state() {
-            val stateRef = lateinitAtomicReference<String>()
+        override fun executor_called_WHEN_recursive_intent_on_label_and_first_intent_processed() {
+            val isProcessingIntent = AtomicBoolean()
+            val isCalledAfter = AtomicBoolean()
 
             val store =
                 store(
                     executorFactory = {
                         TestExecutor(
-                            handleIntent = { intent ->
-                                when (intent) {
-                                    "intent1" -> dispatch("result")
-                                    "intent2" -> stateRef.value = state
+                            handleIntent = {
+                                if (it == "intent1") {
+                                    isProcessingIntent.value = true
+                                    publish("label")
+                                    isProcessingIntent.value = false
+                                } else {
+                                    isCalledAfter.value = !isProcessingIntent.value
                                 }
                             }
                         )
@@ -432,16 +461,10 @@ fun StoreGenericTests(
                     reducer = reducer { it }
                 )
 
-            store.states(
-                observer {
-                    if (it == "result") {
-                        store.accept("intent2")
-                    }
-                }
-            )
+            store.labels(observer { store.accept("intent2") })
             store.accept("intent1")
 
-            assertEquals("result", stateRef.requireValue)
+            assertTrue(isCalledAfter.value)
         }
 
         private fun store(

@@ -10,6 +10,7 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
+import com.arkivanov.mvikotlin.rx.observer
 
 internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
     initialState: State,
@@ -22,6 +23,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
         assertOnMainThread()
     }
 
+    private val intentSubject = PublishSubject<Intent>()
     private val stateSubject = BehaviorSubject(initialState)
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
@@ -29,6 +31,8 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
     private val executor = executorFactory()
 
     init {
+        intentSubject.subscribe(observer(onNext = ::onIntent))
+
         executor.init(
             object : Executor.Callbacks<State, Result, Label> {
                 override val state: State get() = stateSubject.value
@@ -81,6 +85,10 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
     override fun accept(intent: Intent) {
         assertOnMainThread()
 
+        intentSubject.onNext(intent)
+    }
+
+    private fun onIntent(intent: Intent) {
         doIfNotDisposed {
             executor.handleIntent(intent)
         }
@@ -92,6 +100,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
         doIfNotDisposed {
             bootstrapper?.dispose()
             executor.dispose()
+            intentSubject.onComplete()
             stateSubject.onComplete()
             labelSubject.onComplete()
         }

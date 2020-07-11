@@ -9,56 +9,86 @@ internal open class ThreadLocalSubject<T> : Subject<T> {
 
     init {
         @Suppress("ReplacePutWithAssignment", "LeakingThis") // This is safe in this particular case
-        state[this] = LinkedHashMap()
+        state[this] = MutableState<T>()
     }
 
     override val isActive: Boolean get() = state.containsKey(this)
 
     override fun subscribe(observer: Observer<T>): Disposable {
-        val map: MutableMap<Disposable, Observer<T>>? = state[this]?.cast()
+        val mutableState: MutableState<T>? = getMutableState()
 
-        return if (map == null) {
+        return if (mutableState == null) {
             observer.onComplete()
             Disposable().also(Disposable::dispose)
         } else {
             val disposable = disposable()
-            map[disposable] = observer
+            mutableState.map += disposable to observer
             onSubscribed(observer)
             disposable
         }
     }
 
-    protected open fun onSubscribed(observer: Observer<T>) {
-    }
-
     private fun disposable(): Disposable =
         Disposable {
             assertOnMainThread()
-            state[this@ThreadLocalSubject]?.remove(this)
+            getMutableState()?.also { it.map -= this }
         }
 
+    protected open fun onSubscribed(observer: Observer<T>) {
+    }
+
     override fun onNext(value: T) {
-        state[this]
-            ?.cast()
-            ?.values
-            ?.forEach { it.onNext(value) }
+        val mutableState = getMutableState() ?: return
+        mutableState.queue += value
+        mutableState.drainIfNeeded()
     }
 
     override fun onComplete() {
-        state
-            .remove(this)
-            ?.forEach { (disposable, observer) ->
+        val mutableState = removeMutableState() ?: return
+        mutableState.isCompleted = true
+        mutableState.drainIfNeeded()
+    }
+
+    private fun MutableState<T>.drainIfNeeded() {
+        if (!isDraining) {
+            isDraining = true
+            try {
+                drain()
+            } finally {
+                isDraining = false
+            }
+        }
+    }
+
+    private fun MutableState<T>.drain() {
+        while (queue.isNotEmpty()) {
+            val value = queue.removeAt(0)
+            map.values.forEach { it.onNext(value) }
+        }
+
+        if (isCompleted) {
+            map.forEach { (disposable, observer) ->
                 disposable.dispose()
                 observer.onComplete()
             }
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun MutableMap<Disposable, Observer<*>>.cast(): MutableMap<Disposable, Observer<T>> =
-        this as MutableMap<Disposable, Observer<T>>
+    private fun getMutableState(): MutableState<T>? = state[this] as MutableState<T>?
+
+    @Suppress("UNCHECKED_CAST")
+    private fun removeMutableState(): MutableState<T>? = state.remove(this) as MutableState<T>?
 
     @ThreadLocal
     private companion object {
-        private val state: MutableMap<ThreadLocalSubject<*>, MutableMap<Disposable, Observer<*>>> = HashMap()
+        private val state: MutableMap<ThreadLocalSubject<*>, MutableState<*>> = HashMap()
+    }
+
+    private class MutableState<T> {
+        var map = mapOf<Disposable, Observer<T>>()
+        val queue = ArrayList<T>()
+        var isCompleted = false
+        var isDraining = false
     }
 }

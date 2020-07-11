@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.utils.internal.AtomicList
 import com.arkivanov.mvikotlin.utils.internal.add
 import com.arkivanov.mvikotlin.utils.internal.isAssertOnMainThreadEnabled
+import com.arkivanov.mvikotlin.utils.internal.plusAssign
 import com.badoo.reaktive.utils.atomic.AtomicBoolean
 import com.badoo.reaktive.utils.freeze
 import com.badoo.reaktive.utils.isFrozen
@@ -124,5 +125,83 @@ class ThreadLocalSubjectTest {
         subject.subscribe(observer)
 
         assertFalse(observer.isFrozen)
+    }
+
+    @Test
+    fun does_not_emit_values_recursively() {
+        val isEmitting = AtomicBoolean()
+        val isEmittedRecursively = AtomicBoolean()
+
+        subject.subscribe(
+            observer { value ->
+                if (value == 1) {
+                    isEmitting.value = true
+                    subject.onNext(2)
+                    isEmitting.value = false
+                } else {
+                    isEmittedRecursively.value = isEmitting.value
+                }
+            }
+        )
+
+        subject.onNext(1)
+
+        assertFalse(isEmittedRecursively.value)
+    }
+
+    @Test
+    fun emits_all_values_in_order_WHEN_onNext_called_recursively() {
+        val values = AtomicList<Int?>()
+
+        subject.subscribe(
+            observer { value ->
+                if (value == 1) {
+                    subject.onNext(null)
+                    subject.onNext(2)
+                }
+                values += value
+            }
+        )
+
+        subject.onNext(1)
+
+        assertEquals(values.value, listOf(1, null, 2))
+    }
+
+    @Test
+    fun does_no_complete_recursively() {
+        val isEmitting = AtomicBoolean()
+        val isCompletedRecursively = AtomicBoolean()
+
+        subject.subscribe(
+            observer(
+                onComplete = { isCompletedRecursively.value = isEmitting.value },
+                onNext = {
+                    isEmitting.value = true
+                    subject.onComplete()
+                    isEmitting.value = false
+                }
+            )
+        )
+
+        subject.onNext(1)
+
+        assertFalse(isCompletedRecursively.value)
+    }
+
+    @Test
+    fun completes_WHEN_onComplete_called_recursively() {
+        val isCompleted = AtomicBoolean()
+
+        subject.subscribe(
+            observer(
+                onComplete = { isCompleted.value = true },
+                onNext = { subject.onComplete() }
+            )
+        )
+
+        subject.onNext(1)
+
+        assertTrue(isCompleted.value)
     }
 }
