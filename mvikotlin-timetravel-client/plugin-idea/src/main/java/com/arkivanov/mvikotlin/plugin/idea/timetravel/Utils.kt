@@ -1,9 +1,8 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
+import com.intellij.openapi.ui.Messages
 import java.io.BufferedReader
 import java.io.IOException
-import javax.swing.JFrame
-import javax.swing.JOptionPane
 
 internal fun exec(params: List<String>): Process = Runtime.getRuntime().exec(params.toTypedArray())
 
@@ -15,5 +14,9 @@ internal fun log(text: String) {
 }
 
 internal fun showErrorDialog(text: String) {
-    JOptionPane.showMessageDialog(JFrame(), text, "MVIKotlin", JOptionPane.ERROR_MESSAGE)
+    Messages.showErrorDialog(text, "MVIKotlin")
+}
+
+internal fun showInfoDialog(text: String) {
+    Messages.showInfoMessage(text, "MVIKotlin")
 }
