@@ -11,7 +11,10 @@ internal object AdbPathProvider {
 
     fun get(): String? {
         var path: String? = props.getValue(KEY_ADB_PATH)
+
         if ((path == null) || !File(path).exists()) {
+            showInfoDialog("Please select the adb (Android Debug Bridge) executable file in the next dialog...")
+
             path =
                 chooseFile(
                     createSingleFileDescriptor()
@@ -22,7 +25,12 @@ internal object AdbPathProvider {
                 )?.path
 
             if (path != null) {
-                props.setValue(KEY_ADB_PATH, path)
+                if (File(path).name != "adb") {
+                    showErrorDialog("The selected file should be an adb executable, you selected: $path")
+                    path = null
+                } else {
+                    props.setValue(KEY_ADB_PATH, path)
+                }
             }
         }
 
