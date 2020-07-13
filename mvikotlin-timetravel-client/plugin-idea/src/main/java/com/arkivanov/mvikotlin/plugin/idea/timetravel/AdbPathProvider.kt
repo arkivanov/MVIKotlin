@@ -3,9 +3,12 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.fileChooser.FileChooser.chooseFile
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory.createSingleFileDescriptor
+import com.intellij.openapi.project.Project
 import java.io.File
 
-internal object AdbPathProvider {
+internal class AdbPathProvider(
+    private val project: Project
+) {
 
     private val props = PropertiesComponent.getInstance()
 
@@ -20,7 +23,7 @@ internal object AdbPathProvider {
                     createSingleFileDescriptor()
                         .withFileFilter { it.name == "adb" }
                         .withTitle("Select ADB executable"),
-                    null,
+                    project,
                     null
                 )?.path
 
@@ -37,5 +40,7 @@ internal object AdbPathProvider {
         return path
     }
 
-    private const val KEY_ADB_PATH = "ADB_PATH"
+    private companion object {
+        private const val KEY_ADB_PATH = "ADB_PATH"
+    }
 }

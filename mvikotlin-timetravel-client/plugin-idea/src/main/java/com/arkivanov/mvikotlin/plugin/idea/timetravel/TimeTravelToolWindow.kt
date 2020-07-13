@@ -4,9 +4,13 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClient
 import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
 import javax.swing.JComponent
 
-class TimeTravelToolWindow {
+internal class TimeTravelToolWindow(
+    private val adbPathProvider: AdbPathProvider,
+    exporter: Exporter,
+    importer: Importer
+) {
 
-    private val view = TimeTravelView(onConnect = ::onConnect, export = Exporter::export, import = Importer::import)
+    private val view = TimeTravelView(onConnect = ::onConnect, export = exporter::export, import = importer::import)
     private val client = TimeTravelClient(host = "localhost", port = DEFAULT_PORT, view = view)
 
     val content: JComponent = view.content
@@ -17,7 +21,7 @@ class TimeTravelToolWindow {
 
     private fun forwardPort(): Boolean {
         try {
-            val adbPath = AdbPathProvider.get() ?: return false
+            val adbPath = adbPathProvider.get() ?: return false
             val params = listOf(adbPath, "forward", "tcp:$DEFAULT_PORT", "tcp:$DEFAULT_PORT")
             val process = exec(params)
             if (process.waitFor() == 0) {

@@ -6,13 +6,15 @@ import com.intellij.openapi.project.Project
 import java.io.FileOutputStream
 import java.io.IOException
 
-internal object Exporter {
+internal class Exporter(
+    private val project: Project
+) {
 
     fun export(data: ByteArray) {
         var path =
             FileChooserFactory
                 .getInstance()
-                .createSaveFileDialog(FileSaverDescriptor("Save file", "MVIKotlin time travel export", "tte"), null as Project?)
+                .createSaveFileDialog(FileSaverDescriptor("Save file", "MVIKotlin time travel export", "tte"), project)
                 .save(null, null)
                 ?.file
                 ?.absolutePath

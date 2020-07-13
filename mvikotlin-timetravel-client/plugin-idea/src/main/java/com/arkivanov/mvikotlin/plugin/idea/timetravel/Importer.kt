@@ -2,13 +2,16 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory.createSingleFileDescriptor
+import com.intellij.openapi.project.Project
 import java.io.FileInputStream
 import java.io.IOException
 
-internal object Importer {
+internal class Importer(
+    private val project: Project
+) {
 
     fun import(): ByteArray? {
-        var path = FileChooser.chooseFile(createSingleFileDescriptor("tte").withTitle("Select file"), null, null)?.path ?: return null
+        val path = FileChooser.chooseFile(createSingleFileDescriptor("tte").withTitle("Select file"), project, null)?.path ?: return null
 
         return try {
             FileInputStream(path).use(FileInputStream::readBytes)
