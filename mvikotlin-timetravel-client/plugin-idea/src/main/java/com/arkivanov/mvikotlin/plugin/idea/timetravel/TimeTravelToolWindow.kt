@@ -19,32 +19,34 @@ internal class TimeTravelToolWindow(
         client.onCreate()
     }
 
-    private fun forwardPort(): Boolean {
+    private fun onConnect(): Boolean {
         try {
-            val adbPath = adbPathProvider.get() ?: return false
+            val adbPath = adbPathProvider.get()
+
+            if (adbPath == null) {
+                showError("ADB executable path was not selected")
+                return false
+            }
+
+            logI("Using ADB path: $adbPath")
+
             val params = listOf(adbPath, "forward", "tcp:$DEFAULT_PORT", "tcp:$DEFAULT_PORT")
             val process = exec(params)
             if (process.waitFor() == 0) {
-                log("Port forwarded successfully")
+                logI("Port forwarded successfully")
                 return true
-            } else {
-                log("Failed to forward the port: ${process.readError()}")
             }
+
+            showError("Failed to forward the port: \"${process.readError()}\"")
         } catch (e: Exception) {
-            log("Failed to forward the port: ${e.message}")
-            e.printStackTrace()
+            showError("Failed to forward the port: \"${e.message}\"", e)
         }
 
         return false
     }
 
-    private fun onConnect(): Boolean {
-        if (!forwardPort()) {
-            showErrorDialog("Error forwarding port via ADB. Make sure there is only one device connected.")
-
-            return false
-        }
-
-        return true
+    private fun showError(text: String, e: Throwable? = null) {
+        logE(text, e)
+        showErrorDialog(text)
     }
 }
