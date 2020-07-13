@@ -1,0 +1,21 @@
+name: Build
+
+on: [pull_request]
+
+jobs:
+  js-build:
+    name: Build JS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Update dependencies
+        run: sudo apt-get update
+      - name: Install dependencies
+        run: sudo apt-get install nodejs chromium-browser
+      - name: Build JS
+        run: ./gradlew build --info -Pbuild_type=JS
