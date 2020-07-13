@@ -4,6 +4,8 @@ import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.fileChooser.FileChooser.chooseFile
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory.createSingleFileDescriptor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.LocalFileSystem
+import org.apache.commons.lang.SystemUtils
 import java.io.File
 
 internal class AdbPathProvider(
@@ -27,7 +29,7 @@ internal class AdbPathProvider(
                         .withFileFilter { it.name == "adb" }
                         .withTitle("Select ADB executable"),
                     project,
-                    null
+                    SystemUtils.getUserHome().takeIf(File::exists)?.let { LocalFileSystem.getInstance().findFileByIoFile(it) }
                 )?.path
 
             logI("Selected ADB path: $path")
