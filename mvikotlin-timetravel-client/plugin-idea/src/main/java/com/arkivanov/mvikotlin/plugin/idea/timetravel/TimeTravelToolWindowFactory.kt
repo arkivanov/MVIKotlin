@@ -23,7 +23,15 @@ class TimeTravelToolWindowFactory : ToolWindowFactory {
             ContentFactory
                 .SERVICE
                 .getInstance()
-                .createContent(TimeTravelToolWindow().content, "", false)
+                .createContent(
+                    TimeTravelToolWindow(
+                        AdbPathProvider(project),
+                        Exporter(project),
+                        Importer(project)
+                    ).content,
+                    "",
+                    false
+                )
         )
     }
 }
