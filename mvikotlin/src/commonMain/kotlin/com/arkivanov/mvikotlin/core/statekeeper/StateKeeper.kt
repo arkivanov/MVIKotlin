@@ -8,7 +8,7 @@ interface StateKeeper<T : Any> {
     /**
      * Returns a previously saved state, if any
      */
-    val state: T?
+    fun getState(): T?
 
     /**
      * Registers the provided state supplier

@@ -2,6 +2,7 @@ package com.arkivanov.mvikotlin.core.statekeeper
 
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.TestLifecycle
+import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -176,11 +177,10 @@ class RetainInstanceTest {
         fun save(): Map<String, Any> =
             suppliers.mapValues { it.value() }
 
-        override fun <S : Any> get(key: String): StateKeeper<S> =
+        override fun <S : Any> get(clazz: KClass<out S>, key: String): StateKeeper<S> =
             object : StateKeeper<S> {
                 @Suppress("UNCHECKED_CAST")
-                override val state: S?
-                    get() = savedState[key] as S?
+                override fun getState(): S? = savedState[key] as S?
 
                 override fun register(supplier: () -> S) {
                     check(key !in suppliers)

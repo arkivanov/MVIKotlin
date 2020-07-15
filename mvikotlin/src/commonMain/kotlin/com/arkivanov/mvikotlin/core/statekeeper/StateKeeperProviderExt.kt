@@ -4,13 +4,12 @@ import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
 import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.core.store.Store
-import kotlin.reflect.KClass
 
 /**
- * Same as [StateKeeperProvider.get] but uses [KClass.toString] as key
+ * A convenience method for [StateKeeperProvider.get]
  */
-inline fun <T : Any, reified S : T> StateKeeperProvider<T>.get(): StateKeeper<S> =
-    get(S::class.toString())
+inline fun <T : Any, reified S : T> StateKeeperProvider<T>.get(key: String = S::class.toString()): StateKeeper<S> =
+    get(S::class, key)
 
 /**
  * Provides a way to retain instances via [StateKeeper].
@@ -34,9 +33,9 @@ fun <T : Any> StateKeeperProvider<Any>?.retainInstance(lifecycle: Lifecycle, key
         return factory(lifecycle)
     }
 
-    val stateKeeper = get<RetainedInstance<T>>(key)
+    val stateKeeper: StateKeeper<RetainedInstance<T>> = get(key)
 
-    val retainedInstance: RetainedInstance<T>? = stateKeeper.state
+    val retainedInstance: RetainedInstance<T>? = stateKeeper.getState()
     val lifecycleRegistry = retainedInstance?.lifecycleRegistry ?: LifecycleRegistry()
     val instance = retainedInstance?.instance ?: factory(lifecycleRegistry)
 
