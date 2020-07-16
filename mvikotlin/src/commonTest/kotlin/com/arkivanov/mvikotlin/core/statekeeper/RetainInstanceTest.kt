@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.lifecycle.TestLifecycle
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertSame
 
@@ -165,6 +166,16 @@ class RetainInstanceTest {
         assertSame(oldInstance, newInstance)
     }
 
+    @Test
+    fun state_supplier_unregistered_WHEN_original_lifecycle_destroyed() {
+        stateKeeperProvider.retainInstance(lifecycle, "key", ::TestClass)
+        lifecycle.onCreate()
+
+        lifecycle.onDestroy()
+
+        assertFalse(stateKeeperProvider.isRegistered("key"))
+    }
+
     private class TestClass(
         val lifecycle: Lifecycle
     )
@@ -177,6 +188,8 @@ class RetainInstanceTest {
         fun save(): Map<String, Any> =
             suppliers.mapValues { it.value() }
 
+        fun isRegistered(key: String): Boolean = key in suppliers
+
         override fun <S : Any> get(clazz: KClass<out S>, key: String): StateKeeper<S> =
             object : StateKeeper<S> {
                 @Suppress("UNCHECKED_CAST")
@@ -185,6 +198,10 @@ class RetainInstanceTest {
                 override fun register(supplier: () -> S) {
                     check(key !in suppliers)
                     suppliers += key to supplier
+                }
+
+                override fun unregister(supplier: () -> S) {
+                    suppliers -= key
                 }
             }
     }

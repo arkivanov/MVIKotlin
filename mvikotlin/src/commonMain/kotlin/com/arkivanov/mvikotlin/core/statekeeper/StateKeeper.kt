@@ -16,4 +16,11 @@ interface StateKeeper<T : Any> {
      * @param supplier a state supplier that will be called when it's time to save the state
      */
     fun register(supplier: () -> T)
+
+    /**
+     * Unregisters the provided state supplier
+     *
+     * @param supplier a state supplier that was previously registered via [register]
+     */
+    fun unregister(supplier: () -> T)
 }

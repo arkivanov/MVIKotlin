@@ -24,6 +24,10 @@ internal class StateKeeperControllerImpl<in C : Any, in T : Any>(
                 check(key !in suppliers) { "The supplier is already register with this key: $key" }
                 suppliers[key] = clazz to supplier
             }
+
+            override fun unregister(supplier: () -> S) {
+                suppliers -= key
+            }
         }
 
     override fun save(container: C) {
