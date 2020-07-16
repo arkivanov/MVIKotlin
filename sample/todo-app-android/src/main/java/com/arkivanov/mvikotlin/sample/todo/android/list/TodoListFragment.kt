@@ -3,7 +3,7 @@ package com.arkivanov.mvikotlin.sample.todo.android.list
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.arkivanov.mvikotlin.androidxlifecycleinterop.asMviLifecycle
+import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.asMviLifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.store.StoreFactory

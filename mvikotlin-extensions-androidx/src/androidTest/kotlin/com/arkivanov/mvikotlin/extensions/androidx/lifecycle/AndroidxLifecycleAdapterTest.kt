@@ -1,18 +1,18 @@
-package com.arkivanov.mvikotlin.androidxlifecycleinterop
+package com.arkivanov.mvikotlin.extensions.androidx.lifecycle
 
 import androidx.lifecycle.LifecycleOwner
-import com.arkivanov.mvikotlin.androidxlifecycleinterop.TestLifecycleCallbacks.Event.ON_CREATE
-import com.arkivanov.mvikotlin.androidxlifecycleinterop.TestLifecycleCallbacks.Event.ON_DESTROY
-import com.arkivanov.mvikotlin.androidxlifecycleinterop.TestLifecycleCallbacks.Event.ON_PAUSE
-import com.arkivanov.mvikotlin.androidxlifecycleinterop.TestLifecycleCallbacks.Event.ON_RESUME
-import com.arkivanov.mvikotlin.androidxlifecycleinterop.TestLifecycleCallbacks.Event.ON_START
-import com.arkivanov.mvikotlin.androidxlifecycleinterop.TestLifecycleCallbacks.Event.ON_STOP
+import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.TestLifecycleCallbacks.Event.ON_CREATE
+import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.TestLifecycleCallbacks.Event.ON_DESTROY
+import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.TestLifecycleCallbacks.Event.ON_PAUSE
+import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.TestLifecycleCallbacks.Event.ON_RESUME
+import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.TestLifecycleCallbacks.Event.ON_START
+import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.TestLifecycleCallbacks.Event.ON_STOP
 import org.junit.Test
 
-class AndroidxLifecycleInteropTest {
+class AndroidxLifecycleAdapterTest {
 
     private val androidLifecycle = TestAndroidLifecycle()
-    private val lifecycle = AndroidxLifecycleInterop(androidLifecycle)
+    private val lifecycle = AndroidxLifecycleAdapter(androidLifecycle)
     private val callbacks = TestLifecycleCallbacks()
     private val owner = LifecycleOwner { androidLifecycle }
 

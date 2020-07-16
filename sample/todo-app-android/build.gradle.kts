@@ -44,7 +44,7 @@ dependencies {
     implementation(project(":mvikotlin-main"))
     implementation(project(":mvikotlin-timetravel"))
     implementation(project(":mvikotlin-logging"))
-    implementation(project(":androidx-lifecycle-interop"))
+    implementation(project(":mvikotlin-extensions-androidx"))
     implementation(project(":sample:todo-reaktive"))
     implementation(project(":sample:todo-coroutines"))
 }

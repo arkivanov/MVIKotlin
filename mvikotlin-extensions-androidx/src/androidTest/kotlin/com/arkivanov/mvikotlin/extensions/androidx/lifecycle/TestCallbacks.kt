@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.androidxlifecycleinterop
+package com.arkivanov.mvikotlin.extensions.androidx.lifecycle
 
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import kotlin.test.assertEquals

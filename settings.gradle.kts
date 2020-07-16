@@ -15,7 +15,7 @@ doIfJvmTargetAvailable {
 }
 include(":mvikotlin-extensions-reaktive")
 include(":mvikotlin-extensions-coroutines")
-include(":androidx-lifecycle-interop")
+include(":mvikotlin-extensions-androidx")
 include(":sample:todo-common")
 include(":sample:todo-common-internal")
 include(":sample:todo-reaktive")

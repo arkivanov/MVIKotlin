@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.androidxlifecycleinterop
+package com.arkivanov.mvikotlin.extensions.androidx.lifecycle
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleObserver
