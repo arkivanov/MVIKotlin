@@ -5,20 +5,11 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.arkivanov.mvikotlin.core.statekeeper.SimpleStateKeeperController
-import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
-import com.arkivanov.mvikotlin.core.statekeeper.saveAndGet
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.sample.todo.android.root.RootFragment
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 
 class MainActivity : AppCompatActivity() {
-
-    private val nonConfigurationStateKeeperContainer =
-        SimpleStateKeeperController {
-            @Suppress("UNCHECKED_CAST", "DEPRECATION")
-            lastCustomNonConfigurationInstance as MutableMap<String, Any>?
-        }
 
     private val fragmentFactory = MainActivityFragmentFactoryImpl()
 
@@ -41,8 +32,6 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
     }
-
-    override fun onRetainCustomNonConfigurationInstance(): Any? = nonConfigurationStateKeeperContainer.saveAndGet(HashMap())
 
     override fun onBackPressed() {
         supportFragmentManager
@@ -68,7 +57,6 @@ class MainActivity : AppCompatActivity() {
                 object : RootFragment.Dependencies {
                     override val storeFactory: StoreFactory get() = storeFactoryInstance
                     override val database: TodoDatabase get() = app.database
-                    override val stateKeeperProvider: StateKeeperProvider<Any> = nonConfigurationStateKeeperContainer
                     override val frameworkType: FrameworkType = FrameworkType.COROUTINES
                 }
             )

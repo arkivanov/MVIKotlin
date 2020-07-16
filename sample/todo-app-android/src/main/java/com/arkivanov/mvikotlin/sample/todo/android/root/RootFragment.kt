@@ -3,7 +3,6 @@ package com.arkivanov.mvikotlin.sample.todo.android.root
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.sample.todo.android.FrameworkType
 import com.arkivanov.mvikotlin.sample.todo.android.R
@@ -69,7 +68,6 @@ class RootFragment(
     interface Dependencies {
         val storeFactory: StoreFactory
         val database: TodoDatabase
-        val stateKeeperProvider: StateKeeperProvider<Any>
         val frameworkType: FrameworkType
     }
 

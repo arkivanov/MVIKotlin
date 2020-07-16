@@ -18,6 +18,10 @@ There are several `StateKeeperControllers` provided by MVIKotlin:
 - [SerializableStateKeeperController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/androidMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/SerializableStateKeeperControllerFactory.kt) -  this controller is only for Android, it saves `Serializable` data into `Bundle`;
 - [ParcelableStateKeeperController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/androidMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/ParcelableStateKeeperControllerFactory.kt) - same as previous controller but saves `Parcelable` data into `Bundle`.
 
+There are also extensions for AndroidX provided by `mvikotlin-extensions-androidx` module:
+- `Fragment.retainingStateKeeperProvider(): StateKeeperProvider<Any>` - retains data over Fragment configuration change;
+- `AppCompatActivity.retainingStateKeeperProvider(): StateKeeperProvider<Any>` - retains data over Activity configuration change.
+
 ### Examples
 
 #### Preserving state of a Store
@@ -55,6 +59,10 @@ class CalculatorController(stateKeeperProvider: StateKeeperProvider<Any>) {
         stateKeeper.register { store }
     }
     
+    /*
+     * Create a new instance of CalculatorStore.
+     * ⚠️ Pay attention to not leak any dependencies.
+     */
     private fun calculatorStore(): CalculatorStore = // Create the Store
     
     fun dispose() {
@@ -74,6 +82,10 @@ class CalculatorController(
     private val store: CalculatorStore = 
         stateKeeperProvider.retainStore(lifecycle) { calculatorStore() }
 
+    /*
+     * Create a new instance of CalculatorStore.
+     * ⚠️ Pay attention to not leak any dependencies.
+     */
     private fun calculatorStore(): CalculatorStore = // Create the Store
 }
 ```
@@ -81,49 +93,43 @@ class CalculatorController(
 #### Retaining an arbitrary object with Lifecycle
 
 ```kotlin
-class MyFragment(
-    private val stateKeeperProvider: StateKeeperProvider<Any>
+class CalculatorController(
+    stateKeeperProvider: StateKeeperProvider<Any>,
+    lifecycle: Lifecycle
 ) : Fragment() {
 
-    private lateinit var controller: CalculatorController
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        
-        controller = stateKeeperProvider.retainInstance(lifecycle.asMviLifecycle(), ::calculatorController)
-    }
+    private val something = stateKeeperProvider.retainInstance(lifecycle, ::Something)
 
     /*
-     * Create the controller.
+     * Create a new instance of Something.
      * The provided Lifecycle will not be destroyed when the instance is retained.
+     * ⚠️ Pay attention to not leak any dependencies.
      */
-    private fun calculatorController(lifecycle: Lifecycle): CalculatorController = // Create the controller
+    private class Something(lifecycle: Lifecycle) {
+        // ...
+    }
 }
 ```
 
 #### Retaining data over Android configuration change
 
 ```kotlin
-class MainActivity : AppCompatActivity() {
-
-    private val nonConfigurationStateKeeperController = 
-        SimpleStateKeeperController { lastCustomNonConfigurationInstance as MutableMap<String, Any>? }
+class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Pass the nonConfigurationStateKeeperController as StateKeeperProvider to dependencies
+        val stateKeeperProvider = retainingStateKeeperProvider()
+        // Pass the StateKeeperProvider to dependencies
     }
-
-    override fun onRetainCustomNonConfigurationInstance(): Any? =
-        nonConfigurationStateKeeperController.saveAndGet(HashMap())
 }
+
 ```
 
 #### Preserving instance state in Android
 
 ```kotlin
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
 
     private lateinit var savedStateKeeperController: SerializableStateKeeperController
 

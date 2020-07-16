@@ -73,6 +73,7 @@ object Deps {
 
         object Lifecycle : Group(name = "androidx.lifecycle") {
             object LifecycleCommonJava8 : Dependency(group = Lifecycle, name = "lifecycle-common-java8", version = "2.2.0")
+            object LifecycleViewModel : Dependency(group = Lifecycle, name = "lifecycle-viewmodel", version = "2.2.0")
         }
     }
 
