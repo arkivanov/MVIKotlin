@@ -76,7 +76,7 @@ Please note that you must dispose `Stores` at the end of life cycle. In this exa
 MVIKotlin provides an abstraction over [Lifecycle](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/Lifecycle.kt) states and events. Pleaser take a look at the following diagram:
 ![Lifecycle](media/lifecycle.jpg)
 
-You can subscribe to `Lifecycle` events and unsubscribe from them. You can convert the [AndroidX Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle) to MVIKotlin `Lifecycle` using `androidx-lifecycle-interop` module. Also there is [LifecycleRegistry](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/LifecycleRegistry.kt) which implements both the `Lifecycle` and `Lifecycle.Callbacks` interfaces, so you can manually control it.
+You can subscribe to `Lifecycle` events and unsubscribe from it. You can convert the [AndroidX Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle) to MVIKotlin `Lifecycle` using `asMviLifecycle()` extension function from `mvikotlin-extensions-androidx` module. Also there is [LifecycleRegistry](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/LifecycleRegistry.kt) which implements both the `Lifecycle` and `Lifecycle.Callbacks` interfaces, so you can manually control it.
 
 ## Binder + Lifecycle
 

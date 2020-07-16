@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.androidxlifecycleinterop
+package com.arkivanov.mvikotlin.extensions.androidx.lifecycle
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleObserver
@@ -10,9 +10,9 @@ import androidx.lifecycle.Lifecycle as AndroidLifecycle
  * Converts Androidx [Lifecycle][AndroidLifecycle] to MviKotlin [Lifecycle].
  * Requires [Java 1.8 source and target compatibility](https://developer.android.com/studio/write/java8-support).
  */
-fun AndroidLifecycle.asMviLifecycle(): Lifecycle = AndroidxLifecycleInterop(this)
+fun AndroidLifecycle.asMviLifecycle(): Lifecycle = AndroidxLifecycleAdapter(this)
 
-internal class AndroidxLifecycleInterop(
+internal class AndroidxLifecycleAdapter(
     private val androidLifecycle: AndroidLifecycle
 ) : Lifecycle {
 
@@ -29,7 +29,7 @@ internal class AndroidxLifecycleInterop(
             }
 
     override fun subscribe(callbacks: Lifecycle.Callbacks) {
-        val observer = AndroidLifecycleObserverDelegate(callbacks)
+        val observer = AndroidLifecycleObserverAdapter(callbacks)
         callbacksToObserver[callbacks] = observer
         androidLifecycle.addObserver(observer)
     }
@@ -40,7 +40,7 @@ internal class AndroidxLifecycleInterop(
     }
 }
 
-private class AndroidLifecycleObserverDelegate(
+private class AndroidLifecycleObserverAdapter(
     private val delegate: Lifecycle.Callbacks
 ) : DefaultLifecycleObserver {
 
