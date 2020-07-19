@@ -40,10 +40,14 @@ fun <T : Any> StateKeeperProvider<Any>?.retainInstance(lifecycle: Lifecycle, key
     val instance = retainedInstance?.instance ?: factory(lifecycleRegistry)
 
     var isStateSaved = false
-    stateKeeper.register {
-        isStateSaved = true
-        RetainedInstance(lifecycleRegistry, instance)
-    }
+
+    val stateSupplier: () -> RetainedInstance<T> =
+        {
+            isStateSaved = true
+            RetainedInstance(lifecycleRegistry, instance)
+        }
+
+    stateKeeper.register(stateSupplier)
 
     lifecycle.subscribe(
         object : Lifecycle.Callbacks by lifecycleRegistry {
@@ -54,6 +58,7 @@ fun <T : Any> StateKeeperProvider<Any>?.retainInstance(lifecycle: Lifecycle, key
             }
 
             override fun onDestroy() {
+                stateKeeper.unregister(stateSupplier)
                 if (!isStateSaved) {
                     lifecycleRegistry.onDestroy()
                 }

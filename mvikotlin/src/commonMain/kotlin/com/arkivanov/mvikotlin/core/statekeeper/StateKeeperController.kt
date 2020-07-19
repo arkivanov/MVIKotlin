@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.core.statekeeper
 
 /**
- * Represents a controller for state preservation, responsible for manging state suppliers and consumers.
+ * Represents a controller for state preservation, responsible for managing state suppliers and consumers.
  *
  * @param C a type of the state container
  * @param T a type of the state
