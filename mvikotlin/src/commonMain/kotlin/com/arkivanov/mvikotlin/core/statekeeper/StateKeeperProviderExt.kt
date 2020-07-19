@@ -57,6 +57,11 @@ fun <T : Any> StateKeeperProvider<Any>?.retainInstance(lifecycle: Lifecycle, key
                 }
             }
 
+            override fun onStart() {
+                lifecycleRegistry.onStart()
+                isStateSaved = false
+            }
+
             override fun onDestroy() {
                 stateKeeper.unregister(stateSupplier)
                 if (!isStateSaved) {

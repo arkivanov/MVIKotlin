@@ -176,6 +176,20 @@ class RetainInstanceTest {
         assertFalse(stateKeeperProvider.isRegistered("key"))
     }
 
+    @Test
+    fun wrapped_lifecycle_destroyed_WHEN_instance_retained_and_original_lifecycle_stopped_and_started_and_instance_not_retained_and_original_lifecycle_destroyed() {
+        val instance = stateKeeperProvider.retainInstance(lifecycle, "key", ::TestClass)
+        lifecycle.onCreate()
+        lifecycle.onStart()
+        stateKeeperProvider.save()
+        lifecycle.onStop()
+        lifecycle.onStart()
+        lifecycle.onStop()
+        lifecycle.onDestroy()
+
+        assertEquals(Lifecycle.State.DESTROYED, instance.lifecycle.state)
+    }
+
     private class TestClass(
         val lifecycle: Lifecycle
     )
