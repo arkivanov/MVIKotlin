@@ -17,11 +17,11 @@ inline fun <T : Any, reified S : T> StateKeeperProvider<T>.get(key: String = S::
  *
  * The initial `instance` is created using the provided `factory` function that accepts a special [Lifecycle].
  * The special [Lifecycle] is same as the original one
- * but its [onDestroy][Lifecycle.onDestroy] method is not called when the `instance` is retained.
+ * but its [onDestroy][Lifecycle.Callbacks.onDestroy] method is not called when the `instance` is retained.
  * The `instance` is retained and restored together with its special [Lifecycle].
- * After restoration the special [Lifecycle]'s [onCreate][Lifecycle.onCreate] method is also not called,
- * since it was not destroyed. The special [Lifecycle]'s [onDestroy][Lifecycle.onDestroy] method is called
- * when the original [Lifecycle] is destroyed and the `instance` is not retained.
+ * After restoration the special [Lifecycle]'s [onCreate][Lifecycle.Callbacks.onCreate] method is also not called,
+ * since it was not destroyed. The special [Lifecycle]'s [onDestroy][Lifecycle.Callbacks.onDestroy] method is called
+ * when the original [Lifecycle] is destroyed and the `instance` was not retained.
  *
  * @param lifecycle an original [Lifecycle] to be used
  * @param key a key that should be used for `instance` preservation, see [StateKeeperProvider.get] for more information
