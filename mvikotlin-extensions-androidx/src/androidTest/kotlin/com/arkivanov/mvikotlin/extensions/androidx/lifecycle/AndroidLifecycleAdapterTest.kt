@@ -9,10 +9,10 @@ import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.TestLifecycleCallba
 import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.TestLifecycleCallbacks.Event.ON_STOP
 import org.junit.Test
 
-class AndroidxLifecycleAdapterTest {
+class AndroidLifecycleAdapterTest {
 
     private val androidLifecycle = TestAndroidLifecycle()
-    private val lifecycle = AndroidxLifecycleAdapter(androidLifecycle)
+    private val lifecycle = AndroidLifecycleAdapter(androidLifecycle)
     private val callbacks = TestLifecycleCallbacks()
     private val owner = LifecycleOwner { androidLifecycle }
 
