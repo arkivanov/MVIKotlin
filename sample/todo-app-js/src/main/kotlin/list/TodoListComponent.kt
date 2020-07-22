@@ -1,6 +1,8 @@
 package list
 
 import FrameworkType
+import com.arkivanov.mvikotlin.core.instancekeeper.InstanceContainer
+import com.arkivanov.mvikotlin.core.instancekeeper.InstanceKeeperProvider
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
 import com.arkivanov.mvikotlin.core.lifecycle.destroy
@@ -58,7 +60,7 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
         val todoListControllerDependencies =
             object : TodoListController.Dependencies, Dependencies by dependencies {
                 override val lifecycle: Lifecycle = lifecycleRegistry
-                override val stateKeeperProvider: StateKeeperProvider<Any>? = null
+                override val instanceKeeperProvider: InstanceKeeperProvider = InstanceContainer(lifecycle)
             }
 
         return when (dependencies.frameworkType) {

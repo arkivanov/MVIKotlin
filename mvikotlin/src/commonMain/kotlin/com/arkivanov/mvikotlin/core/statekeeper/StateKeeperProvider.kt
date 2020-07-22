@@ -3,7 +3,7 @@ package com.arkivanov.mvikotlin.core.statekeeper
 import kotlin.reflect.KClass
 
 /**
- * Represents a provider of [StateKeeper]s
+ * Represents a provider of typed [StateKeeper]s
  */
 interface StateKeeperProvider<in T : Any> {
 

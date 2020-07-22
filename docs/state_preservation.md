@@ -2,7 +2,7 @@
 
 ## State preservation
 
-Sometimes it might be necessary to save the current `State` of a `Store` (or maybe a whole instance of a `Store`) in order to restore it later. A very common use case is configuration change in Android. MVIKotlin provides a utility for state preservation - the `StateKeeper`.
+Sometimes it might be necessary to preserve a state (e.g. a state of a `Store`) in order to restore it later. A very common use case is Android Activity recreation due to system constraints. MVIKotlin provides a utility for state preservation - the `StateKeeper`.
 
 The `StateKeeper` is a utility for state (or any other data) preservation. In general it does not make any assumptions on what is being preserved and how. The `StateKeeper` is provided by the `mvikotlin` module.
 
@@ -18,9 +18,21 @@ There are several `StateKeeperControllers` provided by MVIKotlin:
 - [SerializableStateKeeperController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/androidMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/SerializableStateKeeperControllerFactory.kt) -  this controller is only for Android, it saves `Serializable` data into `Bundle`;
 - [ParcelableStateKeeperController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/androidMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/ParcelableStateKeeperControllerFactory.kt) - same as previous controller but saves `Parcelable` data into `Bundle`.
 
-There are also extensions for AndroidX provided by `mvikotlin-extensions-androidx` module:
-- `Fragment.retainingStateKeeperProvider(): StateKeeperProvider<Any>` - retains data over Fragment configuration change;
-- `AppCompatActivity.retainingStateKeeperProvider(): StateKeeperProvider<Any>` - retains data over Activity configuration change.
+## Retaining objects
+
+Another use case is to retain an object instance over its scope recreation. This is also commonly used in Android when configuration changes occur. MVIKotlin provides a solution for this as well.
+
+Here are the related interfaces:
+
+- [InstanceKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/instancekeeper/InstanceKeeper.kt) - this generic interface is used to save and retrieve object instances. It also has an associated [Lifecycle](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/Lifecycle.kt) so one can subscribe to it. The generic type parameter ensures that types of the saved and restored instances are same;
+
+- [InstanceKeeperProvider](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/instancekeeper/InstanceKeeperProvider.kt) - this generic interface provides typed instances of the `InstanceKeeper`;
+
+There is a default implementation available - [InstanceContainer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/InstanceContainer.kt). It just stores all retained objects in memory.
+
+An extension for AndroidX is provided by `mvikotlin-extensions-androidx` module:
+- [getInstanceKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/instancekeeper/AndroidInstanceKeeper.kt) - retains instances over Android configuration changes, can be used in `Fragments` and `Activities`.
+
 
 ### Examples
 
@@ -46,41 +58,13 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-#### Retaining a whole Store without Lifecycle
+#### Retaining a whole Store
 
 ```kotlin
-class CalculatorController(stateKeeperProvider: StateKeeperProvider<Any>) {
+class CalculatorController(instanceKeeperProvider: InstanceKeeperProvider) {
 
-    private val store: CalculatorStore
-
-    init {
-        val stateKeeper: StateKeeper<CalculatorStore> = stateKeeperProvider.get()
-        store = stateKeeper.getState() ?: calculatorStore()
-        stateKeeper.register { store }
-    }
-    
-    /*
-     * Create a new instance of CalculatorStore.
-     * ⚠️ Pay attention to not leak any dependencies.
-     */
-    private fun calculatorStore(): CalculatorStore = // Create the Store
-    
-    fun dispose() {
-        store.dispose()
-    }
-}
-```
-
-#### Retaining a whole Store with Lifecycle
-
-```kotlin
-class CalculatorController(
-    stateKeeperProvider: StateKeeperProvider<Any>,
-    lifecycle: Lifecycle
-) {
-
-    private val store: CalculatorStore = 
-        stateKeeperProvider.retainStore(lifecycle) { calculatorStore() }
+    private val store: CalculatorStore =
+        instanceKeeperProvider.get<CalculatorStore>().getOrCreateStore(::calculatorStore)
 
     /*
      * Create a new instance of CalculatorStore.
@@ -88,42 +72,27 @@ class CalculatorController(
      */
     private fun calculatorStore(): CalculatorStore = // Create the Store
 }
+
 ```
 
-#### Retaining an arbitrary object with Lifecycle
+#### Retaining an arbitrary object
 
 ```kotlin
 class CalculatorController(
-    stateKeeperProvider: StateKeeperProvider<Any>,
-    lifecycle: Lifecycle
+    instanceKeeperProvider: InstanceKeeperProvider
 ) : Fragment() {
 
-    private val something = stateKeeperProvider.retainInstance(lifecycle, ::Something)
+    private val something: Something =
+        instanceKeeperProvider.get<Something>().getOrCreate(::Something)
 
     /*
      * Create a new instance of Something.
-     * The provided Lifecycle will not be destroyed when the instance is retained.
      * ⚠️ Pay attention to not leak any dependencies.
      */
     private class Something(lifecycle: Lifecycle) {
         // ...
     }
 }
-```
-
-#### Retaining data over Android configuration change
-
-```kotlin
-class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val stateKeeperProvider = retainingStateKeeperProvider()
-        // Pass the StateKeeperProvider to dependencies
-    }
-}
-
 ```
 
 #### Preserving instance state in Android
@@ -145,6 +114,20 @@ class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
         super.onSaveInstanceState(outState)
 
         savedStateKeeperController.save(outState)
+    }
+}
+```
+
+#### Retaining objects over Android configuration change
+
+```kotlin
+class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val instanceKeeperProvider = getInstanceKeeperProvider()
+        // Pass the StateKeeperProvider to dependencies
     }
 }
 ```
