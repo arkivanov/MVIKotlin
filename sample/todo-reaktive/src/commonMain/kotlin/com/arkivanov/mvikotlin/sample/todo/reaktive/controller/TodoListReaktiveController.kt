@@ -1,9 +1,10 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
 import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
+import com.arkivanov.mvikotlin.core.instancekeeper.get
+import com.arkivanov.mvikotlin.core.instancekeeper.getOrCreateStore
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
-import com.arkivanov.mvikotlin.core.statekeeper.retainStore
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.events
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
@@ -18,6 +19,7 @@ import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.inputToListInt
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listEventToListIntent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listEventToOutput
 import com.arkivanov.mvikotlin.sample.todo.common.internal.mapper.listStateToListModel
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoAddView
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
 import com.arkivanov.mvikotlin.sample.todo.reaktive.store.TodoAddStoreFactory
@@ -31,7 +33,7 @@ class TodoListReaktiveController(
 ) : TodoListController {
 
     private val todoListStore =
-        dependencies.stateKeeperProvider.retainStore(dependencies.lifecycle) {
+        dependencies.instanceKeeperProvider.get<TodoListStore>().getOrCreateStore {
             TodoListStoreFactory(
                 storeFactory = dependencies.storeFactory,
                 database = dependencies.database

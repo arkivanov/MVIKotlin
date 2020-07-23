@@ -1,7 +1,8 @@
 package com.arkivanov.mvikotlin.core.statekeeper
 
 /**
- * Provides a way to save and restore state (e.g. `Store`'s state)
+ * Provides a way to save and restore state (e.g. a `Store`'s state).
+ * A typical use case is Android Activity recreation due to system constraints.
  */
 interface StateKeeper<T : Any> {
 
