@@ -19,6 +19,15 @@ inline fun <T : Any> InstanceKeeper<T>.getOrCreate(factory: (Lifecycle) -> T): T
     return instance ?: factory(lifecycle).also { instance = it }
 }
 
+/**
+ * Either returns a currently retained [Store] instance or creates (and retains) a new one.
+ * The retained [Store] is automatically disposed at the end of the [InstanceKeeper]'s lifecycle.
+ *
+ * See [InstanceKeeper] for more information.
+ *
+ * @param factory a factory function, called when there is no retained instance yet
+ * @return either a currently retained [Store] instance or a new one
+ */
 fun <T : Store<*, *, *>> InstanceKeeper<T>.getOrCreateStore(factory: () -> T): T =
     getOrCreate { lifecycle ->
         val store = factory()
