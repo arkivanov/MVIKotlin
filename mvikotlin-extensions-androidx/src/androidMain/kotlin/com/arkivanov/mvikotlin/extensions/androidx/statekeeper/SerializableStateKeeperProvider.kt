@@ -2,9 +2,11 @@ package com.arkivanov.mvikotlin.extensions.androidx.statekeeper
 
 import android.os.Bundle
 import androidx.savedstate.SavedStateRegistryOwner
+import com.arkivanov.mvikotlin.core.statekeeper.ExperimentalStateKeeperApi
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import java.io.Serializable
 
+@ExperimentalStateKeeperApi
 fun SavedStateRegistryOwner.getSerializableStateKeeperProvider(): StateKeeperProvider<Serializable> =
     object : AndroidStateKeeper<Serializable>(savedStateRegistry) {
         @Suppress("UNCHECKED_CAST")

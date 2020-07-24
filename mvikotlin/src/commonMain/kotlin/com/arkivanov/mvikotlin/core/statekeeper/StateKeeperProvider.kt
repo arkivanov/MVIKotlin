@@ -5,6 +5,7 @@ import kotlin.reflect.KClass
 /**
  * Represents a provider of typed [StateKeeper]s
  */
+@ExperimentalStateKeeperApi
 interface StateKeeperProvider<in T : Any> {
 
     /**

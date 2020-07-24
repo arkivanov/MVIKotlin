@@ -2,10 +2,12 @@ package com.arkivanov.mvikotlin.extensions.androidx.statekeeper
 
 import android.os.Bundle
 import androidx.savedstate.SavedStateRegistry
+import com.arkivanov.mvikotlin.core.statekeeper.ExperimentalStateKeeperApi
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeper
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import kotlin.reflect.KClass
 
+@ExperimentalStateKeeperApi
 internal abstract class AndroidStateKeeper<in T : Any>(
     private val registry: SavedStateRegistry
 ) : StateKeeperProvider<T> {
