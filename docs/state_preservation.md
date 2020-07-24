@@ -12,8 +12,8 @@ There are several interfaces related to this.
 - [StateKeeperProvider](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/StateKeeperProvider.kt) - this generic interface provides typed instances of the `StateKeeper`;
 
 There are extensions for AndroidX provided by `mvikotlin-extensions-androidx` module, can be used in `Fragments` and `Activities`:
-- [getParcelableStateKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/statekeeper/ParcelableStateKeeperProvider.kt) - preserves `Parcelable` data;
-- [getSerializableStateKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/statekeeper/SerializableStateKeeperProvider.kt) - preserves `Serializable` data.
+- [getParcelableStateKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-androidx/src/androidMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/statekeeper/ParcelableStateKeeperProvider.kt) - preserves `Parcelable` data;
+- [getSerializableStateKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-androidx/src/androidMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/statekeeper/SerializableStateKeeperProvider.kt) - preserves `Serializable` data.
 
 ## Retaining objects
 
@@ -25,10 +25,10 @@ Here are the related interfaces:
 
 - [InstanceKeeperProvider](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/instancekeeper/InstanceKeeperProvider.kt) - this generic interface provides typed instances of the `InstanceKeeper`;
 
-There is a default implementation available - [InstanceContainer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/InstanceContainer.kt). It just stores all retained objects in memory.
+There is a default implementation available - [InstanceContainer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/instancekeeper/InstanceContainer.kt). It just stores all retained objects in memory.
 
 An extension for AndroidX is provided by `mvikotlin-extensions-androidx` module, can be used in `Fragments` and `Activities`:
-- [getInstanceKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/instancekeeper/AndroidInstanceKeeper.kt) - retains instances over Android configuration changes.
+- [getInstanceKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-androidx/src/androidMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/instancekeeper/AndroidInstanceKeeper.kt) - retains instances over Android configuration changes.
 
 ### Examples
 
