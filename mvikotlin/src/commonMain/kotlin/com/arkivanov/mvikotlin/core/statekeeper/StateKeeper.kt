@@ -12,16 +12,9 @@ interface StateKeeper<T : Any> {
     fun getState(): T?
 
     /**
-     * Registers the provided state supplier
+     * Sets or removes a state supplier
      *
-     * @param supplier a state supplier that will be called when it's time to save the state
+     * @param supplier a state supplier that will be called when it's time to save the state, or `null` to remove the supplier
      */
-    fun register(supplier: () -> T)
-
-    /**
-     * Unregisters the provided state supplier
-     *
-     * @param supplier a state supplier that was previously registered via [register]
-     */
-    fun unregister(supplier: () -> T)
+    fun setSupplier(supplier: (() -> T)?)
 }
