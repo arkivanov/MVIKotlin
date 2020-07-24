@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
  * Provides a way to retain instances (e.g. a `Store`'s instance).
  * A typical use case is Android Activity recreation due to configuration changes.
  */
+@ExperimentalInstanceKeeperApi
 interface InstanceKeeper<T : Any> {
 
     /**

@@ -3,6 +3,7 @@ package com.arkivanov.mvikotlin.core.instancekeeper
 /**
  * Represents a provider of typed [InstanceKeeper]s
  */
+@ExperimentalInstanceKeeperApi
 interface InstanceKeeperProvider {
 
     /**

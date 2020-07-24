@@ -149,6 +149,10 @@ fun Project.setupMultiplatform() {
         }
 
         sourceSets {
+            all {
+                languageSettings.useExperimentalAnnotation("com.arkivanov.mvikotlin.core.instancekeeper.ExperimentalInstanceKeeperApi")
+            }
+
             commonMain {
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.StdLib.Common)
