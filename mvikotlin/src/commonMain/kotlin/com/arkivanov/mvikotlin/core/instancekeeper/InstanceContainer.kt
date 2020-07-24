@@ -6,6 +6,7 @@ import com.badoo.reaktive.utils.ensureNeverFrozen
 /**
  * A simple instances container, implements [InstanceKeeperProvider]
  */
+@ExperimentalInstanceKeeperApi
 class InstanceContainer(
     private val lifecycle: Lifecycle
 ) : InstanceKeeperProvider {
