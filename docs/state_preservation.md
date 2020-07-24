@@ -10,13 +10,10 @@ There are several interfaces related to this.
 
 - [StateKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/StateKeeper.kt) - this generic interface is used to retrieve saved data, if any, and to register a data supplier. The data supplier is called when it's time to save the state. The generic type parameter ensures that types of the saved and restored data are same;
 - [StateKeeperProvider](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/StateKeeperProvider.kt) - this generic interface provides typed instances of the `StateKeeper`;
-- [StateKeeperController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/StateKeeperController.kt) - this generic interface is used to actually save and restore data. Its generic type parameters ensure that all saved data conform to a base type.
 
-There are several `StateKeeperControllers` provided by MVIKotlin:
-
-- [SimpleStateKeeperController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/SimpleStateKeeperControllerFactory.kt) - this is for in-memory data preservation. It accepts `Any` data so it can not be serialized or somehow persisted. One possible use case is to preserve data over configuration change in Android. You can find usage example [here](https://github.com/arkivanov/MVIKotlin/blob/master/sample/todo-app-android/src/main/java/com/arkivanov/mvikotlin/sample/todo/android/MainActivity.kt). This controller is multiplatform.
-- [SerializableStateKeeperController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/androidMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/SerializableStateKeeperControllerFactory.kt) -  this controller is only for Android, it saves `Serializable` data into `Bundle`;
-- [ParcelableStateKeeperController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/androidMain/kotlin/com/arkivanov/mvikotlin/core/statekeeper/ParcelableStateKeeperControllerFactory.kt) - same as previous controller but saves `Parcelable` data into `Bundle`.
+There are extensions for AndroidX provided by `mvikotlin-extensions-androidx` module, can be used in `Fragments` and `Activities`:
+- [getParcelableStateKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/statekeeper/ParcelableStateKeeperProvider.kt) - preserves `Parcelable` data;
+- [getSerializableStateKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/statekeeper/SerializableStateKeeperProvider.kt) - preserves `Serializable` data.
 
 ## Retaining objects
 
@@ -30,9 +27,8 @@ Here are the related interfaces:
 
 There is a default implementation available - [InstanceContainer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/InstanceContainer.kt). It just stores all retained objects in memory.
 
-An extension for AndroidX is provided by `mvikotlin-extensions-androidx` module:
-- [getInstanceKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/instancekeeper/AndroidInstanceKeeper.kt) - retains instances over Android configuration changes, can be used in `Fragments` and `Activities`.
-
+An extension for AndroidX is provided by `mvikotlin-extensions-androidx` module, can be used in `Fragments` and `Activities`:
+- [getInstanceKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/instancekeeper/AndroidInstanceKeeper.kt) - retains instances over Android configuration changes.
 
 ### Examples
 
@@ -100,20 +96,11 @@ class CalculatorController(
 ```kotlin
 class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
 
-    private lateinit var savedStateKeeperController: SerializableStateKeeperController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        savedStateKeeperController = SerializableStateKeeperController { savedInstanceState }
-
-        // Pass savedStateKeeperController as StateKeeperProvider to dependencies
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        savedStateKeeperController.save(outState)
+        val stateKeeperProvider = getSerializableStateKeeperProvider()
+        // Pass the StateKeeperProvider to dependencies
     }
 }
 ```
@@ -127,7 +114,7 @@ class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
         super.onCreate(savedInstanceState)
 
         val instanceKeeperProvider = getInstanceKeeperProvider()
-        // Pass the StateKeeperProvider to dependencies
+        // Pass the InstanceKeeperProvider to dependencies
     }
 }
 ```

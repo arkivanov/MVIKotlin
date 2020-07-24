@@ -15,9 +15,10 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(project(":mvikotlin"))
-                implementation(Deps.AndroidX.AppCompat.AppCompat)
                 implementation(Deps.AndroidX.Lifecycle.LifecycleCommonJava8)
                 implementation(Deps.AndroidX.Lifecycle.LifecycleViewModel)
+                implementation(Deps.AndroidX.Lifecycle.LifecycleViewModelSavedState)
+                implementation(Deps.AndroidX.Lifecycle.LifecycleRuntime)
             }
         }
     }
