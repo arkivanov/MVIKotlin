@@ -76,6 +76,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Update dependencies
+        run: sudo apt-get update
+      - name: Install dependencies
+        run: sudo apt-get install nodejs chromium-browser
       - name: Check JVM, Android, JS publication
         run: ./gradlew build --info -Pcheck_publication=true -Pbuild_type=NON_NATIVE -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
   linux-check-publication:
