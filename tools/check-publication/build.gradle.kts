@@ -1,8 +1,6 @@
-// ./gradlew :tools:check-publication -Pversion=2.0.0-preview1 -Pbintray_api_key=
-
 setupMultiplatform()
 
-val version = property("version").toString()
+val version = property("mvikotlin.version").toString()
 
 repositories {
     maven {
@@ -26,6 +24,12 @@ kotlin {
                 implementation("com.arkivanov.mvikotlin:mvikotlin-timetravel:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-reaktive:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$version")
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-androidx:$version")
             }
         }
     }
