@@ -27,8 +27,9 @@ doIfAndroidTargetAvailable {
 doIfJsTargetAvailable {
     include(":sample:todo-app-js")
 }
-
-//include(":tools:check-publication")
+if (find("check_publication")?.toString()?.toBoolean() == true) {
+    include(":tools:check-publication")
+}
 
 enum class BuildType {
     ALL, METADATA, NON_NATIVE, ANDROID, JVM, JS, LINUX, IOS, MAC_OS
