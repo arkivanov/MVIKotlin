@@ -28,7 +28,7 @@ open class BaseMviView<in Model : Any, Event : Any> : MviView<Model, Event> {
      */
     @JsName("dispatch")
     @MainThread
-    protected open fun dispatch(event: Event) {
+    fun dispatch(event: Event) {
         subject.onNext(event)
     }
 

@@ -10,8 +10,4 @@ class TodoListViewProxy(
     override fun render(model: TodoListView.Model) {
         updateState(model)
     }
-
-    public override fun dispatch(event: TodoListView.Event) {
-        super.dispatch(event)
-    }
 }
