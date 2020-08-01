@@ -7,11 +7,13 @@ import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.core.view.ViewRenderer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
@@ -99,14 +101,18 @@ private class BuilderBinder(
         job =
             GlobalScope.launch(mainContext) {
                 bindings.forEach { binding ->
-                    launch { start(binding) }
+                    start(binding)
                 }
             }
     }
 
-    private suspend fun <T> start(binding: Binding<T>) {
-        binding.source.collect {
-            binding.consumer(it)
+    private fun <T> CoroutineScope.start(binding: Binding<T>) {
+        launch {
+            binding.source.collect {
+                if (isActive) {
+                    binding.consumer(it)
+                }
+            }
         }
     }
 
