@@ -2,47 +2,22 @@
 
 package com.arkivanov.mvikotlin.utils.internal
 
-import platform.posix.fprintf
 import platform.posix.pthread_self
-import platform.posix.stderr
 import kotlin.native.concurrent.AtomicReference
 
 @Suppress("ObjectPropertyName")
-private val _mainThreadId = AtomicReference<ULong?>(null)
+private val mainThreadIdRef = AtomicReference<ULong?>(null)
 
 fun setMainThreadId(id: ULong) {
-    if (!_mainThreadId.compareAndSet(null, id)) {
+    if (!mainThreadIdRef.compareAndSet(null, id)) {
         throw IllegalStateException("Main thread id can be set only once")
     }
 }
 
-private fun ensureMainThreadId(): ULong {
-    var id: ULong
-    var errorMessage: String?
-    while (true) {
-        errorMessage = null
+internal actual fun getMainThreadId(): MainThreadId? = mainThreadIdRef.value?.let(::MainThreadId)
 
-        val savedId = _mainThreadId.value
-        if (savedId != null) {
-            id = savedId
-            break
-        }
+internal actual fun isMainThread(mainThreadId: MainThreadId): Boolean = mainThreadId.id == pthread_self()
 
-        id = pthread_self()
-        errorMessage = "Main thread id is not set, current thread is considered as main: $id"
+internal actual fun getCurrentThreadDescription(): String = "Thread(id=${pthread_self()})"
 
-        if (_mainThreadId.compareAndSet(null, id)) {
-            break
-        }
-    }
-
-    errorMessage?.also {
-        fprintf(stderr, it)
-    }
-
-    return id
-}
-
-internal actual val isMainThread: Boolean get() = pthread_self() == ensureMainThreadId()
-
-internal actual val currentThreadDescription: String get() = "Thread(id=${pthread_self()})"
+internal actual class MainThreadId(val id: ULong)

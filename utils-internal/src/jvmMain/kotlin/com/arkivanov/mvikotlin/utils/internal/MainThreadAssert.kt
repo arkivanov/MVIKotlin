@@ -5,41 +5,18 @@ package com.arkivanov.mvikotlin.utils.internal
 import java.util.concurrent.atomic.AtomicReference
 
 @Suppress("ObjectPropertyName")
-private var _mainThreadId = AtomicReference<Long?>(null)
+private val mainThreadIdRef = AtomicReference<Long?>(null)
 
 fun setMainThreadId(id: Long) {
-    if (!_mainThreadId.compareAndSet(null, id)) {
+    if (!mainThreadIdRef.compareAndSet(null, id)) {
         throw IllegalStateException("Main thread id can be set only once")
     }
 }
 
-private fun ensureMainThreadId(): Long {
-    var id: Long
-    var errorMessage: String?
-    while (true) {
-        errorMessage = null
+internal actual fun getMainThreadId(): MainThreadId? = mainThreadIdRef.get()?.let(::MainThreadId)
 
-        val savedId = _mainThreadId.get()
-        if (savedId != null) {
-            id = savedId
-            break
-        }
+internal actual fun isMainThread(mainThreadId: MainThreadId): Boolean = mainThreadId.id == Thread.currentThread().id
 
-        id = Thread.currentThread().id
-        errorMessage = "Main thread id is not set, current thread is considered as main: $id"
+internal actual fun getCurrentThreadDescription(): String = Thread.currentThread().toString()
 
-        if (_mainThreadId.compareAndSet(null, id)) {
-            break
-        }
-    }
-
-    errorMessage?.also {
-        System.err.println(it)
-    }
-
-    return id
-}
-
-internal actual val isMainThread: Boolean get() = Thread.currentThread().id == ensureMainThreadId()
-
-internal actual val currentThreadDescription: String get() = Thread.currentThread().toString()
+internal actual class MainThreadId(val id: Long)
