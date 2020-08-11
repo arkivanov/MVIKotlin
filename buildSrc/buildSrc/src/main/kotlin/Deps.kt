@@ -2,7 +2,7 @@ object Deps {
 
     object Jetbrains {
         object Kotlin : Group(name = "org.jetbrains.kotlin") {
-            private const val version = "1.3.70"
+            private const val version = "1.3.72"
 
             object Plugin {
                 object Gradle : Dependency(group = Kotlin, name = "kotlin-gradle-plugin", version = version)
