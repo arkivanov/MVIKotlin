@@ -2,6 +2,10 @@ package com.arkivanov.mvikotlin.utils.internal
 
 import platform.Foundation.NSThread
 
-internal actual val isMainThread: Boolean get() = NSThread.isMainThread()
+internal actual fun getMainThreadId(): MainThreadId? = MainThreadId()
 
-internal actual val currentThreadDescription: String get() = "Thread(name=${NSThread.currentThread().name()})"
+internal actual fun isMainThread(mainThreadId: MainThreadId): Boolean = NSThread.isMainThread()
+
+internal actual fun getCurrentThreadDescription(): String = "Thread(name=${NSThread.currentThread().name()})"
+
+internal actual class MainThreadId

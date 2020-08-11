@@ -1,5 +1,9 @@
 package com.arkivanov.mvikotlin.utils.internal
 
-internal actual val isMainThread: Boolean = true
+internal actual fun getMainThreadId(): MainThreadId? = MainThreadId()
 
-internal actual val currentThreadDescription: String = "Main thread"
+internal actual fun isMainThread(mainThreadId: MainThreadId): Boolean = true
+
+internal actual fun getCurrentThreadDescription(): String = "Main thread"
+
+internal actual class MainThreadId
