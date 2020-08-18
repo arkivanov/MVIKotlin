@@ -95,14 +95,21 @@ inline fun <reified T : BuildTarget> ExtensionAware.doIfBuildTargetAvailable(blo
     }
 }
 
+val Project.isAnyTargetAvailable: Boolean
+    get() = buildType.buildTargets.any { it in buildTargets }
+
 fun Project.setupMultiplatform() {
-    plugins.apply("kotlin-multiplatform")
+    if (!isAnyTargetAvailable) {
+        return
+    }
 
     doIfBuildTargetAvailable<BuildTarget.Android> {
         plugins.apply("com.android.library")
 
         setupAndroidSdkVersions()
     }
+
+    plugins.apply("kotlin-multiplatform")
 
     kotlin {
         doIfBuildTargetAvailable<BuildTarget.Js> {
@@ -367,7 +374,9 @@ fun Project.android(block: BaseExtension.() -> Unit) {
 }
 
 fun Project.kotlin(block: KotlinMultiplatformExtension.() -> Unit) {
-    extensions.getByType<KotlinMultiplatformExtension>().block()
+    if (isAnyTargetAvailable) {
+        extensions.getByType<KotlinMultiplatformExtension>().block()
+    }
 }
 
 fun Project.setupXcodeSync() {
