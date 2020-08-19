@@ -9,7 +9,7 @@ package com.arkivanov.mvikotlin.core.lifecycle
  */
 inline fun Lifecycle.doOnDestroy(crossinline onDestroy: () -> Unit) {
     subscribe(
-        object : Lifecycle.Callbacks {
+        object : DefaultLifecycleCallbacks {
             override fun onDestroy() {
                 onDestroy.invoke()
             }
@@ -27,7 +27,7 @@ inline fun Lifecycle.doOnDestroy(crossinline onDestroy: () -> Unit) {
  */
 inline fun Lifecycle.doOnCreateDestroy(crossinline onCreate: () -> Unit, crossinline onDestroy: () -> Unit) {
     subscribe(
-        object : Lifecycle.Callbacks {
+        object : DefaultLifecycleCallbacks {
             override fun onCreate() {
                 onCreate.invoke()
             }
@@ -48,7 +48,7 @@ inline fun Lifecycle.doOnCreateDestroy(crossinline onCreate: () -> Unit, crossin
  */
 inline fun Lifecycle.doOnStop(crossinline onStop: () -> Unit) {
     subscribe(
-        object : Lifecycle.Callbacks {
+        object : DefaultLifecycleCallbacks {
             override fun onStop() {
                 onStop.invoke()
             }
@@ -66,7 +66,7 @@ inline fun Lifecycle.doOnStop(crossinline onStop: () -> Unit) {
  */
 inline fun Lifecycle.doOnStartStop(crossinline onStart: () -> Unit, crossinline onStop: () -> Unit) {
     subscribe(
-        object : Lifecycle.Callbacks {
+        object : DefaultLifecycleCallbacks {
             override fun onStart() {
                 onStart.invoke()
             }
@@ -87,7 +87,7 @@ inline fun Lifecycle.doOnStartStop(crossinline onStart: () -> Unit, crossinline 
  */
 inline fun Lifecycle.doOnPause(crossinline onPause: () -> Unit) {
     subscribe(
-        object : Lifecycle.Callbacks {
+        object : DefaultLifecycleCallbacks {
             override fun onPause() {
                 onPause.invoke()
             }
@@ -105,7 +105,7 @@ inline fun Lifecycle.doOnPause(crossinline onPause: () -> Unit) {
  */
 inline fun Lifecycle.doOnResumePause(crossinline onResume: () -> Unit, crossinline onPause: () -> Unit) {
     subscribe(
-        object : Lifecycle.Callbacks {
+        object : DefaultLifecycleCallbacks {
             override fun onResume() {
                 onResume.invoke()
             }
