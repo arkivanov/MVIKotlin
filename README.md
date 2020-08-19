@@ -96,7 +96,12 @@ The sample project is a todo list with details view.
 * Sample JavaScript application with both Reaktive and coroutines implementations, plus logging and time travel is [here](sample/todo-app-js)
 
 ## Author
+
 Twitter: [@arkann1985](https://twitter.com/arkann1985)
+
+## Inspiration
+
+This project is inspired by [Badoo MVICore](https://github.com/badoo/MVICore) library.
 
 ## Watch video (time travel, logs, debug, etc.)
 
