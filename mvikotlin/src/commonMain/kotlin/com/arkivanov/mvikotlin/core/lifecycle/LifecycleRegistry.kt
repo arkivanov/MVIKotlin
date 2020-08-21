@@ -55,16 +55,16 @@ class LifecycleRegistry : Lifecycle, Lifecycle.Callbacks {
 
     override fun onPause() {
         setState(required = Lifecycle.State.RESUMED, newState = Lifecycle.State.STARTED)
-        set.forEach(Lifecycle.Callbacks::onPause)
+        set.reversed().forEach(Lifecycle.Callbacks::onPause)
     }
 
     override fun onStop() {
-        set.forEach(Lifecycle.Callbacks::onStop)
+        set.reversed().forEach(Lifecycle.Callbacks::onStop)
         setState(required = Lifecycle.State.STARTED, newState = Lifecycle.State.CREATED)
     }
 
     override fun onDestroy() {
-        set.forEach(Lifecycle.Callbacks::onDestroy)
+        set.reversed().forEach(Lifecycle.Callbacks::onDestroy)
         set = emptySet()
         setState(required = Lifecycle.State.CREATED, newState = Lifecycle.State.DESTROYED)
     }

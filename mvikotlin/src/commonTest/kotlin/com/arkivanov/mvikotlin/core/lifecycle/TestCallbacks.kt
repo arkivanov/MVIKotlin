@@ -2,32 +2,39 @@ package com.arkivanov.mvikotlin.core.lifecycle
 
 import kotlin.test.assertEquals
 
-class TestLifecycleCallbacks : Lifecycle.Callbacks {
+class TestLifecycleCallbacks(
+    private val onEvent: (Event) -> Unit = {}
+) : Lifecycle.Callbacks {
 
     private val events = ArrayList<Event>()
 
     override fun onCreate() {
-        events += Event.ON_CREATE
+        onEvent(Event.ON_CREATE)
     }
 
     override fun onStart() {
-        events += Event.ON_START
+        onEvent(Event.ON_START)
     }
 
     override fun onResume() {
-        events += Event.ON_RESUME
+        onEvent(Event.ON_RESUME)
     }
 
     override fun onPause() {
-        events += Event.ON_PAUSE
+        onEvent(Event.ON_PAUSE)
     }
 
     override fun onStop() {
-        events += Event.ON_STOP
+        onEvent(Event.ON_STOP)
     }
 
     override fun onDestroy() {
-        events += Event.ON_DESTROY
+        onEvent(Event.ON_DESTROY)
+    }
+
+    private fun onEvent(event: Event) {
+        events += event
+        onEvent.invoke(event)
     }
 
     fun assertEvents(events: List<Event>) {
