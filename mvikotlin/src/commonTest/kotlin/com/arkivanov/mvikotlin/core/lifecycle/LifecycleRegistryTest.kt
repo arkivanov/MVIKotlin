@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.core.lifecycle.TestLifecycleCallbacks.Event.ON_RE
 import com.arkivanov.mvikotlin.core.lifecycle.TestLifecycleCallbacks.Event.ON_START
 import com.arkivanov.mvikotlin.core.lifecycle.TestLifecycleCallbacks.Event.ON_STOP
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class LifecycleRegistryTest {
 
@@ -32,6 +33,40 @@ class LifecycleRegistryTest {
         val events = listOf(ON_CREATE, ON_START, ON_STOP, ON_START, ON_RESUME, ON_PAUSE, ON_RESUME, ON_PAUSE, ON_STOP, ON_DESTROY)
         callbacks1.assertEvents(events)
         callbacks2.assertEvents(events)
+    }
+
+    @Test
+    fun calls_all_callbacks_in_proper_order() {
+        val events = ArrayList<String>()
+        val callbacks1 = TestLifecycleCallbacks { events += "first-$it" }
+        val callbacks2 = TestLifecycleCallbacks { events += "second-$it" }
+
+        lifecycle.subscribe(callbacks1)
+        lifecycle.subscribe(callbacks2)
+        lifecycle.onCreate()
+        lifecycle.onStart()
+        lifecycle.onResume()
+        lifecycle.onPause()
+        lifecycle.onStop()
+        lifecycle.onDestroy()
+
+        assertEquals(
+            listOf(
+                "first-$ON_CREATE",
+                "second-$ON_CREATE",
+                "first-$ON_START",
+                "second-$ON_START",
+                "first-$ON_RESUME",
+                "second-$ON_RESUME",
+                "second-$ON_PAUSE",
+                "first-$ON_PAUSE",
+                "second-$ON_STOP",
+                "first-$ON_STOP",
+                "second-$ON_DESTROY",
+                "first-$ON_DESTROY"
+            ),
+            events
+        )
     }
 
     @Test
