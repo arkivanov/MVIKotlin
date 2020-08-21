@@ -2,7 +2,7 @@ object Deps {
 
     object Jetbrains {
         object Kotlin : Group(name = "org.jetbrains.kotlin") {
-            private const val version = "1.3.72"
+            private const val version = "1.4.0"
 
             object Plugin {
                 object Gradle : Dependency(group = Kotlin, name = "kotlin-gradle-plugin", version = version)
@@ -13,8 +13,6 @@ object Deps {
                 object Jdk7 : Dependency(group = Kotlin, name = "kotlin-stdlib-jdk7", version = version)
                 object Js : Dependency(group = Kotlin, name = "kotlin-stdlib-js", version = version)
             }
-
-            object Reflect : Dependency(group = Kotlin, name = "kotlin-reflect", version = version)
 
             object Test {
                 object Common : Dependency(group = Kotlin, name = "kotlin-test-common", version = version)
@@ -29,14 +27,9 @@ object Deps {
 
         object Kotlinx : Group(name = "org.jetbrains.kotlinx") {
             object Coroutines {
-                private const val version = "1.3.5"
+                private const val version = "1.3.9"
 
-                object Core : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core", version = version) {
-                    object Common : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-common", version = version)
-                    object Native : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-native", version = version)
-                    object Js : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core-js", version = version)
-                }
-
+                object Core : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core", version = version)
                 object Android : Dependency(group = Kotlinx, name = "kotlinx-coroutines-android", version = version)
             }
         }
@@ -81,7 +74,7 @@ object Deps {
 
     object Badoo {
         object Reaktive : Group(name = "com.badoo.reaktive") {
-            private const val version = "1.1.16"
+            private const val version = "1.1.17"
 
             object Reaktive : Dependency(group = Badoo.Reaktive, name = "reaktive", version = version)
             object ReaktiveAnnotations : Dependency(group = Badoo.Reaktive, name = "reaktive-annotations", version = version)

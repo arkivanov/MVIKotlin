@@ -14,7 +14,7 @@ val muirwik_version = "0.4.1"
 
 dependencies {
     implementation(Deps.Jetbrains.Kotlin.StdLib.Js)
-    implementation(Deps.Jetbrains.Kotlinx.Coroutines.Core.Js)
+    implementation(Deps.Jetbrains.Kotlinx.Coroutines.Core)
 
     implementation("org.jetbrains:kotlin-react:$kotlin_react_version")
     implementation("org.jetbrains:kotlin-react-dom:$kotlin_react_version")
@@ -44,5 +44,12 @@ dependencies {
     implementation(npm("@material-ui/icons", "4.9.1"))
 }
 
-kotlin.target.useCommonJs()
-kotlin.target.browser {}
+kotlin.withGroovyBuilder {
+    "js" {
+        "useCommonJs"()
+        "browser"()
+        "binaries" {
+            "executable"()
+        }
+    }
+}
