@@ -59,27 +59,21 @@ interface Lifecycle {
      */
     interface Callbacks {
         @MainThread
-        fun onCreate() {
-        }
+        fun onCreate()
 
         @MainThread
-        fun onStart() {
-        }
+        fun onStart()
 
         @MainThread
-        fun onResume() {
-        }
+        fun onResume()
 
         @MainThread
-        fun onPause() {
-        }
+        fun onPause()
 
         @MainThread
-        fun onStop() {
-        }
+        fun onStop()
 
         @MainThread
-        fun onDestroy() {
-        }
+        fun onDestroy()
     }
 }
