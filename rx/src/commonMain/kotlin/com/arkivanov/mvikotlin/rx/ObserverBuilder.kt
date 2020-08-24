@@ -3,8 +3,8 @@ package com.arkivanov.mvikotlin.rx
 inline fun <T> observer(
     crossinline onComplete: () -> Unit = {},
     crossinline onNext: (T) -> Unit = {}
-): Observer<T> =
-    object : Observer<T> {
+): Observer<T> {
+    val result = object : Observer<T> {
         override fun onNext(value: T) {
             onNext.invoke(value)
         }
@@ -13,3 +13,5 @@ inline fun <T> observer(
             onComplete.invoke()
         }
     }
+    return result
+}

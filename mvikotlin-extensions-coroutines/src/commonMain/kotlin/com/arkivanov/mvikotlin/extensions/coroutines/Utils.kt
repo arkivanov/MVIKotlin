@@ -13,11 +13,10 @@ internal inline fun <T, R> T.toFlow(
     crossinline subscribe: T.(Observer<R>) -> Disposable
 ): Flow<R> =
     callbackFlow {
-        val disposable = subscribe(
-            observer(
-                onComplete = { channel.close() },
-                onNext = { channel.offer(it) }
-            )
+        val mObserver = observer<R>(
+            onComplete = { channel.close() },
+            onNext = { channel.offer(it) }
         )
+        val disposable = subscribe(mObserver)
         awaitClose(disposable::dispose)
     }
