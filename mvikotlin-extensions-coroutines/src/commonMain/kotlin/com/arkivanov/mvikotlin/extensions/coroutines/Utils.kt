@@ -13,11 +13,11 @@ internal inline fun <T, R> T.toFlow(
     crossinline subscribe: T.(Observer<R>) -> Disposable
 ): Flow<R> =
     callbackFlow {
-        val disposable = subscribe(
-            observer(
-                onComplete = { channel.close() },
-                onNext = { channel.offer(it) }
-            )
+        // Fixes weird "ObjectLiteral is not defined" error (https://github.com/arkivanov/MVIKotlin/issues/145)
+        val observer = observer<R>(
+            onComplete = { channel.close() },
+            onNext = { channel.offer(it) }
         )
+        val disposable = subscribe(observer)
         awaitClose(disposable::dispose)
     }

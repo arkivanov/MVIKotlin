@@ -3,8 +3,10 @@ package com.arkivanov.mvikotlin.rx
 inline fun <T> observer(
     crossinline onComplete: () -> Unit = {},
     crossinline onNext: (T) -> Unit = {}
-): Observer<T> =
-    object : Observer<T> {
+): Observer<T> {
+    // Fixes weird "ObjectLiteral is not defined" error (https://github.com/arkivanov/MVIKotlin/issues/145)
+    @Suppress("UnnecessaryVariable")
+    val result = object : Observer<T> {
         override fun onNext(value: T) {
             onNext.invoke(value)
         }
@@ -13,3 +15,5 @@ inline fun <T> observer(
             onComplete.invoke()
         }
     }
+    return result
+}
