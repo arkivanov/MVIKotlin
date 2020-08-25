@@ -32,20 +32,29 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
+import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class TodoListCoroutinesController(
-    private val dependencies: Dependencies
+class TodoListCoroutinesController internal constructor(
+    private val dependencies: Dependencies,
+    private val mainContext: CoroutineContext,
+    ioContext: CoroutineContext
 ) : TodoListController {
+
+    constructor(dependencies: Dependencies) : this(
+        dependencies = dependencies,
+        mainContext = mainDispatcher,
+        ioContext = ioDispatcher
+    )
 
     private val todoListStore =
         dependencies.instanceKeeperProvider.get<TodoListStore>().getOrCreateStore {
             TodoListStoreFactory(
                 storeFactory = dependencies.storeFactory,
                 database = dependencies.database,
-                mainContext = mainDispatcher,
-                ioContext = ioDispatcher
+                mainContext = mainContext,
+                ioContext = ioContext
             ).create()
         }
 
@@ -53,15 +62,15 @@ class TodoListCoroutinesController(
         TodoAddStoreFactory(
             storeFactory = dependencies.storeFactory,
             database = dependencies.database,
-            mainContext = mainDispatcher,
-            ioContext = ioDispatcher
+            mainContext = mainContext,
+            ioContext = ioContext
         ).create()
 
     private val inputChannel = BroadcastChannel<Input>(Channel.BUFFERED)
     override val input: (Input) -> Unit = { inputChannel.offer(it) }
 
     init {
-        bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
+        bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY, mainContext) {
             inputChannel.asFlow().mapNotNull(inputToListIntent) bindTo todoListStore
             todoAddStore.labels.mapNotNull(addLabelToListIntent) bindTo todoListStore
         }
@@ -74,12 +83,12 @@ class TodoListCoroutinesController(
         todoAddView: TodoAddView,
         viewLifecycle: Lifecycle
     ) {
-        bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
+        bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainContext) {
             todoListView.events.mapNotNull(listEventToListIntent) bindTo todoListStore
             todoAddView.events.mapNotNull(addEventToAddIntent) bindTo todoAddStore
         }
 
-        bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainDispatcher) {
+        bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainContext) {
             todoListStore.states.mapNotNull(listStateToListModel) bindTo todoListView
             todoAddStore.states.mapNotNull(addStateToAddModel) bindTo todoAddView
             todoListView.events.mapNotNull(listEventToOutput) bindTo { dependencies.listOutput(it) }

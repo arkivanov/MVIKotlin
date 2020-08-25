@@ -13,5 +13,13 @@ kotlin {
                 implementation(Deps.Jetbrains.Kotlinx.Coroutines.Core)
             }
         }
+
+        commonTest {
+            dependencies {
+                implementation(project(":mvikotlin-main"))
+                implementation(project(":rx"))
+                implementation(Deps.Badoo.Reaktive.Utils)
+            }
+        }
     }
 }

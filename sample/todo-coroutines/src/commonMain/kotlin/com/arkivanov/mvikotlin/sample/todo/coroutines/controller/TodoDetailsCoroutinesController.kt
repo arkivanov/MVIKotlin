@@ -20,19 +20,28 @@ import com.arkivanov.mvikotlin.sample.todo.coroutines.store.TodoDetailsStoreFact
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
-class TodoDetailsCoroutinesController(
-    private val dependencies: Dependencies
+class TodoDetailsCoroutinesController internal constructor(
+    private val dependencies: Dependencies,
+    private val mainContext: CoroutineContext,
+    ioContext: CoroutineContext
 ) : TodoDetailsController {
+
+    constructor(dependencies: Dependencies) : this(
+        dependencies = dependencies,
+        mainContext = mainDispatcher,
+        ioContext = ioDispatcher
+    )
 
     private val todoDetailsStore =
         TodoDetailsStoreFactory(
             storeFactory = dependencies.storeFactory,
             database = dependencies.database,
             itemId = dependencies.itemId,
-            mainContext = mainDispatcher,
-            ioContext = ioDispatcher
+            mainContext = mainContext,
+            ioContext = ioContext
         ).create()
 
     init {
@@ -40,11 +49,11 @@ class TodoDetailsCoroutinesController(
     }
 
     override fun onViewCreated(todoDetailsView: TodoDetailsView, viewLifecycle: Lifecycle) {
-        bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainDispatcher) {
+        bind(viewLifecycle, BinderLifecycleMode.CREATE_DESTROY, mainContext) {
             todoDetailsView.events.mapNotNull(detailsEventToIntent) bindTo todoDetailsStore
         }
 
-        bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainDispatcher) {
+        bind(viewLifecycle, BinderLifecycleMode.START_STOP, mainContext) {
             todoDetailsStore.states.mapNotNull(detailsStateToModel) bindTo todoDetailsView
             todoDetailsStore.labels.mapNotNull(detailsLabelToOutput).flatMapConcat { it.asFlow() } bindTo { dependencies.detailsOutput(it) }
         }
