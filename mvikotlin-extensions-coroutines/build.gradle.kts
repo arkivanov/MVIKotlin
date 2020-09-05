@@ -1,7 +1,7 @@
 setupMultiplatform()
 setupPublication()
 
-kotlin {
+kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {

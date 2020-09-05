@@ -5,7 +5,7 @@ plugins {
 
 setupAndroidSdkVersions()
 
-android {
+androidCompat {
     defaultConfig {
         applicationId = "com.arkivanov.rxkotlin.sample.todo.android"
         versionCode = 1

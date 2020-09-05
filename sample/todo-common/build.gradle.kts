@@ -3,7 +3,7 @@ buildTargets = setOf(BuildTarget.Android, BuildTarget.Js, BuildTarget.IosX64, Bu
 setupMultiplatform()
 setupXcodeSync()
 
-kotlin {
+kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {

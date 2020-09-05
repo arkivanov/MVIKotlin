@@ -4,7 +4,7 @@ buildTargets = setOf(BuildTarget.Jvm, BuildTarget.MacOsX64)
 
 setupMultiplatform()
 
-kotlin {
+kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {
@@ -37,7 +37,7 @@ doIfBuildTargetAvailable<BuildTarget.MacOsX64> {
     val packMacForXcode by tasks.creating(Sync::class) {
         val targetDir = File(buildDir, "xcode-mac-frameworks")
 
-        kotlin {
+        kotlinCompat {
             /// selecting the right configuration for the iOS
             /// framework depending on the environment
             /// variables set by Xcode build

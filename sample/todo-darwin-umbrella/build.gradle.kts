@@ -4,7 +4,7 @@ buildTargets = setOf(BuildTarget.IosX64, BuildTarget.IosArm64)
 
 setupMultiplatform()
 
-kotlin {
+kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {

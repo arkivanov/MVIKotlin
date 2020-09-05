@@ -1,7 +1,7 @@
 setupMultiplatform()
 setupPublication()
 
-android {
+androidCompat {
     sourceSets {
         getByName("main") {
             res.srcDirs("src/androidMain/res")
@@ -9,7 +9,7 @@ android {
     }
 }
 
-kotlin {
+kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {

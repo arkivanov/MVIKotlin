@@ -111,7 +111,7 @@ fun Project.setupMultiplatform() {
 
     plugins.apply("kotlin-multiplatform")
 
-    kotlin {
+    kotlinCompat {
         doIfBuildTargetAvailable<BuildTarget.Js> {
             js {
                 nodejs()
@@ -312,7 +312,7 @@ fun Project.setupPublication() {
 }
 
 fun Project.setupAndroidSdkVersions() {
-    android {
+    androidCompat {
         compileSdkVersion(29)
 
         defaultConfig {
@@ -367,13 +367,13 @@ fun KotlinMultiplatformExtension.macosX64Compat(block: KotlinNativeTarget.() -> 
 private inline fun <reified T : KotlinTarget> KotlinMultiplatformExtension.findTargetByName(name: String): T? =
     targets.findByName(name) as T?
 
-fun Project.android(block: BaseExtension.() -> Unit) {
+fun Project.androidCompat(block: BaseExtension.() -> Unit) {
     if (isBuildTargetAvailable<BuildTarget.Android>()) {
         extensions.getByType<BaseExtension>().block()
     }
 }
 
-fun Project.kotlin(block: KotlinMultiplatformExtension.() -> Unit) {
+fun Project.kotlinCompat(block: KotlinMultiplatformExtension.() -> Unit) {
     if (isAnyTargetAvailable) {
         extensions.getByType<KotlinMultiplatformExtension>().block()
     }

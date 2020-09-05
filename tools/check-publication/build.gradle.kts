@@ -13,7 +13,7 @@ repositories {
     }
 }
 
-kotlin {
+kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {
