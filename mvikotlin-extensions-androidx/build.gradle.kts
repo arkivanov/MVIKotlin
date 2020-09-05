@@ -3,14 +3,14 @@ buildTargets = setOf(BuildTarget.Android)
 setupMultiplatform()
 setupPublication()
 
-android {
+androidCompat {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
-kotlin {
+kotlinCompat {
     sourceSets {
         androidMain {
             dependencies {

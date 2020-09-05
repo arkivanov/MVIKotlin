@@ -1,6 +1,6 @@
 setupMultiplatform()
 
-kotlin {
+kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {

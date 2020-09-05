@@ -2,7 +2,7 @@ buildTargets = setOf(BuildTarget.Android, BuildTarget.Js, BuildTarget.IosX64, Bu
 
 setupMultiplatform()
 
-kotlin {
+kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {
