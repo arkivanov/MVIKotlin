@@ -47,11 +47,7 @@ interface Lifecycle {
      * Describes the current state of a [Lifecycle]
      */
     enum class State {
-        INITIALIZED, CREATED, STARTED, RESUMED, DESTROYED;
-
-        companion object {
-            val VALUES: List<State> = values().toList()
-        }
+        DESTROYED, INITIALIZED, CREATED, STARTED, RESUMED
     }
 
     /**
