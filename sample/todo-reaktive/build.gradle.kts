@@ -8,6 +8,7 @@ kotlinCompat {
         commonMain {
             dependencies {
                 implementation(project(":mvikotlin"))
+                implementation(project(":keepers"))
                 implementation(project(":mvikotlin-extensions-reaktive"))
                 api(project(":sample:todo-common"))
                 implementation(project(":sample:todo-common-internal"))

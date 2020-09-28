@@ -6,6 +6,10 @@ import com.badoo.reaktive.utils.ensureNeverFrozen
 /**
  * A simple instances container, implements [InstanceKeeperProvider]
  */
+@Deprecated(
+    "Use DefaultInstanceKeeper from the 'keepers' module",
+    ReplaceWith("DefaultInstanceKeeper", "com.arkivanov.mvikotlin.keepers.instancekeeper.DefaultInstanceKeeper")
+)
 @ExperimentalInstanceKeeperApi
 class InstanceContainer(
     private val lifecycle: Lifecycle

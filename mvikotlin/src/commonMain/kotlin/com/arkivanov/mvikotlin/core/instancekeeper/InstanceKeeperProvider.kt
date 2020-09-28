@@ -3,6 +3,10 @@ package com.arkivanov.mvikotlin.core.instancekeeper
 /**
  * Represents a provider of typed [InstanceKeeper]s
  */
+@Deprecated(
+    "Use InstanceKeeper from the 'keepers' module",
+    ReplaceWith("InstanceKeeper", "com.arkivanov.mvikotlin.keepers.instancekeeper.InstanceKeeper")
+)
 @ExperimentalInstanceKeeperApi
 interface InstanceKeeperProvider {
 

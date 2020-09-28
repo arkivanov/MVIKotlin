@@ -1,15 +1,14 @@
 package list
 
 import FrameworkType
-import com.arkivanov.mvikotlin.core.instancekeeper.InstanceContainer
-import com.arkivanov.mvikotlin.core.instancekeeper.InstanceKeeperProvider
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
 import com.arkivanov.mvikotlin.core.lifecycle.destroy
 import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.core.lifecycle.resume
-import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.keepers.instancekeeper.DefaultInstanceKeeper
+import com.arkivanov.mvikotlin.keepers.instancekeeper.InstanceKeeper
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.observer
@@ -60,7 +59,7 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
         val todoListControllerDependencies =
             object : TodoListController.Dependencies, Dependencies by dependencies {
                 override val lifecycle: Lifecycle = lifecycleRegistry
-                override val instanceKeeperProvider: InstanceKeeperProvider = InstanceContainer(lifecycle)
+                override val instanceKeeper: InstanceKeeper = DefaultInstanceKeeper()
             }
 
         return when (dependencies.frameworkType) {

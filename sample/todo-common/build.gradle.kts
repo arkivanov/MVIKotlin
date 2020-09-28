@@ -8,6 +8,7 @@ kotlinCompat {
         commonMain {
             dependencies {
                 implementation(project(":mvikotlin"))
+                implementation(project(":keepers"))
                 implementation(Deps.Badoo.Reaktive.Utils)
             }
         }

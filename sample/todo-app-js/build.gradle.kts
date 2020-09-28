@@ -25,6 +25,7 @@ dependencies {
     implementation("com.ccfraser.muirwik:muirwik-components:$muirwik_version")
 
     implementation(project(":rx"))
+    implementation(project(":keepers"))
     implementation(project(":mvikotlin"))
     implementation(project(":mvikotlin-main"))
     implementation(project(":mvikotlin-logging"))
