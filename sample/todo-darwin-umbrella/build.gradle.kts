@@ -9,6 +9,7 @@ kotlinCompat {
         commonMain {
             dependencies {
                 api(project(":rx"))
+                api(project(":keepers"))
                 api(project(":mvikotlin"))
                 api(project(":mvikotlin-main"))
                 api(project(":mvikotlin-logging"))
@@ -30,6 +31,7 @@ fun KotlinNativeTarget.setupBinaries() {
             freeCompilerArgs = freeCompilerArgs.plus("-Xobjc-generics").toMutableList()
 
             export(project(":rx"))
+            export(project(":keepers"))
             export(project(":mvikotlin"))
             export(project(":mvikotlin-main"))
             export(project(":mvikotlin-logging"))
