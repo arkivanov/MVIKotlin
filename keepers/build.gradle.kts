@@ -20,6 +20,7 @@ kotlinCompat {
         androidMain {
             dependencies {
                 implementation(Deps.AndroidX.Lifecycle.LifecycleViewModel)
+                implementation(Deps.AndroidX.Lifecycle.LifecycleViewModelSavedState)
             }
         }
 
