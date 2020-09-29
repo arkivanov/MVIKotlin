@@ -12,7 +12,7 @@ There are several interfaces related to this.
 - [StateKeeperRegistry](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/commonMain/kotlin/com/arkivanov/mvikotlin/keepers/statekeeper/StateKeeperRegistry.kt) - this generic interface provides and manages typed instances of the `StateKeeper`.
 
 There are extensions for AndroidX available, they can be used in `Fragments` and `Activities`:
-- [getParcelableStateKeeperRegistry()](https://github.com/arkivanov/MVIKotlin/blob/master/keeperssrc/androidMain/kotlin/com/arkivanov/mvikotlin/keepers/statekeeper/ParcelableStateKeeperRegistry.kt) - preserves `Parcelable` data.
+- [getParcelableStateKeeperRegistry()](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/androidMain/kotlin/com/arkivanov/mvikotlin/keepers/statekeeper/ParcelableStateKeeperRegistry.kt) - preserves `Parcelable` data.
 - [getSerializableStateKeeperRegistry()](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/androidMain/kotlin/com/arkivanov/mvikotlin/keepers/statekeeper/SerializableStateKeeperRegistry.kt) - preserves `Serializable` data.
 
 ## Retaining objects
