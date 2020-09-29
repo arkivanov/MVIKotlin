@@ -6,8 +6,8 @@ import com.arkivanov.mvikotlin.core.instancekeeper.InstanceContainer
 import com.arkivanov.mvikotlin.core.instancekeeper.InstanceKeeperProvider
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
+import com.arkivanov.mvikotlin.core.lifecycle.asMviLifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.destroy
-import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.asMviLifecycle
 import androidx.lifecycle.Lifecycle as AndroidLifecycle
 
 @ExperimentalInstanceKeeperApi

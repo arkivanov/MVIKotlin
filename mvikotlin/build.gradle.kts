@@ -1,6 +1,13 @@
 setupMultiplatform()
 setupPublication()
 
+androidCompat {
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
 kotlinCompat {
     sourceSets {
         commonMain {
@@ -10,6 +17,13 @@ kotlinCompat {
                 implementation(project(":rx-internal"))
                 implementation(project(":keepers"))
                 implementation(Deps.Badoo.Reaktive.Utils)
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation(Deps.AndroidX.Lifecycle.LifecycleCommonJava8)
+                implementation(Deps.AndroidX.Lifecycle.LifecycleRuntime)
             }
         }
     }

@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.lifecycle.asMviLifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.androidx.lifecycle.asMviLifecycle
 import com.arkivanov.mvikotlin.keepers.instancekeeper.InstanceKeeper
 import com.arkivanov.mvikotlin.keepers.instancekeeper.getInstanceKeeper
 import com.arkivanov.mvikotlin.sample.todo.android.FrameworkType
