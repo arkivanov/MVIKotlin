@@ -5,6 +5,10 @@ import kotlin.reflect.KClass
 /**
  * Represents a provider of typed [StateKeeper]s
  */
+@Deprecated(
+    "Use StateKeeperRegistry from 'keepers' module",
+    ReplaceWith("StateKeeperRegistry<T>", "com.arkivanov.mvikotlin.keepers.statekeeper.StateKeeperRegistry")
+)
 @ExperimentalStateKeeperApi
 interface StateKeeperProvider<in T : Any> {
 

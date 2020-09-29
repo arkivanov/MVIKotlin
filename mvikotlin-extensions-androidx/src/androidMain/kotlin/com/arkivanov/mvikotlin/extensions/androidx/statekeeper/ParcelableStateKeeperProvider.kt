@@ -6,6 +6,10 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.arkivanov.mvikotlin.core.statekeeper.ExperimentalStateKeeperApi
 import com.arkivanov.mvikotlin.core.statekeeper.StateKeeperProvider
 
+@Deprecated(
+    "Use getParcelableStateKeeperRegistry() from the 'keepers' module",
+    ReplaceWith("getParcelableStateKeeperRegistry()", "com.arkivanov.mvikotlin.keepers.statekeeper.getParcelableStateKeeperRegistry")
+)
 @ExperimentalStateKeeperApi
 fun SavedStateRegistryOwner.getParcelableStateKeeperProvider(): StateKeeperProvider<Parcelable> =
     object : AndroidStateKeeper<Parcelable>(savedStateRegistry) {

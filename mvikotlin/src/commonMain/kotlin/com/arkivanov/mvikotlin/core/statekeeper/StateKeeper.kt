@@ -4,6 +4,10 @@ package com.arkivanov.mvikotlin.core.statekeeper
  * Provides a way to save and restore state (e.g. a `Store`'s state).
  * A typical use case is Android Activity recreation due to system constraints.
  */
+@Deprecated(
+    "Use StateKeeper from the 'keepers' module",
+    ReplaceWith("StateKeeper<T>", "com.arkivanov.mvikotlin.keepers.statekeeper.StateKeeper")
+)
 @ExperimentalStateKeeperApi
 interface StateKeeper<T : Any> {
 
