@@ -24,7 +24,7 @@ private class ControllerHolder {
                 storeFactory: deps.storeFactory,
                 database: deps.database,
                 lifecycle: lifecycle.lifecycle,
-                instanceKeeperProvider: InstanceContainer(lifecycle: lifecycle.lifecycle),
+                instanceKeeper: DefaultInstanceKeeper(),
                 listOutput: output
             )
         )

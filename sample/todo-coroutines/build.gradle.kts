@@ -7,6 +7,7 @@ kotlinCompat {
         commonMain {
             dependencies {
                 implementation(project(":mvikotlin"))
+                implementation(project(":keepers"))
                 implementation(project(":mvikotlin-extensions-coroutines"))
                 api(project(":sample:todo-common"))
                 implementation(project(":sample:todo-common-internal"))

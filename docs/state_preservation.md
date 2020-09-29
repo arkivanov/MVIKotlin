@@ -17,18 +17,17 @@ There are extensions for AndroidX provided by `mvikotlin-extensions-androidx` mo
 
 ## Retaining objects
 
-Another use case is to retain an object instance over its scope recreation. This is also commonly used in Android when configuration changes occur. MVIKotlin provides a solution for this as well.
+Another use case is to retain an object instance over its scope recreation. This is also commonly used in Android when configuration changes occur. MVIKotlin `keepers` module provides a solution for this as well:
 
-Here are the related interfaces:
+- [InstanceKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/commonMain/kotlin/com/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper.kt) - this interface is used to save and retrieve object instances by key. It has just one method `getOrCreate(key, factory)`, as well as a few handy extension functions. When `getOrCreate` method is called first time, the factory function is called and the returned instance is saved (retained). For any future invocation the retained instance is returned, and the factory function is not invoked.
 
-- [InstanceKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/instancekeeper/InstanceKeeper.kt) - this generic interface is used to save and retrieve object instances. It also has an associated [Lifecycle](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/Lifecycle.kt) so one can subscribe to it. The generic type parameter ensures that types of the saved and restored instances are same;
+There is a default implementation available:
 
-- [InstanceKeeperProvider](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/instancekeeper/InstanceKeeperProvider.kt) - this generic interface provides typed instances of the `InstanceKeeper`;
+- [DefaultInstanceKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/commonMain/kotlin/com/arkivanov/mvikotlin/keepers/instancekeeper/DefaultInstanceKeeper.kt) - it just stores all retained objects in memory.
 
-There is a default implementation available - [InstanceContainer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/instancekeeper/InstanceContainer.kt). It just stores all retained objects in memory.
+An extension for AndroidX that can be used in `Fragments` and `Activities`:
 
-An extension for AndroidX is provided by `mvikotlin-extensions-androidx` module, can be used in `Fragments` and `Activities`:
-- [getInstanceKeeperProvider()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-androidx/src/androidMain/kotlin/com/arkivanov/mvikotlin/extensions/androidx/instancekeeper/AndroidInstanceKeeper.kt) - retains instances over Android configuration changes.
+- [getInstanceKeeper()](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/androidMain/kotlin/com/arkivanov/mvikotlin/keepers/instancekeeper/AndroidInstanceKeeper.kt) - retains instances over Android configuration changes.
 
 ### Examples
 
@@ -57,10 +56,10 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 #### Retaining a whole Store
 
 ```kotlin
-class CalculatorController(instanceKeeperProvider: InstanceKeeperProvider) {
+class CalculatorController(instanceKeeper: InstanceKeeper) {
 
     private val store: CalculatorStore =
-        instanceKeeperProvider.get<CalculatorStore>().getOrCreateStore(::calculatorStore)
+        instanceKeeper.getOrCreateStore(::calculatorStore)
 
     /*
      * Create a new instance of CalculatorStore.
@@ -74,19 +73,19 @@ class CalculatorController(instanceKeeperProvider: InstanceKeeperProvider) {
 #### Retaining an arbitrary object
 
 ```kotlin
-class CalculatorController(
-    instanceKeeperProvider: InstanceKeeperProvider
-) : Fragment() {
+class CalculatorController(instanceKeeper: InstanceKeeper) {
 
     private val something: Something =
-        instanceKeeperProvider.get<Something>().getOrCreate(::Something)
+        instanceKeeper.getOrCreate(::Something)
 
     /*
-     * Create a new instance of Something.
+     * Instances of this class will be retained.
      * ⚠️ Pay attention to not leak any dependencies.
      */
-    private class Something(lifecycle: Lifecycle) {
-        // ...
+    private class Something : InstanceKeeper.Instance {
+        override fun onDestroy() {
+            // Clean-up any resources here
+        }
     }
 }
 ```
@@ -113,8 +112,8 @@ class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val instanceKeeperProvider = getInstanceKeeperProvider()
-        // Pass the InstanceKeeperProvider to dependencies
+        val instanceKeeper = getInstanceKeeper()
+        // Pass the InstanceKeeper to dependencies
     }
 }
 ```
