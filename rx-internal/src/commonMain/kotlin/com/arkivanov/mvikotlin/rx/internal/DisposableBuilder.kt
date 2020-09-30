@@ -1,17 +1,18 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.Disposable
-import com.badoo.reaktive.utils.atomic.AtomicBoolean
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.getValue
+import com.arkivanov.mvikotlin.utils.internal.setValue
 
 @Suppress("FunctionName")
 inline fun Disposable(crossinline onDispose: Disposable.() -> Unit = {}): Disposable =
     object : Disposable {
         @Suppress("ObjectPropertyName")
-        private val _isDisposed = AtomicBoolean()
-        override val isDisposed: Boolean get() = _isDisposed.value
+        override var isDisposed: Boolean by atomic(false)
 
         override fun dispose() {
-            _isDisposed.value = true
+            isDisposed = true
             onDispose()
         }
     }

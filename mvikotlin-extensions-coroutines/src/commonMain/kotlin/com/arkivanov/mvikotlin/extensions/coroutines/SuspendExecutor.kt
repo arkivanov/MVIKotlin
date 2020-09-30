@@ -6,8 +6,8 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +23,8 @@ open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Res
     mainContext: CoroutineContext = Dispatchers.Main
 ) : Executor<Intent, Action, State, Result, Label> {
 
-    private val callbacks = lateinitAtomicReference<Callbacks<State, Result, Label>>()
-    private val getState: () -> State = { callbacks.requireValue.state }
+    private val callbacks = atomic<Callbacks<State, Result, Label>>()
+    private val getState: () -> State = { callbacks.requireValue().state }
     private val scope = CoroutineScope(mainContext)
 
     final override fun init(callbacks: Callbacks<State, Result, Label>) {
@@ -77,7 +77,7 @@ open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Res
      */
     @MainThread
     protected fun dispatch(result: Result) {
-        callbacks.requireValue.onResult(result)
+        callbacks.requireValue().onResult(result)
     }
 
     /**
@@ -87,6 +87,6 @@ open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Res
      */
     @MainThread
     protected fun publish(label: Label) {
-        callbacks.requireValue.onLabel(label)
+        callbacks.requireValue().onLabel(label)
     }
 }

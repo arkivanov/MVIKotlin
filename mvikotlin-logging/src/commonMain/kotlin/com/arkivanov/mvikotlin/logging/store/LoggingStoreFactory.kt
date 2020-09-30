@@ -10,7 +10,9 @@ import com.arkivanov.mvikotlin.logging.logger.DefaultLogger
 import com.arkivanov.mvikotlin.logging.logger.LogFormatter
 import com.arkivanov.mvikotlin.logging.logger.Logger
 import com.arkivanov.mvikotlin.logging.logger.LoggerWrapper
-import com.badoo.reaktive.utils.atomic.AtomicReference
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.getValue
+import com.arkivanov.mvikotlin.utils.internal.setValue
 
 /**
  * An implementation of the [StoreFactory] that wraps another [StoreFactory] and provides logging
@@ -27,20 +29,8 @@ class LoggingStoreFactory(
 
     constructor(delegate: StoreFactory) : this(delegate, DefaultLogger, DefaultLogFormatter())
 
-    private val _logger = AtomicReference(logger)
-    var logger: Logger
-        get() = _logger.value
-        set(value) {
-            _logger.value = value
-        }
-
-    private val _logFormatter = AtomicReference(logFormatter)
-    var logFormatter: LogFormatter
-        get() = _logFormatter.value
-        set(value) {
-            _logFormatter.value = value
-        }
-
+    var logger: Logger by atomic(logger)
+    var logFormatter: LogFormatter by atomic(logFormatter)
     private val loggerWrapper = LoggerWrapper(logger, logFormatter)
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(

@@ -5,8 +5,8 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.completable.Completable
 import com.badoo.reaktive.disposable.Disposable
@@ -23,8 +23,8 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Re
     Executor<Intent, Action, State, Result, Label>,
     DisposableScope {
 
-    private val callbacks = lateinitAtomicReference<Executor.Callbacks<State, Result, Label>>()
-    private val getState: () -> State = { callbacks.requireValue.state }
+    private val callbacks = atomic<Executor.Callbacks<State, Result, Label>>()
+    private val getState: () -> State = { callbacks.requireValue().state }
     private val scope = DisposableScope()
 
     final override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
@@ -71,7 +71,7 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Re
      */
     @MainThread
     protected fun dispatch(result: Result) {
-        callbacks.requireValue.onResult(result)
+        callbacks.requireValue().onResult(result)
     }
 
     /**
@@ -81,7 +81,7 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Re
      */
     @MainThread
     protected fun publish(label: Label) {
-        callbacks.requireValue.onLabel(label)
+        callbacks.requireValue().onLabel(label)
     }
 
     /*

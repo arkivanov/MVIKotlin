@@ -10,7 +10,6 @@ import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.arkivanov.mvikotlin.sample.todo.common.database.update
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.State
-import com.badoo.reaktive.utils.ensureNeverFrozen
 
 /**
  * Abstract factories are normally not needed. Just create a normal factory as described [here][Store].
@@ -28,9 +27,6 @@ abstract class TodoListStoreAbstractFactory(
             executorFactory = ::createExecutor,
             reducer = ReducerImpl
         ) {
-            init {
-                ensureNeverFrozen() // Optional, just a matter of preference, Stores are freezable
-            }
         }
 
     protected sealed class Result : JvmSerializable {

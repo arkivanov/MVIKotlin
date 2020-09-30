@@ -2,7 +2,7 @@ package com.arkivanov.mvikotlin.core.lifecycle
 
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle.Callbacks
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle.State
-import com.badoo.reaktive.utils.ensureNeverFrozen
+import com.arkivanov.mvikotlin.utils.internal.ensureNeverFrozen
 
 /**
  * Implements both [Lifecycle] and [Lifecycle.Callbacks]

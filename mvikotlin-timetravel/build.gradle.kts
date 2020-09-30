@@ -18,7 +18,6 @@ kotlinCompat {
                 implementation(project(":rx-internal"))
                 implementation(project(":utils-internal"))
                 implementation(project(":mvikotlin-timetravel-proto-internal"))
-                implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
 

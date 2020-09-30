@@ -8,7 +8,6 @@ kotlinCompat {
                 implementation(project(":mvikotlin"))
                 implementation(project(":rx"))
                 implementation(project(":rx-internal"))
-                implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
 

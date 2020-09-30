@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.keepers.instancekeeper
 
-import com.badoo.reaktive.utils.ensureNeverFrozen
+import com.arkivanov.mvikotlin.utils.internal.ensureNeverFrozen
 
 /**
  * A simple [InstanceKeeper] implementation via `HashMap`

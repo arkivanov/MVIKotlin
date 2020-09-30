@@ -8,10 +8,10 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
-import com.badoo.reaktive.utils.ThreadLocalHolder
 import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
 import platform.posix.close
+import kotlin.native.concurrent.ThreadLocal
 import kotlin.native.concurrent.freeze
 
 class TimeTravelServer(
@@ -22,10 +22,13 @@ class TimeTravelServer(
 
     constructor() : this(controller = timeTravelController)
 
-    private val storage = ThreadLocalHolder(Holder(controller = controller, onError = onError))
+    init {
+        threadLocalHolders[this] = Holder(controller = controller, onError = onError)
+    }
 
     fun start() {
-        val holder: Holder = storage.get() ?: return
+        val holder = threadLocalHolders[this] ?: return
+
         val connectionThread = connectionThread()
         holder.connectionThread = connectionThread
         connectionThread.start()
@@ -39,9 +42,8 @@ class TimeTravelServer(
         )
 
     fun stop() {
-        val holder = storage.get() ?: return
+        val holder = threadLocalHolders.remove(this) ?: return
 
-        storage.dispose()
         holder.connectionThread?.interrupt()
         closeClients(holder.clients.values)
     }
@@ -107,14 +109,14 @@ class TimeTravelServer(
     }
 
     private fun runOnMainThreadIfNotDisposed(block: (Holder) -> Unit) {
-        val callback: () -> Unit =
-            {
-                storage
-                    .get()
-                    ?.also(block)
-            }
+        val callback: () -> Unit = { threadLocalHolders[this]?.also(block) }
 
         dispatch_async(dispatch_get_main_queue(), callback.freeze())
+    }
+
+    @ThreadLocal
+    private companion object {
+        private val threadLocalHolders = HashMap<TimeTravelServer, Holder>()
     }
 
     private class Holder(

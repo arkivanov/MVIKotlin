@@ -9,7 +9,6 @@ kotlinCompat {
                 implementation(project(":utils-internal"))
                 implementation(Deps.Jetbrains.Kotlin.Test.Common)
                 implementation(Deps.Jetbrains.Kotlin.TestAnnotations.Common)
-                implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
 

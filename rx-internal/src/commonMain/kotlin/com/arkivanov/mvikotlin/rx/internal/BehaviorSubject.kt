@@ -1,7 +1,9 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.Observer
-import com.badoo.reaktive.utils.atomic.AtomicReference
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.getValue
+import com.arkivanov.mvikotlin.utils.internal.setValue
 
 interface BehaviorSubject<T> : Subject<T> {
 
@@ -13,8 +15,8 @@ fun <T> BehaviorSubject(initialValue: T): BehaviorSubject<T> = BehaviorSubjectIm
 
 private class BehaviorSubjectImpl<T>(initialValue: T) : ThreadLocalSubject<T>(), BehaviorSubject<T> {
 
-    private val _value = AtomicReference(initialValue)
-    override val value: T get() = _value.value
+    override var value: T by atomic(initialValue)
+        private set
 
     override fun onSubscribed(observer: Observer<T>) {
         super.onSubscribed(observer)
@@ -23,7 +25,7 @@ private class BehaviorSubjectImpl<T>(initialValue: T) : ThreadLocalSubject<T>(),
     }
 
     override fun onNext(value: T) {
-        _value.value = value
+        this.value = value
 
         super.onNext(value)
     }

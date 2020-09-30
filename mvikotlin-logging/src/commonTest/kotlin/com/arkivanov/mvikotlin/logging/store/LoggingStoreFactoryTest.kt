@@ -13,11 +13,10 @@ import com.arkivanov.mvikotlin.logging.logger.LogFormatter
 import com.arkivanov.mvikotlin.logging.logger.Logger
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.utils.internal.AtomicList
-import com.arkivanov.mvikotlin.utils.internal.plusAssign
-import com.badoo.reaktive.utils.atomic.AtomicReference
-import com.badoo.reaktive.utils.atomic.update
-import com.badoo.reaktive.utils.freeze
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.freeze
+import com.arkivanov.mvikotlin.utils.internal.getValue
+import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -153,14 +152,14 @@ class LoggingStoreFactoryTest {
     private class TestLogger(
         private val formatter: LogFormatter
     ) : Logger {
-        private val logs = AtomicList<String>()
+        private var logs by atomic(emptyList<String>())
 
         override fun log(text: String) {
-            logs += text
+            this.logs += text
         }
 
         fun assertLoggedText(text: String) {
-            assertTrue(text in logs.value)
+            assertTrue(text in logs)
         }
 
         fun assertLoggedEvent(eventType: StoreEventType, value: Any?) {
@@ -168,7 +167,7 @@ class LoggingStoreFactoryTest {
         }
 
         fun assertNoLogs() {
-            assertEquals(emptyList(), logs.value)
+            assertEquals(emptyList(), logs)
         }
     }
 
@@ -177,14 +176,14 @@ class LoggingStoreFactoryTest {
             "$storeName;$eventType;$value"
     }
 
-    private class TestStore<in Intent : Any, Action : Any, out State : Any, Result : Any, Label : Any>(
+    private class TestStore<in Intent : Any, Action : Any, State : Any, Result : Any, Label : Any>(
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
         private val reducer: Reducer<State, Result>
     ) : Store<Intent, State, Label> {
-        private val _state = AtomicReference(initialState)
-        override val state: State get() = _state.value
+        override var state: State by atomic(initialState)
+            private set
         override val isDisposed: Boolean = false
         private val executor = executorFactory()
 
@@ -193,14 +192,10 @@ class LoggingStoreFactoryTest {
 
             executor.init(
                 object : Executor.Callbacks<State, Result, Label> {
-                    override val state: State get() = _state.value
+                    override val state: State get() = this@TestStore.state
 
                     override fun onResult(result: Result) {
-                        _state.update { oldState ->
-                            reducer.run {
-                                oldState.reduce(result)
-                            }
-                        }
+                        this@TestStore.state = reducer.run { state.reduce(result) }
                     }
 
                     override fun onLabel(label: Label) {

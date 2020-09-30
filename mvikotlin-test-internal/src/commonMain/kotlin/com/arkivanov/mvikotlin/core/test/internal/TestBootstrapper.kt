@@ -1,21 +1,22 @@
 package com.arkivanov.mvikotlin.core.test.internal
 
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
-import com.badoo.reaktive.utils.atomic.AtomicBoolean
+import com.arkivanov.mvikotlin.utils.internal.setValue
 
 class TestBootstrapper(
     private val init: () -> Unit = {},
     private val invoke: TestBootstrapper.() -> Unit = {}
 ) : Bootstrapper<String> {
 
-    private val actionConsumer = lateinitAtomicReference<(String) -> Unit>()
+    private val actionConsumer = atomic<(String) -> Unit>()
     val isInitialized: Boolean get() = actionConsumer.value != null
 
-    private val _isDisposed = AtomicBoolean()
-    val isDisposed: Boolean get() = _isDisposed.value
+    var isDisposed: Boolean by atomic(false)
+        private set
 
     override fun init(actionConsumer: (String) -> Unit) {
         this.actionConsumer.initialize(actionConsumer)
@@ -27,10 +28,10 @@ class TestBootstrapper(
     }
 
     override fun dispose() {
-        _isDisposed.value = true
+        isDisposed = true
     }
 
     fun dispatch(action: String) {
-        actionConsumer.requireValue.invoke(action)
+        actionConsumer.requireValue().invoke(action)
     }
 }

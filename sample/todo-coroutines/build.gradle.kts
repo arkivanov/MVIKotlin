@@ -17,9 +17,9 @@ kotlinCompat {
 
         commonTest {
             dependencies {
+                implementation(project(":utils-internal"))
                 implementation(project(":mvikotlin-main"))
                 implementation(project(":rx"))
-                implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
     }

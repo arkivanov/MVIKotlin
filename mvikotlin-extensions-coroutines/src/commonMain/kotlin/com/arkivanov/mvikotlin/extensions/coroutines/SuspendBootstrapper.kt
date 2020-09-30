@@ -2,8 +2,8 @@ package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +19,7 @@ abstract class SuspendBootstrapper<Action : Any>(
     mainContext: CoroutineContext = Dispatchers.Main
 ) : Bootstrapper<Action> {
 
-    private val actionConsumer = lateinitAtomicReference<(Action) -> Unit>()
+    private val actionConsumer = atomic<(Action) -> Unit>()
     private val scope = CoroutineScope(mainContext)
 
     final override fun init(actionConsumer: (Action) -> Unit) {
@@ -32,7 +32,7 @@ abstract class SuspendBootstrapper<Action : Any>(
      * @param action an `Action` to be dispatched
      */
     protected fun dispatch(action: Action) {
-        actionConsumer.requireValue.invoke(action)
+        actionConsumer.requireValue().invoke(action)
     }
 
     final override fun invoke() {
