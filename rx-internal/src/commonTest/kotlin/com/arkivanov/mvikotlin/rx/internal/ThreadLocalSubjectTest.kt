@@ -1,13 +1,12 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.observer
-import com.arkivanov.mvikotlin.utils.internal.AtomicList
-import com.arkivanov.mvikotlin.utils.internal.add
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.freeze
+import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.isAssertOnMainThreadEnabled
-import com.arkivanov.mvikotlin.utils.internal.plusAssign
-import com.badoo.reaktive.utils.atomic.AtomicBoolean
-import com.badoo.reaktive.utils.freeze
-import com.badoo.reaktive.utils.isFrozen
+import com.arkivanov.mvikotlin.utils.internal.isFrozen
+import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -31,72 +30,72 @@ class ThreadLocalSubjectTest {
 
     @Test
     fun multicasts_values_to_all_subscribers() {
-        val values1 = AtomicList<Int?>()
-        val values2 = AtomicList<Int?>()
+        var values1 by atomic(emptyList<Int?>())
+        var values2 by atomic(emptyList<Int?>())
 
-        subject.subscribe(observer(onNext = values1::add))
+        subject.subscribe(observer(onNext = { values1 = values1 + it }))
         subject.onNext(0)
         subject.onNext(null)
-        subject.subscribe(observer(onNext = values2::add))
+        subject.subscribe(observer(onNext = { values2 = values2 + it }))
         subject.onNext(1)
         subject.onNext(null)
 
-        assertEquals(listOf(0, null, 1, null), values1.value)
-        assertEquals(listOf(1, null), values2.value)
+        assertEquals(listOf(0, null, 1, null), values1)
+        assertEquals(listOf(1, null), values2)
     }
 
     @Test
     fun completes_all_existing_observers_WHEN_completed() {
-        val isCompleted1 = AtomicBoolean()
-        val isCompleted2 = AtomicBoolean()
+        var isCompleted1 by atomic(false)
+        var isCompleted2 by atomic(false)
 
         subject.subscribe(observer = observer(onComplete = {
-            isCompleted1.value = true
+            isCompleted1 = true
         }))
         subject.onNext(0)
         subject.subscribe(observer = observer(onComplete = {
-            isCompleted2.value = true
+            isCompleted2 = true
         }))
         subject.onNext(1)
         subject.onComplete()
 
-        assertTrue(isCompleted1.value)
-        assertTrue(isCompleted2.value)
+        assertTrue(isCompleted1)
+        assertTrue(isCompleted2)
     }
 
     @Test
     fun completes_new_observer_WHEN_already_completed_and_new_observer_subscribed() {
-        val isCompleted1 = AtomicBoolean()
+        var isCompleted by atomic(false)
 
         subject.onComplete()
         subject.subscribe(observer = observer(onComplete = {
-            isCompleted1.value = true
+            isCompleted = true
         }))
 
-        assertTrue(isCompleted1.value)
+        assertTrue(isCompleted)
     }
 
     @Test
     fun does_not_produce_values_to_unsubscribed_observers() {
-        val hasValue = AtomicBoolean()
+        var hasValue by atomic(false)
 
-        subject.subscribe(observer { hasValue.value = true }).dispose()
+        subject.subscribe(observer { hasValue = true }).dispose()
         subject.onNext(0)
 
-        assertFalse(hasValue.value)
+        assertFalse(hasValue)
     }
 
     @Test
     fun produces_values_to_another_observers_WHEN_one_observer_unsubscribed_and_new_values() {
         val disposable1 = subject.subscribe(observer())
-        val values2 = AtomicList<Int?>()
+        var values2 by atomic(emptyList<Int?>())
 
-        subject.subscribe(observer(onNext = values2::add))
+        subject.subscribe(observer(onNext = { values2 = values2 + it }))
         disposable1.dispose()
         subject.onNext(0)
         subject.onNext(null)
 
-        assertEquals(listOf(0, null), values2.value)
+        assertEquals(listOf(0, null), values2)
     }
 
     @Test
@@ -129,29 +128,29 @@ class ThreadLocalSubjectTest {
 
     @Test
     fun does_not_emit_values_recursively() {
-        val isEmitting = AtomicBoolean()
-        val isEmittedRecursively = AtomicBoolean()
+        var isEmitting by atomic(false)
+        var isEmittedRecursively by atomic(false)
 
         subject.subscribe(
             observer { value ->
                 if (value == 1) {
-                    isEmitting.value = true
+                    isEmitting = true
                     subject.onNext(2)
-                    isEmitting.value = false
+                    isEmitting = false
                 } else {
-                    isEmittedRecursively.value = isEmitting.value
+                    isEmittedRecursively = isEmitting
                 }
             }
         )
 
         subject.onNext(1)
 
-        assertFalse(isEmittedRecursively.value)
+        assertFalse(isEmittedRecursively)
     }
 
     @Test
     fun emits_all_values_in_order_WHEN_onNext_called_recursively() {
-        val values = AtomicList<Int?>()
+        var values by atomic(emptyList<Int?>())
 
         subject.subscribe(
             observer { value ->
@@ -159,49 +158,49 @@ class ThreadLocalSubjectTest {
                     subject.onNext(null)
                     subject.onNext(2)
                 }
-                values += value
+                values = values + value
             }
         )
 
         subject.onNext(1)
 
-        assertEquals(values.value, listOf(1, null, 2))
+        assertEquals(listOf(1, null, 2), values)
     }
 
     @Test
     fun does_no_complete_recursively() {
-        val isEmitting = AtomicBoolean()
-        val isCompletedRecursively = AtomicBoolean()
+        var isEmitting by atomic(false)
+        var isCompletedRecursively by atomic(false)
 
         subject.subscribe(
             observer(
-                onComplete = { isCompletedRecursively.value = isEmitting.value },
+                onComplete = { isCompletedRecursively = isEmitting },
                 onNext = {
-                    isEmitting.value = true
+                    isEmitting = true
                     subject.onComplete()
-                    isEmitting.value = false
+                    isEmitting = false
                 }
             )
         )
 
         subject.onNext(1)
 
-        assertFalse(isCompletedRecursively.value)
+        assertFalse(isCompletedRecursively)
     }
 
     @Test
     fun completes_WHEN_onComplete_called_recursively() {
-        val isCompleted = AtomicBoolean()
+        var isCompleted by atomic(false)
 
         subject.subscribe(
             observer(
-                onComplete = { isCompleted.value = true },
+                onComplete = { isCompleted = true },
                 onNext = { subject.onComplete() }
             )
         )
 
         subject.onNext(1)
 
-        assertTrue(isCompleted.value)
+        assertTrue(isCompleted)
     }
 }

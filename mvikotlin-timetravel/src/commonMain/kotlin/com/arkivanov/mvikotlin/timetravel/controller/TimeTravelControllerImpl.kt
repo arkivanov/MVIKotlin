@@ -12,8 +12,7 @@ import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore
-import com.badoo.reaktive.utils.ThreadLocalHolder
-import com.badoo.reaktive.utils.ensureNeverFrozen
+import com.arkivanov.mvikotlin.utils.internal.ensureNeverFrozen
 import kotlin.collections.set
 
 internal class TimeTravelControllerImpl : TimeTravelController {
@@ -38,23 +37,10 @@ internal class TimeTravelControllerImpl : TimeTravelController {
 
         stores[name] = store
 
-        val observerThreadLocalHolder = ThreadLocalHolder(
-            observer(
-                onComplete = { stores -= name },
-                onNext = ::onEvent
-            )
-        )
-
         store.events(
             observer(
-                onComplete = {
-                    observerThreadLocalHolder.get()?.onComplete()
-                    observerThreadLocalHolder.dispose()
-                },
-                onNext = {
-                    val event = TimeTravelEvent(id = eventId++, storeName = name, type = it.type, value = it.value, state = it.state)
-                    observerThreadLocalHolder.get()?.onNext(event)
-                }
+                onComplete = { stores -= name },
+                onNext = { onEvent(TimeTravelEvent(id = eventId++, storeName = name, type = it.type, value = it.value, state = it.state)) }
             )
         )
 

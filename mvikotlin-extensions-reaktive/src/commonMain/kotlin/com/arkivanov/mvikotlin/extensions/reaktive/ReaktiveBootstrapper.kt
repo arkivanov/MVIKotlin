@@ -2,8 +2,8 @@ package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.badoo.reaktive.completable.Completable
 import com.badoo.reaktive.disposable.Disposable
@@ -18,7 +18,7 @@ import com.badoo.reaktive.single.Single
  */
 abstract class ReaktiveBootstrapper<Action : Any> : Bootstrapper<Action>, DisposableScope {
 
-    private val actionConsumer = lateinitAtomicReference<(Action) -> Unit>()
+    private val actionConsumer = atomic<(Action) -> Unit>()
     private val scope = DisposableScope()
 
     final override fun init(actionConsumer: (Action) -> Unit) {
@@ -31,7 +31,7 @@ abstract class ReaktiveBootstrapper<Action : Any> : Bootstrapper<Action>, Dispos
      * @param action an `Action` to be dispatched
      */
     protected fun dispatch(action: Action) {
-        actionConsumer.requireValue.invoke(action)
+        actionConsumer.requireValue().invoke(action)
     }
 
     override fun dispose() {

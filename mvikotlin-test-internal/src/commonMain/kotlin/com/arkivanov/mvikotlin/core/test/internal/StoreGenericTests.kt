@@ -5,12 +5,11 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.rx.observer
-import com.arkivanov.mvikotlin.utils.internal.AtomicList
-import com.arkivanov.mvikotlin.utils.internal.add
-import com.arkivanov.mvikotlin.utils.internal.plusAssign
-import com.badoo.reaktive.utils.atomic.AtomicBoolean
-import com.badoo.reaktive.utils.freeze
-import com.badoo.reaktive.utils.isFrozen
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.freeze
+import com.arkivanov.mvikotlin.utils.internal.getValue
+import com.arkivanov.mvikotlin.utils.internal.isFrozen
+import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -134,11 +133,11 @@ fun StoreGenericTests(
         }
 
         override fun calls_bootstrapper_after_initialization_WHEN_created() {
-            val events = AtomicList<String>()
+            var events by atomic(emptyList<String>())
 
-            store(bootstrapper = TestBootstrapper(init = { events += "init" }, invoke = { events += "invoke" }))
+            store(bootstrapper = TestBootstrapper(init = { events = events + "init" }, invoke = { events = events + "invoke" }))
 
-            assertEquals(listOf("init", "invoke"), events.value)
+            assertEquals(listOf("init", "invoke"), events)
         }
 
         override fun initializes_executor_WHEN_with_bootstrapper_and_created() {
@@ -158,107 +157,107 @@ fun StoreGenericTests(
         }
 
         override fun initializes_executor_before_bootstrapper_call_WHEN_with_bootstrapper_and_created() {
-            val events = AtomicList<String>()
+            var events by atomic(emptyList<String>())
 
             store(
-                bootstrapper = TestBootstrapper(init = { events += "bootstrapper" }),
-                executorFactory = { TestExecutor(init = { events += "executor" }) }
+                bootstrapper = TestBootstrapper(init = { events = events + "bootstrapper" }),
+                executorFactory = { TestExecutor(init = { events = events + "executor" }) }
             )
 
-            assertEquals(listOf("executor", "bootstrapper"), events.value)
+            assertEquals(listOf("executor", "bootstrapper"), events)
         }
 
         override fun delivers_actions_from_bootstrapper_to_executor_after_bootstrap() {
-            val actions = AtomicList<String>()
+            var actions by atomic(emptyList<String>())
             val bootstrapper = TestBootstrapper()
 
             store(
                 bootstrapper = bootstrapper,
-                executorFactory = { TestExecutor(handleAction = { actions += it }) }
+                executorFactory = { TestExecutor(handleAction = { actions = actions + it }) }
             )
 
             bootstrapper.dispatch("action1")
             bootstrapper.dispatch("action2")
 
-            assertEquals(listOf("action1", "action2"), actions.value)
+            assertEquals(listOf("action1", "action2"), actions)
         }
 
         override fun delivers_actions_from_bootstrapper_to_executor_during_bootstrap() {
-            val actions = AtomicList<String>()
+            var actions by atomic(emptyList<String>())
 
             store(
                 bootstrapper = TestBootstrapper {
                     dispatch("action1")
                     dispatch("action2")
                 },
-                executorFactory = { TestExecutor(handleAction = { actions += it }) }
+                executorFactory = { TestExecutor(handleAction = { actions = actions + it }) }
             )
 
-            assertEquals(listOf("action1", "action2"), actions.value)
+            assertEquals(listOf("action1", "action2"), actions)
         }
 
         override fun does_not_deliver_actions_from_bootstrapper_to_executor_WHEN_disposed_and_bootstrapper_produced_actions() {
-            val actions = AtomicList<String>()
+            var actions by atomic(emptyList<String>())
             val bootstrapper = TestBootstrapper()
 
             val store =
                 store(
                     bootstrapper = bootstrapper,
-                    executorFactory = { TestExecutor(handleAction = { actions += it }) }
+                    executorFactory = { TestExecutor(handleAction = { actions = actions + it }) }
                 )
 
             store.dispose()
             bootstrapper.dispatch("action1")
             bootstrapper.dispatch("action2")
 
-            assertEquals(emptyList(), actions.value)
+            assertEquals(emptyList(), actions)
         }
 
         override fun produces_labels_from_executor() {
-            val labels = AtomicList<String>()
+            var labels by atomic(emptyList<String>())
             val executor = TestExecutor()
 
             val store = store(executorFactory = { executor })
-            store.labels(observer(onNext = labels::add))
+            store.labels(observer(onNext = { labels = labels + it }))
 
             executor.publish("label1")
             executor.publish("label2")
 
-            assertEquals(listOf("label1", "label2"), labels.value)
+            assertEquals(listOf("label1", "label2"), labels)
         }
 
         override fun does_not_produce_labels_from_executor_to_unsubscribed_observer() {
-            val labels = AtomicList<String>()
+            var labels by atomic(emptyList<String>())
             val executor = TestExecutor()
 
             val store = store(executorFactory = { executor })
-            store.labels(observer(onNext = labels::add)).dispose()
+            store.labels(observer(onNext = { labels = labels + it })).dispose()
 
             executor.publish("label1")
             executor.publish("label2")
 
-            assertEquals(emptyList(), labels.value)
+            assertEquals(emptyList(), labels)
         }
 
         override fun delivers_intents_to_executor() {
-            val intents = AtomicList<String>()
-            val store = store(executorFactory = { TestExecutor(handleIntent = { intents += it }) })
+            var intents by atomic(emptyList<String>())
+            val store = store(executorFactory = { TestExecutor(handleIntent = { intents = intents + it }) })
 
             store.accept("intent1")
             store.accept("intent2")
 
-            assertEquals(listOf("intent1", "intent2"), intents.value)
+            assertEquals(listOf("intent1", "intent2"), intents)
         }
 
         override fun does_not_deliver_intents_to_executor_WHEN_disposed_and_new_intents() {
-            val intents = AtomicList<String>()
-            val store = store(executorFactory = { TestExecutor(handleIntent = { intents += it }) })
+            var intents by atomic(emptyList<String>())
+            val store = store(executorFactory = { TestExecutor(handleIntent = { intents = intents + it }) })
 
             store.dispose()
             store.accept("intent1")
             store.accept("intent2")
 
-            assertEquals(emptyList(), intents.value)
+            assertEquals(emptyList(), intents)
         }
 
         override fun executor_can_read_initial_state() {
@@ -278,12 +277,12 @@ fun StoreGenericTests(
         }
 
         override fun delivers_results_from_executor_to_reducer() {
-            val results = AtomicList<String>()
+            var results by atomic(emptyList<String>())
             val executor = TestExecutor()
             store(
                 executorFactory = { executor },
                 reducer = reducer {
-                    results += it
+                    results = results + it
                     this
                 }
             )
@@ -291,7 +290,7 @@ fun StoreGenericTests(
             executor.dispatch("result1")
             executor.dispatch("result2")
 
-            assertEquals(listOf("result1", "result2"), results.value)
+            assertEquals(listOf("result1", "result2"), results)
         }
 
         override fun state_val_returns_new_state_WHEN_new_state_returned_from_reducer() {
@@ -338,29 +337,29 @@ fun StoreGenericTests(
         }
 
         override fun states_observers_completed_WHEN_store_disposed() {
-            val isCompleted1 = AtomicBoolean()
-            val isCompleted2 = AtomicBoolean()
+            var isCompleted1 by atomic(false)
+            var isCompleted2 by atomic(false)
             val store = store()
-            store.states(observer(onComplete = { isCompleted1.value = true }))
-            store.states(observer(onComplete = { isCompleted2.value = true }))
+            store.states(observer(onComplete = { isCompleted1 = true }))
+            store.states(observer(onComplete = { isCompleted2 = true }))
 
             store.dispose()
 
-            assertTrue(isCompleted1.value)
-            assertTrue(isCompleted2.value)
+            assertTrue(isCompleted1)
+            assertTrue(isCompleted2)
         }
 
         override fun labels_observers_completed_WHEN_store_disposed() {
-            val isCompleted1 = AtomicBoolean()
-            val isCompleted2 = AtomicBoolean()
+            var isCompleted1 by atomic(false)
+            var isCompleted2 by atomic(false)
             val store = store()
-            store.labels(observer(onComplete = { isCompleted1.value = true }))
-            store.labels(observer(onComplete = { isCompleted2.value = true }))
+            store.labels(observer(onComplete = { isCompleted1 = true }))
+            store.labels(observer(onComplete = { isCompleted2 = true }))
 
             store.dispose()
 
-            assertTrue(isCompleted1.value)
-            assertTrue(isCompleted2.value)
+            assertTrue(isCompleted1)
+            assertTrue(isCompleted2)
         }
 
         override fun states_observers_disposables_disposed_WHEN_store_disposed() {
@@ -412,8 +411,8 @@ fun StoreGenericTests(
         }
 
         override fun executor_not_called_WHEN_recursive_intent_on_label() {
-            val isProcessingIntent = AtomicBoolean()
-            val isCalledRecursively = AtomicBoolean()
+            var isProcessingIntent by atomic(false)
+            var isCalledRecursively by atomic(false)
 
             val store =
                 store(
@@ -421,11 +420,11 @@ fun StoreGenericTests(
                         TestExecutor(
                             handleIntent = {
                                 if (it == "intent1") {
-                                    isProcessingIntent.value = true
+                                    isProcessingIntent = true
                                     publish("label")
-                                    isProcessingIntent.value = false
+                                    isProcessingIntent = false
                                 } else {
-                                    isCalledRecursively.value = isProcessingIntent.value
+                                    isCalledRecursively = isProcessingIntent
                                 }
                             }
                         )
@@ -436,12 +435,12 @@ fun StoreGenericTests(
             store.labels(observer { store.accept("intent2") })
             store.accept("intent1")
 
-            assertFalse(isCalledRecursively.value)
+            assertFalse(isCalledRecursively)
         }
 
         override fun executor_called_WHEN_recursive_intent_on_label_and_first_intent_processed() {
-            val isProcessingIntent = AtomicBoolean()
-            val isCalledAfter = AtomicBoolean()
+            var isProcessingIntent by atomic(false)
+            var isCalledAfter by atomic(false)
 
             val store =
                 store(
@@ -449,11 +448,11 @@ fun StoreGenericTests(
                         TestExecutor(
                             handleIntent = {
                                 if (it == "intent1") {
-                                    isProcessingIntent.value = true
+                                    isProcessingIntent = true
                                     publish("label")
-                                    isProcessingIntent.value = false
+                                    isProcessingIntent = false
                                 } else {
-                                    isCalledAfter.value = !isProcessingIntent.value
+                                    isCalledAfter = !isProcessingIntent
                                 }
                             }
                         )
@@ -464,7 +463,7 @@ fun StoreGenericTests(
             store.labels(observer { store.accept("intent2") })
             store.accept("intent1")
 
-            assertTrue(isCalledAfter.value)
+            assertTrue(isCalledAfter)
         }
 
         private fun store(

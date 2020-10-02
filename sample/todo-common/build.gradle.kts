@@ -7,9 +7,9 @@ kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(project(":utils-internal"))
                 implementation(project(":mvikotlin"))
                 implementation(project(":keepers"))
-                implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
     }

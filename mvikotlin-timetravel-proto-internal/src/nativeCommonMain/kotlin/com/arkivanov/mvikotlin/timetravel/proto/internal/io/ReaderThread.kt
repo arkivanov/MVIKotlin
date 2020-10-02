@@ -2,7 +2,6 @@ package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.thread.Thread
-import com.badoo.reaktive.utils.printStack
 import kotlinx.cinterop.Arena
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.allocArray

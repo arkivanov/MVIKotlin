@@ -5,13 +5,10 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
-import com.arkivanov.mvikotlin.utils.internal.AtomicList
-import com.arkivanov.mvikotlin.utils.internal.clear
-import com.arkivanov.mvikotlin.utils.internal.isEmpty
-import com.arkivanov.mvikotlin.utils.internal.plusAssign
-import com.badoo.reaktive.utils.atomic.AtomicBoolean
-import com.badoo.reaktive.utils.atomic.AtomicReference
-import com.badoo.reaktive.utils.freeze
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.freeze
+import com.arkivanov.mvikotlin.utils.internal.getValue
+import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -20,17 +17,11 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     val eventProcessor = TestEventProcessor()
     val eventDebugger = TestEventDebugger()
     private val _events = PublishSubject<Event>()
-    private val isStateRestored = AtomicBoolean()
+    private var isStateRestored by atomic(false)
+    override var state: String by atomic("state")
 
-    private val _state = AtomicReference("state")
-    override var state: String
-        get() = _state.value
-        set(value) {
-            _state.value = value
-        }
-
-    private val _isDisposed = AtomicBoolean()
-    override val isDisposed: Boolean get() = _isDisposed.value
+    override var isDisposed: Boolean by atomic(false)
+        private set
 
     init {
         freeze()
@@ -46,7 +37,7 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     }
 
     override fun restoreState() {
-        isStateRestored.value = true
+        isStateRestored = true
     }
 
     override fun states(observer: Observer<String>): Disposable = TODO()
@@ -57,7 +48,7 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     }
 
     override fun dispose() {
-        _isDisposed.value = true
+        isDisposed = true
         _events.onComplete()
     }
 
@@ -70,47 +61,47 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     }
 
     fun assertStateRestored() {
-        assertTrue(isStateRestored.value)
+        assertTrue(isStateRestored)
     }
 
     class TestEventProcessor {
-        private val events = AtomicList<Pair<StoreEventType, Any>>()
+        private var events by atomic(emptyList<Pair<StoreEventType, Any>>())
 
         fun process(type: StoreEventType, value: Any) {
-            events += type to value
+            this.events += type to value
         }
 
         fun assertProcessedEvent(type: StoreEventType, value: Any) {
             val pair = type to value
-            assertEquals(1, events.value.count { it == pair })
+            assertEquals(1, events.count { it == pair })
         }
 
         fun assertSingleProcessedEvent(type: StoreEventType, value: Any) {
-            assertEquals(listOf(type to value), events.value)
+            assertEquals(listOf(type to value), events)
         }
 
         fun assertNoProcessedEvents() {
-            assertTrue(events.isEmpty)
+            assertTrue(events.isEmpty())
         }
 
         fun reset() {
-            events.clear()
+            events = emptyList()
         }
     }
 
     class TestEventDebugger {
-        private val events = AtomicList<Event>()
+        private var events by atomic(emptyList<Event>())
 
         fun debug(type: StoreEventType, value: Any, state: Any) {
-            events += Event(type, value, state)
+            this.events += Event(type, value, state)
         }
 
         fun assertSingleDebuggedEvent(event: Event) {
-            assertEquals(listOf(event), events.value)
+            assertEquals(listOf(event), events)
         }
 
         fun assertNoDebuggedEvents() {
-            assertTrue(events.isEmpty)
+            assertTrue(events.isEmpty())
         }
     }
 }

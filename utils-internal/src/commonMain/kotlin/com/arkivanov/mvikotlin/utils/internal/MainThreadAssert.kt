@@ -1,13 +1,8 @@
 package com.arkivanov.mvikotlin.utils.internal
 
-import com.badoo.reaktive.utils.atomic.AtomicBoolean
-import com.badoo.reaktive.utils.atomic.AtomicReference
-import com.badoo.reaktive.utils.atomic.getValue
-import com.badoo.reaktive.utils.atomic.setValue
+var isAssertOnMainThreadEnabled: Boolean by atomic(true)
 
-var isAssertOnMainThreadEnabled: Boolean by AtomicBoolean(true)
-
-private val mainThreadIdRef = AtomicReference<MainThreadIdHolder?>(null)
+private val mainThreadIdRef = atomic<MainThreadIdHolder?>(null)
 
 fun assertOnMainThread() {
     if (isAssertOnMainThreadEnabled) {
@@ -36,7 +31,7 @@ private fun isMainThread(): Boolean {
     return mainThreadId.id?.let(::isMainThread) ?: true
 }
 
-private inline fun <T : Any> AtomicReference<T?>.initAndGet(init: () -> T): T {
+private inline fun <T : Any> AtomicRef<T?>.initAndGet(init: () -> T): T {
     while (true) {
         var v: T? = value
         if (v != null) {

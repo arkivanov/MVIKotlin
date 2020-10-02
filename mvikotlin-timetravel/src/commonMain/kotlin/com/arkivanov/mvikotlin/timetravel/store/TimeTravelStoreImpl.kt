@@ -11,10 +11,9 @@ import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
-import com.badoo.reaktive.utils.atomic.AtomicReference
-import com.badoo.reaktive.utils.atomic.getAndSet
-import com.badoo.reaktive.utils.atomic.update
-import com.badoo.reaktive.utils.atomic.updateAndGet
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.getValue
+import com.arkivanov.mvikotlin.utils.internal.setValue
 
 internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
     initialState: State,
@@ -28,13 +27,13 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     }
 
     private val executor = executorFactory()
-    private val internalState = AtomicReference(initialState)
+    private var internalState by atomic(initialState)
     private val stateSubject = BehaviorSubject(initialState)
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
     private val eventSubject = PublishSubject<Event>()
-    private val debuggingExecutor = AtomicReference<Executor<*, *, *, *, *>?>(null)
+    private var debuggingExecutor by atomic<Executor<*, *, *, *, *>?>(null)
     private val eventProcessor = EventProcessor()
     private val eventDebugger = EventDebugger()
 
@@ -68,7 +67,8 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         assertOnMainThread()
 
         doIfNotDisposed {
-            debuggingExecutor.getAndSet(null)?.dispose()
+            debuggingExecutor?.dispose()
+            debuggingExecutor = null
             bootstrapper?.dispose()
             executor.dispose()
             stateSubject.onComplete()
@@ -82,7 +82,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
 
         executor.init(
             object : Executor.Callbacks<State, Result, Label> {
-                override val state: State get() = internalState.value
+                override val state: State get() = internalState
 
                 override fun onResult(result: Result) {
                     onEvent(StoreEventType.RESULT, result, state)
@@ -105,7 +105,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         assertOnMainThread()
 
         doIfNotDisposed {
-            changeState(internalState.value)
+            changeState(internalState)
         }
     }
 
@@ -152,12 +152,9 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         }
 
         private fun processResult(result: Result) {
-            val previousState = internalState.value
-
-            val newState =
-                internalState.updateAndGet {
-                    reducer.run { it.reduce(result) }
-                }
+            val previousState = internalState
+            val newState = reducer.run { previousState.reduce(result) }
+            internalState = newState
 
             onEvent(StoreEventType.STATE, newState, previousState)
         }
@@ -192,20 +189,18 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         }
 
         private fun debugExecutor(initialState: State, execute: Executor<Intent, Action, State, Result, Label>.() -> Unit) {
-            val localState = AtomicReference(initialState)
+            var localState by atomic(initialState)
 
             val executor =
                 executorFactory().apply {
                     init(
                         object : Executor.Callbacks<State, Result, Label> {
-                            override val state: State get() = localState.value
+                            override val state: State get() = localState
 
                             override fun onResult(result: Result) {
                                 assertOnMainThread()
 
-                                reducer.run {
-                                    localState.update { it.reduce(result) }
-                                }
+                                localState = reducer.run { localState.reduce(result) }
                             }
 
                             override fun onLabel(label: Label) {
@@ -217,9 +212,8 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
                     execute()
                 }
 
-            debuggingExecutor
-                .getAndSet(executor)
-                ?.dispose()
+            debuggingExecutor?.dispose()
+            debuggingExecutor = executor
         }
 
         private fun debugResult(result: Result, initialState: State) {

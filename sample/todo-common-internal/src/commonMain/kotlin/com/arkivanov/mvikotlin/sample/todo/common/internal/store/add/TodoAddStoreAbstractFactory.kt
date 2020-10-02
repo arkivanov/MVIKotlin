@@ -8,7 +8,6 @@ import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.add.TodoAddStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.add.TodoAddStore.Label
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.add.TodoAddStore.State
-import com.badoo.reaktive.utils.ensureNeverFrozen
 
 /**
  * Abstract factories are normally not needed. Just create a normal factory as described [here][Store].
@@ -24,10 +23,7 @@ abstract class TodoAddStoreAbstractFactory(
             initialState = State(),
             executorFactory = ::createExecutor,
             reducer = ReducerImpl
-        ) {
-            init {
-                ensureNeverFrozen() // Optional, just a matter of preference, Stores are freezable
-            }
+        ){
         }
 
     protected abstract fun createExecutor(): Executor<Intent, Nothing, State, Result, Label>

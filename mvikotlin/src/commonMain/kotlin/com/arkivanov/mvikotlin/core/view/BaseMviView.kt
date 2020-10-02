@@ -4,7 +4,7 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
-import com.badoo.reaktive.utils.ensureNeverFrozen
+import com.arkivanov.mvikotlin.utils.internal.ensureNeverFrozen
 import kotlin.js.JsName
 
 /**

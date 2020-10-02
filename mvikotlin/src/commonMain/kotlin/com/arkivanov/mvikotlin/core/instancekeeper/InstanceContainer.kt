@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.core.instancekeeper
 
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
-import com.badoo.reaktive.utils.ensureNeverFrozen
+import com.arkivanov.mvikotlin.utils.internal.ensureNeverFrozen
 
 /**
  * A simple instances container, implements [InstanceKeeperProvider]

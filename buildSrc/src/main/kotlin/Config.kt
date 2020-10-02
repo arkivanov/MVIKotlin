@@ -179,8 +179,12 @@ fun Project.setupMultiplatform() {
             jvmNativeCommonMain.dependsOn(commonMain)
             jvmNativeCommonTest.dependsOn(commonTest)
 
+            jvmJsCommonMain.dependsOn(commonMain)
+            jvmJsCommonTest.dependsOn(commonTest)
+
             jvmCommonMain {
                 dependsOn(jvmNativeCommonMain)
+                dependsOn(jvmJsCommonMain)
 
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.StdLib.Jdk7)
@@ -189,6 +193,7 @@ fun Project.setupMultiplatform() {
 
             jvmCommonTest {
                 dependsOn(jvmNativeCommonTest)
+                dependsOn(jvmJsCommonTest)
 
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.Test.Junit)
@@ -203,6 +208,7 @@ fun Project.setupMultiplatform() {
 
             jsMain {
                 dependsOn(jsNativeCommonMain)
+                dependsOn(jvmJsCommonMain)
 
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.StdLib.Js)
@@ -211,6 +217,7 @@ fun Project.setupMultiplatform() {
 
             jsTest {
                 dependsOn(jsNativeCommonTest)
+                dependsOn(jvmJsCommonTest)
 
                 dependencies {
                     implementation(Deps.Jetbrains.Kotlin.Test.Js)
@@ -436,6 +443,20 @@ val SourceSets.jvmNativeCommonTest: KotlinSourceSet get() = getOrCreate("jvmNati
 
 fun SourceSets.jvmNativeCommonTest(block: KotlinSourceSet.() -> Unit) {
     jvmNativeCommonTest.apply(block)
+}
+
+// jvmJsCommon
+
+val SourceSets.jvmJsCommonMain: KotlinSourceSet get() = getOrCreate("jvmJsCommonMain")
+
+fun SourceSets.jvmJsCommonMain(block: KotlinSourceSet.() -> Unit) {
+    jvmJsCommonMain.apply(block)
+}
+
+val SourceSets.jvmJsCommonTest: KotlinSourceSet get() = getOrCreate("jvmJsCommonTest")
+
+fun SourceSets.jvmJsCommonTest(block: KotlinSourceSet.() -> Unit) {
+    jvmJsCommonTest.apply(block)
 }
 
 // jvmCommon

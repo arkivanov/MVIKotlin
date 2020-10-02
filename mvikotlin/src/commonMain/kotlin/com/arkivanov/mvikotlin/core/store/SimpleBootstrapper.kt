@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.core.store
 
+import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.lateinitAtomicReference
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 
 /**
@@ -14,7 +14,7 @@ class SimpleBootstrapper<out Action : Any>(
     private vararg val actions: Action
 ) : Bootstrapper<Action> {
 
-    private val actionConsumer = lateinitAtomicReference<(Action) -> Unit>()
+    private val actionConsumer = atomic<(Action) -> Unit>()
 
     override fun init(actionConsumer: (Action) -> Unit) {
         this.actionConsumer.initialize(actionConsumer)
@@ -25,6 +25,6 @@ class SimpleBootstrapper<out Action : Any>(
     }
 
     override fun invoke() {
-        actions.forEach(actionConsumer.requireValue::invoke)
+        actions.forEach(actionConsumer.requireValue()::invoke)
     }
 }

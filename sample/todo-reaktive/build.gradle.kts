@@ -13,12 +13,12 @@ kotlinCompat {
                 api(project(":sample:todo-common"))
                 implementation(project(":sample:todo-common-internal"))
                 implementation(Deps.Badoo.Reaktive.Reaktive)
-                implementation(Deps.Badoo.Reaktive.Utils)
             }
         }
 
         commonTest {
             dependencies {
+                implementation(project(":utils-internal"))
                 implementation(project(":mvikotlin-main"))
                 implementation(Deps.Badoo.Reaktive.ReaktiveTesting)
             }
