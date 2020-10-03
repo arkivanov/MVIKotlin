@@ -15,9 +15,9 @@ class AndroidInstanceKeeperTest {
     fun retains_instance_WHEN_recreated() {
         val viewModelStore = ViewModelStore()
         val instance = Data()
-        Owner(viewModelStore).keeper.getOrCreate(key = "data") { instance }
+        Owner(viewModelStore).keeper.get(key = "data") { instance }
 
-        val retainedInstance = Owner(viewModelStore).keeper.getOrCreate<Data>(key = "data") { throw IllegalStateException() }
+        val retainedInstance = Owner(viewModelStore).keeper.get<Data>(key = "data") { throw IllegalStateException() }
 
         assertSame(instance, retainedInstance)
     }
@@ -29,7 +29,7 @@ class AndroidInstanceKeeperTest {
         val instances = List(10) { Data() }
 
         instances.forEachIndexed { index, data ->
-            owner.keeper.getOrCreate(index) { data }
+            owner.keeper.get(index) { data }
         }
 
         viewModelStore.clear()

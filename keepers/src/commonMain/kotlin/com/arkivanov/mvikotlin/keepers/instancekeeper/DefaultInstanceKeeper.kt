@@ -15,7 +15,7 @@ class DefaultInstanceKeeper : InstanceKeeper {
     private val map = HashMap<Any, InstanceKeeper.Instance>()
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : InstanceKeeper.Instance> getOrCreate(key: Any, factory: () -> T): T =
+    override fun <T : InstanceKeeper.Instance> get(key: Any, factory: () -> T): T =
         map.getOrPut(key, factory) as T
 
     /**

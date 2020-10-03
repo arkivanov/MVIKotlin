@@ -40,16 +40,13 @@ fun <T : Store<*, *, *>> OldInstanceKeeper<T>.getOrCreateStore(factory: () -> T)
     }
 
 @com.arkivanov.mvikotlin.keepers.instancekeeper.ExperimentalInstanceKeeperApi
-fun <T : Store<*, *, *>> InstanceKeeper.getOrCreateStore(key: Any, factory: () -> T): T =
-    getOrCreate(key) {
+fun <T : Store<*, *, *>> InstanceKeeper.getStore(key: Any, factory: () -> T): T =
+    get(key) {
         StoreInstance(factory())
     }.store
 
 @com.arkivanov.mvikotlin.keepers.instancekeeper.ExperimentalInstanceKeeperApi
-inline fun <reified T : Store<*, *, *>> InstanceKeeper.getOrCreateStore(
-    noinline factory: () -> T
-): T =
-    getOrCreateStore(T::class, factory)
+inline fun <reified T : Store<*, *, *>> InstanceKeeper.getStore(noinline factory: () -> T): T = getStore(T::class, factory)
 
 @com.arkivanov.mvikotlin.keepers.instancekeeper.ExperimentalInstanceKeeperApi
 private class StoreInstance<out T : Store<*, *, *>>(

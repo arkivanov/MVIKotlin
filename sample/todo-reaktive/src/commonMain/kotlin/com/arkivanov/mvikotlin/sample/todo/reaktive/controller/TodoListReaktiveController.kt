@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
 import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
-import com.arkivanov.mvikotlin.core.instancekeeper.getOrCreateStore
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
@@ -31,7 +31,7 @@ class TodoListReaktiveController(
 ) : TodoListController {
 
     private val todoListStore =
-        dependencies.instanceKeeper.getOrCreateStore {
+        dependencies.instanceKeeper.getStore {
             TodoListStoreFactory(
                 storeFactory = dependencies.storeFactory,
                 database = dependencies.database

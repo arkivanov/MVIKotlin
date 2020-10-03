@@ -13,7 +13,7 @@ interface InstanceKeeper {
      * @param factory a factory function, called when there is no retained `Instance` yet
      * @return either a currently retained `Instance` or a new one
      */
-    fun <T : Instance> getOrCreate(key: Any, factory: () -> T): T
+    fun <T : Instance> get(key: Any, factory: () -> T): T
 
     /**
      * Represents a retained instance
