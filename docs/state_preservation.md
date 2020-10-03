@@ -2,7 +2,7 @@
 
 ## State preservation
 
-Sometimes it might be necessary to preserve a state (e.g. a state of a `Store`) in order to restore it later. A very common use case is Android Activity recreation due to system constraints. MVIKotlin provides a utility for state preservation - the `StateKeeper`.
+Sometimes it might be necessary to preserve a state (e.g. a state of a `Store`) in order to restore it later. A very common use case is Android Activity recreation due to system constraints. If you are working on a pure Android project (not multiplatform) then AndroidX [SavedStateRegistry](https://developer.android.com/reference/androidx/savedstate/SavedStateRegistry) can be used directly. For multiplatform projects MVIKotlin provides an abstraction - the `StateKeeper`.
 
 The `StateKeeper` is an interface for state (or any other data) preservation. In general it does not make any assumptions on what is being preserved and how. The `StateKeeper` is provided by the `keepers` module.
 
@@ -17,9 +17,9 @@ There are extensions for AndroidX available, they can be used in `Fragments` and
 
 ## Retaining objects
 
-Another use case is to retain an object instance over its scope recreation. This is also commonly used in Android when configuration changes occur. MVIKotlin `keepers` module provides a solution for this as well:
+Another use case is to retain an object instance over its scope recreation. This is also commonly used in Android when configuration changes occur. If you are working on a pure Android project (not multiplatform) then AndroidX [ViewModelStore](https://developer.android.com/reference/android/arch/lifecycle/ViewModelStore) and [ViewModelProvider](https://developer.android.com/reference/android/arch/lifecycle/ViewModelProvider) can be used directly. For multiplatform projects MVIKotlin provides an abstraction:
 
-- [InstanceKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/commonMain/kotlin/com/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper.kt) - this interface is used to save and retrieve object instances by key. It has just one method `get(key, factory)`, as well as a few handy extension functions. When `get` method is called first time, the factory function is called and the returned instance is saved (retained). For any future invocation the retained instance is returned, and the factory function is not invoked.
+- [InstanceKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/commonMain/kotlin/com/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper.kt) - this interface is used to save and retrieve object instances by key, it is provided by the `keepers` module. It has just one method `get(key, factory)`, as well as a few handy extension functions. When `get` method is called first time, the factory function is called and the returned instance is saved (retained). For any future invocation the retained instance is returned, and the factory function is not invoked.
 
 There is a default implementation available:
 
