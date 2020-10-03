@@ -19,7 +19,7 @@ There are extensions for AndroidX available, they can be used in `Fragments` and
 
 Another use case is to retain an object instance over its scope recreation. This is also commonly used in Android when configuration changes occur. MVIKotlin `keepers` module provides a solution for this as well:
 
-- [InstanceKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/commonMain/kotlin/com/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper.kt) - this interface is used to save and retrieve object instances by key. It has just one method `getOrCreate(key, factory)`, as well as a few handy extension functions. When `getOrCreate` method is called first time, the factory function is called and the returned instance is saved (retained). For any future invocation the retained instance is returned, and the factory function is not invoked.
+- [InstanceKeeper](https://github.com/arkivanov/MVIKotlin/blob/master/keepers/src/commonMain/kotlin/com/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper.kt) - this interface is used to save and retrieve object instances by key. It has just one method `get(key, factory)`, as well as a few handy extension functions. When `get` method is called first time, the factory function is called and the returned instance is saved (retained). For any future invocation the retained instance is returned, and the factory function is not invoked.
 
 There is a default implementation available:
 
@@ -59,7 +59,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 class CalculatorController(instanceKeeper: InstanceKeeper) {
 
     private val store: CalculatorStore =
-        instanceKeeper.getOrCreateStore(::calculatorStore)
+        instanceKeeper.getStore(::calculatorStore)
 
     /*
      * Create a new instance of CalculatorStore.
@@ -76,7 +76,7 @@ class CalculatorController(instanceKeeper: InstanceKeeper) {
 class CalculatorController(instanceKeeper: InstanceKeeper) {
 
     private val something: Something =
-        instanceKeeper.getOrCreate(::Something)
+        instanceKeeper.get(::Something)
 
     /*
      * Instances of this class will be retained.
