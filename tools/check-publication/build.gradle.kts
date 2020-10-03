@@ -18,6 +18,7 @@ kotlinCompat {
         commonMain {
             dependencies {
                 implementation("com.arkivanov.mvikotlin:rx:$version")
+                implementation("com.arkivanov.mvikotlin:keepers:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin-main:$version")
                 implementation("com.arkivanov.mvikotlin:mvikotlin-logging:$version")
