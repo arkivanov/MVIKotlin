@@ -12,8 +12,8 @@ class DefaultInstanceKeeperTest {
         val container = DefaultInstanceKeeper()
         val data = Data()
 
-        container.getOrCreate(key = "data") { data }
-        val retainedData = container.getOrCreate<Data>(key = "data") { throw IllegalStateException() }
+        container.get(key = "data") { data }
+        val retainedData = container.get<Data>(key = "data") { throw IllegalStateException() }
 
         assertSame(data, retainedData)
     }
@@ -24,7 +24,7 @@ class DefaultInstanceKeeperTest {
         val dataList = List(10) { Data() }
 
         dataList.forEachIndexed { index, data ->
-            container.getOrCreate(index) { data }
+            container.get(index) { data }
         }
 
         container.destroy()
