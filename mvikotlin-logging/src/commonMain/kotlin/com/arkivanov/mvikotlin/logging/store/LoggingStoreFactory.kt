@@ -10,9 +10,6 @@ import com.arkivanov.mvikotlin.logging.logger.DefaultLogger
 import com.arkivanov.mvikotlin.logging.logger.LogFormatter
 import com.arkivanov.mvikotlin.logging.logger.Logger
 import com.arkivanov.mvikotlin.logging.logger.LoggerWrapper
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 
 /**
  * An implementation of the [StoreFactory] that wraps another [StoreFactory] and provides logging
@@ -29,8 +26,6 @@ class LoggingStoreFactory(
 
     constructor(delegate: StoreFactory) : this(delegate, DefaultLogger, DefaultLogFormatter())
 
-    var logger: Logger by atomic(logger)
-    var logFormatter: LogFormatter by atomic(logFormatter)
     private val loggerWrapper = LoggerWrapper(logger, logFormatter)
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
