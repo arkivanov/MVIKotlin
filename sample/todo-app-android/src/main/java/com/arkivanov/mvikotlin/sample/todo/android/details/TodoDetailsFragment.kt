@@ -54,6 +54,7 @@ class TodoDetailsFragment(
         private const val KEY_ARGUMENTS = "ARGUMENTS"
     }
 
+    @Suppress("ForbiddenComment")
     private class Arguments(
         val itemId: String
     ) : Serializable // FIXME: Replace with parcelize

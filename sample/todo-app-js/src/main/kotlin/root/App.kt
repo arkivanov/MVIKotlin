@@ -16,13 +16,36 @@ import com.ccfraser.muirwik.components.styles.ThemeOptions
 import com.ccfraser.muirwik.components.styles.createMuiTheme
 import details.TodoDetailsComponent
 import details.todoDetails
-import kotlinx.css.*
+import kotlinx.css.Align
+import kotlinx.css.Display
+import kotlinx.css.FlexDirection
+import kotlinx.css.JustifyContent
+import kotlinx.css.Overflow
+import kotlinx.css.TextOverflow
+import kotlinx.css.alignItems
+import kotlinx.css.display
+import kotlinx.css.flexDirection
+import kotlinx.css.height
+import kotlinx.css.justifyContent
+import kotlinx.css.marginTop
+import kotlinx.css.overflow
+import kotlinx.css.padding
+import kotlinx.css.paddingLeft
+import kotlinx.css.pct
+import kotlinx.css.px
+import kotlinx.css.textOverflow
+import kotlinx.css.width
 import list.TodoListParentComponent
 import list.todoContainer
-import react.*
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.RState
+import react.setState
 import styled.StyleSheet
 import timetravel.timeTravel
 
+@Suppress("MagicNumber")
 abstract class App : RComponent<AppProps, AppState>() {
 
     private val themeColor = "light"
@@ -165,8 +188,7 @@ abstract class App : RComponent<AppProps, AppState>() {
 class AppState(
     var todoId: String,
     var showDebugDrawer: Boolean
-) : RState {
-}
+) : RState
 
 interface AppProps : RProps {
     var dependecies: App.Dependencies

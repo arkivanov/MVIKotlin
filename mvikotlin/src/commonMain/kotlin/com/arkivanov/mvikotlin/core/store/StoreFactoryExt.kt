@@ -28,8 +28,10 @@ private class BypassExecutor<Intent : Any, in State : Any> : Executor<Intent, No
     }
 
     override fun handleAction(action: Nothing) {
+        // no-op
     }
 
     override fun dispose() {
+        // no-op
     }
 }

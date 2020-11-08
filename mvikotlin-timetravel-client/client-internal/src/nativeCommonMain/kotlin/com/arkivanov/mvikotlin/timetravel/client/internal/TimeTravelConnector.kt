@@ -39,6 +39,7 @@ import platform.posix.memset
 import platform.posix.sockaddr_in
 import platform.posix.socket
 
+@Suppress("EXPERIMENTAL_API_USAGE")
 internal class TimeTravelConnector(
     private val host: String,
     private val port: Int
@@ -68,7 +69,7 @@ internal class TimeTravelConnector(
             memset(sin.ptr, 0, sockaddr_in.size.convert())
             sin.sin_len = sizeOf<sockaddr_in>().convert()
             sin.sin_family = AF_INET.convert()
-            sin.sin_port = ((port shr 8) or ((port and 0xff) shl 8)).toUShort()
+            sin.sin_port = getSinPort()
             val addrList = requireNotNull(addr.pointed.h_addr_list)
             val firstAddr = requireNotNull(addrList[0]).reinterpret<in_addr>()
             sin.sin_addr.s_addr = firstAddr.pointed.s_addr
@@ -113,4 +114,7 @@ internal class TimeTravelConnector(
             }
         )
     }
+
+    @Suppress("MagicNumber")
+    private fun getSinPort(): UShort = ((port shr 8) or ((port and 0xff) shl 8)).toUShort()
 }

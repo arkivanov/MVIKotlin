@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.thread
 
-abstract class LooperThread<in T> : AbstractThread() {
+abstract class LooperThread<in T> : BaseThread() {
 
     protected abstract fun run(message: T)
 

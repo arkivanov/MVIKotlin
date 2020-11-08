@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.data.value
 
-class ValueTextTreeBuilder<T>(
+class ValueTextTreeBuilder<out T>(
     private val newNode: (text: String) -> T,
     private val addChild: T.(child: T) -> Unit
 ) {

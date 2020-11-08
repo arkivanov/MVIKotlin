@@ -15,6 +15,7 @@ import kotlinx.css.zIndex
 import react.RBuilder
 import styled.css
 
+@Suppress("MagicNumber")
 fun RBuilder.appBarWithButton(icon: String, onIconClick: () -> Unit) {
     themeContext.Consumer { theme ->
         mToolbar {

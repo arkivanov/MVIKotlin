@@ -10,6 +10,7 @@ internal class SimpleMainScheduler(
 ) : Scheduler {
 
     override fun destroy() {
+        // no-op
     }
 
     override fun newExecutor(): Scheduler.Executor = ExecutorImpl()
@@ -18,6 +19,7 @@ internal class SimpleMainScheduler(
         override var isDisposed: Boolean = false
 
         override fun cancel() {
+            // no-op
         }
 
         override fun dispose() {

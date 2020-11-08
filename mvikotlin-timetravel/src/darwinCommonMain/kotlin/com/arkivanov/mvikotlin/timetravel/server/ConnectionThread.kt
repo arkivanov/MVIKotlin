@@ -1,7 +1,5 @@
 package com.arkivanov.mvikotlin.timetravel.server
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
-import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.thread.Thread
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.convert
@@ -24,6 +22,7 @@ import platform.posix.sockaddr_in
 import platform.posix.socket
 import kotlin.native.concurrent.AtomicInt
 
+@Suppress("EXPERIMENTAL_API_USAGE")
 internal class ConnectionThread(
     private val port: Int,
     private val onClientConnected: (Int) -> Unit,
@@ -46,7 +45,7 @@ internal class ConnectionThread(
             memset(sin.ptr, 0, sockaddr_in.size.convert())
             sin.sin_len = sizeOf<sockaddr_in>().convert()
             sin.sin_family = AF_INET.convert()
-            sin.sin_port = ((port shr 8) or ((port and 0xff) shl 8)).toUShort()
+            sin.sin_port = getSinPort()
             sin.sin_addr.s_addr = INADDR_ANY
 
             if (bind(serverSocket, sin.ptr.reinterpret(), sockaddr_in.size.convert()) < 0) {
@@ -55,7 +54,7 @@ internal class ConnectionThread(
             }
         }
 
-        if (listen(serverSocket, 16) < 0) {
+        if (listen(serverSocket, arg1 = 16) < 0) {
             onError(Exception("Error listen socket: $errno"))
             return
         }
@@ -70,6 +69,9 @@ internal class ConnectionThread(
             onClientConnected(socket)
         }
     }
+
+    @Suppress("MagicNumber")
+    private fun getSinPort(): UShort = ((port shr 8) or ((port and 0xff) shl 8)).toUShort()
 
     override fun interrupt() {
         super.interrupt()

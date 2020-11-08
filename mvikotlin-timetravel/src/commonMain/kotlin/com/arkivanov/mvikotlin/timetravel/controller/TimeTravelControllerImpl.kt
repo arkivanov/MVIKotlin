@@ -187,7 +187,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         }
 
         val set = HashSet<String>()
-        val deque = ArrayList<TimeTravelEvent>() // FIXME: Use queue
+        val deque = ArrayDeque<TimeTravelEvent>()
         val isForward = to > from
         val progression =
             if (isForward) {
@@ -200,14 +200,14 @@ internal class TimeTravelControllerImpl : TimeTravelController {
             val event = events[i]
             if ((event.type === StoreEventType.STATE) && stores.containsKey(event.storeName) && !set.contains(event.storeName)) {
                 set.add(event.storeName)
-                deque += event
+                deque.addLast(event)
                 if (set.size == stores.size) {
                     break
                 }
             }
         }
         while (!deque.isEmpty()) {
-            deque.removeAt(0).also { event ->
+            deque.removeFirst().also { event ->
                 if ((event.type === StoreEventType.STATE) && !isForward) {
                     process(event, event.state)
                 } else {

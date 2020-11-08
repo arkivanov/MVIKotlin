@@ -23,5 +23,6 @@ internal class TodoDatabaseOpenHelper(context: Context) : SQLiteOpenHelper(conte
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        // no-op
     }
 }
