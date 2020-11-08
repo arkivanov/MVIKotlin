@@ -2,7 +2,6 @@ package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import java.io.IOException
-import java.io.Serializable
 import java.net.Socket
 
 class ReaderThread<T : ProtoObject>(

@@ -4,7 +4,9 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
-import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.*
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Intent
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Label
+import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.State
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStoreAbstractFactory
 import com.badoo.reaktive.completable.completableFromFunction
 import com.badoo.reaktive.completable.observeOn

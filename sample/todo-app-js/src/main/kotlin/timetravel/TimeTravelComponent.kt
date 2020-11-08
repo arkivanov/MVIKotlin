@@ -8,7 +8,11 @@ import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
 import com.ccfraser.muirwik.components.MDrawerAnchor
 import com.ccfraser.muirwik.components.mDrawer
 import com.ccfraser.muirwik.components.themeContext
-import react.*
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.RState
+import react.setState
 import root.App.TodoStyles.debugButtonsContainerStyle
 import root.App.TodoStyles.debugDrawerStyle
 import root.App.TodoStyles.eventsContainerStyle

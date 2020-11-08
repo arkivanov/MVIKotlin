@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.thread
 
-abstract class Thread : AbstractThread() {
+abstract class Thread : BaseThread() {
 
     protected abstract fun run()
 

@@ -34,6 +34,7 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     }
 
     override fun init() {
+        // no-op
     }
 
     override fun restoreState() {
@@ -45,6 +46,7 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     override fun labels(observer: Observer<String>): Disposable = TODO()
 
     override fun accept(intent: String) {
+        // no-op
     }
 
     override fun dispose() {

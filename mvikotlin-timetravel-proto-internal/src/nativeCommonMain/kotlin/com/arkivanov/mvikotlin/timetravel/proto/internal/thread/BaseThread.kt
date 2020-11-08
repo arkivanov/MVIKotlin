@@ -3,7 +3,7 @@ package com.arkivanov.mvikotlin.timetravel.proto.internal.thread
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.Worker
 
-abstract class AbstractThread {
+open class BaseThread {
 
     protected val worker = Worker.start(errorReporting = true)
     private val _isInterrupted = AtomicInt(0)

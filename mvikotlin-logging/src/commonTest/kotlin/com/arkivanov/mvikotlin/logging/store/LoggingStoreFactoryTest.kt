@@ -217,6 +217,7 @@ class LoggingStoreFactoryTest {
         }
 
         override fun dispose() {
+            // no-op
         }
     }
 }

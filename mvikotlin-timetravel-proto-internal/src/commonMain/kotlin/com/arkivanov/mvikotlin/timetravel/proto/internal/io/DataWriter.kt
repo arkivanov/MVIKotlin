@@ -2,7 +2,7 @@ package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 
 internal class DataWriter {
 
-    var data: ByteArray = ByteArray(1024)
+    var data: ByteArray = ByteArray(size = 1024)
         private set
 
     var size: Int = 0

@@ -4,7 +4,7 @@ class ProtoFrameDecoder(
     private val consume: (ByteArray) -> Unit
 ) {
 
-    private var buffer = ByteArray(1024)
+    private var buffer = ByteArray(size = 1024)
     private var index = 0
 
     fun accept(data: ByteArray, size: Int) {

@@ -1,5 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 
+@Suppress("MagicNumber")
 internal fun DataWriter.writeInt(value: Int) {
     writeByte((value and 0xFF).toByte())
     writeByte(((value shr 8) and 0xFF).toByte())
@@ -7,6 +8,7 @@ internal fun DataWriter.writeInt(value: Int) {
     writeByte(((value shr 24) and 0xFF).toByte())
 }
 
+@Suppress("MagicNumber")
 internal fun DataWriter.writeLong(value: Long) {
     writeByte((value and 0xFF).toByte())
     writeByte(((value shr 8) and 0xFF).toByte())

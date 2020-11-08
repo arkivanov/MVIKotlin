@@ -1,11 +1,13 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 
+@Suppress("MagicNumber")
 internal fun DataReader.readInt(): Int =
     readByte().toInt().and(0xFF) or
         readByte().toInt().and(0xFF).shl(8) or
         readByte().toInt().and(0xFF).shl(16) or
         readByte().toInt().and(0xFF).shl(24)
 
+@Suppress("MagicNumber")
 internal fun DataReader.readLong(): Long =
     readByte().toLong().and(0xFF) or
         readByte().toLong().and(0xFF).shl(8) or

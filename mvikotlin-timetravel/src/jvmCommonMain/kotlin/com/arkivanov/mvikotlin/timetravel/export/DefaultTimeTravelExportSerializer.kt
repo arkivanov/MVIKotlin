@@ -12,43 +12,50 @@ import java.util.zip.ZipOutputStream
 
 object DefaultTimeTravelExportSerializer : TimeTravelExportSerializer {
 
+    private const val ZIP_LEVEL = 9
     private val HEADER = "MVIKotlin".toByteArray()
 
     override fun serialize(export: TimeTravelExport): Result<ByteArray> =
         try {
-            ByteArrayOutputStream().use { output ->
-                output.write(HEADER)
-
-                ZipOutputStream(output).use { zipOutput ->
-                    zipOutput.setLevel(9)
-                    zipOutput.putNextEntry(ZipEntry("export"))
-
-                    ObjectOutputStream(zipOutput).use { objectOutput ->
-                        objectOutput.writeObject(export)
-                        objectOutput.flush()
-                    }
-                }
-
-                Result.Success(output.toByteArray())
-            }
+            Result.Success(export.toByteArray())
         } catch (e: IOException) {
             Result.Error(e)
         }
 
-    override fun deserialize(data: ByteArray): Result<TimeTravelExport> =
-        try {
-            ByteArrayInputStream(data).use { input ->
-                repeat(HEADER.size) { input.read() }
+    private fun TimeTravelExport.toByteArray(): ByteArray =
+        ByteArrayOutputStream().use { output ->
+            output.write(HEADER)
 
-                ZipInputStream(input).use { zipInput ->
-                    zipInput.nextEntry
+            ZipOutputStream(output).use { zipOutput ->
+                zipOutput.setLevel(ZIP_LEVEL)
+                zipOutput.putNextEntry(ZipEntry("export"))
 
-                    ObjectInputStream(zipInput).use { objectInput ->
-                        Result.Success(objectInput.readObject() as TimeTravelExport)
-                    }
+                ObjectOutputStream(zipOutput).use { objectOutput ->
+                    objectOutput.writeObject(this)
+                    objectOutput.flush()
                 }
             }
+
+            output.toByteArray()
+        }
+
+    override fun deserialize(data: ByteArray): Result<TimeTravelExport> =
+        try {
+            Result.Success(data.toExport())
         } catch (e: Exception) {
             Result.Error(e)
+        }
+
+    private fun ByteArray.toExport(): TimeTravelExport =
+        ByteArrayInputStream(this).use { input ->
+            repeat(HEADER.size) { input.read() }
+
+            ZipInputStream(input).use { zipInput ->
+                zipInput.nextEntry
+
+                ObjectInputStream(zipInput).use { objectInput ->
+                    objectInput.readObject() as TimeTravelExport
+                }
+            }
         }
 }

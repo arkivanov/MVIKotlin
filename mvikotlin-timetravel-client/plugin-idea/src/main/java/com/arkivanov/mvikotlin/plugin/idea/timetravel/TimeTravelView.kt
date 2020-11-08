@@ -45,7 +45,7 @@ internal class TimeTravelView(
             add(toolbar.component, BorderLayout.NORTH)
 
             add(
-                JBSplitter(false, 0.4F).apply {
+                JBSplitter(false, SPLITTER_PROPORTION).apply {
                     firstComponent = JBScrollPane(list)
                     secondComponent = JBScrollPane(tree)
                 },
@@ -99,6 +99,10 @@ internal class TimeTravelView(
 
     private fun renderSelectedEventValue(value: Value?) {
         treeModel.setRoot(value?.let(treeBuilder::build))
+    }
+
+    private companion object {
+        private const val SPLITTER_PROPORTION = 0.4F
     }
 
     private inner class ToolbarListenerImpl : TimeTravelToolbar.Listener {

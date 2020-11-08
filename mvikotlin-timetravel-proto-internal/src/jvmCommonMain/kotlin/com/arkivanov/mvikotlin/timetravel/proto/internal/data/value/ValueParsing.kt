@@ -1,7 +1,5 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.data.value
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.type
 import java.lang.reflect.Field
 import java.lang.reflect.TypeVariable
 
@@ -114,20 +112,7 @@ private fun otherDefault(obj: Any, visitedObjects: MutableSet<Any>): Value.Objec
         try {
             val fieldName = field.name
             if (fieldName.isAllowedFieldName()) {
-                val value: Value =
-                    when (field.type) {
-                        Int::class.javaPrimitiveType -> Value.Primitive.Int(field.getInt(obj))
-                        Long::class.javaPrimitiveType -> Value.Primitive.Long(field.getLong(obj))
-                        Short::class.javaPrimitiveType -> Value.Primitive.Short(field.getShort(obj))
-                        Byte::class.javaPrimitiveType -> Value.Primitive.Byte(field.getByte(obj))
-                        Float::class.javaPrimitiveType -> Value.Primitive.Float(field.getFloat(obj))
-                        Double::class.javaPrimitiveType -> Value.Primitive.Double(field.getDouble(obj))
-                        Char::class.javaPrimitiveType -> Value.Primitive.Char(field.getChar(obj))
-                        Boolean::class.javaPrimitiveType -> Value.Primitive.Boolean(field.getBoolean(obj))
-                        else -> valueObject(field.get(obj), field.type, visitedObjects)
-                    }
-
-                map[fieldName] = value
+                map[fieldName] = field.getValue(obj, visitedObjects)
             }
         } finally {
             if (!isAccessible) {
@@ -138,6 +123,19 @@ private fun otherDefault(obj: Any, visitedObjects: MutableSet<Any>): Value.Objec
 
     return Value.Object.Other(type = getFullTypeName(value = obj), value = map)
 }
+
+private fun Field.getValue(obj: Any, visitedObjects: MutableSet<Any>): Value =
+    when (type) {
+        Int::class.javaPrimitiveType -> Value.Primitive.Int(getInt(obj))
+        Long::class.javaPrimitiveType -> Value.Primitive.Long(getLong(obj))
+        Short::class.javaPrimitiveType -> Value.Primitive.Short(getShort(obj))
+        Byte::class.javaPrimitiveType -> Value.Primitive.Byte(getByte(obj))
+        Float::class.javaPrimitiveType -> Value.Primitive.Float(getFloat(obj))
+        Double::class.javaPrimitiveType -> Value.Primitive.Double(getDouble(obj))
+        Char::class.javaPrimitiveType -> Value.Primitive.Char(getChar(obj))
+        Boolean::class.javaPrimitiveType -> Value.Primitive.Boolean(getBoolean(obj))
+        else -> valueObject(get(obj), type, visitedObjects)
+    }
 
 private val Class<*>.allFields: List<Field>
     get() {

@@ -2,7 +2,6 @@ package com.arkivanov.mvikotlin.main.store
 
 import com.arkivanov.mvikotlin.core.test.internal.StoreGenericTests
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
-import com.arkivanov.mvikotlin.main.store.DefaultStore
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
