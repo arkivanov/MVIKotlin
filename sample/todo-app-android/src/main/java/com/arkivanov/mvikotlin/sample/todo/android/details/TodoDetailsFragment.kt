@@ -24,9 +24,7 @@ class TodoDetailsFragment(
     private val args: Arguments by lazy {
         requireArguments().apply {
             classLoader = Arguments::class.java.classLoader
-        }.let {
-            it.getParcelable<Arguments>(KEY_ARGUMENTS) as Arguments
-        }
+        }.getParcelable<Arguments>(KEY_ARGUMENTS) as Arguments
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
