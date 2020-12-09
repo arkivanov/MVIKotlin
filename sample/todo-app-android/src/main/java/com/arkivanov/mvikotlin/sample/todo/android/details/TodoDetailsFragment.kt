@@ -1,6 +1,8 @@
 package com.arkivanov.mvikotlin.sample.todo.android.details
 
 import android.os.Bundle
+import kotlinx.android.parcel.Parcelize
+import android.os.Parcelable
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -13,14 +15,17 @@ import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsControll
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.coroutines.controller.TodoDetailsCoroutinesController
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoDetailsReaktiveController
-import java.io.Serializable
 
 class TodoDetailsFragment(
     private val dependencies: Dependencies
 ) : Fragment(R.layout.todo_details) {
 
     private lateinit var controller: TodoDetailsController
-    private val args: Arguments by lazy { requireArguments().getSerializable(KEY_ARGUMENTS) as Arguments }
+    private val args: Arguments by lazy {
+        requireArguments().apply {
+            classLoader = Arguments::class.java.classLoader
+        }.getParcelable<Arguments>(KEY_ARGUMENTS) as Arguments
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,10 +59,8 @@ class TodoDetailsFragment(
         private const val KEY_ARGUMENTS = "ARGUMENTS"
     }
 
-    @Suppress("ForbiddenComment")
-    private class Arguments(
-        val itemId: String
-    ) : Serializable // FIXME: Replace with parcelize
+    @Parcelize
+    private class Arguments(val itemId: String) : Parcelable
 
     interface Dependencies {
         val storeFactory: StoreFactory
