@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.sample.todo.android.details
 
 import android.os.Bundle
-import android.os.Parcel
+import kotlinx.android.parcel.Parcelize
 import android.os.Parcelable
 import android.view.View
 import androidx.core.os.bundleOf
@@ -59,19 +59,8 @@ class TodoDetailsFragment(
         private const val KEY_ARGUMENTS = "ARGUMENTS"
     }
 
-    private class Arguments(
-        val itemId: String
-    ) : Parcelable
-    {
-        override fun describeContents(): Int = 0
-        override fun writeToParcel(dest: Parcel, flags: Int) = dest.writeString(itemId)
-        companion object CREATOR : Parcelable.Creator<Arguments> {
-            // We can use the not-null assertion operator safely here as we have defined that the value we are writing
-            // to the Parcel cannot have a null value. Therefore a NPE should never occur in it's current implementation.
-            override fun createFromParcel(parcel: Parcel): Arguments = Arguments(parcel.readString()!!)
-            override fun newArray(size: Int): Array<Arguments?> = arrayOfNulls(size)
-        }
-    }
+    @Parcelize
+    private class Arguments(val itemId: String) : Parcelable
 
     interface Dependencies {
         val storeFactory: StoreFactory
