@@ -39,7 +39,7 @@ internal class TimeTravelClientStoreFactory(
     }
 
     private inner class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Result, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) =
+        override fun executeIntent(intent: Intent, getState: () -> State): Unit =
             when (intent) {
                 is Intent.Connect -> connectIfNeeded(getState())
                 is Intent.Disconnect -> disconnectIfNeeded(getState())

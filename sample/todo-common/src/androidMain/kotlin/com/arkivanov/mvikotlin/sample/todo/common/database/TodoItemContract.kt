@@ -10,13 +10,13 @@ import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItemContract.INDE
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItemContract.INDEX_TEXT
 
 internal object TodoItemContract {
-    const val TABLE_NAME = "todo_item"
-    const val COLUMN_ID = "id"
-    const val COLUMN_TEXT = "text"
-    const val COLUMN_IS_DONE = "is_done"
-    const val INDEX_ID = 0
-    const val INDEX_TEXT = 1
-    const val INDEX_IS_DONE = 2
+    const val TABLE_NAME: String = "todo_item"
+    const val COLUMN_ID: String = "id"
+    const val COLUMN_TEXT: String = "text"
+    const val COLUMN_IS_DONE: String = "is_done"
+    const val INDEX_ID: Int = 0
+    const val INDEX_TEXT: Int = 1
+    const val INDEX_IS_DONE: Int = 2
 }
 
 internal fun Cursor.getTodoItem(): TodoItem =

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 @ExperimentalInstanceKeeperApi
 internal class InstanceKeeperViewModel : ViewModel() {
 
-    val instanceKeeper = DefaultInstanceKeeper()
+    val instanceKeeper: DefaultInstanceKeeper = DefaultInstanceKeeper()
 
     override fun onCleared() {
         instanceKeeper.destroy()

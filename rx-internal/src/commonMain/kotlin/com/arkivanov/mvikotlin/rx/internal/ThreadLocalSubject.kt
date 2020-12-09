@@ -39,7 +39,7 @@ internal open class ThreadLocalSubject<T> : Subject<T> {
 
     override fun onNext(value: T) {
         val mutableState = getMutableState() ?: return
-        mutableState.queue += value
+        mutableState.queue.addLast(value)
         mutableState.drainIfNeeded()
     }
 
@@ -62,7 +62,7 @@ internal open class ThreadLocalSubject<T> : Subject<T> {
 
     private fun MutableState<T>.drain() {
         while (queue.isNotEmpty()) {
-            val value = queue.removeAt(0)
+            val value = queue.removeFirst()
             map.values.forEach { it.onNext(value) }
         }
 
@@ -86,9 +86,9 @@ internal open class ThreadLocalSubject<T> : Subject<T> {
     }
 
     private class MutableState<T> {
-        var map = mapOf<Disposable, Observer<T>>()
-        val queue = ArrayList<T>()
-        var isCompleted = false
-        var isDraining = false
+        var map: Map<Disposable, Observer<T>> = mapOf()
+        val queue: ArrayDeque<T> = ArrayDeque()
+        var isCompleted: Boolean = false
+        var isDraining: Boolean = false
     }
 }

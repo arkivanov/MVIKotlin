@@ -4,6 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.arkivanov.mvikotlin.core.utils.diff
 import com.arkivanov.mvikotlin.core.view.BaseMviView
+import com.arkivanov.mvikotlin.core.view.ViewRenderer
 import com.arkivanov.mvikotlin.sample.todo.android.R
 import com.arkivanov.mvikotlin.sample.todo.android.getViewById
 import com.arkivanov.mvikotlin.sample.todo.common.view.TodoListView
@@ -29,8 +30,8 @@ class TodoListViewImpl(root: View) : BaseMviView<Model, Event>(), TodoListView {
             }
         )
 
-    override val renderer =
-        diff<Model> {
+    override val renderer: ViewRenderer<Model> =
+        diff {
             diff(get = Model::items, compare = { a, b -> a === b }, set = adapter::setItems)
         }
 
