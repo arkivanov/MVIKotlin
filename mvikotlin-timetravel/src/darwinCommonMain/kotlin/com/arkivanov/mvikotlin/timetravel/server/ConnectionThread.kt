@@ -54,7 +54,7 @@ internal class ConnectionThread(
             }
         }
 
-        if (listen(serverSocket, arg1 = 16) < 0) {
+        if (listen(serverSocket, SOCKET_BACKLOG) < 0) {
             onError(Exception("Error listen socket: $errno"))
             return
         }
@@ -80,5 +80,9 @@ internal class ConnectionThread(
             .value
             .takeIf { it >= 0 }
             ?.also { close(it) }
+    }
+
+    private companion object {
+        private const val SOCKET_BACKLOG = 16
     }
 }
