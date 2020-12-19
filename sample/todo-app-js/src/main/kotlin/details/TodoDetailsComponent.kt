@@ -24,6 +24,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.ReactElement
 import react.setState
 import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.detailsButtonsCss
@@ -155,7 +156,7 @@ interface TodoDetailsParentProps : RProps {
 
 fun RBuilder.todoDetails(
     dependencies: TodoDetailsComponent.Dependencies
-) =
+): ReactElement =
     child(TodoDetailsComponent::class) {
         attrs.dependencies = dependencies
     }

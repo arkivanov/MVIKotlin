@@ -116,7 +116,7 @@ class TimeTravelServer(
 
     @ThreadLocal
     private companion object {
-        private val threadLocalHolders = HashMap<TimeTravelServer, Holder>()
+        private val threadLocalHolders: MutableMap<TimeTravelServer, Holder> = HashMap()
     }
 
     private class Holder(
@@ -124,7 +124,7 @@ class TimeTravelServer(
         val onError: (Throwable) -> Unit
     ) {
         var connectionThread: ConnectionThread? = null
-        val clients = HashMap<Int, Client>()
+        val clients: MutableMap<Int, Client> = HashMap()
     }
 
     private class Client(

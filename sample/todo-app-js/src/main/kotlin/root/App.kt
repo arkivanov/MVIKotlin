@@ -17,6 +17,7 @@ import com.ccfraser.muirwik.components.styles.createMuiTheme
 import details.TodoDetailsComponent
 import details.todoDetails
 import kotlinx.css.Align
+import kotlinx.css.CSSBuilder
 import kotlinx.css.Display
 import kotlinx.css.FlexDirection
 import kotlinx.css.JustifyContent
@@ -41,6 +42,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.ReactElement
 import react.setState
 import styled.StyleSheet
 import timetravel.timeTravel
@@ -116,27 +118,27 @@ abstract class App : RComponent<AppProps, AppState>() {
     }
 
     object TodoStyles : StyleSheet("TodoStyles", isStatic = true) {
-        val addCss by css {
+        val addCss: CSSBuilder.() -> Unit by css {
             display = Display.inlineFlex
             width = 100.pct
             padding(2.spacingUnits)
         }
 
-        val listCss by css {
+        val listCss: CSSBuilder.() -> Unit by css {
             width = 100.pct
         }
 
-        val columnCss by css {
+        val columnCss: CSSBuilder.() -> Unit by css {
             display = Display.flex
             flexDirection = FlexDirection.column
             alignItems = Align.center
         }
 
-        val headerMarginCss by css {
+        val headerMarginCss: CSSBuilder.() -> Unit by css {
             marginTop = 9.spacingUnits
         }
 
-        val detailsButtonsCss by css {
+        val detailsButtonsCss: CSSBuilder.() -> Unit by css {
             display = Display.flex
             flexDirection = FlexDirection.row
             justifyContent = JustifyContent.spaceBetween
@@ -145,25 +147,25 @@ abstract class App : RComponent<AppProps, AppState>() {
             paddingLeft = 2.spacingUnits
         }
 
-        val detailsInputCss by css {
+        val detailsInputCss: CSSBuilder.() -> Unit by css {
             width = 100.pct
             padding(2.spacingUnits)
         }
 
-        val debugDrawerStyle by css {
+        val debugDrawerStyle: CSSBuilder.() -> Unit by css {
             height = 100.pct
             display = Display.flex
             flexDirection = FlexDirection.column
             justifyContent = JustifyContent.spaceBetween
         }
 
-        val debugButtonsContainerStyle by css {
+        val debugButtonsContainerStyle: CSSBuilder.() -> Unit by css {
             display = Display.flex
             flexDirection = FlexDirection.row
             justifyContent = JustifyContent.spaceAround
         }
 
-        val eventItemCss by css {
+        val eventItemCss: CSSBuilder.() -> Unit by css {
             overflow = Overflow.hidden
             textOverflow = TextOverflow.ellipsis
             put("-webkit-line-clamp", "3")
@@ -171,7 +173,7 @@ abstract class App : RComponent<AppProps, AppState>() {
             put("-webkit-box-orient", "vertical")
         }
 
-        val eventsContainerStyle by css {
+        val eventsContainerStyle: CSSBuilder.() -> Unit by css {
             height = 100.pct
             overflow = Overflow.auto
             width = 320.px
@@ -194,6 +196,7 @@ interface AppProps : RProps {
     var dependecies: App.Dependencies
 }
 
-fun RBuilder.app(dependencies: App.Dependencies) = child(App::class) {
-    attrs.dependecies = dependencies
-}
+fun RBuilder.app(dependencies: App.Dependencies): ReactElement =
+    child(App::class) {
+        attrs.dependecies = dependencies
+    }

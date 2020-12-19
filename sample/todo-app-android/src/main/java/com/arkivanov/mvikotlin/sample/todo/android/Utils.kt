@@ -9,11 +9,12 @@ import androidx.annotation.IdRes
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
 
-val storeFactoryInstance =
+val storeFactoryInstance: StoreFactory =
     if (BuildConfig.DEBUG) {
         LoggingStoreFactory(delegate = TimeTravelStoreFactory(fallback = DefaultStoreFactory))
     } else {

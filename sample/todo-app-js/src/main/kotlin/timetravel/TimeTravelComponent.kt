@@ -12,6 +12,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.ReactElement
 import react.setState
 import root.App.TodoStyles.debugButtonsContainerStyle
 import root.App.TodoStyles.debugDrawerStyle
@@ -121,6 +122,7 @@ class TimeTravelComponentState(
     var currentEvent: TimeTravelEvent?
 ) : RState
 
-fun RBuilder.timeTravel(onClose: () -> Unit) = child(TimeTravelComponent::class) {
-    attrs.onClose = onClose
-}
+fun RBuilder.timeTravel(onClose: () -> Unit): ReactElement =
+    child(TimeTravelComponent::class) {
+        attrs.onClose = onClose
+    }

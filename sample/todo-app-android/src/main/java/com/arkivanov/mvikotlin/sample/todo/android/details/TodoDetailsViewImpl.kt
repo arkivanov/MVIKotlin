@@ -7,6 +7,7 @@ import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import com.arkivanov.mvikotlin.core.utils.diff
 import com.arkivanov.mvikotlin.core.view.BaseMviView
+import com.arkivanov.mvikotlin.core.view.ViewRenderer
 import com.arkivanov.mvikotlin.sample.todo.android.R
 import com.arkivanov.mvikotlin.sample.todo.android.SimpleTextWatcher
 import com.arkivanov.mvikotlin.sample.todo.android.getViewById
@@ -27,8 +28,8 @@ class TodoDetailsViewImpl(root: View) : BaseMviView<Model, Event>(), TodoDetails
     private val editText = root.getViewById<EditText>(R.id.edit_text)
     private val checkBox = root.getViewById<CheckBox>(R.id.check_completed)
 
-    override val renderer =
-        diff<Model> {
+    override val renderer: ViewRenderer<Model> =
+        diff {
             diff(Model::text) {
                 editText.setTextCompat(it, textWatcher)
             }

@@ -1,11 +1,11 @@
+import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
 
+const val DEBUG: Boolean = true
 
-const val DEBUG = true
-
-val storeFactoryInstance =
+val storeFactoryInstance: StoreFactory =
     if (DEBUG) {
         LoggingStoreFactory(delegate = TimeTravelStoreFactory(fallback = DefaultStoreFactory))
     } else {

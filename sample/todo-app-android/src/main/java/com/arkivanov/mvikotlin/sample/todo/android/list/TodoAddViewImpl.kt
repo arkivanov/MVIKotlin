@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.EditText
 import com.arkivanov.mvikotlin.core.utils.diff
 import com.arkivanov.mvikotlin.core.view.BaseMviView
+import com.arkivanov.mvikotlin.core.view.ViewRenderer
 import com.arkivanov.mvikotlin.sample.todo.android.R
 import com.arkivanov.mvikotlin.sample.todo.android.SimpleTextWatcher
 import com.arkivanov.mvikotlin.sample.todo.android.getViewById
@@ -23,8 +24,8 @@ class TodoAddViewImpl(root: View) : BaseMviView<Model, Event>(), TodoAddView {
             }
         }
 
-    override val renderer =
-        diff<Model> {
+    override val renderer: ViewRenderer<Model> =
+        diff {
             diff(Model::text) {
                 editText.setTextCompat(it, textWatcher)
             }
