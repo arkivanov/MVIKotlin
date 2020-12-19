@@ -23,5 +23,5 @@ internal fun attachTimeTravelStore(store: TimeTravelStore<*, *, *>, name: String
 
 @ThreadLocal
 private object TimeTravelControllerHolder {
-    val impl = TimeTravelControllerImpl()
+    val impl: TimeTravelControllerImpl = TimeTravelControllerImpl()
 }

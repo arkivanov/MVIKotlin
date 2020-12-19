@@ -52,6 +52,6 @@ class DefaultLogFormatter(
     }
 
     companion object {
-        const val DEFAULT_VALUE_LENGTH_LIMIT = 256
+        const val DEFAULT_VALUE_LENGTH_LIMIT: Int = 256
     }
 }

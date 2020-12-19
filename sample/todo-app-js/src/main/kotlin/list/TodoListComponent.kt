@@ -25,6 +25,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.ReactElement
 import react.setState
 import root.App.TodoStyles.addCss
 import root.App.TodoStyles.columnCss
@@ -131,6 +132,7 @@ class TodoListParentState(
     var addModel: TodoAddView.Model
 ) : RState
 
-fun RBuilder.todoContainer(dependencies: TodoListParentComponent.Dependencies) = child(TodoListParentComponent::class) {
-    attrs.dependencies = dependencies
-}
+fun RBuilder.todoContainer(dependencies: TodoListParentComponent.Dependencies): ReactElement =
+    child(TodoListParentComponent::class) {
+        attrs.dependencies = dependencies
+    }
