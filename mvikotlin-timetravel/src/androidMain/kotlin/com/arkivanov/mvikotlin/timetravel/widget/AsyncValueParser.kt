@@ -1,14 +1,14 @@
 package com.arkivanov.mvikotlin.timetravel.widget
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueTextTreeBuilder
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.parseObject
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.toFormattedString
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.toTree
 import java.lang.ref.WeakReference
 import java.util.concurrent.Executors
 
 internal object AsyncValueParser {
 
-    private val executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors().coerceAtLeast(2))
-    private val treeBuilder = ValueTextTreeBuilder(newNode = ::Node, addChild = { children.add(it) })
+    private val executors = Executors.newSingleThreadExecutor()
 
     fun parse(value: Any, callback: (String) -> Unit) {
         executors.submit(Task(value, WeakReference(callback)))
@@ -20,8 +20,7 @@ internal object AsyncValueParser {
     ) : Runnable {
         override fun run() {
             val value = parseObject(obj = value)
-            val tree = treeBuilder.build(value)
-            val text = StringBuilder().appendNode(tree).toString()
+            val text = value.toTree().toFormattedString()
             callback.get()?.invoke(text)
         }
 

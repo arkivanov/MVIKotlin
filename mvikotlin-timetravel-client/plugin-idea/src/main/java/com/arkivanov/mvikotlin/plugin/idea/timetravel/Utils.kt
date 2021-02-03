@@ -1,18 +1,11 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.ui.Messages
-import java.io.BufferedReader
-import java.io.IOException
-
-internal fun exec(params: List<String>): Process = Runtime.getRuntime().exec(params.toTypedArray())
-
-@Throws(IOException::class)
-internal fun Process.readError(): String? =
-    errorStream
-        ?.bufferedReader()
-        ?.use(BufferedReader::readText)
-        ?.trim()
+import java.util.function.Consumer
+import javax.swing.Icon
 
 internal fun logI(text: String) {
     Logger.getInstance("MVIKotlin").info(text)
@@ -29,3 +22,24 @@ internal fun showErrorDialog(text: String) {
 internal fun showInfoDialog(text: String) {
     Messages.showInfoMessage(text, "MVIKotlin")
 }
+
+internal fun anAction(
+    text: String?,
+    icon: Icon?,
+    onUpdate: Consumer<AnActionEvent>?,
+    onAction: Runnable
+): AnAction =
+    object : AnAction() {
+        init {
+            templatePresentation.text = text
+            templatePresentation.icon = icon
+        }
+
+        override fun actionPerformed(event: AnActionEvent) {
+            onAction.run()
+        }
+
+        override fun update(event: AnActionEvent) {
+            onUpdate?.accept(event)
+        }
+    }

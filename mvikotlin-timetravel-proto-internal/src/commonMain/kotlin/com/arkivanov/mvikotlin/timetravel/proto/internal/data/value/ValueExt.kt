@@ -1,28 +1,36 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.data.value
 
-val Value.type: String
+val ParsedValue.type: String
     get() =
         when (this) {
-            is Value.Primitive.Int -> "Int"
-            is Value.Primitive.Long -> "Long"
-            is Value.Primitive.Short -> "Short"
-            is Value.Primitive.Byte -> "Byte"
-            is Value.Primitive.Float -> "Float"
-            is Value.Primitive.Double -> "Double"
-            is Value.Primitive.Char -> "Char"
-            is Value.Primitive.Boolean -> "Boolean"
-            is Value.Object.String -> "String"
-            is Value.Object.IntArray -> "IntArray"
-            is Value.Object.LongArray -> "LongArray"
-            is Value.Object.ShortArray -> "ShortArray"
-            is Value.Object.ByteArray -> "ByteArray"
-            is Value.Object.FloatArray -> "FloatArray"
-            is Value.Object.DoubleArray -> "DoubleArray"
-            is Value.Object.CharArray -> "CharArray"
-            is Value.Object.BooleanArray -> "BooleanArray"
-            is Value.Object.Array -> type
-            is Value.Object.Iterable -> type
-            is Value.Object.Map -> type
-            is Value.Object.Other -> type
-            is Value.Object.Unparsed -> type
+            is ParsedValue.Primitive.Int -> "Int"
+            is ParsedValue.Primitive.Long -> "Long"
+            is ParsedValue.Primitive.Short -> "Short"
+            is ParsedValue.Primitive.Byte -> "Byte"
+            is ParsedValue.Primitive.Float -> "Float"
+            is ParsedValue.Primitive.Double -> "Double"
+            is ParsedValue.Primitive.Char -> "Char"
+            is ParsedValue.Primitive.Boolean -> "Boolean"
+            is ParsedValue.Object.Int -> "Int"
+            is ParsedValue.Object.Long -> "Long"
+            is ParsedValue.Object.Short -> "Short"
+            is ParsedValue.Object.Byte -> "Byte"
+            is ParsedValue.Object.Float -> "Float"
+            is ParsedValue.Object.Double -> "Double"
+            is ParsedValue.Object.Char -> "Char"
+            is ParsedValue.Object.Boolean -> "Boolean"
+            is ParsedValue.Object.String -> "String"
+            is ParsedValue.Object.IntArray -> "IntArray"
+            is ParsedValue.Object.LongArray -> "LongArray"
+            is ParsedValue.Object.ShortArray -> "ShortArray"
+            is ParsedValue.Object.ByteArray -> "ByteArray"
+            is ParsedValue.Object.FloatArray -> "FloatArray"
+            is ParsedValue.Object.DoubleArray -> "DoubleArray"
+            is ParsedValue.Object.CharArray -> "CharArray"
+            is ParsedValue.Object.BooleanArray -> "BooleanArray"
+            is ParsedValue.Object.Array -> type
+            is ParsedValue.Object.Iterable -> type
+            is ParsedValue.Object.Map -> type
+            is ParsedValue.Object.Other -> type
+            is ParsedValue.Object.Unparsed -> type
         }
