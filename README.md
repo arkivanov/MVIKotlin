@@ -99,6 +99,8 @@ The sample project is a todo list with details view.
 
 Twitter: [@arkann1985](https://twitter.com/arkann1985)
 
+If you like this project you can always <a href="https://www.buymeacoffee.com/arkivanov" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" height=32></a> ;-)
+
 ## Inspiration
 
 This project is inspired by [Badoo MVICore](https://github.com/badoo/MVICore) library.
