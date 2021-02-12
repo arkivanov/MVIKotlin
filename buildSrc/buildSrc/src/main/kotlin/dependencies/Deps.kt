@@ -2,7 +2,7 @@ object Deps {
 
     object Jetbrains {
         object Kotlin : Group(name = "org.jetbrains.kotlin") {
-            private const val version = "1.4.20"
+            private const val version = "1.4.30"
 
             object Plugin {
                 object Gradle : Dependency(group = Kotlin, name = "kotlin-gradle-plugin", version = version)
@@ -74,7 +74,7 @@ object Deps {
 
     object Badoo {
         object Reaktive : Group(name = "com.badoo.reaktive") {
-            private const val version = "1.1.19"
+            private const val version = "1.1.20"
 
             object Reaktive : Dependency(group = Badoo.Reaktive, name = "reaktive", version = version)
             object ReaktiveAnnotations : Dependency(group = Badoo.Reaktive, name = "reaktive-annotations", version = version)
