@@ -303,15 +303,15 @@ fun Project.setupPublication() {
                 url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = userId
-                    password = findProperty("SONATYPE_PASSWORD")?.toString()
+                    password = System.getenv("SONATYPE_PASSWORD")
                 }
             }
         }
 
         extensions.getByType<SigningExtension>().run {
             useInMemoryPgpKeys(
-                findProperty("SIGNING_KEY")?.toString(),
-                findProperty("SIGNING_PASSWORD")?.toString()
+                System.getenv("SIGNING_KEY"),
+                System.getenv("SIGNING_PASSWORD")
             )
             sign(publications)
         }

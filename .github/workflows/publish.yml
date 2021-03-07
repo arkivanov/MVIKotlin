@@ -17,7 +17,12 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish Metadata
-        run: ./gradlew publish --info -Pbuild_type=METADATA -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
+        env:
+          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew publish --info -Pbuild_type=METADATA
   non-native-publish:
     name: Publish JVM, Android, JS
     runs-on: ubuntu-latest
@@ -29,7 +34,12 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish JVM, Android, JS
-        run: ./gradlew publish --info -Pbuild_type=NON_NATIVE -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
+        env:
+          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew publish --info -Pbuild_type=NON_NATIVE
   linux-publish:
     name: Publish Linux
     runs-on: ubuntu-latest
@@ -41,7 +51,12 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish Linux
-        run: ./gradlew publish --info -Pbuild_type=LINUX -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
+        env:
+          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew publish --info -Pbuild_type=LINUX
   ios-publish:
     name: Publish iOS
     runs-on: macos-latest
@@ -53,7 +68,12 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish iOS
-        run: ./gradlew publish -Pbuild_type=IOS -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
+        env:
+          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew publish -Pbuild_type=IOS
   macos-publish:
     name: Publish macOS
     runs-on: macos-latest
@@ -65,7 +85,12 @@ jobs:
         with:
           java-version: 1.8
       - name: Publish macOS
-        run: ./gradlew publish --info -Pbuild_type=MAC_OS -Pbintray_api_key=${{ secrets.BINTRAY_API_KEY }}
+        env:
+          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: ./gradlew publish --info -Pbuild_type=MAC_OS
 #  non-native-check-publication:
 #    name: Check JVM, Android, JS publication
 #    runs-on: ubuntu-latest

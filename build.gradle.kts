@@ -21,7 +21,7 @@ allprojects {
 
 extensions.getByType<io.codearte.gradle.nexus.NexusStagingExtension>().run {
     packageGroup = "com.arkivanov.mvikotlin"
-    stagingProfileId = findProperty("SONATYPE_STAGING_PROFILE_ID")?.toString()
+    stagingProfileId = System.getenv("SONATYPE_STAGING_PROFILE_ID")
     username = "arkivanov"
     password = findProperty("SONATYPE_PASSWORD")?.toString()
 }
