@@ -11,6 +11,7 @@ dependencies {
     implementation(Deps.Jetbrains.Kotlin.Plugin.Gradle)
     implementation(Deps.Android.Tools.Build.Gradle)
     implementation(Deps.TouchLab.KotlinXcodeSync)
+    implementation(Deps.Codearte.Gradle.Nexus.StagingPlugin)
 }
 
 kotlin {
