@@ -18,7 +18,7 @@ jobs:
           username: arkivanov
           password: ${{ secrets.SONATYPE_PASSWORD }}
           staging-profile-id: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
-          description: Created by $GITHUB_WORKFLOW ($GITHUB_ACTION) for $GITHUB_REPOSITORY
+          description: Created by GitHub Actions
   metadata-publish:
     name: Publish Metadata
     runs-on: ubuntu-latest

@@ -6,10 +6,12 @@ import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
+import org.gradle.jvm.tasks.Jar
+import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.withType
-import org.gradle.plugins.signing.SigningExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
@@ -261,8 +263,15 @@ fun Project.setupPublication() {
     val isMetadataBuildType = buildType === BuildType.METADATA
     val metadataPublicationNames = setOf(KotlinMultiplatformPlugin.METADATA_TARGET_NAME, "kotlinMultiplatform")
 
+    val javadocJar by tasks.creating(Jar::class) {
+        archiveClassifier.value("javadoc")
+        // TODO: instead of a single empty Javadoc JAR, generate real documentation for each module
+    }
+
     extensions.getByType<PublishingExtension>().run {
         publications.withType<MavenPublication>().all {
+            artifact(javadocJar)
+
             pom {
                 withXml {
                     asNode().apply {
