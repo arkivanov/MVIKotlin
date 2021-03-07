@@ -4,11 +4,11 @@ val version = property("mvikotlin.version").toString()
 
 repositories {
     maven {
-        setUrl("https://dl.bintray.com/arkivanov/maven/")
+        setUrl("https://oss.sonatype.org/content/groups/staging/")
 
         credentials  {
             setUsername("arkivanov")
-            setPassword(property("bintray_api_key").toString())
+            setPassword(System.getenv("SONATYPE_PASSWORD"))
         }
     }
 }
