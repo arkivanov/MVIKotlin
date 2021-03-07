@@ -9,6 +9,7 @@ import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
+import org.gradle.plugins.signing.SigningExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
@@ -116,16 +117,6 @@ fun Project.setupMultiplatform() {
             js {
                 nodejs()
                 browser()
-
-                compilations.all {
-                    compileKotlinTask.kotlinOptions {
-                        metaInfo = true
-                        sourceMap = true
-                        sourceMapEmbedSources = "always"
-                        moduleKind = "umd"
-                        main = "call"
-                    }
-                }
             }
         }
 
@@ -257,6 +248,7 @@ fun Project.setupMultiplatform() {
 
 fun Project.setupPublication() {
     plugins.apply("maven-publish")
+    plugins.apply("signing")
 
     group = "com.arkivanov.mvikotlin"
     version = property("mvikotlin.version") as String
@@ -308,12 +300,20 @@ fun Project.setupPublication() {
 
         repositories {
             maven {
-                url = uri("https://api.bintray.com/maven/arkivanov/maven/mvikotlin/;publish=0;override=1")
+                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = userId
-                    password = findProperty("bintray_api_key")?.toString()
+                    password = findProperty("SONATYPE_PASSWORD")?.toString()
                 }
             }
+        }
+
+        extensions.getByType<SigningExtension>().run {
+            useInMemoryPgpKeys(
+                findProperty("SIGNING_KEY")?.toString(),
+                findProperty("SIGNING_PASSWORD")?.toString()
+            )
+            sign(publications)
         }
     }
 }
