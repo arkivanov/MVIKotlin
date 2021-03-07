@@ -115,7 +115,7 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
         run: ./gradlew publish --info -Pbuild_type=MAC_OS
   close-staging-repository:
-    name: Publish Metadata
+    name: Close staging repository
     runs-on: ubuntu-latest
     needs: [ metadata-publish, non-native-publish, linux-publish, ios-publish, macos-publish ]
     steps:
