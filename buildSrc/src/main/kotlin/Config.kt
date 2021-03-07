@@ -300,7 +300,8 @@ fun Project.setupPublication() {
 
         repositories {
             maven {
-                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                val repositoryId = System.getenv("SONATYPE_REPOSITORY_ID")
+                url = uri("https://oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId")
                 credentials {
                     username = userId
                     password = System.getenv("SONATYPE_PASSWORD")
