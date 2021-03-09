@@ -246,7 +246,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-Not it's time to handle the `Action` in the `ReaktiveExecutor`:
+Now it's time to handle the `Action` in the `ReaktiveExecutor`:
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
