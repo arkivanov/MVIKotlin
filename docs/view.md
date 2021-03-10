@@ -8,7 +8,7 @@ In MVIKotlin there are two basic interfaces related to `View`:
 - [ViewRenderer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/ViewRenderer.kt) - consumes and renders `Models`
 - [ViewEvents](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/ViewEvents.kt) - produces `Events`
 
-There is also the [MviView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/MviView.kt) interface which is just a combination of both `ViewRenderer` and `ViewEvents` interfaces. Again you normally don't need to implement the `MviView` interface directly. Instead you can extend the [BaseMviView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/AbstractMviView.kt) class.
+There is also the [MviView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/MviView.kt) interface which is just a combination of both `ViewRenderer` and `ViewEvents` interfaces. Again you normally don't need to implement the `MviView` interface directly. Instead you can extend the [BaseMviView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/BaseMviView.kt) class.
 
 ## Implementing a View
 
