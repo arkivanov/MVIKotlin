@@ -9,7 +9,7 @@ import kotlin.js.JsName
  * @see Store
  * @see Executor
  */
-interface Reducer<State, in Result> {
+fun interface Reducer<State, in Result> {
 
     /**
      * Accepts the current `State` and the `Result` and produces the new `State`.
