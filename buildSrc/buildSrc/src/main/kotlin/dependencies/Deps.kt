@@ -86,14 +86,6 @@ object Deps {
         object KotlinXcodeSync : Dependency(group = TouchLab, name = "kotlinxcodesync", version = "0.2")
     }
 
-    object Codearte {
-        object Gradle {
-            object Nexus : Group(name = "io.codearte.gradle.nexus") {
-                object StagingPlugin : Dependency(group = Nexus, name = "gradle-nexus-staging-plugin", version = "0.22.0")
-            }
-        }
-    }
-
     open class Group(val name: String)
 
     open class Dependency private constructor(

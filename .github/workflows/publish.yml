@@ -117,20 +117,15 @@ jobs:
   close-staging-repository:
     name: Close staging repository
     runs-on: ubuntu-latest
-    needs: [ metadata-publish, non-native-publish, linux-publish, ios-publish, macos-publish ]
+    needs: [ create-staging-repository, metadata-publish, non-native-publish, linux-publish, ios-publish, macos-publish ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
       - name: Close staging repository
-        env:
-          SONATYPE_REPOSITORY_ID: ${{ needs.create-staging-repository.outputs.repository-id }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        run: ./gradlew closeRepository --info
+        uses: nexus-actions/release-nexus-staging-repo@v1.1
+        with:
+          username: arkivanov
+          password: ${{ secrets.SONATYPE_PASSWORD }}
+          staging_repository_id: ${{ needs.create-staging-repository.outputs.repository-id }}
+          close_only: 'true'
   non-native-check-publication:
     name: Check JVM, Android, JS publication
     runs-on: ubuntu-latest
