@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/arkivanov/MVIKotlin/master/docs/media/logo/landscape/png/mvikotlin_coloured.png" height="64">
 
-[![Download](https://api.bintray.com/packages/arkivanov/maven/mvikotlin/images/download.svg)](https://bintray.com/arkivanov/maven/mvikotlin/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/com.arkivanov.mvikotlin/mvikotlin?color=blue)](https://search.maven.org/artifact/com.arkivanov.mvikotlin/mvikotlin)
 [![License](https://img.shields.io/badge/License-Apache/2.0-blue.svg)](https://github.com/arkivanov/MVIKotlin/blob/master/LICENSE)
 [![kotlinlang|MVIKotlin](https://img.shields.io/badge/kotlinlang-mvikotlin-blue?logo=slack)](https://kotlinlang.slack.com/archives/C01403U1ZGW)
 
@@ -43,16 +43,7 @@ You can find one of the architecture options in the [samples](https://github.com
 Recommended minimum Gradle version is 5.3. Please read first the documentation about
 [metadata publishing mode](https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#experimental-metadata-publishing-mode).
 
-MVIKotlin is published to Bintray, the repository is synchronized with JCenter.
-Make sure you have the JCenter repository specified in your build.gradle:
-
-```groovy
-repositories {
-    jcenter()
-}
-```
-
-There are a number of modules published:
+There are a number of modules published to Maven Central:
 - `mvikotlin` - core interfaces and functionality (multiplatform)
 - `mvikotlin-main` - the main module with the default `Store` implementation (mutiplatform)
 - `mvikotlin-logging` - logging functionality (mutiplatform)
