@@ -1,7 +1,6 @@
 plugins {
     `kotlin-dsl`
     id("io.gitlab.arturbosch.detekt").version("1.14.2")
-    id("io.codearte.nexus-staging")
 }
 
 allprojects {
@@ -17,11 +16,4 @@ allprojects {
         config = files("$rootDir/detekt.yml")
         input = files(file("src").listFiles()?.filter(File::isDirectory))
     }
-}
-
-extensions.getByType<io.codearte.gradle.nexus.NexusStagingExtension>().run {
-    packageGroup = "com.arkivanov.mvikotlin"
-    stagingProfileId = System.getenv("SONATYPE_STAGING_PROFILE_ID")
-    username = "arkivanov"
-    password = System.getenv("SONATYPE_PASSWORD")
 }
