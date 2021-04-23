@@ -43,6 +43,7 @@ class CalculatorController {
     fun onViewCreated(view: CalculatorView) {
         binder = bind {
             store.states.map(stateToModel) bindTo view
+            // Use store.labels to bind Labels to a consumer
             view.events.map(eventToIntent) bindTo store
         }
     }
@@ -93,6 +94,7 @@ class CalculatorController(lifecycle: Lifecycle) {
     fun onViewCreated(view: CalculatorView, viewLifecycle: Lifecycle) {
         bind(viewLifecycle, BinderLifecycleMode.START_STOP) {
             store.states.map(stateToModel) bindTo view
+            // Use store.labels to bind Labels to a consumer
             view.events.map(eventToIntent) bindTo store
         }
     }
