@@ -22,9 +22,13 @@ Every `Store` has up to three components: `Bootstrapper`, `Executor` and `Reduce
 
 This component bootstraps (kick-starts) the `Store`. If passed to the `StoreFactory` it will be called at some point during `Store` creation. `Bootstrapper` produces `Actions` that are processed by the `Executor`.
 
+> ⚠️ Please note that `Bootstrappers` are stateful and so can not be `object`s (singletons).
+
 ### Executor
 
 This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from the `Bootstrapper`. Also the `Executor` has two outputs: `Results` and `Labels`. `Results` are passed to the `Reducer` and `Labels` are emitted straight to the outside world. `Executor` has constant access to a current `State`, a new `State` is visible for the `Executor` right after the `Result` is dispatched.
+
+> ⚠️ Please note that `Executors` are stateful and so can not be `object`s (singletons).
 
 ### Reducer
 
