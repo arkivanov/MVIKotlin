@@ -12,6 +12,8 @@ It has the following features:
 - The `accept(Intent)`  method supplies the `Store` with the `Intents`
 - The `dispose()` method disposes the `Store` and cancels all its async operations
 
+> ⚠️ Usually you don't need to use `states(Observer)` or `labels(Observer)` methods directly. There are extensions available for `Reaktive` and `kotlinx.coroutines` libraries (see [Binding and Lifecycle](binding_and_lifecycle.md) for more information). However you will need these methods if you implement custom extensions.
+
 Every `Store` has up to three components: `Bootstrapper`, `Executor` and `Reducer`. Here is the diagram of how they are connected:
 
 ![Store](media/store.jpg)
@@ -203,7 +205,11 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
 Here we extended the `SuspendExecutor` class. This gives us the `suspend fun executeIntent` method so we can use coroutines. The sum is calculated on the `Default` dispatcher and the `Result` is dispatched from on the `Main` thread.
 
-#### Creating the Store
+#### Publishing Labels
+
+`Labels` are one-time events produced by the `Store`, or more specifically by the `Executor`. Once published (emitted) they are delivered to all current subscribers and are not cached. The `Executor` has special method for it: `publish(Label)`.
+
+### Creating the Store
 
 We also need to pass a factory of our `Executor` to the `StoreFactory`:
 
