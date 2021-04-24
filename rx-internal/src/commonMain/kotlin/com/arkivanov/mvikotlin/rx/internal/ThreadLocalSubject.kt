@@ -2,17 +2,17 @@ package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
+import com.arkivanov.mvikotlin.utils.internal.AtomicRef
+import com.arkivanov.mvikotlin.utils.internal.IsolatedRef
 import com.arkivanov.mvikotlin.utils.internal.assertOnMainThread
-import kotlin.native.concurrent.ThreadLocal
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.getAndUpdate
 
 internal open class ThreadLocalSubject<T> : Subject<T> {
 
-    init {
-        @Suppress("ReplacePutWithAssignment", "LeakingThis") // This is safe in this particular case
-        state[this] = MutableState<T>()
-    }
+    private val stateRef: AtomicRef<IsolatedRef<MutableState<T>>?> = atomic(IsolatedRef(MutableState()))
 
-    override val isActive: Boolean get() = state.containsKey(this)
+    override val isActive: Boolean get() = getMutableState() != null
 
     override fun subscribe(observer: Observer<T>): Disposable {
         val mutableState: MutableState<T>? = getMutableState()
@@ -75,15 +75,12 @@ internal open class ThreadLocalSubject<T> : Subject<T> {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getMutableState(): MutableState<T>? = state[this] as MutableState<T>?
+    private fun getMutableState(): MutableState<T>? =
+        stateRef.value?.valueOrNull
 
     @Suppress("UNCHECKED_CAST")
-    private fun removeMutableState(): MutableState<T>? = state.remove(this) as MutableState<T>?
-
-    @ThreadLocal
-    private companion object {
-        private val state: MutableMap<ThreadLocalSubject<*>, MutableState<*>> = HashMap()
-    }
+    private fun removeMutableState(): MutableState<T>? =
+        stateRef.getAndUpdate { null }?.valueOrNull
 
     private class MutableState<T> {
         var map: Map<Disposable, Observer<T>> = mapOf()

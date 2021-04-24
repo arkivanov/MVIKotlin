@@ -8,10 +8,13 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
+import com.arkivanov.mvikotlin.utils.internal.AtomicRef
+import com.arkivanov.mvikotlin.utils.internal.IsolatedRef
+import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.getAndUpdate
 import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
 import platform.posix.close
-import kotlin.native.concurrent.ThreadLocal
 import kotlin.native.concurrent.freeze
 
 class TimeTravelServer(
@@ -22,12 +25,10 @@ class TimeTravelServer(
 
     constructor() : this(controller = timeTravelController)
 
-    init {
-        threadLocalHolders[this] = Holder(controller = controller, onError = onError)
-    }
+    private val holderRef: AtomicRef<IsolatedRef<Holder>?> = atomic(IsolatedRef(Holder(controller = controller, onError = onError)))
 
     fun start() {
-        val holder = threadLocalHolders[this] ?: return
+        val holder = getHolder() ?: return
 
         val connectionThread = connectionThread()
         holder.connectionThread = connectionThread
@@ -42,7 +43,7 @@ class TimeTravelServer(
         )
 
     fun stop() {
-        val holder = threadLocalHolders.remove(this) ?: return
+        val holder = removeHolder() ?: return
 
         holder.connectionThread?.interrupt()
         closeClients(holder.clients.values)
@@ -109,15 +110,16 @@ class TimeTravelServer(
     }
 
     private fun runOnMainThreadIfNotDisposed(block: (Holder) -> Unit) {
-        val callback: () -> Unit = { threadLocalHolders[this]?.also(block) }
+        val callback: () -> Unit = { getHolder()?.also(block) }
 
         dispatch_async(dispatch_get_main_queue(), callback.freeze())
     }
 
-    @ThreadLocal
-    private companion object {
-        private val threadLocalHolders: MutableMap<TimeTravelServer, Holder> = HashMap()
-    }
+    private fun getHolder(): Holder? =
+        holderRef.value?.valueOrNull
+
+    private fun removeHolder(): Holder? =
+        holderRef.getAndUpdate { null }?.valueOrNull
 
     private class Holder(
         val controller: TimeTravelController,
