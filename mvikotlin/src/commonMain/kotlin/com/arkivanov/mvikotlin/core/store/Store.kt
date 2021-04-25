@@ -10,13 +10,23 @@ import kotlin.js.JsName
  * It also can produce `Labels` as side effects.
  *
  * There are three main components of the `Store`: [Bootstrapper], [Executor] and [Reducer].
- * The [Store] normally accepts these components and manages the communication between them.
+ * [Store] implementations usually accept these components and manage the communication between them.
  *
- * The [Bootstrapper] is normally called during instantiation of the [Store].
+ * Every [Store] should be initialized first, so it will trigger the [Bootstrapper] and will start listening for `Intents`.
+ * To initialize a [Store], call its [Store.init] method. The [Store] can be instantiated on any thread
+ * but most of its methods can only be called on the main thread, all such methods are annotated with @[MainThread].
+ *
+ * Every [Store] should be disposed at the end of lifecycle.
+ * When a [Store] is disposed, all running asynchronous operations are cancelled, `State` and `Label` streams are completed.
+ * To dispose a [Store], call its [Store.dispose] method.
+ *
+ * The [Bootstrapper] is called during initialization of the [Store].
  * All the `Actions` dispatched by the [Bootstrapper] are passed to the [Executor].
+ * Please note that the [Bootstrapper] is stateful and so can not be `object` (singleton).
  *
  * The [Executor] is the main component of the [Store]. It accepts `Intents` and `Actions` and produces `Results` and `Labels`.
  * `Results` are then passed to the [Reducer]. `Labels` are just emitted from the `Store` as side effects.
+ * Please note that the [Executor] is stateful and so can not be `object` (singleton).
  *
  * The [Reducer] accepts a current `State` and a `Result` and transforms it to a new `State`.
  * The new `State` then applied to the [Store] and emitted.
@@ -44,7 +54,7 @@ import kotlin.js.JsName
  *         object : MyStore, Store<Intent, State, Label> by factory.create(
  *             name = "MyStore",
  *             initialState = State(),
- *             bootstrapper = BootstrapperImpl(),
+ *             bootstrapper = BootstrapperImpl(), // Use SimpleBootstrapper to just immediately emit some Actions
  *             executorFactory = ::ExecutorImpl,
  *             reducer = ReducerImpl
  *         ) {
@@ -91,7 +101,6 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
     /**
      * Returns whether the [Store] is disposed or not
      */
-    @MainThread
     val isDisposed: Boolean
 
     /**
@@ -102,7 +111,6 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      * @param observer an [Observer] that will receive the `States`
      */
     @JsName("states")
-    @MainThread
     fun states(observer: Observer<State>): Disposable
 
     /**
@@ -112,17 +120,24 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
      * @param observer an [Observer] that will receive the `Labels`
      */
     @JsName("labels")
-    @MainThread
     fun labels(observer: Observer<Label>): Disposable
 
     /**
-     * Accepts `Intents` and passes them to the [Executor]
+     * Accepts `Intents` and passes them to the [Executor].
+     * Does nothing if the [Store] is not yet initialized (see [init] for more information).
      *
      * @param intent an `Intent`
      */
     @JsName("accept")
     @MainThread
     fun accept(intent: Intent)
+
+    /**
+     * Initializes the [Store] and calls its [Bootstrapper] if applicable.
+     * The behaviour is undefined if the [Store] is already disposed.
+     */
+    @MainThread
+    fun init()
 
     /**
      * Disposes the [Store] and all its components

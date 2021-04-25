@@ -5,32 +5,44 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
-import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.test.internal.TestBootstrapper
 import com.arkivanov.mvikotlin.core.test.internal.TestExecutor
 import com.arkivanov.mvikotlin.core.test.internal.reducer
-import com.arkivanov.mvikotlin.logging.logger.LogFormatter
-import com.arkivanov.mvikotlin.logging.logger.Logger
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.freeze
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class LoggingStoreFactoryTest {
 
     private val formatter = TestLogFormatter()
-    private val logger = TestLogger(formatter)
+    private val logger = TestLogger(formatter = formatter, storeName = STORE_NAME)
 
     @Test
     fun logs_created() {
         store()
 
-        logger.assertLoggedText("$STORE_NAME: created")
+        logger.assertLoggedText("$STORE_NAME: creating")
+    }
+
+    @Test
+    fun logs_initializing_WHEN_isAutoInit_true() {
+        store(isAutoInit = true)
+
+        logger.assertLoggedText("$STORE_NAME: initializing")
+    }
+
+    @Test
+    fun does_not_log_initializing_WHEN_isAutoInit_false() {
+        store(isAutoInit = false)
+
+        logger.assertNoLoggedText("$STORE_NAME: initializing")
+    }
+
+    @Test
+    fun logs_initializing_WHEN_isAutoInit_false_and_init_called() {
+        val store = store(isAutoInit = false)
+
+        store.init()
+
+        logger.assertLoggedText("$STORE_NAME: initializing")
     }
 
     @Test
@@ -112,32 +124,17 @@ class LoggingStoreFactoryTest {
 
     private fun store(
         name: String? = STORE_NAME,
+        isAutoInit: Boolean = true,
         initialState: String = "initial",
         bootstrapper: Bootstrapper<String>? = null,
         executorFactory: () -> Executor<String, String, String, String, String> = { TestExecutor() },
         reducer: Reducer<String, String> = reducer()
     ): Store<String, String, String> {
-        val delegate =
-            object : StoreFactory {
-                override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
-                    name: String?,
-                    initialState: State,
-                    bootstrapper: Bootstrapper<Action>?,
-                    executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
-                    reducer: Reducer<State, Result>
-                ): Store<Intent, State, Label> =
-                    TestStore(
-                        initialState = initialState,
-                        bootstrapper = bootstrapper,
-                        executorFactory = executorFactory,
-                        reducer = reducer
-                    )
-            }
-
-        val factory = LoggingStoreFactory(delegate = delegate, logger = logger, logFormatter = formatter)
+        val factory = LoggingStoreFactory(delegate = TestStoreFactory, logger = logger, logFormatter = formatter)
 
         return factory.create(
             name = name,
+            isAutoInit = isAutoInit,
             initialState = initialState,
             bootstrapper = bootstrapper,
             executorFactory = executorFactory,
@@ -147,77 +144,5 @@ class LoggingStoreFactoryTest {
 
     private companion object {
         private const val STORE_NAME = "store"
-    }
-
-    private class TestLogger(
-        private val formatter: LogFormatter
-    ) : Logger {
-        private var logs by atomic(emptyList<String>())
-
-        override fun log(text: String) {
-            this.logs += text
-        }
-
-        fun assertLoggedText(text: String) {
-            assertTrue(text in logs)
-        }
-
-        fun assertLoggedEvent(eventType: StoreEventType, value: Any?) {
-            assertLoggedText(requireNotNull(formatter.format(storeName = STORE_NAME, eventType = eventType, value = value)))
-        }
-
-        fun assertNoLogs() {
-            assertEquals(emptyList(), logs)
-        }
-    }
-
-    private class TestLogFormatter : LogFormatter {
-        override fun format(storeName: String, eventType: StoreEventType, value: Any?): String? =
-            "$storeName;$eventType;$value"
-    }
-
-    private class TestStore<in Intent : Any, Action : Any, State : Any, Result : Any, Label : Any>(
-        initialState: State,
-        bootstrapper: Bootstrapper<Action>?,
-        executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
-        private val reducer: Reducer<State, Result>
-    ) : Store<Intent, State, Label> {
-        override var state: State by atomic(initialState)
-            private set
-        override val isDisposed: Boolean = false
-        private val executor = executorFactory()
-
-        init {
-            freeze()
-
-            executor.init(
-                object : Executor.Callbacks<State, Result, Label> {
-                    override val state: State get() = this@TestStore.state
-
-                    override fun onResult(result: Result) {
-                        this@TestStore.state = reducer.run { state.reduce(result) }
-                    }
-
-                    override fun onLabel(label: Label) {
-                        // no-op
-                    }
-                }
-            )
-
-            bootstrapper?.init(executor::handleAction)
-            bootstrapper?.invoke()
-        }
-
-        override fun states(observer: Observer<State>): Disposable = throw NotImplementedError("Not required")
-
-        override fun labels(observer: Observer<Label>): Disposable = throw NotImplementedError("Not required")
-
-        override fun accept(intent: Intent) {
-            executor.handleIntent(intent)
-        }
-
-        override fun dispose() {
-            // no-op
-        }
     }
 }

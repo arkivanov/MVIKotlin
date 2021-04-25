@@ -1,6 +1,5 @@
 package com.arkivanov.mvikotlin.core.store
 
-import com.arkivanov.mvikotlin.core.annotations.MainThread
 import kotlin.js.JsName
 
 /**
@@ -9,10 +8,19 @@ import kotlin.js.JsName
  */
 interface StoreFactory {
 
+    val isAutoInitByDefault: Boolean
+
+    /**
+     * Creates an implementation of [Store]
+     *
+     * @param name a name of the [Store] being created, used for logging, time traveling, etc.
+     * @param isAutoInit if `true` then the [Store] will be automatically initialized after creation,
+     * otherwise call [Store.init] manually
+     */
     @JsName("create")
-    @MainThread
     fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String? = null,
+        isAutoInit: Boolean = isAutoInitByDefault,
         initialState: State,
         bootstrapper: Bootstrapper<Action>? = null,
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
@@ -21,9 +29,6 @@ interface StoreFactory {
     ): Store<Intent, State, Label>
 
     private companion object {
-        private val bypassReducer: Reducer<Any, Any> =
-            object : Reducer<Any, Any> {
-                override fun Any.reduce(result: Any): Any = this
-            }
+        private val bypassReducer: Reducer<Any, Any> = Reducer { this }
     }
 }
