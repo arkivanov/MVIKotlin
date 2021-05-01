@@ -5,12 +5,14 @@
 `Store` is the place for business logic. In MVIKotlin it is represented by the `Store` interface which is located in the `mvikotlin` module. You can check its definition [here](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Store.kt).
 
 It has the following features:
-- There are three generic parameters: input `Intent` and output `State` and `Label`
-- The property named `state` returns the current `State` of the `Store`
-- Its `states(Observer<State>)` method is used to subscribe for `State` updates. When subscribed it emits the current `State` of the `Store`.
-- The `labels(Observer<Label>)` method is used to subscribe for `Labels`
-- The `accept(Intent)`  method supplies the `Store` with the `Intents`
-- The `dispose()` method disposes the `Store` and cancels all its async operations
+- There are three generic parameters: input `Intent` and output `State` and `Label`.
+- The property named `state` returns the current `State` of the `Store`.
+- Can be instantiated (created) on any thread.
+- Its `states(Observer<State>)` method is used to subscribe for `State` updates. When subscribed it emits the current `State` of the `Store`. Can be called (subscribed) on any thread, `States` are emitted always on the main thread.
+- The `labels(Observer<Label>)` method is used to subscribe for `Labels`. Can be called (subscribed) on any thread, `Labels` are emitted always on the main thread.
+- The `accept(Intent)`  method supplies the `Store` with the `Intents`, must be called only on the main thread.
+- The `init()` method initializes the `Store` and triggers the `Bootstrapper` if applicable, must be called only on the main thread.
+- The `dispose()` method disposes the `Store` and cancels all its async operations, must be called only on the main thread.
 
 > ⚠️ Usually you don't need to use `states(Observer)` or `labels(Observer)` methods directly. There are extensions available for `Reaktive` and `kotlinx.coroutines` libraries (see [Binding and Lifecycle](binding_and_lifecycle.md) for more information). However you will need these methods if you implement custom extensions.
 
@@ -20,7 +22,7 @@ Every `Store` has up to three components: `Bootstrapper`, `Executor` and `Reduce
 
 ### Bootstrapper
 
-This component bootstraps (kick-starts) the `Store`. If passed to the `StoreFactory` it will be called at some point during `Store` creation. `Bootstrapper` produces `Actions` that are processed by the `Executor`.
+This component bootstraps (kick-starts) the `Store`. If passed to the `StoreFactory` it will be called at some point during `Store` initialization. `Bootstrapper` produces `Actions` that are processed by the `Executor`.
 
 > ⚠️ Please note that `Bootstrappers` are stateful and so can not be `object`s (singletons).
 
@@ -42,6 +44,12 @@ There are a number of factories provided by MVIKotlin:
 - [DefaultStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-main/src/commonMain/kotlin/com/arkivanov/mvikotlin/main/store/DefaultStoreFactory.kt) creates a default implementation of `Store` and is provided by the `mvikotlin-main` module.
 - [LoggingStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-logging/src/commonMain/kotlin/com/arkivanov/mvikotlin/logging/store/LoggingStoreFactory.kt) wraps another `StoreFactory` and adds logging, it's provided by the `mvikotlin-logging` module.
 - [TimeTravelStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/commonMain/kotlin/com/arkivanov/mvikotlin/timetravel/store/TimeTravelStoreFactory.kt) is provided by the `mvikotlin-timetravel` module, it creates a `Store` with time travel functionality.
+
+### Initializing a Store
+
+By default `Stores` are initialized automatically by the `StoreFactory`. You can opt-out from the automatic initialization by passing `isAutoInit=false` argument to the `StoreFactory.create(...)` function. It is also possible to disable the automatic initialization for entire `DefaultStoreFactory` by passing `isAutoInitByDefault=false` argument to the its constructor.
+
+> ⚠️ When automatic initialization is disabled, you should manually call the `Store.init()` method.
 
 ### Simplest example
 

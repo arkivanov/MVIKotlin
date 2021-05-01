@@ -8,11 +8,7 @@ import com.arkivanov.mvikotlin.rx.Observer
 
 internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label : Any> : Store<Intent, State, Label> {
 
-    @MainThread
     fun events(observer: Observer<Event>): Disposable
-
-    @MainThread
-    fun init()
 
     @MainThread
     fun restoreState()

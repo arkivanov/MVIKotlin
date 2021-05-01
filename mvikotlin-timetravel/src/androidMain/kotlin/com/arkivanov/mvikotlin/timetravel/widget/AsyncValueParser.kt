@@ -30,7 +30,7 @@ internal object AsyncValueParser {
                 append(' ')
             }
 
-            appendln(node.text)
+            appendLine(node.text)
 
             node.children.forEach {
                 appendNode(node = it, indent = indent + 2)

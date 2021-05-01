@@ -22,10 +22,6 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     private val reducer: Reducer<State, Result>
 ) : TimeTravelStore<Intent, State, Label> {
 
-    init {
-        assertOnMainThread()
-    }
-
     private val executor = executorFactory()
     private var internalState by atomic(initialState)
     private val stateSubject = BehaviorSubject(initialState)
@@ -37,23 +33,14 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     private val eventProcessor = EventProcessor()
     private val eventDebugger = EventDebugger()
 
-    override fun states(observer: Observer<State>): Disposable {
-        assertOnMainThread()
+    override fun states(observer: Observer<State>): Disposable =
+        stateSubject.subscribe(observer)
 
-        return stateSubject.subscribe(observer)
-    }
+    override fun labels(observer: Observer<Label>): Disposable =
+        labelSubject.subscribe(observer)
 
-    override fun labels(observer: Observer<Label>): Disposable {
-        assertOnMainThread()
-
-        return labelSubject.subscribe(observer)
-    }
-
-    override fun events(observer: Observer<Event>): Disposable {
-        assertOnMainThread()
-
-        return eventSubject.subscribe(observer)
-    }
+    override fun events(observer: Observer<Event>): Disposable =
+        eventSubject.subscribe(observer)
 
     override fun accept(intent: Intent) {
         assertOnMainThread()

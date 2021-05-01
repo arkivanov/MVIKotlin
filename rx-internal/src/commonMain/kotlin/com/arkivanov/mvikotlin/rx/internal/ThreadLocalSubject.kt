@@ -4,88 +4,118 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.utils.internal.AtomicRef
 import com.arkivanov.mvikotlin.utils.internal.IsolatedRef
-import com.arkivanov.mvikotlin.utils.internal.assertOnMainThread
 import com.arkivanov.mvikotlin.utils.internal.atomic
+import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getAndUpdate
+import com.arkivanov.mvikotlin.utils.internal.isMainThread
 
-internal open class ThreadLocalSubject<T> : Subject<T> {
+internal open class ThreadLocalSubject<T>(
+    private val isOnMainThread: () -> Boolean = ::isMainThread
+) : Subject<T> {
 
-    private val stateRef: AtomicRef<IsolatedRef<MutableState<T>>?> = atomic(IsolatedRef(MutableState()))
+    private val stateRef: AtomicRef<State<T>?> = atomic(State())
 
-    override val isActive: Boolean get() = getMutableState() != null
+    override val isActive: Boolean get() = stateRef.value != null
 
     override fun subscribe(observer: Observer<T>): Disposable {
-        val mutableState: MutableState<T>? = getMutableState()
+        val disposable =
+            Disposable {
+                stateRef.getAndUpdate {
+                    it?.copy(map = it.map - this)
+                }
+            }
 
-        return if (mutableState == null) {
-            observer.onComplete()
-            Disposable().also(Disposable::dispose)
-        } else {
-            val disposable = disposable()
-            mutableState.map += disposable to observer
+        if (!isOnMainThread()) {
+            observer.freeze()
+        }
+
+        val isolatedObserver = IsolatedRef(observer)
+
+        val oldState =
+            stateRef.getAndUpdate {
+                it?.copy(map = it.map + (disposable to isolatedObserver))
+            }
+
+        if (oldState != null) {
             onSubscribed(observer)
-            disposable
+        } else {
+            observer.onComplete()
+            disposable.dispose()
         }
-    }
 
-    private fun disposable(): Disposable =
-        Disposable {
-            assertOnMainThread()
-            getMutableState()?.also { it.map -= this }
-        }
+        return disposable
+    }
 
     protected open fun onSubscribed(observer: Observer<T>) {
     }
 
     override fun onNext(value: T) {
-        val mutableState = getMutableState() ?: return
-        mutableState.queue.addLast(value)
-        mutableState.drainIfNeeded()
+        val oldState =
+            stateRef.getAndUpdate {
+                it?.copy(
+                    queue = if (it.isDraining) it.queue + value else it.queue,
+                    isDraining = true
+                )
+            } ?: return
+
+        if (!oldState.isDraining) {
+            oldState.emitValue(value)
+            drain()
+        }
     }
 
     override fun onComplete() {
-        val mutableState = removeMutableState() ?: return
-        mutableState.isCompleted = true
-        mutableState.drainIfNeeded()
+        val oldState =
+            stateRef.getAndUpdate {
+                it?.copy(
+                    isCompleted = true,
+                    isDraining = true
+                )
+            } ?: return
+
+        if (!oldState.isDraining) {
+            drain()
+        }
     }
 
-    private fun MutableState<T>.drainIfNeeded() {
-        if (!isDraining) {
-            isDraining = true
-            try {
-                drain()
-            } finally {
-                isDraining = false
+    private fun drain() {
+        while (true) {
+            val oldState =
+                stateRef.getAndUpdate {
+                    it?.takeUnless(State<*>::isCompleted)?.run {
+                        copy(
+                            queue = queue.drop(1),
+                            isDraining = queue.isNotEmpty()
+                        )
+                    }
+                } ?: return
+
+            if (oldState.isCompleted) {
+                oldState.queue.forEach { value ->
+                    oldState.emitValue(value)
+                }
+
+                oldState.map.forEach { (disposable, observer) ->
+                    disposable.dispose()
+                    observer.valueOrNull?.onComplete()
+                }
+
+                return
             }
+
+            val queue = oldState.queue.takeUnless(List<*>::isEmpty) ?: return
+            oldState.emitValue(queue.first())
         }
     }
 
-    private fun MutableState<T>.drain() {
-        while (queue.isNotEmpty()) {
-            val value = queue.removeFirst()
-            map.values.forEach { it.onNext(value) }
-        }
-
-        if (isCompleted) {
-            map.forEach { (disposable, observer) ->
-                disposable.dispose()
-                observer.onComplete()
-            }
-        }
+    private fun State<T>.emitValue(value: T) {
+        map.values.forEach { it.valueOrNull?.onNext(value) }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun getMutableState(): MutableState<T>? =
-        stateRef.value?.valueOrNull
-
-    @Suppress("UNCHECKED_CAST")
-    private fun removeMutableState(): MutableState<T>? =
-        stateRef.getAndUpdate { null }?.valueOrNull
-
-    private class MutableState<T> {
-        var map: Map<Disposable, Observer<T>> = mapOf()
-        val queue: ArrayDeque<T> = ArrayDeque()
-        var isCompleted: Boolean = false
-        var isDraining: Boolean = false
-    }
+    private data class State<T>(
+        val map: Map<Disposable, IsolatedRef<Observer<T>>> = emptyMap(),
+        val queue: List<T> = emptyList(),
+        val isCompleted: Boolean = false,
+        val isDraining: Boolean = false
+    )
 }

@@ -9,6 +9,11 @@ internal class LoggingStore<in Intent : Any, out State : Any, out Label : Any>(
     private val name: String
 ) : Store<Intent, State, Label> by delegate {
 
+    override fun init() {
+        logger.log("$name: initializing")
+        delegate.init()
+    }
+
     override fun dispose() {
         delegate.dispose()
         logger.log("$name: disposed")

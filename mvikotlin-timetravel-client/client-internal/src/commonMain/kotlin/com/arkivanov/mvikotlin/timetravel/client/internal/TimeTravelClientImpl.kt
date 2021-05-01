@@ -19,7 +19,7 @@ internal class TimeTravelClientImpl(
 
     private val store =
         TimeTravelClientStoreFactory(
-            storeFactory = DefaultStoreFactory,
+            storeFactory = DefaultStoreFactory(),
             connector = connector
         ).create()
 

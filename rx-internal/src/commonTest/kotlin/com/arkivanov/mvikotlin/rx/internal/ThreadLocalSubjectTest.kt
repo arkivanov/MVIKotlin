@@ -1,6 +1,5 @@
 package com.arkivanov.mvikotlin.rx.internal
 
-import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.freeze
@@ -26,7 +25,7 @@ class ThreadLocalSubjectTest {
 
     @AfterTest
     fun after() {
-        isAssertOnMainThreadEnabled = false
+        isAssertOnMainThreadEnabled = true
     }
 
     @Test
@@ -203,23 +202,5 @@ class ThreadLocalSubjectTest {
         subject.onNext(1)
 
         assertTrue(isCompleted)
-    }
-
-    @Test
-    fun does_not_freeze_subscribers() {
-        val observer =
-            object : Observer<Int?> {
-                override fun onNext(value: Int?) {
-                    // no-op
-                }
-
-                override fun onComplete() {
-                    // no-op
-                }
-            }
-
-        subject.subscribe(observer)
-
-        assertFalse(observer.isFrozen)
     }
 }

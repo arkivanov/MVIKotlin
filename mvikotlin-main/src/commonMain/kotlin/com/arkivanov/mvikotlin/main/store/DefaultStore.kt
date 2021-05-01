@@ -15,22 +15,19 @@ import com.arkivanov.mvikotlin.rx.observer
 internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
-    executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
+    private val executor: Executor<Intent, Action, State, Result, Label>,
     private val reducer: Reducer<State, Result>
 ) : Store<Intent, State, Label> {
-
-    init {
-        assertOnMainThread()
-    }
 
     private val intentSubject = PublishSubject<Intent>()
     private val stateSubject = BehaviorSubject(initialState)
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
-    private val executor = executorFactory()
 
-    init {
+    override fun init() {
+        assertOnMainThread()
+
         intentSubject.subscribe(observer(onNext = ::onIntent))
 
         executor.init(
@@ -70,17 +67,11 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
         stateSubject.onNext(func(stateSubject.value))
     }
 
-    override fun states(observer: Observer<State>): Disposable {
-        assertOnMainThread()
+    override fun states(observer: Observer<State>): Disposable =
+        stateSubject.subscribe(observer)
 
-        return stateSubject.subscribe(observer)
-    }
-
-    override fun labels(observer: Observer<Label>): Disposable {
-        assertOnMainThread()
-
-        return labelSubject.subscribe(observer)
-    }
+    override fun labels(observer: Observer<Label>): Disposable =
+        labelSubject.subscribe(observer)
 
     override fun accept(intent: Intent) {
         assertOnMainThread()

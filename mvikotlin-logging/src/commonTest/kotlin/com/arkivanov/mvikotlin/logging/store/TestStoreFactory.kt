@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.main.store
+package com.arkivanov.mvikotlin.logging.store
 
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
@@ -6,14 +6,9 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 
-/**
- * An implementation of the [StoreFactory] that creates default implementations of the [Store].
- *
- * @param isAutoInitByDefault the value is used as default for [StoreFactory.create] (`initialState`) argument
- */
-class DefaultStoreFactory(
-    override val isAutoInitByDefault: Boolean = true
-) : StoreFactory {
+internal object TestStoreFactory : StoreFactory {
+
+    override val isAutoInitByDefault: Boolean = false
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String?,
@@ -23,20 +18,14 @@ class DefaultStoreFactory(
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
         reducer: Reducer<State, Result>
     ): Store<Intent, State, Label> =
-        DefaultStore(
+        TestStore(
             initialState = initialState,
             bootstrapper = bootstrapper,
-            executor = executorFactory(),
+            executorFactory = executorFactory,
             reducer = reducer
         ).apply {
             if (isAutoInit) {
                 init()
             }
         }
-
-    @Deprecated(
-        "The DefaultStoreFactory is no longer an object, please use the constructor.",
-        ReplaceWith("DefaultStoreFactory()")
-    )
-    companion object : StoreFactory by DefaultStoreFactory()
 }
