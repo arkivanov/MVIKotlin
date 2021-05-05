@@ -7,14 +7,8 @@ kotlinCompat {
                 implementation(project(":mvikotlin"))
                 implementation(project(":rx"))
                 implementation(project(":utils-internal"))
-                implementation(Deps.Jetbrains.Kotlin.Test.Common)
+                implementation(Deps.Jetbrains.Kotlin.Test)
                 implementation(Deps.Jetbrains.Kotlin.TestAnnotations.Common)
-            }
-        }
-
-        jsMain {
-            dependencies {
-                implementation(Deps.Jetbrains.Kotlin.Test.Js)
             }
         }
 
