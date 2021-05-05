@@ -162,8 +162,7 @@ fun Project.setupMultiplatform() {
 
             commonTest {
                 dependencies {
-                    implementation(Deps.Jetbrains.Kotlin.Test.Common)
-                    implementation(Deps.Jetbrains.Kotlin.TestAnnotations.Common)
+                    implementation(Deps.Jetbrains.Kotlin.Test)
                 }
             }
 
@@ -188,10 +187,6 @@ fun Project.setupMultiplatform() {
             jvmCommonTest {
                 dependsOn(jvmNativeCommonTest)
                 dependsOn(jvmJsCommonTest)
-
-                dependencies {
-                    implementation(Deps.Jetbrains.Kotlin.Test.Junit)
-                }
             }
 
             jvmMain.dependsOn(jvmCommonMain)
@@ -212,10 +207,6 @@ fun Project.setupMultiplatform() {
             jsTest {
                 dependsOn(jsNativeCommonTest)
                 dependsOn(jvmJsCommonTest)
-
-                dependencies {
-                    implementation(Deps.Jetbrains.Kotlin.Test.Js)
-                }
             }
 
             nativeCommonMain {

@@ -2,9 +2,15 @@ plugins {
     kotlin("js")
 }
 
+kotlin {
+    js {
+        useCommonJs()
+        browser()
+    }
+}
+
 repositories {
     maven("https://dl.bintray.com/kotlin/kotlin-js-wrappers")
-
 }
 
 val kotlin_version = "pre.94-kotlin-1.3.70" // for kotlin-wrappers
@@ -35,7 +41,6 @@ dependencies {
 
     implementation(npm("core-js", "2.6.5"))
     implementation(npm("svg-inline-loader", "0.8.0"))
-    implementation(npm("abort-controller"))
     implementation(npm("react", "16.13.0"))
     implementation(npm("react-dom", "16.13.0"))
     implementation(npm("react-is", "16.13.0"))
@@ -43,14 +48,4 @@ dependencies {
     implementation(npm("styled-components", "4.3.2"))
     implementation(npm("@material-ui/core", "4.9.14"))
     implementation(npm("@material-ui/icons", "4.9.1"))
-}
-
-kotlin.withGroovyBuilder {
-    "js" {
-        "useCommonJs"()
-        "browser"()
-        "binaries" {
-            "executable"()
-        }
-    }
 }

@@ -2,7 +2,7 @@ object Deps {
 
     object Jetbrains {
         object Kotlin : Group(name = "org.jetbrains.kotlin") {
-            private const val version = "1.4.30"
+            private const val version = "1.5.0"
 
             object Plugin {
                 object Gradle : Dependency(group = Kotlin, name = "kotlin-gradle-plugin", version = version)
@@ -14,9 +14,7 @@ object Deps {
                 object Js : Dependency(group = Kotlin, name = "kotlin-stdlib-js", version = version)
             }
 
-            object Test {
-                object Common : Dependency(group = Kotlin, name = "kotlin-test-common", version = version)
-                object Js : Dependency(group = Kotlin, name = "kotlin-test-js", version = version)
+            object Test : Dependency(group = Kotlin, name = "kotlin-test", version = version) {
                 object Junit : Dependency(group = Kotlin, name = "kotlin-test-junit", version = version)
             }
 
@@ -38,7 +36,7 @@ object Deps {
     object Android {
         object Tools {
             object Build : Group(name = "com.android.tools.build") {
-                object Gradle : Dependency(group = Build, name = "gradle", version = "4.1.0")
+                object Gradle : Dependency(group = Build, name = "gradle", version = "4.2.0")
             }
         }
     }
