@@ -14,7 +14,9 @@ object Deps {
                 object Js : Dependency(group = Kotlin, name = "kotlin-stdlib-js", version = version)
             }
 
-            object Test : Dependency(group = Kotlin, name = "kotlin-test", version = version) {
+            object Test {
+                object Common : Dependency(group = Kotlin, name = "kotlin-test-common", version = version)
+                object Js : Dependency(group = Kotlin, name = "kotlin-test-js", version = version)
                 object Junit : Dependency(group = Kotlin, name = "kotlin-test-junit", version = version)
             }
 
