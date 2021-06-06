@@ -1,0 +1,22 @@
+setupMultiplatform(project)
+setupMultiplatformPublications(project)
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation project(":utils-internal")
+                implementation project(":rx")
+                implementation project(":rx-internal")
+                implementation project(":keepers")
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation "androidx.lifecycle:lifecycle-common-java8:$androidxLifecycleVersion"
+                implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleVersion"
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+setupMultiplatform(project)
+setupMultiplatformPublications(project)
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation project(":mvikotlin")
+                implementation project(":rx")
+                implementation project(":utils-internal")
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
+            }
+        }
+    }
+}

@@ -212,7 +212,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"../client-internal/build/xcode-mac-frameworks\"\n./gradlew :mvikotlin-timetravel-client:client-internal:packMacForXCode -PXCODE_CONFIGURATION=${CONFIGURATION}\n";
+			shellScript = "cd $SRCROOT/..\n./gradlew :mvikotlin-timetravel-client:client-internal:packMacForXCode -PXCODE_CONFIGURATION=${CONFIGURATION}\ncd $SRCROOT\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -370,7 +370,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"app-macos/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = "../client-internal/build/xcode-mac-frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../client-internal/build/xcode-mac-frameworks";
 				INFOPLIST_FILE = "app-macos/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -392,7 +392,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"app-macos/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = "../client-internal/build/xcode-mac-frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../client-internal/build/xcode-mac-frameworks";
 				INFOPLIST_FILE = "app-macos/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
