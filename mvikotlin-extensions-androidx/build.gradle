@@ -1,0 +1,20 @@
+if (!setupMultiplatform(project, [Target.ANDROID])) {
+    return
+}
+
+setupMultiplatform(project)
+setupMultiplatformPublications(project)
+
+kotlin {
+    sourceSets {
+        androidMain {
+            dependencies {
+                implementation project(":mvikotlin")
+                implementation "androidx.lifecycle:lifecycle-common-java8:$androidxLifecycleVersion"
+                implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
+                implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$androidxLifecycleVersion"
+                implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleVersion"
+            }
+        }
+    }
+}

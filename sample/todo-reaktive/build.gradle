@@ -1,0 +1,26 @@
+if (!setupMultiplatform(project, [Target.ANDROID, Target.JS_IR, Target.JS_LEGACY, Target.IOS])) {
+    return
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation project(":mvikotlin")
+                implementation project(":keepers")
+                implementation project(":mvikotlin-extensions-reaktive")
+                api project(":sample:todo-common")
+                implementation project(":sample:todo-common-internal")
+                implementation "com.badoo.reaktive:reaktive:$reaktiveVersion"
+            }
+        }
+
+        commonTest {
+            dependencies {
+                implementation project(":utils-internal")
+                implementation project(":mvikotlin-main")
+                implementation "com.badoo.reaktive:reaktive-testing:$reaktiveVersion"
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+setupMultiplatform(project)
+setupMultiplatformPublications(project)
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation project(":rx")
+                implementation project(":utils-internal")
+            }
+        }
+    }
+}
