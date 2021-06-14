@@ -2,7 +2,6 @@ if (!setupMultiplatform(project, [Target.ANDROID])) {
     return
 }
 
-setupMultiplatform(project)
 setupMultiplatformPublications(project)
 
 kotlin {
