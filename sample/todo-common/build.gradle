@@ -2,8 +2,6 @@ if (!setupMultiplatform(project, [Target.ANDROID, Target.JS_IR, Target.JS_LEGACY
     return
 }
 
-setupMultiplatform(project)
-
 kotlin {
     sourceSets {
         commonMain {
