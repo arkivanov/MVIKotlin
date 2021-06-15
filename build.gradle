@@ -307,6 +307,9 @@ void setupMultiplatformPublications(Project project) {
     project.with {
         plugins.apply('maven-publish')
 
+        group = "com.arkivanov.mvikotlin"
+        version = mvikotlinVersion
+
         publishing {
             publications.withType(MavenPublication.class).all {
                 setupPublicationPom(project, it)
