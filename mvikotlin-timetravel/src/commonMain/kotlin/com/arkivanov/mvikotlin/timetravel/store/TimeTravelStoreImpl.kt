@@ -9,6 +9,7 @@ import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
+import com.arkivanov.mvikotlin.rx.internal.Disposable
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 import com.arkivanov.mvikotlin.utils.internal.atomic
@@ -28,7 +29,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
-    private val eventSubject = PublishSubject<Event>()
+    private val eventSubjects = StoreEventType.values().associateWith { PublishSubject<Event>() }
     private var debuggingExecutor by atomic<Executor<*, *, *, *, *>?>(null)
     private val eventProcessor = EventProcessor()
     private val eventDebugger = EventDebugger()
@@ -36,11 +37,13 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     override fun states(observer: Observer<State>): Disposable =
         stateSubject.subscribe(observer)
 
-    override fun labels(observer: Observer<Label>): Disposable =
-        labelSubject.subscribe(observer)
+    override fun labels(observer: Observer<Label>): Disposable =labelSubject.subscribe(observer)
 
-    override fun events(observer: Observer<Event>): Disposable =
-        eventSubject.subscribe(observer)
+    override fun events(observer: Observer<Event>): Disposable {
+        val disposables = eventSubjects.values.map { it.subscribe(observer) }
+
+        return Disposable { disposables.forEach(Disposable::dispose) }
+    }
 
     override fun accept(intent: Intent) {
         assertOnMainThread()
@@ -60,7 +63,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
             executor.dispose()
             stateSubject.onComplete()
             labelSubject.onComplete()
-            eventSubject.onComplete()
+            eventSubjects.values.forEach(PublishSubject<*>::onComplete)
         }
     }
 
@@ -108,7 +111,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         assertOnMainThread()
 
         doIfNotDisposed {
-            eventSubject.onNext(Event(type = type, value = value, state = state))
+            eventSubjects.getValue(type).onNext(Event(type = type, value = value, state = state))
         }
     }
 

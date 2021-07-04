@@ -1,0 +1,44 @@
+if (!setupMultiplatform(project, [Target.JVM, Target.MACOS_X64])) {
+    return
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                api project(":mvikotlin-timetravel-proto-internal")
+                api project(":mvikotlin")
+                implementation project(":mvikotlin-main")
+                implementation project(":mvikotlin-extensions-reaktive")
+                implementation "com.badoo.reaktive:reaktive:$reaktiveVersion"
+                implementation "com.badoo.reaktive:reaktive-annotations:$reaktiveVersion"
+            }
+        }
+    }
+
+    doIfMacosX64Enabled(project) {
+        macosX64 {
+            binaries {
+                framework {
+                    baseName = "TimeTravelClient"
+
+                    export(project(":mvikotlin-timetravel-proto-internal"))
+                    export(project(":mvikotlin"))
+                }
+            }
+        }
+    }
+}
+
+doIfMacosX64Enabled(project) {
+    task packMacForXcode(type: Sync) {
+        group = "build"
+        def mode = System.getenv("CONFIGURATION") ?: "DEBUG"
+        def framework = kotlin.targets.getByName("macosX64").binaries.getFramework(mode)
+        inputs.property("mode", mode)
+        dependsOn(framework.linkTask)
+        def targetDir = new File(buildDir, "xcode-mac-frameworks")
+        from(framework.outputDirectory)
+        into(targetDir)
+    }
+}

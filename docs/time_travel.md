@@ -6,6 +6,8 @@ Time travel is a power debugging tool. Basically it allows you to record all eve
 
 If you want time travel you have to use the [TimeTravelStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/commonMain/kotlin/com/arkivanov/mvikotlin/timetravel/store/TimeTravelStoreFactory.kt).
 
+> ⚠️ Time travel is a debugging tool and may affect performance, ideally it should not be used in production.
+
 ### Using TimeTravelStoreFactory
 
 The `TimeTravelStoreFactory` is used to create implementations of `Store` that are able to record and replay events. 

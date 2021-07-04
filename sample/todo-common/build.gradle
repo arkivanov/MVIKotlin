@@ -1,0 +1,15 @@
+if (!setupMultiplatform(project, [Target.ANDROID, Target.JS_IR, Target.JS_LEGACY, Target.IOS])) {
+    return
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation project(":utils-internal")
+                implementation project(":mvikotlin")
+                implementation project(":keepers")
+            }
+        }
+    }
+}

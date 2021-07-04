@@ -33,32 +33,12 @@ jobs:
       - name: Publish Metadata
         env:
           SONATYPE_REPOSITORY_ID: ${{ needs.create-staging-repository.outputs.repository-id }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish --info -Pbuild_type=METADATA
-  non-native-publish:
-    name: Publish JVM, Android, JS
-    runs-on: ubuntu-latest
-    needs: create-staging-repository
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Publish JVM, Android, JS
-        env:
-          SONATYPE_REPOSITORY_ID: ${{ needs.create-staging-repository.outputs.repository-id }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish --info -Pbuild_type=NON_NATIVE
+        run: ./gradlew publish -Dpublish_metadata
   linux-publish:
-    name: Publish Linux
+    name: Publish on Linux
     runs-on: ubuntu-latest
     needs: create-staging-repository
     steps:
@@ -68,35 +48,15 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Publish Linux
+      - name: Publish on Linux
         env:
           SONATYPE_REPOSITORY_ID: ${{ needs.create-staging-repository.outputs.repository-id }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish --info -Pbuild_type=LINUX
-  ios-publish:
-    name: Publish iOS
-    runs-on: macos-latest
-    needs: create-staging-repository
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Publish iOS
-        env:
-          SONATYPE_REPOSITORY_ID: ${{ needs.create-staging-repository.outputs.repository-id }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish -Pbuild_type=IOS
+        run: ./gradlew publish -Dtargets=ANDROID,JVM,JS_IR,JS_LEGACY,LINUX_X64
   macos-publish:
-    name: Publish macOS
+    name: Publish on macOS
     runs-on: macos-latest
     needs: create-staging-repository
     steps:
@@ -106,18 +66,17 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Publish macOS
+      - name: Publish on macOS
         env:
           SONATYPE_REPOSITORY_ID: ${{ needs.create-staging-repository.outputs.repository-id }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish --info -Pbuild_type=MAC_OS
+        run: ./gradlew publish -Dtargets=IOS,WATCHOS,MACOS_X64
   close-staging-repository:
     name: Close staging repository
     runs-on: ubuntu-latest
-    needs: [ create-staging-repository, metadata-publish, non-native-publish, linux-publish, ios-publish, macos-publish ]
+    needs: [ create-staging-repository, metadata-publish, linux-publish, macos-publish ]
     steps:
       - name: Close staging repository
         uses: nexus-actions/release-nexus-staging-repo@v1.1
@@ -126,8 +85,8 @@ jobs:
           password: ${{ secrets.SONATYPE_PASSWORD }}
           staging_repository_id: ${{ needs.create-staging-repository.outputs.repository-id }}
           close_only: 'true'
-  non-native-check-publication:
-    name: Check JVM, Android, JS publication
+  linux-check-publication:
+    name: Check publication on Linux
     runs-on: ubuntu-latest
     needs: close-staging-repository
     steps:
@@ -141,34 +100,8 @@ jobs:
         run: sudo apt-get update
       - name: Install dependencies
         run: sudo apt-get install nodejs chromium-browser
-      - name: Check JVM, Android, JS publication
-        run: ./gradlew :tools:check-publication:build --info -Pcheck_publication=true -Pbuild_type=NON_NATIVE
-  linux-check-publication:
-    name: Check Linux publication
-    runs-on: ubuntu-latest
-    needs: close-staging-repository
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Check Linux publication
-        run: ./gradlew :tools:check-publication:build --info -Pcheck_publication=true -Pbuild_type=LINUX
-  ios-check-publication:
-    name: Check iOS publication
-    runs-on: macos-latest
-    needs: close-staging-repository
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Check iOS publication
-        run: ./gradlew :tools:check-publication:build --info -Pcheck_publication=true -Pbuild_type=IOS
+      - name: Check publication on Linux
+        run: ./gradlew :tools:check-publication:build -Pcheck_publication -Dtargets=ANDROID,JVM,JS_IR,JS_LEGACY,LINUX_X64
   macos-check-publication:
     name: Check macOS publication
     runs-on: macos-latest
@@ -181,4 +114,4 @@ jobs:
         with:
           java-version: 1.8
       - name: Check macOS publication
-        run: ./gradlew :tools:check-publication:build --info -Pcheck_publication=true -Pbuild_type=MAC_OS
+        run: ./gradlew :tools:check-publication:build -Pcheck_publication -Dtargets=IOS,WATCHOS,MACOS_X64

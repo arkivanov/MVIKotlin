@@ -3,49 +3,11 @@ name: Build
 on:
   pull_request:
     paths-ignore:
-    - 'docs/**'
+      - 'docs/**'
 
 jobs:
-  android-build:
-    name: Build Android
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Set up cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Build Android
-        run: ./gradlew build --info -Pbuild_type=ANDROID
-  jvm-build:
-    name: Build JVM
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Set up cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Build JVM
-        run: ./gradlew build --info -Pbuild_type=JVM
-  js-build:
-    name: Build JS
+  linux-build:
+    name: Build on Linux
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -65,48 +27,10 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Build JS
-        run: ./gradlew build --info -Pbuild_type=JS
-  linux-build:
-    name: Build Linux
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Set up cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Build Linux
-        run: ./gradlew build --info -Pbuild_type=LINUX
-  ios-build:
-    name: Build iOS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Set up cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Build iOS
-        run: ./gradlew build --info -Pbuild_type=IOS
+      - name: Build on Linux
+        run: ./gradlew build -Dtargets=ANDROID,JVM,JS_IR,JS_LEGACY,LINUX_X64
   macos-build:
-    name: Build macOS
+    name: Build on macOS
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -122,5 +46,5 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Build macOS
-        run: ./gradlew build --info -Pbuild_type=MAC_OS
+      - name: Build on macOS
+        run: ./gradlew build --info -Dtargets=IOS,WATCHOS,MACOS_X64

@@ -582,6 +582,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F38434523FDD21B00501F27 /* Build configuration list for PBXNativeTarget "todo-app-ios" */;
 			buildPhases = (
+				1FC33044266D554900689124 /* ShellScript */,
 				1F38432D23FDD21900501F27 /* Sources */,
 				1F38432E23FDD21900501F27 /* Frameworks */,
 				1F38432F23FDD21900501F27 /* Resources */,
@@ -641,6 +642,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1FC33044266D554900689124 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd $SRCROOT/../..\n./gradlew :sample:todo-darwin-umbrella:packForXCode -PXCODE_CONFIGURATION=${CONFIGURATION}\ncd $SRCROOT\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1F38432D23FDD21900501F27 /* Sources */ = {
@@ -809,6 +830,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"todo-app-ios/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../todo-darwin-umbrella/build/xcode-frameworks";
 				INFOPLIST_FILE = "todo-app-ios/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -828,6 +850,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"todo-app-ios/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../todo-darwin-umbrella/build/xcode-frameworks";
 				INFOPLIST_FILE = "todo-app-ios/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

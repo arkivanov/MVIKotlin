@@ -1,0 +1,61 @@
+if (!setupMultiplatform(project, [Target.IOS])) {
+    return
+}
+
+kotlin {
+    sourceSets {
+        commonMain {
+            dependencies {
+                api project(":rx")
+                api project(":keepers")
+                api project(":mvikotlin")
+                api project(":mvikotlin-main")
+                api project(":mvikotlin-logging")
+                api project(":mvikotlin-timetravel")
+                api project(":sample:todo-common")
+                api project(":sample:todo-reaktive")
+            }
+        }
+    }
+
+    doIfIosEnabled(project) {
+        ios {
+            binaries {
+                framework {
+                    baseName = "TodoLib"
+
+                    export project(":rx")
+                    export project(":keepers")
+                    export project(":mvikotlin")
+                    export project(":mvikotlin-main")
+                    export project(":mvikotlin-logging")
+                    export project(":mvikotlin-timetravel")
+                    export project(":sample:todo-common")
+                    export project(":sample:todo-reaktive")
+                }
+            }
+        }
+    }
+}
+
+static String getIosTargetName() {
+    def sdkName = System.getenv("SDK_NAME") ?: "iphonesimulator"
+    return "ios" + (sdkName.startsWith("iphoneos") ? "Arm64" : "X64")
+}
+
+doIfIosEnabled(project) {
+    task packForXcode(type: Sync) {
+        group = "build"
+        def mode = System.getenv("CONFIGURATION")
+        if (mode == null) {
+            mode = "DEBUG"
+        }
+        def targetName = getIosTargetName()
+        def framework = kotlin.targets.getByName(targetName).binaries.getFramework(mode)
+        inputs.property("mode", mode)
+        dependsOn(framework.linkTask)
+        def targetDir = new File(buildDir, "xcode-frameworks")
+        from(framework.outputDirectory)
+        into(targetDir)
+    }
+}

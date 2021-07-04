@@ -1,2 +1,0 @@
-setupMultiplatform()
-setupPublication()
