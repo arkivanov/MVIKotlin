@@ -318,7 +318,7 @@ void setupMultiplatformPublications(Project project) {
 
         setupPublicationRepository(project)
 
-        final isMetadata = findProperty("publish_metadata") != null
+        final isMetadata = System.getProperty("publish_metadata") != null
         final metadataPublicationNames = [KotlinMultiplatformPlugin.METADATA_TARGET_NAME, "kotlinMultiplatform"]
 
         tasks.withType(PublishToMavenRepository.class).all {
