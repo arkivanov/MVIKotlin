@@ -28,7 +28,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build on Linux
-        run: ./gradlew build -Ptargets=ANDROID,JVM,JS_IR,JS_LEGACY,LINUX_X64
+        run: ./gradlew build -Dtargets=ANDROID,JVM,JS_IR,JS_LEGACY,LINUX_X64
   macos-build:
     name: Build on macOS
     runs-on: macos-latest
@@ -47,4 +47,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build on macOS
-        run: ./gradlew build --info -Ptargets=IOS,WATCHOS,MACOS_X64
+        run: ./gradlew build --info -Dtargets=IOS,WATCHOS,MACOS_X64
