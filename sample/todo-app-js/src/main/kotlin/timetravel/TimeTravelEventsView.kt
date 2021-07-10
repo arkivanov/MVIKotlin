@@ -70,7 +70,7 @@ class TimeTravelEventsView(prps: TimeTravelEventsProps) :
     }
 }
 
-interface TimeTravelEventsProps : RProps {
+external interface TimeTravelEventsProps : RProps {
     var events: List<TimeTravelEvent>
     var selectedEventIndex: Int
     var onDebugEventClick: (Long) -> Unit

@@ -110,7 +110,7 @@ class TimeTravelComponent(prps: TimeTravelComponentProps) :
     }
 }
 
-interface TimeTravelComponentProps : RProps {
+external interface TimeTravelComponentProps : RProps {
     var onClose: () -> Unit
 }
 
