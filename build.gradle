@@ -5,8 +5,8 @@ import javax.annotation.Nullable
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
+        mavenCentral()
         google()
-        jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
@@ -22,8 +22,8 @@ plugins {
 
 allprojects {
     repositories {
+        mavenCentral()
         google()
-        jcenter()
     }
 
     plugins.apply("io.gitlab.arturbosch.detekt")
@@ -31,6 +31,14 @@ allprojects {
     detekt {
         toolVersion = "1.14.2"
         config = files("$rootDir/detekt.yml")
+    }
+
+    // Workaround until Detekt is updated: https://github.com/detekt/detekt/issues/3840.
+    // The current version depends on kotlinx-html-jvm:0.7.2 which is not in Maven Central.
+    configurations.detekt {
+        resolutionStrategy {
+            force("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
+        }
     }
 }
 

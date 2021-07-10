@@ -150,7 +150,7 @@ class TodoDetailsParentState(
     var model: TodoDetailsView.Model
 ) : RState
 
-interface TodoDetailsParentProps : RProps {
+external interface TodoDetailsParentProps : RProps {
     var dependencies: TodoDetailsComponent.Dependencies
 }
 

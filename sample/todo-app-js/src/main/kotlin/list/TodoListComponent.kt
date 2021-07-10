@@ -123,7 +123,7 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
     }
 }
 
-interface TodoListParentProps : RProps {
+external interface TodoListParentProps : RProps {
     var dependencies: TodoListParentComponent.Dependencies
 }
 
