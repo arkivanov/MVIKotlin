@@ -192,7 +192,7 @@ class AppState(
     var showDebugDrawer: Boolean
 ) : RState
 
-interface AppProps : RProps {
+external interface AppProps : RProps {
     var dependecies: App.Dependencies
 }
 
