@@ -33,6 +33,7 @@ class ProtoEncoder(
     }
 
     private inline fun writeTyped(type: ProtoObjectType, block: DataWriter.() -> Unit) {
+        writer.writeInt(PROTO_VERSION)
         writer.writeEnum(type)
         writer.block()
     }

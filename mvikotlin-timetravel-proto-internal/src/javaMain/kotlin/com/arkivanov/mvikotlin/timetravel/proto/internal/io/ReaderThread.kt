@@ -1,14 +1,13 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
-import java.io.IOException
 import java.net.Socket
 
 class ReaderThread<T : ProtoObject>(
     private val socket: Socket,
     private val onRead: (T) -> Unit,
     private val onDisconnected: () -> Unit = {},
-    private val onError: (IOException) -> Unit = {}
+    private val onError: (Exception) -> Unit = {}
 ) : Thread() {
 
     override fun run() {
@@ -32,7 +31,7 @@ class ReaderThread<T : ProtoObject>(
 
                 protoFrameDecoder.accept(buffer, len)
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             onError(e)
         } finally {
             socket.closeSafe()

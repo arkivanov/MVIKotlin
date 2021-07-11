@@ -9,4 +9,8 @@
         <toolWindow anchor="right" factoryClass="com.arkivanov.mvikotlin.plugin.idea.timetravel.TimeTravelToolWindowFactory"
             id="MVIKotlin Time Travel" />
     </extensions>
+
+    <projectListeners>
+        <listener class="com.arkivanov.mvikotlin.plugin.idea.timetravel.TimeTravelToolWindowListener" topic="com.intellij.openapi.wm.ex.ToolWindowManagerListener" />
+    </projectListeners>
 </idea-plugin>

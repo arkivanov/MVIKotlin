@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.T
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventsupdate.TimeTravelEventsUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ParsedValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -22,13 +22,13 @@ class EncodeDecodeTest {
                             id = 1L,
                             storeName = "store",
                             type = StoreEventType.INTENT,
-                            value = Value.Object.String(value = "string")
+                            value = ParsedValue.Object.String(value = "string")
                         ),
                         TimeTravelEvent(
                             id = 2L,
                             storeName = "store",
                             type = StoreEventType.ACTION,
-                            value = Value.Object.Unparsed(type = "unparsedType", value = "unparsedValue")
+                            value = ParsedValue.Object.Unparsed(type = "unparsedType", value = "unparsedValue")
                         )
                     )
                 ),
@@ -48,13 +48,13 @@ class EncodeDecodeTest {
                             id = 1L,
                             storeName = "store",
                             type = StoreEventType.INTENT,
-                            value = Value.Object.String(value = "string")
+                            value = ParsedValue.Object.String(value = "string")
                         ),
                         TimeTravelEvent(
                             id = 2L,
                             storeName = "store",
                             type = StoreEventType.ACTION,
-                            value = Value.Object.Unparsed(type = "unparsedType", value = "unparsedValue")
+                            value = ParsedValue.Object.Unparsed(type = "unparsedType", value = "unparsedValue")
                         )
                     )
                 ),

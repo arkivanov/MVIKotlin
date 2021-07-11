@@ -43,46 +43,54 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.io.writeString
 
 //region Write
 
-internal fun DataWriter.writeValue(value: Value) {
+internal fun DataWriter.writeValue(value: ParsedValue) {
     when (value) {
-        is Value.Primitive -> {
+        is ParsedValue.Primitive -> {
             writeEnum(Type.PRIMITIVE)
             writeValuePrimitive(value)
         }
 
-        is Value.Object -> {
+        is ParsedValue.Object -> {
             writeEnum(Type.OBJECT)
             writeValueObject(value)
         }
     }.let {}
 }
 
-private fun DataWriter.writeValuePrimitive(value: Value.Primitive) {
+private fun DataWriter.writeValuePrimitive(value: ParsedValue.Primitive) {
     when (value) {
-        is Value.Primitive.Int -> writeTyped(PrimitiveType.INT) { writeInt(value.value) }
-        is Value.Primitive.Long -> writeTyped(PrimitiveType.LONG) { writeLong(value.value) }
-        is Value.Primitive.Short -> writeTyped(PrimitiveType.SHORT) { writeShort(value.value) }
-        is Value.Primitive.Byte -> writeTyped(PrimitiveType.BYTE) { writeByte(value.value) }
-        is Value.Primitive.Float -> writeTyped(PrimitiveType.FLOAT) { writeFloat(value.value) }
-        is Value.Primitive.Double -> writeTyped(PrimitiveType.DOUBLE) { writeDouble(value.value) }
-        is Value.Primitive.Char -> writeTyped(PrimitiveType.CHAR) { writeChar(value.value) }
-        is Value.Primitive.Boolean -> writeTyped(PrimitiveType.BOOLEAN) { writeBoolean(value.value) }
+        is ParsedValue.Primitive.Int -> writeTyped(PrimitiveType.INT) { writeInt(value.value) }
+        is ParsedValue.Primitive.Long -> writeTyped(PrimitiveType.LONG) { writeLong(value.value) }
+        is ParsedValue.Primitive.Short -> writeTyped(PrimitiveType.SHORT) { writeShort(value.value) }
+        is ParsedValue.Primitive.Byte -> writeTyped(PrimitiveType.BYTE) { writeByte(value.value) }
+        is ParsedValue.Primitive.Float -> writeTyped(PrimitiveType.FLOAT) { writeFloat(value.value) }
+        is ParsedValue.Primitive.Double -> writeTyped(PrimitiveType.DOUBLE) { writeDouble(value.value) }
+        is ParsedValue.Primitive.Char -> writeTyped(PrimitiveType.CHAR) { writeChar(value.value) }
+        is ParsedValue.Primitive.Boolean -> writeTyped(PrimitiveType.BOOLEAN) { writeBoolean(value.value) }
     }.let {}
 }
 
-private fun DataWriter.writeValueObject(value: Value.Object) {
+private fun DataWriter.writeValueObject(value: ParsedValue.Object) {
     when (value) {
-        is Value.Object.String -> writeTyped(ObjectType.STRING) { writeString(value.value) }
-        is Value.Object.IntArray -> writeTyped(ObjectType.INT_ARRAY) { writeIntArray(value.value) }
-        is Value.Object.LongArray -> writeTyped(ObjectType.LONG_ARRAY) { writeLongArray(value.value) }
-        is Value.Object.ShortArray -> writeTyped(ObjectType.SHORT_ARRAY) { writeShortArray(value.value) }
-        is Value.Object.ByteArray -> writeTyped(ObjectType.BYTE_ARRAY) { writeByteArray(value.value) }
-        is Value.Object.FloatArray -> writeTyped(ObjectType.FLOAT_ARRAY) { writeFloatArray(value.value) }
-        is Value.Object.DoubleArray -> writeTyped(ObjectType.DOUBLE_ARRAY) { writeDoubleArray(value.value) }
-        is Value.Object.CharArray -> writeTyped(ObjectType.CHAR_ARRAY) { writeCharArray(value.value) }
-        is Value.Object.BooleanArray -> writeTyped(ObjectType.BOOLEAN_ARRAY) { writeBooleanArray(value.value) }
+        is ParsedValue.Object.Int -> writeTyped(ObjectType.INT) { writeObject(value.value, DataWriter::writeInt) }
+        is ParsedValue.Object.Long -> writeTyped(ObjectType.LONG) { writeObject(value.value, DataWriter::writeLong) }
+        is ParsedValue.Object.Short -> writeTyped(ObjectType.SHORT) { writeObject(value.value, DataWriter::writeShort) }
+        is ParsedValue.Object.Byte -> writeTyped(ObjectType.BYTE) { writeObject(value.value, DataWriter::writeByte) }
+        is ParsedValue.Object.Float -> writeTyped(ObjectType.FLOAT) { writeObject(value.value, DataWriter::writeFloat) }
+        is ParsedValue.Object.Double -> writeTyped(ObjectType.DOUBLE) { writeObject(value.value, DataWriter::writeDouble) }
+        is ParsedValue.Object.Char -> writeTyped(ObjectType.CHAR) { writeObject(value.value, DataWriter::writeChar) }
+        is ParsedValue.Object.Boolean -> writeTyped(ObjectType.BOOLEAN) { writeObject(value.value, DataWriter::writeBoolean) }
+        is ParsedValue.Object.String -> writeTyped(ObjectType.STRING) { writeString(value.value) }
+        is ParsedValue.Object.IntArray -> writeTyped(ObjectType.INT_ARRAY) { writeIntArray(value.value) }
+        is ParsedValue.Object.LongArray -> writeTyped(ObjectType.LONG_ARRAY) { writeLongArray(value.value) }
+        is ParsedValue.Object.ShortArray -> writeTyped(ObjectType.SHORT_ARRAY) { writeShortArray(value.value) }
+        is ParsedValue.Object.ByteArray -> writeTyped(ObjectType.BYTE_ARRAY) { writeByteArray(value.value) }
+        is ParsedValue.Object.FloatArray -> writeTyped(ObjectType.FLOAT_ARRAY) { writeFloatArray(value.value) }
+        is ParsedValue.Object.DoubleArray -> writeTyped(ObjectType.DOUBLE_ARRAY) { writeDoubleArray(value.value) }
+        is ParsedValue.Object.CharArray -> writeTyped(ObjectType.CHAR_ARRAY) { writeCharArray(value.value) }
+        is ParsedValue.Object.BooleanArray -> writeTyped(ObjectType.BOOLEAN_ARRAY) { writeBooleanArray(value.value) }
 
-        is Value.Object.Array ->
+        is ParsedValue.Object.Array ->
             writeTyped(ObjectType.ARRAY) {
                 writeString(value.type)
                 writeCollection(value.value) {
@@ -90,7 +98,7 @@ private fun DataWriter.writeValueObject(value: Value.Object) {
                 }
             }
 
-        is Value.Object.Iterable ->
+        is ParsedValue.Object.Iterable ->
             writeTyped(ObjectType.ITERABLE) {
                 writeString(value.type)
                 writeCollection(value.value) {
@@ -98,24 +106,24 @@ private fun DataWriter.writeValueObject(value: Value.Object) {
                 }
             }
 
-        is Value.Object.Map ->
+        is ParsedValue.Object.Map ->
             writeTyped(ObjectType.MAP) {
                 writeString(value.type)
                 writeMap(map = value.value, writeKey = { writeValueObject(it) }, writeValue = { writeValueObject(it) })
             }
 
-        is Value.Object.Other ->
+        is ParsedValue.Object.Other ->
             writeTyped(ObjectType.OTHER) {
                 writeString(value.type)
                 writeMap(map = value.value, writeKey = { writeString(it) }, writeValue = { writeValue(it) })
             }
 
-        is Value.Object.Unparsed ->
+        is ParsedValue.Object.Unparsed ->
             writeTyped(ObjectType.UNPARSED) {
                 writeString(value.type)
                 writeString(value.value)
             }
-    }
+    }.let {}
 }
 
 private inline fun <T : Enum<*>> DataWriter.writeTyped(type: T, block: DataWriter.() -> Unit) {
@@ -123,56 +131,76 @@ private inline fun <T : Enum<*>> DataWriter.writeTyped(type: T, block: DataWrite
     block()
 }
 
+private inline fun <T : Any> DataWriter.writeObject(value: T?, block: DataWriter.(T) -> Unit) {
+    if (value == null) {
+        writeByte(0)
+    } else {
+        writeByte(1)
+        block(value)
+    }
+}
+
 //endregion Write
 
 //region Read
 
-internal fun DataReader.readValue(): Value =
+internal fun DataReader.readValue(): ParsedValue =
     when (readEnum<Type>()) {
         Type.PRIMITIVE -> readValuePrimitive()
         Type.OBJECT -> readValueObject()
     }
 
-private fun DataReader.readValuePrimitive(): Value.Primitive =
+private fun DataReader.readValuePrimitive(): ParsedValue.Primitive =
     when (readEnum<PrimitiveType>()) {
-        PrimitiveType.INT -> Value.Primitive.Int(readInt())
-        PrimitiveType.LONG -> Value.Primitive.Long(readLong())
-        PrimitiveType.SHORT -> Value.Primitive.Short(readShort())
-        PrimitiveType.BYTE -> Value.Primitive.Byte(readByte())
-        PrimitiveType.FLOAT -> Value.Primitive.Float(readFloat())
-        PrimitiveType.DOUBLE -> Value.Primitive.Double(readDouble())
-        PrimitiveType.CHAR -> Value.Primitive.Char(readChar())
-        PrimitiveType.BOOLEAN -> Value.Primitive.Boolean(readBoolean())
+        PrimitiveType.INT -> ParsedValue.Primitive.Int(readInt())
+        PrimitiveType.LONG -> ParsedValue.Primitive.Long(readLong())
+        PrimitiveType.SHORT -> ParsedValue.Primitive.Short(readShort())
+        PrimitiveType.BYTE -> ParsedValue.Primitive.Byte(readByte())
+        PrimitiveType.FLOAT -> ParsedValue.Primitive.Float(readFloat())
+        PrimitiveType.DOUBLE -> ParsedValue.Primitive.Double(readDouble())
+        PrimitiveType.CHAR -> ParsedValue.Primitive.Char(readChar())
+        PrimitiveType.BOOLEAN -> ParsedValue.Primitive.Boolean(readBoolean())
     }
 
-private fun DataReader.readValueObject(): Value.Object =
+private fun DataReader.readValueObject(): ParsedValue.Object =
     when (readEnum<ObjectType>()) {
-        ObjectType.STRING -> Value.Object.String(readString())
-        ObjectType.INT_ARRAY -> Value.Object.IntArray(readIntArray())
-        ObjectType.LONG_ARRAY -> Value.Object.LongArray(readLongArray())
-        ObjectType.SHORT_ARRAY -> Value.Object.ShortArray(readShortArray())
-        ObjectType.BYTE_ARRAY -> Value.Object.ByteArray(readByteArray())
-        ObjectType.FLOAT_ARRAY -> Value.Object.FloatArray(readFloatArray())
-        ObjectType.DOUBLE_ARRAY -> Value.Object.DoubleArray(readDoubleArray())
-        ObjectType.CHAR_ARRAY -> Value.Object.CharArray(readCharArray())
-        ObjectType.BOOLEAN_ARRAY -> Value.Object.BooleanArray(readBooleanArray())
-        ObjectType.ARRAY -> Value.Object.Array(type = readString()!!, value = readList { readValueObject() })
-        ObjectType.ITERABLE -> Value.Object.Iterable(type = readString()!!, value = readList { readValueObject() })
+        ObjectType.INT -> ParsedValue.Object.Int(readObject(DataReader::readInt))
+        ObjectType.LONG -> ParsedValue.Object.Long(readObject(DataReader::readLong))
+        ObjectType.SHORT -> ParsedValue.Object.Short(readObject(DataReader::readShort))
+        ObjectType.BYTE -> ParsedValue.Object.Byte(readObject(DataReader::readByte))
+        ObjectType.FLOAT -> ParsedValue.Object.Float(readObject(DataReader::readFloat))
+        ObjectType.DOUBLE -> ParsedValue.Object.Double(readObject(DataReader::readDouble))
+        ObjectType.CHAR -> ParsedValue.Object.Char(readObject(DataReader::readChar))
+        ObjectType.BOOLEAN -> ParsedValue.Object.Boolean(readObject(DataReader::readBoolean))
+        ObjectType.STRING -> ParsedValue.Object.String(readString())
+        ObjectType.INT_ARRAY -> ParsedValue.Object.IntArray(readIntArray())
+        ObjectType.LONG_ARRAY -> ParsedValue.Object.LongArray(readLongArray())
+        ObjectType.SHORT_ARRAY -> ParsedValue.Object.ShortArray(readShortArray())
+        ObjectType.BYTE_ARRAY -> ParsedValue.Object.ByteArray(readByteArray())
+        ObjectType.FLOAT_ARRAY -> ParsedValue.Object.FloatArray(readFloatArray())
+        ObjectType.DOUBLE_ARRAY -> ParsedValue.Object.DoubleArray(readDoubleArray())
+        ObjectType.CHAR_ARRAY -> ParsedValue.Object.CharArray(readCharArray())
+        ObjectType.BOOLEAN_ARRAY -> ParsedValue.Object.BooleanArray(readBooleanArray())
+        ObjectType.ARRAY -> ParsedValue.Object.Array(type = readString()!!, value = readList { readValueObject() })
+        ObjectType.ITERABLE -> ParsedValue.Object.Iterable(type = readString()!!, value = readList { readValueObject() })
 
         ObjectType.MAP ->
-            Value.Object.Map(
+            ParsedValue.Object.Map(
                 type = readString()!!,
                 value = readMap(readKey = { readValueObject() }, readValue = { readValueObject() })
             )
 
         ObjectType.OTHER ->
-            Value.Object.Other(
+            ParsedValue.Object.Other(
                 type = readString()!!,
                 value = readMap(readKey = { readString()!! }, readValue = { readValue() })
             )
 
-        ObjectType.UNPARSED -> Value.Object.Unparsed(type = readString()!!, value = readString()!!)
+        ObjectType.UNPARSED -> ParsedValue.Object.Unparsed(type = readString()!!, value = readString()!!)
     }
+
+private inline fun <T : Any> DataReader.readObject(block: DataReader.() -> T): T? =
+    if (readByte().toInt() == 0) null else block()
 
 //endregion
 
@@ -192,6 +220,14 @@ private enum class PrimitiveType {
 }
 
 private enum class ObjectType {
+    INT,
+    LONG,
+    SHORT,
+    BYTE,
+    FLOAT,
+    DOUBLE,
+    CHAR,
+    BOOLEAN,
     STRING,
     INT_ARRAY,
     LONG_ARRAY,

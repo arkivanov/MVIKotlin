@@ -1,37 +1,46 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.data.value
 
 import java.lang.reflect.Field
+import java.lang.reflect.Modifier
 import java.lang.reflect.TypeVariable
 
 private val BLACK_LIST_FIELDS = hashSetOf("serialVersionUID", "INSTANCE")
 
-actual fun parseObject(obj: Any?): Value =
+actual fun parseObject(obj: Any?): ParsedValue =
     valueObject(value = obj, visitedObjects = HashSet())
 
-private fun valueObject(value: Any? = null, clazz: Class<*>? = null, visitedObjects: MutableSet<Any>): Value.Object =
+private fun valueObject(value: Any? = null, clazz: Class<*>? = null, visitedObjects: MutableSet<Any>): ParsedValue.Object =
     when {
         value != null -> valueObject(value = value, visitedObjects = visitedObjects)
         clazz != null -> valueObject(clazz = clazz)
-        else -> Value.Object.Other(type = getFullTypeName(), value = null)
+        else -> ParsedValue.Object.Other(type = getFullTypeName(), value = null)
     }
 
-private fun valueObject(value: Any, visitedObjects: MutableSet<Any>): Value.Object {
+private fun valueObject(value: Any, visitedObjects: MutableSet<Any>): ParsedValue.Object {
     if (value in visitedObjects) {
-        return Value.Object.Unparsed(type = getFullTypeName(value = value), value = "Recursive reference")
+        return ParsedValue.Object.Unparsed(type = getFullTypeName(value = value), value = "Recursive reference")
     }
 
     visitedObjects += value
     try {
         return when (value) {
-            is String -> Value.Object.String(value)
-            is IntArray -> Value.Object.IntArray(value)
-            is LongArray -> Value.Object.LongArray(value)
-            is ShortArray -> Value.Object.ShortArray(value)
-            is ByteArray -> Value.Object.ByteArray(value)
-            is FloatArray -> Value.Object.FloatArray(value)
-            is DoubleArray -> Value.Object.DoubleArray(value)
-            is CharArray -> Value.Object.CharArray(value)
-            is BooleanArray -> Value.Object.BooleanArray(value)
+            is Int -> ParsedValue.Object.Int(value)
+            is Long -> ParsedValue.Object.Long(value)
+            is Short -> ParsedValue.Object.Short(value)
+            is Byte -> ParsedValue.Object.Byte(value)
+            is Float -> ParsedValue.Object.Float(value)
+            is Double -> ParsedValue.Object.Double(value)
+            is Char -> ParsedValue.Object.Char(value)
+            is Boolean -> ParsedValue.Object.Boolean(value)
+            is String -> ParsedValue.Object.String(value)
+            is IntArray -> ParsedValue.Object.IntArray(value)
+            is LongArray -> ParsedValue.Object.LongArray(value)
+            is ShortArray -> ParsedValue.Object.ShortArray(value)
+            is ByteArray -> ParsedValue.Object.ByteArray(value)
+            is FloatArray -> ParsedValue.Object.FloatArray(value)
+            is DoubleArray -> ParsedValue.Object.DoubleArray(value)
+            is CharArray -> ParsedValue.Object.CharArray(value)
+            is BooleanArray -> ParsedValue.Object.BooleanArray(value)
             is Array<*> -> array(value, visitedObjects)
             is Iterable<*> -> iterable(value, visitedObjects)
             is Map<*, *> -> map(value, visitedObjects)
@@ -42,34 +51,42 @@ private fun valueObject(value: Any, visitedObjects: MutableSet<Any>): Value.Obje
     }
 }
 
-private fun valueObject(clazz: Class<*>): Value.Object =
+private fun valueObject(clazz: Class<*>): ParsedValue.Object =
     when {
-        clazz == String::class.java -> Value.Object.String(null)
-        clazz == IntArray::class.java -> Value.Object.IntArray(null)
-        clazz == LongArray::class.java -> Value.Object.LongArray(null)
-        clazz == ShortArray::class.java -> Value.Object.ShortArray(null)
-        clazz == ByteArray::class.java -> Value.Object.ByteArray(null)
-        clazz == FloatArray::class.java -> Value.Object.FloatArray(null)
-        clazz == DoubleArray::class.java -> Value.Object.DoubleArray(null)
-        clazz == CharArray::class.java -> Value.Object.CharArray(null)
-        clazz == BooleanArray::class.java -> Value.Object.BooleanArray(null)
-        clazz == Array<Any?>::class.java -> Value.Object.Array(getFullTypeName(clazz = Array<Any?>::class.java), null)
-        Iterable::class.java.isAssignableFrom(clazz) -> Value.Object.Iterable(getFullTypeName(clazz = clazz), null)
-        Map::class.java.isAssignableFrom(clazz) -> Value.Object.Map(getFullTypeName(clazz = clazz), null)
-        else -> Value.Object.Other(getFullTypeName(clazz = clazz), null)
+        clazz == Int::class.java -> ParsedValue.Object.Int(null)
+        clazz == Long::class.java -> ParsedValue.Object.Long(null)
+        clazz == Short::class.java -> ParsedValue.Object.Short(null)
+        clazz == Byte::class.java -> ParsedValue.Object.Byte(null)
+        clazz == Float::class.java -> ParsedValue.Object.Float(null)
+        clazz == Double::class.java -> ParsedValue.Object.Double(null)
+        clazz == Char::class.java -> ParsedValue.Object.Char(null)
+        clazz == Boolean::class.java -> ParsedValue.Object.Boolean(null)
+        clazz == String::class.java -> ParsedValue.Object.String(null)
+        clazz == IntArray::class.java -> ParsedValue.Object.IntArray(null)
+        clazz == LongArray::class.java -> ParsedValue.Object.LongArray(null)
+        clazz == ShortArray::class.java -> ParsedValue.Object.ShortArray(null)
+        clazz == ByteArray::class.java -> ParsedValue.Object.ByteArray(null)
+        clazz == FloatArray::class.java -> ParsedValue.Object.FloatArray(null)
+        clazz == DoubleArray::class.java -> ParsedValue.Object.DoubleArray(null)
+        clazz == CharArray::class.java -> ParsedValue.Object.CharArray(null)
+        clazz == BooleanArray::class.java -> ParsedValue.Object.BooleanArray(null)
+        clazz == Array<Any?>::class.java -> ParsedValue.Object.Array(getFullTypeName(clazz = Array<Any?>::class.java), null)
+        Iterable::class.java.isAssignableFrom(clazz) -> ParsedValue.Object.Iterable(getFullTypeName(clazz = clazz), null)
+        Map::class.java.isAssignableFrom(clazz) -> ParsedValue.Object.Map(getFullTypeName(clazz = clazz), null)
+        else -> ParsedValue.Object.Other(getFullTypeName(clazz = clazz), null)
     }
 
-private fun iterable(iterable: Iterable<*>, visitedObjects: MutableSet<Any>): Value.Object.Iterable =
-    Value.Object.Iterable(
+private fun iterable(iterable: Iterable<*>, visitedObjects: MutableSet<Any>): ParsedValue.Object.Iterable =
+    ParsedValue.Object.Iterable(
         type = getFullTypeName(iterable),
         value = iterable.map { valueObject(value = it, visitedObjects = visitedObjects) }
     )
 
-private fun map(map: Map<*, *>, visitedObjects: MutableSet<Any>): Value.Object.Map =
-    Value.Object.Map(
+private fun map(map: Map<*, *>, visitedObjects: MutableSet<Any>): ParsedValue.Object.Map =
+    ParsedValue.Object.Map(
         type = getFullTypeName(map),
         value = run {
-            val newMap = mutableMapOf<Value.Object, Value.Object>()
+            val newMap = mutableMapOf<ParsedValue.Object, ParsedValue.Object>()
             map.forEach { (k, v) ->
                 newMap[valueObject(value = k, visitedObjects = visitedObjects)] =
                     valueObject(value = v, visitedObjects = visitedObjects)
@@ -78,62 +95,75 @@ private fun map(map: Map<*, *>, visitedObjects: MutableSet<Any>): Value.Object.M
         }
     )
 
-private fun array(array: Array<*>, visitedObjects: MutableSet<Any>): Value.Object.Array =
-    Value.Object.Array(
+private fun array(array: Array<*>, visitedObjects: MutableSet<Any>): ParsedValue.Object.Array =
+    ParsedValue.Object.Array(
         type = getFullTypeName(value = array),
         value = array.map { valueObject(value = it, visitedObjects = visitedObjects) }
     )
 
-private fun other(obj: Any, visitedObjects: MutableSet<Any>): Value.Object.Other =
+private fun other(obj: Any, visitedObjects: MutableSet<Any>): ParsedValue.Object.Other =
     when (obj) {
         is Throwable -> throwable(obj, visitedObjects)
         else -> otherDefault(obj, visitedObjects)
     }
 
-private fun throwable(throwable: Throwable?, visitedObjects: MutableSet<Any>): Value.Object.Other =
-    Value.Object.Other(
+private fun throwable(throwable: Throwable?, visitedObjects: MutableSet<Any>): ParsedValue.Object.Other =
+    ParsedValue.Object.Other(
         type = getFullTypeName(throwable, Throwable::class.java),
         value = throwable?.let {
             mapOf(
-                "message" to Value.Object.String(it.message),
+                "message" to ParsedValue.Object.String(it.message),
                 "cause" to throwable(it.cause, visitedObjects)
             )
         }
     )
 
-private fun otherDefault(obj: Any, visitedObjects: MutableSet<Any>): Value.Object.Other {
-    val map = mutableMapOf<String, Value>()
+private fun otherDefault(obj: Any, visitedObjects: MutableSet<Any>): ParsedValue.Object.Other {
+    val fields = mutableMapOf<String, ParsedValue>()
 
     obj.javaClass.allFields.forEach { field ->
-        val isAccessible = field.isAccessible
-        if (!isAccessible) {
-            field.isAccessible = true
-        }
-        try {
-            val fieldName = field.name
-            if (fieldName.isAllowedFieldName()) {
-                map[fieldName] = field.getValue(obj, visitedObjects)
-            }
-        } finally {
-            if (!isAccessible) {
-                field.isAccessible = false
+        if (field.isValidForParsing()) {
+            @Suppress("DEPRECATION") // Required for Java 8
+            val isAccessible = field.isAccessible
+            if (isAccessible || field.trySetAccessibleCompat()) {
+                try {
+                    val fieldName = field.name
+                    if (fieldName.isAllowedFieldName()) {
+                        fields[fieldName] = field.getValue(obj, visitedObjects)
+                    }
+                } finally {
+                    if (!isAccessible) {
+                        field.isAccessible = false
+                    }
+                }
             }
         }
     }
 
-    return Value.Object.Other(type = getFullTypeName(value = obj), value = map)
+    return ParsedValue.Object.Other(type = getFullTypeName(value = obj), value = fields)
 }
 
-private fun Field.getValue(obj: Any, visitedObjects: MutableSet<Any>): Value =
+private fun Field.trySetAccessibleCompat(): Boolean =
+    try {
+        isAccessible = true
+        true
+    } catch (e: SecurityException) {
+        false
+    }
+
+private fun Field.isValidForParsing(): Boolean =
+    !Modifier.isStatic(modifiers) && !Modifier.isTransient(modifiers)
+
+private fun Field.getValue(obj: Any, visitedObjects: MutableSet<Any>): ParsedValue =
     when (type) {
-        Int::class.javaPrimitiveType -> Value.Primitive.Int(getInt(obj))
-        Long::class.javaPrimitiveType -> Value.Primitive.Long(getLong(obj))
-        Short::class.javaPrimitiveType -> Value.Primitive.Short(getShort(obj))
-        Byte::class.javaPrimitiveType -> Value.Primitive.Byte(getByte(obj))
-        Float::class.javaPrimitiveType -> Value.Primitive.Float(getFloat(obj))
-        Double::class.javaPrimitiveType -> Value.Primitive.Double(getDouble(obj))
-        Char::class.javaPrimitiveType -> Value.Primitive.Char(getChar(obj))
-        Boolean::class.javaPrimitiveType -> Value.Primitive.Boolean(getBoolean(obj))
+        Int::class.javaPrimitiveType -> ParsedValue.Primitive.Int(getInt(obj))
+        Long::class.javaPrimitiveType -> ParsedValue.Primitive.Long(getLong(obj))
+        Short::class.javaPrimitiveType -> ParsedValue.Primitive.Short(getShort(obj))
+        Byte::class.javaPrimitiveType -> ParsedValue.Primitive.Byte(getByte(obj))
+        Float::class.javaPrimitiveType -> ParsedValue.Primitive.Float(getFloat(obj))
+        Double::class.javaPrimitiveType -> ParsedValue.Primitive.Double(getDouble(obj))
+        Char::class.javaPrimitiveType -> ParsedValue.Primitive.Char(getChar(obj))
+        Boolean::class.javaPrimitiveType -> ParsedValue.Primitive.Boolean(getBoolean(obj))
         else -> valueObject(get(obj), type, visitedObjects)
     }
 
@@ -152,27 +182,18 @@ private val Class<*>.allFields: List<Field>
 private fun String.isAllowedFieldName(): Boolean = !startsWith("$") && !BLACK_LIST_FIELDS.contains(this)
 
 fun getFullTypeName(value: Any? = null, clazz: Class<*>? = null): String {
-    val valueClass = value?.javaClass ?: clazz ?: return "?"
+    val valueClass = value?.javaClass ?: clazz ?: return "Object"
 
-    if (value != null) {
-        if (valueClass.isArray) {
-            return valueClass.simpleName.replaceFirst("[]", "[${java.lang.reflect.Array.getLength(value)}]")
-        }
-
-        if (value is Collection<*>) {
-            return "${valueClass.toTypeNameWithGenerics(value)}(${value.size})"
-        }
+    if (valueClass.isArray) {
+        return "Array<${valueClass.componentType?.getFixedName() ?: "T"}>"
     }
 
-    return valueClass.toTypeNameWithGenerics(value)
+    return valueClass
+        .typeParameters
+        .takeUnless(Array<*>::isEmpty)
+        ?.joinToString(separator = ", ", prefix = "${valueClass.getFixedName()}<", postfix = ">", transform = TypeVariable<*>::getName)
+        ?: valueClass.getFixedName()
 }
 
-private fun Class<*>.toTypeNameWithGenerics(value: Any?): String =
-    (value?.javaClass ?: this).let { clazz ->
-        clazz
-            .typeParameters
-            .takeUnless(Array<*>::isEmpty)
-            ?.joinToString(separator = ", ", prefix = "<", postfix = ">", transform = TypeVariable<*>::getName)
-            ?.let { "${clazz.simpleName}$it" }
-            ?: clazz.simpleName
-    }
+private fun Class<*>.getFixedName(): String =
+    this.kotlin.simpleName ?: simpleName
