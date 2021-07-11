@@ -63,7 +63,7 @@ internal interface CalculatorStore : Store<Intent, State, Nothing> {
 }
 ```
 
-The `CalculatorStore` interface itself can be marked as `internal`, so it will be an mplementation detail of a module. Also `CalculatorStore` has two `Intents` (`Increment` and `Decrement`) and the `State` with just a `Long` value. This is the public API of our `Store`.
+The `CalculatorStore` interface itself can be marked as `internal`, so it will be an implementation detail of a module. Also `CalculatorStore` has two `Intents` (`Increment` and `Decrement`) and the `State` with just a `Long` value. This is the public API of our `Store`.
 
 Now it's time for implementation:
 
