@@ -6,12 +6,12 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation project(":mvikotlin")
-                implementation project(":keepers")
+                api project(":mvikotlin")
                 implementation project(":mvikotlin-extensions-coroutines")
                 api project(":sample:todo-common")
                 implementation project(":sample:todo-common-internal")
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
+                api "com.arkivanov.essenty:instance-keeper:$essentyVersion"
             }
         }
 

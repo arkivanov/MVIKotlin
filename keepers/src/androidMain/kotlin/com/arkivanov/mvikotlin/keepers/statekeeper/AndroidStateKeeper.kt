@@ -5,6 +5,7 @@ import androidx.savedstate.SavedStateRegistry
 import kotlin.reflect.KClass
 
 @ExperimentalStateKeeperApi
+@Deprecated(message = "This API is now provided by Essenty library: github.com/arkivanov/Essenty")
 internal abstract class AndroidStateKeeper<T : Any>(
     private val registry: SavedStateRegistry,
     private val clazz: KClass<out T>,

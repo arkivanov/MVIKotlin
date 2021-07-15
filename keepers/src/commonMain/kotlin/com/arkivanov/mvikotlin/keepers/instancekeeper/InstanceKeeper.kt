@@ -5,6 +5,7 @@ package com.arkivanov.mvikotlin.keepers.instancekeeper
  * A typical use case is Android Activity recreation due to configuration changes.
  */
 @ExperimentalInstanceKeeperApi
+@Deprecated(message = "This API is now provided by Essenty library: github.com/arkivanov/Essenty")
 interface InstanceKeeper {
 
     /**

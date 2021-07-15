@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal.settings.integration
 
-import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.SettingsConfig
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings

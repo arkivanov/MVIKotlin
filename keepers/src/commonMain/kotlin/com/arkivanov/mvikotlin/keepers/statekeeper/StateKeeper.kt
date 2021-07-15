@@ -5,6 +5,7 @@ package com.arkivanov.mvikotlin.keepers.statekeeper
  * A typical use case is Android Activity recreation due to system constraints.
  */
 @ExperimentalStateKeeperApi
+@Deprecated(message = "This API is now provided by Essenty library: github.com/arkivanov/Essenty")
 interface StateKeeper<T : Any> {
 
     /**

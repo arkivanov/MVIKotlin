@@ -60,7 +60,7 @@ struct TodoDetailsParent: View {
                 if (self.controller == nil) {
                     self.controller = ControllerHolder(deps: self.deps, itemId: self.itemId, output: self.output)
                 }
-                let viewLifecycle = LifecycleRegistry()
+                let viewLifecycle = LifecycleRegistryKt.LifecycleRegistry()
                 self.viewLifecycle = viewLifecycle
                 self.controller?.controller.onViewCreated(todoDetailsView: self.detailsView, viewLifecycle: viewLifecycle)
                 self.controller?.lifecycle.start()

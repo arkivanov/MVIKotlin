@@ -30,11 +30,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$androidxLifecycleVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
+    implementation "com.arkivanov.essenty:instance-keeper:$essentyVersion"
     implementation project(":mvikotlin")
     implementation project(":mvikotlin-main")
     implementation project(":mvikotlin-timetravel")
     implementation project(":mvikotlin-logging")
-    implementation project(":keepers")
     implementation project(":sample:todo-reaktive")
     implementation project(":sample:todo-coroutines")
 }

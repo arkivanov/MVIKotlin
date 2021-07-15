@@ -6,13 +6,9 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api project(":rx")
-                api project(":keepers")
-                api project(":mvikotlin")
                 api project(":mvikotlin-main")
                 api project(":mvikotlin-logging")
                 api project(":mvikotlin-timetravel")
-                api project(":sample:todo-common")
                 api project(":sample:todo-reaktive")
             }
         }
@@ -23,14 +19,11 @@ kotlin {
             binaries {
                 framework {
                     baseName = "TodoLib"
+                    transitiveExport = true
 
-                    export project(":rx")
-                    export project(":keepers")
-                    export project(":mvikotlin")
                     export project(":mvikotlin-main")
                     export project(":mvikotlin-logging")
                     export project(":mvikotlin-timetravel")
-                    export project(":sample:todo-common")
                     export project(":sample:todo-reaktive")
                 }
             }
