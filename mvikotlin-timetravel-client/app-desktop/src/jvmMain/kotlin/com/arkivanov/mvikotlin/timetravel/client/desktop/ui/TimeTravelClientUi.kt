@@ -148,73 +148,15 @@ private fun ButtonBar(
 ) {
     Surface(modifier = Modifier.height(IntrinsicSize.Min).fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxSize()) {
-            ToolbarButton(
-                imageVector = Icons.Default.Phonelink,
-                enabled = buttons.isConnectEnabled,
-                onClick = events.onConnect
-            )
-            ToolbarButton(
-                imageVector = Icons.Default.PhonelinkOff,
-                enabled = buttons.isDisconnectEnabled,
-                onClick = events.onDisconnect
-            )
+            ConnectionButtons(buttons, events)
 
             VerticalDivider()
 
-            ToolbarButton(
-                imageVector = Icons.Default.FiberManualRecord,
-                enabled = buttons.isStartRecordingEnabled,
-                onClick = events.onStartRecording
-            )
-            ToolbarButton(
-                imageVector = Icons.Default.Stop,
-                enabled = buttons.isStopRecordingEnabled,
-                onClick = events.onStopRecording
-            )
-            ToolbarButton(
-                imageVector = Icons.Default.SkipPrevious,
-                enabled = buttons.isMoveToStartEnabled,
-                onClick = events.onMoveToStart
-            )
-            ToolbarButton(
-                imageVector = Icons.Default.ChevronLeft,
-                enabled = buttons.isStepBackwardEnabled,
-                onClick = events.onStepBackward
-            )
-            ToolbarButton(
-                imageVector = Icons.Default.ChevronRight,
-                enabled = buttons.isStepForwardEnabled,
-                onClick = events.onStepForward
-            )
-            ToolbarButton(
-                imageVector = Icons.Default.SkipNext,
-                enabled = buttons.isMoveToEndEnabled,
-                onClick = events.onMoveToEnd
-            )
-            ToolbarButton(
-                imageVector = Icons.Default.Close,
-                enabled = buttons.isCancelEnabled,
-                onClick = events.onCancel
-            )
-            ToolbarButton(
-                imageVector = Icons.Default.BugReport,
-                enabled = buttons.isDebugEventEnabled,
-                onClick = events.onDebug
-            )
+            ControlButtons(buttons, events)
 
             VerticalDivider()
 
-            ToolbarButton(
-                imageVector = Icons.Default.Share,
-                enabled = buttons.isExportEventsEnabled,
-                onClick = events.onExportEvents
-            )
-
-            ToolbarButton(
-                imageVector = Icons.Default.Download,
-                enabled = buttons.isImportEventsEnabled,
-                onClick = events.onImportEvents
-            )
+            ExportImportButtons(buttons, events)
 
             VerticalDivider()
 
@@ -224,6 +166,95 @@ private fun ButtonBar(
             )
         }
     }
+}
+
+@Composable
+private fun ConnectionButtons(
+    buttons: Model.Buttons,
+    events: ButtonBarEvents
+) {
+    ToolbarButton(
+        imageVector = Icons.Default.Phonelink,
+        enabled = buttons.isConnectEnabled,
+        onClick = events.onConnect
+    )
+    ToolbarButton(
+        imageVector = Icons.Default.PhonelinkOff,
+        enabled = buttons.isDisconnectEnabled,
+        onClick = events.onDisconnect
+    )
+}
+
+@Composable
+private fun ControlButtons(
+    buttons: Model.Buttons,
+    events: ButtonBarEvents
+) {
+    ToolbarButton(
+        imageVector = Icons.Default.FiberManualRecord,
+        enabled = buttons.isStartRecordingEnabled,
+        onClick = events.onStartRecording
+    )
+
+    ToolbarButton(
+        imageVector = Icons.Default.Stop,
+        enabled = buttons.isStopRecordingEnabled,
+        onClick = events.onStopRecording
+    )
+
+    ToolbarButton(
+        imageVector = Icons.Default.SkipPrevious,
+        enabled = buttons.isMoveToStartEnabled,
+        onClick = events.onMoveToStart
+    )
+
+    ToolbarButton(
+        imageVector = Icons.Default.ChevronLeft,
+        enabled = buttons.isStepBackwardEnabled,
+        onClick = events.onStepBackward
+    )
+
+    ToolbarButton(
+        imageVector = Icons.Default.ChevronRight,
+        enabled = buttons.isStepForwardEnabled,
+        onClick = events.onStepForward
+    )
+
+    ToolbarButton(
+        imageVector = Icons.Default.SkipNext,
+        enabled = buttons.isMoveToEndEnabled,
+        onClick = events.onMoveToEnd
+    )
+
+    ToolbarButton(
+        imageVector = Icons.Default.Close,
+        enabled = buttons.isCancelEnabled,
+        onClick = events.onCancel
+    )
+
+    ToolbarButton(
+        imageVector = Icons.Default.BugReport,
+        enabled = buttons.isDebugEventEnabled,
+        onClick = events.onDebug
+    )
+}
+
+@Composable
+private fun ExportImportButtons(
+    buttons: Model.Buttons,
+    events: ButtonBarEvents
+) {
+    ToolbarButton(
+        imageVector = Icons.Default.Share,
+        enabled = buttons.isExportEventsEnabled,
+        onClick = events.onExportEvents
+    )
+
+    ToolbarButton(
+        imageVector = Icons.Default.Download,
+        enabled = buttons.isImportEventsEnabled,
+        onClick = events.onImportEvents
+    )
 }
 
 @Composable
