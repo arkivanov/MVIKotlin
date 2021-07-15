@@ -123,24 +123,30 @@ private fun otherDefault(obj: Any, visitedObjects: MutableSet<Any>): ParsedValue
 
     obj.javaClass.allFields.forEach { field ->
         if (field.isValidForParsing()) {
-            @Suppress("DEPRECATION") // Required for Java 8
-            val isAccessible = field.isAccessible
-            if (isAccessible || field.trySetAccessibleCompat()) {
-                try {
-                    val fieldName = field.name
-                    if (fieldName.isAllowedFieldName()) {
-                        fields[fieldName] = field.getValue(obj, visitedObjects)
-                    }
-                } finally {
-                    if (!isAccessible) {
-                        field.isAccessible = false
-                    }
+            field.access {
+                val fieldName = field.name
+                if (fieldName.isAllowedFieldName()) {
+                    fields[fieldName] = field.getValue(obj, visitedObjects)
                 }
             }
         }
     }
 
     return ParsedValue.Object.Other(type = getFullTypeName(value = obj), value = fields)
+}
+
+private inline fun Field.access(block: () -> Unit) {
+    @Suppress("DEPRECATION") // Required for Java 8
+    val isFieldAccessible = isAccessible
+    if (isFieldAccessible || trySetAccessibleCompat()) {
+        try {
+            block()
+        } finally {
+            if (!isFieldAccessible) {
+                isAccessible = false
+            }
+        }
+    }
 }
 
 private fun Field.trySetAccessibleCompat(): Boolean =
