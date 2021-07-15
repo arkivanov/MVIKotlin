@@ -31,6 +31,7 @@ allprojects {
     detekt {
         toolVersion = "1.14.2"
         config = files("$rootDir/detekt.yml")
+        input = files(file("src").listFiles()?.findAll { it.isDirectory() } ?: new ArrayList())
     }
 
     // Workaround until Detekt is updated: https://github.com/detekt/detekt/issues/3840.
