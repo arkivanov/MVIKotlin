@@ -67,8 +67,8 @@ class TodoAddStoreTest {
     private fun createStore() {
         store =
             TodoAddStoreFactory(
-                DefaultStoreFactory,
-                database,
+                storeFactory = DefaultStoreFactory(),
+                database = database,
                 mainContext = Dispatchers.Unconfined,
                 ioContext = Dispatchers.Unconfined
             ).create()

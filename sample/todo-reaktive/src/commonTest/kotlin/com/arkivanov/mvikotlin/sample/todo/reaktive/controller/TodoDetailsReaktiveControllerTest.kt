@@ -34,7 +34,7 @@ class TodoDetailsReaktiveControllerTest {
 
     private val dependencies =
         object : Dependencies {
-            override val storeFactory: StoreFactory = DefaultStoreFactory
+            override val storeFactory: StoreFactory = DefaultStoreFactory()
             override val database: TodoDatabase = this@TodoDetailsReaktiveControllerTest.database
             override val lifecycle: Lifecycle = this@TodoDetailsReaktiveControllerTest.lifecycle
             override val itemId: String get() = this@TodoDetailsReaktiveControllerTest.itemId

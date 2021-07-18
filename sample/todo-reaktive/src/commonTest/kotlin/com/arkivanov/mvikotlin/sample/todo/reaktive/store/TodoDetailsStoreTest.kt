@@ -147,6 +147,11 @@ class TodoDetailsStoreTest {
     }
 
     private fun createStore() {
-        store = TodoDetailsStoreFactory(DefaultStoreFactory, database, itemId = itemId).create()
+        store =
+            TodoDetailsStoreFactory(
+                storeFactory = DefaultStoreFactory(),
+                database = database,
+                itemId = itemId
+            ).create()
     }
 }

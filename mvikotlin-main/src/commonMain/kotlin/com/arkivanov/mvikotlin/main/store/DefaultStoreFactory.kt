@@ -15,6 +15,10 @@ class DefaultStoreFactory(
     override val isAutoInitByDefault: Boolean = true
 ) : StoreFactory {
 
+    constructor() : this(
+        isAutoInitByDefault = true
+    )
+
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String?,
         isAutoInit: Boolean,
@@ -33,10 +37,4 @@ class DefaultStoreFactory(
                 init()
             }
         }
-
-    @Deprecated(
-        "The DefaultStoreFactory is no longer an object, please use the constructor.",
-        ReplaceWith("DefaultStoreFactory()")
-    )
-    companion object : StoreFactory by DefaultStoreFactory()
 }
