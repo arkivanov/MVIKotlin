@@ -131,6 +131,6 @@ class TodoListStoreTest {
     }
 
     private fun createStore() {
-        store = TodoListStoreFactory(DefaultStoreFactory, database).create()
+        store = TodoListStoreFactory(DefaultStoreFactory(), database).create()
     }
 }

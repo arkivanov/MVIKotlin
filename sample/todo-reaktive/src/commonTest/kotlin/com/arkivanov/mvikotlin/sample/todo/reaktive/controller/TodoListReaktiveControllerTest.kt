@@ -35,7 +35,7 @@ class TodoListReaktiveControllerTest {
 
     private val dependencies =
         object : Dependencies {
-            override val storeFactory: StoreFactory = DefaultStoreFactory
+            override val storeFactory: StoreFactory = DefaultStoreFactory()
             override val database: TodoDatabase = this@TodoListReaktiveControllerTest.database
             override val lifecycle: Lifecycle = this@TodoListReaktiveControllerTest.lifecycle
             override val instanceKeeper: InstanceKeeper = DefaultInstanceKeeper()

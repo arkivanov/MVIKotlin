@@ -127,7 +127,7 @@ class TodoListStoreTest {
     private fun createStore() {
         store =
             TodoListStoreFactory(
-                storeFactory = DefaultStoreFactory,
+                storeFactory = DefaultStoreFactory(),
                 database = database,
                 mainContext = Dispatchers.Unconfined,
                 ioContext = Dispatchers.Unconfined

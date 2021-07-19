@@ -72,6 +72,6 @@ class TodoAddStoreTest {
     }
 
     private fun createStore() {
-        store = TodoAddStoreFactory(DefaultStoreFactory, database).create()
+        store = TodoAddStoreFactory(DefaultStoreFactory(), database).create()
     }
 }
