@@ -1,14 +1,14 @@
 package com.arkivanov.mvikotlin.core.binder
 
-import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
-import com.arkivanov.mvikotlin.core.lifecycle.TestLifecycle
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class BinderAttachToLifecycleTest {
 
     private val binder = TestBinder()
-    private val lifecycle = TestLifecycle()
+    private val lifecycle = LifecycleRegistry()
 
     @Test
     fun calls_binder_correctly_WHEN_attachTo_with_CREATE_DESTROY() {
@@ -20,7 +20,7 @@ class BinderAttachToLifecycleTest {
         lifecycle.onStop()
         lifecycle.onDestroy()
 
-        binder.assertEvents(BinderEvent.START to Lifecycle.State.CREATED, BinderEvent.STOP to Lifecycle.State.CREATED)
+        binder.assertEvents(BinderEvent.START to Lifecycle.State.CREATED, BinderEvent.STOP to Lifecycle.State.DESTROYED)
     }
 
     @Test
@@ -39,9 +39,9 @@ class BinderAttachToLifecycleTest {
 
         binder.assertEvents(
             BinderEvent.START to Lifecycle.State.STARTED,
-            BinderEvent.STOP to Lifecycle.State.STARTED,
+            BinderEvent.STOP to Lifecycle.State.CREATED,
             BinderEvent.START to Lifecycle.State.STARTED,
-            BinderEvent.STOP to Lifecycle.State.STARTED
+            BinderEvent.STOP to Lifecycle.State.CREATED
         )
     }
 
@@ -59,9 +59,9 @@ class BinderAttachToLifecycleTest {
 
         binder.assertEvents(
             BinderEvent.START to Lifecycle.State.RESUMED,
-            BinderEvent.STOP to Lifecycle.State.RESUMED,
+            BinderEvent.STOP to Lifecycle.State.STARTED,
             BinderEvent.START to Lifecycle.State.RESUMED,
-            BinderEvent.STOP to Lifecycle.State.RESUMED
+            BinderEvent.STOP to Lifecycle.State.STARTED
         )
     }
 

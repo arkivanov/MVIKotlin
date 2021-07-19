@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
-import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
-import com.arkivanov.mvikotlin.core.lifecycle.doOnCreateDestroy
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.subscribe
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.DefaultAdbController
@@ -34,7 +34,7 @@ class TimeTravelToolWindow(
         val view = TimeTravelView(TimeTravelViewListener(client))
 
         var disposable: Disposable? = null
-        lifecycle.doOnCreateDestroy(
+        lifecycle.subscribe(
             onCreate = { disposable = client.models.subscribe(onNext = view::render) },
             onDestroy = {
                 disposable?.dispose()

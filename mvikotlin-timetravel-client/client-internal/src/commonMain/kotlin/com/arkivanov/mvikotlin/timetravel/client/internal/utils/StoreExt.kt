@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal.utils
 
-import com.arkivanov.mvikotlin.core.lifecycle.DefaultLifecycleCallbacks
-import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.observer
@@ -13,7 +12,7 @@ internal fun <T : Any, S : Any> Store<*, T, *>.mapState(lifecycle: Lifecycle, ma
     val subject = BehaviorSubject(mapper(state))
 
     lifecycle.subscribe(
-        object : DefaultLifecycleCallbacks {
+        object : Lifecycle.Callbacks {
             private var disposable: Disposable? = null
 
             override fun onCreate() {

@@ -6,12 +6,12 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation project(":mvikotlin")
-                implementation project(":keepers")
+                api project(":mvikotlin")
                 implementation project(":mvikotlin-extensions-reaktive")
                 api project(":sample:todo-common")
                 implementation project(":sample:todo-common-internal")
                 implementation "com.badoo.reaktive:reaktive:$reaktiveVersion"
+                api "com.arkivanov.essenty:instance-keeper:$essentyVersion"
             }
         }
 

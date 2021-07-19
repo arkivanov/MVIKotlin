@@ -8,7 +8,8 @@ kotlin {
                 implementation project(":utils-internal")
                 implementation project(":rx")
                 implementation project(":rx-internal")
-                implementation project(":keepers")
+                api "com.arkivanov.essenty:lifecycle:$essentyVersion"
+                implementation "com.arkivanov.essenty:instance-keeper:$essentyVersion"
             }
         }
 
