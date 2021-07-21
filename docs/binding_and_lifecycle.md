@@ -2,7 +2,7 @@
 
 ## Binding
 
-Connecting inputs and outputs sounds like a simple task. And indeed it is. But it can be even easier if you use [Binder](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/binder/Binder.kt). It provides just two methods: `start()` and `stop()`. When you call `start()` it connects (subscribes) outputs with inputs. And when you call `stop()` it disconnects (unsubscribes).
+Connecting inputs and outputs sounds like a simple task, and indeed it is. But it can be even easier if you use [Binder](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/binder/Binder.kt). It provides just two methods: `start()` and `stop()`. When you call `start()` it connects (subscribes) outputs with inputs. And when you call `stop()` it disconnects (unsubscribes).
 
 ### Creating a Binder
 
@@ -74,14 +74,15 @@ Please note that you must dispose `Stores` at the end of life cycle. In this exa
 
 ## Lifecycle
 
-MVIKotlin provides an abstraction over [Lifecycle](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/Lifecycle.kt) states and events. Please take a look at the following diagram:
-![Lifecycle](media/lifecycle.jpg)
+MVIKotlin uses [Essenty](https://github.com/arkivanov/Essenty) library (from the same author), which provides `Lifecycle` -  a multiplatform abstraction for lifecycle states and events. The Essenty's `lifecycle` module is used as `api` dependency, so you don't need to explicitly add it to your project. Please familiarise yourself with Essenty library, especially with the `Lifecycle`.
 
-You can subscribe to `Lifecycle` events and unsubscribe from it. You can convert the [AndroidX Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle) to MVIKotlin `Lifecycle` using [asMviLifecycle()](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/androidMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/AndroidLifecycleExt.kt) extension function. Also there is [LifecycleRegistry](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/lifecycle/LifecycleRegistry.kt) which implements both the `Lifecycle` and `Lifecycle.Callbacks` interfaces, so you can manually control it.
+<img src="media/lifecycle.jpg" width="512">
 
 ## Binder + Lifecycle
 
-Work with the `Binder` can be simplified if you use the `Lifecycle`. Let's simplify our previous binding example::
+Work with the `Binder` can be simplified if you use the `Lifecycle`. You need to add one of the extension modules in order to use `Binder` with `Lifecycle`, either `mvikotlin-extensions-reaktive` or `mvikotlin-extensions-coroutines`.
+
+Let's simplify our previous binding example::
 
 ```kotlin
 class CalculatorController(lifecycle: Lifecycle) {

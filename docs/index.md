@@ -6,7 +6,7 @@ Overview | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding
 
 MVI stands for Model-View-Intent. It is an architectural pattern that utilizes unidirectional data flow. The data circulates between `Model` and `View` only in one direction - from `Model` to `View` and from `View` to `Model`.
 
-![MVI](media/mvi.jpg)
+<img src="media/mvi.jpg" width="256">
 
 ### What is MVIKotlin
 
@@ -17,7 +17,7 @@ MVIKotlin does not bring or enforce any particular architecture. Its responsibil
 
 - To provide a single source of truth for `State` (the scope is not defined, it can be a whole app, a screen, a feature, or a part of a feature);
 - To provide an abstraction for UI with efficient updates (however this is not obligatory, you can use whatever you want);
-- To provide lifecycle aware connections (binding) between inputs and outputs (again this is not obligatory in any way).
+- To provide lifecycle-aware connections (binding) between inputs and outputs (again this is not obligatory in any way).
 
 Everything else is out of scope of the library, there are no definitions for "screens", "features", "modules", etc. Also, no particular reactive framework is enforced/exposed. This gives a lot of flexibility:
 
@@ -32,12 +32,13 @@ You can find one of the architecture options in the [samples](https://github.com
 There are two core components in MVIKotlin: 
 
 - `Store` - represents `Model` from MVI, this is the place for business logic
-- `MviView` - represents `View` from MVI, the UI part
+- `MviView` - represents `View` from MVI, the UI part, optional
 
 ### How the data flows
 
 Please take a look at the following diagram:
-![MVIKotlin](media/mvikotlin.jpg)
+
+<img src="media/mvikotlin.jpg" width="384">
 
 The `Store` produces a stream of `States` which is transformed to a stream of `View Models` by a `Mapper` function (f). The `View` renders `View Models` and produces a stream of `View Events` which is transformed to a stream of `Intents` by another `Mapper` function (f). This makes the `Store` and the `View` independent from each other. You can also combine multiple `States` (multiple `Stores`) into a single `View Model` (single `View`), or multiple `View Events` (multiple `Views`) into a single `Intent` (single `Store`). But if you have only one `Store` and only one `View` and you need simplicity then your `View` can directly render `States` and produce `Intents`.
 
@@ -50,7 +51,6 @@ The data flows between core components only on Main thread.
 ### Reactivity
 
 MVI loves reactivity, it's all about data streams and transformations. MVIKotlin is a reactive framework. But the main functionality of the framework does not depend on any such library. A tiny abstraction over Rx is used instead. Extensions for [Reaktive](https://github.com/badoo/Reaktive) and for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) libraries are provided as separate modules.
-
 
 ### Kotlin/Native
 
