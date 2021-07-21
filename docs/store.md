@@ -338,7 +338,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
     
     // ...
 
-    private object BootstrapperImpl : ReaktiveBootstrapper<Action>() {
+    private class BootstrapperImpl : ReaktiveBootstrapper<Action>() {
         override fun invoke() {
             singleFromFunction { (1L..1000000.toLong()).sum() }
                 .subscribeOn(computationScheduler)
@@ -382,7 +382,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private object BootstrapperImpl : SuspendBootstrapper<Action>() {
+    private class BootstrapperImpl : SuspendBootstrapper<Action>() {
         override suspend fun bootstrap() {
             val sum = withContext(Dispatchers.Default) { (1L..1000000.toLong()).sum() }
             dispatch(Action.SetValue(sum))
