@@ -1,5 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.server
 
+import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
@@ -10,6 +11,7 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.arkivanov.mvikotlin.utils.internal.AtomicRef
 import com.arkivanov.mvikotlin.utils.internal.IsolatedRef
+import com.arkivanov.mvikotlin.utils.internal.assertOnMainThread
 import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.getAndUpdate
 import platform.darwin.dispatch_async
@@ -25,9 +27,16 @@ class TimeTravelServer(
 
     constructor() : this(controller = timeTravelController)
 
+    init {
+        assertOnMainThread()
+    }
+
     private val holderRef: AtomicRef<IsolatedRef<Holder>?> = atomic(IsolatedRef(Holder(controller = controller, onError = onError)))
 
+    @MainThread
     fun start() {
+        assertOnMainThread()
+
         val holder = getHolder() ?: return
 
         val connectionThread = connectionThread()
@@ -42,7 +51,10 @@ class TimeTravelServer(
             onError = ::onError
         )
 
+    @MainThread
     fun stop() {
+        assertOnMainThread()
+
         val holder = removeHolder() ?: return
 
         holder.connectionThread?.interrupt()
@@ -116,10 +128,10 @@ class TimeTravelServer(
     }
 
     private fun getHolder(): Holder? =
-        holderRef.value?.valueOrNull
+        holderRef.value?.value
 
     private fun removeHolder(): Holder? =
-        holderRef.getAndUpdate { null }?.valueOrNull
+        holderRef.getAndUpdate { null }?.value
 
     private class Holder(
         val controller: TimeTravelController,

@@ -14,9 +14,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class ThreadLocalSubjectTest {
+class BaseSubjectTest {
 
-    private val subject = ThreadLocalSubject<Int?>().freeze()
+    private val subject = BaseSubject<Int?>().freeze()
 
     @BeforeTest
     fun before() {
