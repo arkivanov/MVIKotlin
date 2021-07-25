@@ -105,8 +105,9 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
 
     /**
      * Subscribes the provided [Observer] of `States`.
-     * The first emission with the current `State` will be performed synchronously on subscription.
-     * Emissions are performed on the main thread.
+     * Can be called on any thread.
+     * The first emission with the current `State` will be performed synchronously on subscription, on the calling thread.
+     * Further emissions are always performed on the main thread.
      *
      * @param observer an [Observer] that will receive the `States`
      */
@@ -115,7 +116,8 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
 
     /**
      * Subscribes the provided [Observer] of `Labels`.
-     * Emissions are performed on the main thread.
+     * Can be called on any thread.
+     * Emissions are always performed on the main thread.
      *
      * @param observer an [Observer] that will receive the `Labels`
      */
@@ -124,6 +126,7 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
 
     /**
      * Accepts `Intents` and passes them to the [Executor].
+     * Must be called only on the main thread.
      * Does nothing if the [Store] is not yet initialized (see [init] for more information).
      *
      * @param intent an `Intent`
@@ -134,13 +137,15 @@ interface Store<in Intent : Any, out State : Any, out Label : Any> {
 
     /**
      * Initializes the [Store] and calls its [Bootstrapper] if applicable.
+     * Must be called only on the main thread.
      * The behaviour is undefined if the [Store] is already disposed.
      */
     @MainThread
     fun init()
 
     /**
-     * Disposes the [Store] and all its components
+     * Disposes the [Store] and all its components.
+     * Must be called only on the main thread.
      */
     @MainThread
     fun dispose()

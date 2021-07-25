@@ -10,4 +10,12 @@ interface Subject<T> : Observer<T> {
 
     @JsName("subscribe")
     fun subscribe(observer: Observer<T>): Disposable
+
+    // @MainThread
+    override fun onNext(value: T) {
+    }
+
+    // @MainThread
+    override fun onComplete() {
+    }
 }
