@@ -68,11 +68,11 @@ import kotlin.js.JsName
  *         // Result entries
  *     }
  *
- *     private class BootstrapperImpl: /* Extend either ReaktiveBootstrapper or SuspendBootstrapper */ {
+ *     private class BootstrapperImpl: /* Extend either ReaktiveBootstrapper or CoroutineBootstrapper */ {
  *         // Implementation here
  *     }
  *
- *     private class ExecutorImpl: /* Extend either ReaktiveExecutor or SuspendExecutor */ {
+ *     private class ExecutorImpl: /* Extend either ReaktiveExecutor or CoroutineExecutor */ {
  *         // Implementation here
  *     }
  *

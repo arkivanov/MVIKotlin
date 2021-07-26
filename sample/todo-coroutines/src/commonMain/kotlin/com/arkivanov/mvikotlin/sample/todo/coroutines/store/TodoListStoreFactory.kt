@@ -2,7 +2,7 @@ package com.arkivanov.mvikotlin.sample.todo.coroutines.store
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.SuspendExecutor
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.State
@@ -21,7 +21,7 @@ internal class TodoListStoreFactory(
 
     override fun createExecutor(): Executor<Intent, Unit, State, Result, Nothing> = ExecutorImpl()
 
-    private inner class ExecutorImpl : SuspendExecutor<Intent, Unit, State, Result, Nothing>(mainContext = mainContext) {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Result, Nothing>(mainContext = mainContext) {
         override suspend fun executeAction(action: Unit, getState: () -> State) {
             withContext(ioContext) { database.getAll() }
                 .let(Result::Loaded)
