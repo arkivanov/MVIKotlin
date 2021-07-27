@@ -2,7 +2,7 @@ package com.arkivanov.mvikotlin.sample.todo.coroutines.store
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.SuspendExecutor
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.add.TodoAddStore.Intent
@@ -23,7 +23,7 @@ internal class TodoAddStoreFactory(
 
     override fun createExecutor(): Executor<Intent, Nothing, State, Result, Label> = ExecutorImpl()
 
-    private inner class ExecutorImpl : SuspendExecutor<Intent, Nothing, State, Result, Label>(mainContext = mainContext) {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Result, Label>(mainContext = mainContext) {
         override suspend fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.SetText -> dispatch(Result.TextChanged(intent.text))

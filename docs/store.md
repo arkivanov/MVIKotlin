@@ -154,7 +154,7 @@ Now it's time for the `Executor`. If you are interested you can find the interfa
 
 There are two base `Executors` provided by `MVIKotlin`:
 - [ReaktiveExecutor](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutor.kt) - this implementation is based on the [Reaktive](https://github.com/badoo/Reaktive) library and is provided by `mvikotlin-extensions-reaktive` module
-- [SuspendExecutor](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-coroutines/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/coroutines/SuspendExecutor.kt) - this implementation is based on the [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) library and is provided by `mvikotlin-extensions-coroutines` module
+- [CoroutineExecutor](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-coroutines/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutor.kt) - this implementation is based on the [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) library and is provided by `mvikotlin-extensions-coroutines` module
 
 Let's try both.
 
@@ -190,14 +190,14 @@ So we extended the `ReaktiveExecutor` class and implemented the `executeIntent` 
 
 > ⚠️ `ReaktiveExecutor` implements Reaktive's [DisposableScope](https://github.com/badoo/Reaktive#subscription-management-with-disposablescope) which provides a bunch of additional extension functions. We used one of those functions - `subscribeScoped`. This ensures that the subscription is disposed when the `Store` (and so the `Executor`) is disposed.
 
-#### SuspendExecutor
+#### CoroutineExecutor
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class ExecutorImpl : SuspendExecutor<Intent, Nothing, State, Result, Nothing>() {
+    private class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Result, Nothing>() {
         override suspend fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
                 is Intent.Increment -> dispatch(Result.Value(getState().value + 1))
@@ -215,7 +215,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-Here we extended the `SuspendExecutor` class. This gives us the `suspend fun executeIntent` method so we can use coroutines. The sum is calculated on the `Default` dispatcher and the `Result` is dispatched from on the `Main` thread.
+Here we extended the `CoroutineExecutor` class. This gives us the `suspend fun executeIntent` method so we can use coroutines. The sum is calculated on the `Default` dispatcher and the `Result` is dispatched from on the `Main` thread.
 
 #### Publishing Labels
 
@@ -284,14 +284,14 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-And same for the `SuspendExecutor`:
+And same for the `CoroutineExecutor`:
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class ExecutorImpl : SuspendExecutor<Intent, Action, State, Result, Nothing>() {
+    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Result, Nothing>() {
         override suspend fun executeAction(action: Action, getState: () -> State) =
             when (action) {
                 is Action.Sum -> sum(action.n)
@@ -369,7 +369,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-Using `SuspendBootstrapper` from the `mvikotlin-extensions-coroutines` module:
+Using `CoroutineBootstrapper` from the `mvikotlin-extensions-coroutines` module:
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
@@ -390,14 +390,14 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private object BootstrapperImpl : SuspendBootstrapper<Action>() {
+    private object BootstrapperImpl : CoroutineBootstrapper<Action>() {
         override suspend fun bootstrap() {
             val sum = withContext(Dispatchers.Default) { (1L..1000000.toLong()).sum() }
             dispatch(Action.SetValue(sum))
         }
     }
 
-    private class ExecutorImpl : SuspendExecutor<Intent, Action, State, Result, Nothing>() {
+    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Result, Nothing>() {
         override suspend fun executeAction(action: Action, getState: () -> State) =
             when (action) {
                 is Action.SetValue -> dispatch(Result.Value(action.value))

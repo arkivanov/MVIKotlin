@@ -19,11 +19,7 @@ import kotlin.coroutines.CoroutineContext
  * An abstract implementation of the [Executor] that provides interoperability with coroutines.
  * All coroutines are launched in a scope which closes when the [Executor] is disposed.
  */
-@Deprecated(
-    message = "Please use CoroutineExecutor",
-    replaceWith = ReplaceWith("CoroutineExecutor<Intent, Action, State, Result, Label>")
-)
-open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Result : Any, Label : Any>(
+open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, Result : Any, Label : Any>(
     mainContext: CoroutineContext = Dispatchers.Main
 ) : Executor<Intent, Action, State, Result, Label> {
 
