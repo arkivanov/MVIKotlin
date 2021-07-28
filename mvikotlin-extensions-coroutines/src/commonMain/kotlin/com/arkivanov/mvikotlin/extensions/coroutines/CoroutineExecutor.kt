@@ -12,7 +12,6 @@ import com.arkivanov.mvikotlin.utils.internal.requireValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -25,16 +24,14 @@ open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, R
 
     private val callbacks = atomic<Callbacks<State, Result, Label>>()
     private val getState: () -> State = { callbacks.requireValue().state }
-    private val scope = CoroutineScope(mainContext)
+    protected val scope: CoroutineScope = CoroutineScope(mainContext)
 
     final override fun init(callbacks: Callbacks<State, Result, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
     final override fun handleIntent(intent: Intent) {
-        scope.launch {
-            executeIntent(intent, getState)
-        }
+        executeIntent(intent, getState)
     }
 
     /**
@@ -45,13 +42,11 @@ open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, R
      * @param getState a `State` supplier that returns the *current* `State` of the [Store]
      */
     @MainThread
-    protected open suspend fun executeIntent(intent: Intent, getState: () -> State) {
+    protected open fun executeIntent(intent: Intent, getState: () -> State) {
     }
 
     final override fun handleAction(action: Action) {
-        scope.launch {
-            executeAction(action, getState)
-        }
+        executeAction(action, getState)
     }
 
     /**
@@ -62,7 +57,7 @@ open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, R
      * @param getState a `State` supplier that returns the *current* `State` of the [Store]
      */
     @MainThread
-    protected open suspend fun executeAction(action: Action, getState: () -> State) {
+    protected open fun executeAction(action: Action, getState: () -> State) {
     }
 
     override fun dispose() {

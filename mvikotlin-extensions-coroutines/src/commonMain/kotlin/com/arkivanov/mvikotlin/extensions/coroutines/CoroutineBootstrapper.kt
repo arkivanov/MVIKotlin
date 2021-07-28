@@ -8,7 +8,6 @@ import com.arkivanov.mvikotlin.utils.internal.requireValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -20,7 +19,7 @@ abstract class CoroutineBootstrapper<Action : Any>(
 ) : Bootstrapper<Action> {
 
     private val actionConsumer = atomic<(Action) -> Unit>()
-    private val scope = CoroutineScope(mainContext)
+    protected val scope: CoroutineScope = CoroutineScope(mainContext)
 
     final override fun init(actionConsumer: (Action) -> Unit) {
         this.actionConsumer.initialize(actionConsumer)
@@ -34,18 +33,6 @@ abstract class CoroutineBootstrapper<Action : Any>(
     protected fun dispatch(action: Action) {
         actionConsumer.requireValue().invoke(action)
     }
-
-    final override fun invoke() {
-        scope.launch {
-            bootstrap()
-        }
-    }
-
-    /**
-     * A suspending variant of the [Bootstrapper.invoke] method.
-     * The coroutine is launched in a scope which closes when the [Bootstrapper] is disposed.
-     */
-    abstract suspend fun bootstrap()
 
     override fun dispose() {
         scope.cancel()

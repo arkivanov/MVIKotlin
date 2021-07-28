@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStore.State
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.list.TodoListStoreAbstractFactory
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -22,13 +23,14 @@ internal class TodoListStoreFactory(
     override fun createExecutor(): Executor<Intent, Unit, State, Result, Nothing> = ExecutorImpl()
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Result, Nothing>(mainContext = mainContext) {
-        override suspend fun executeAction(action: Unit, getState: () -> State) {
-            withContext(ioContext) { database.getAll() }
-                .let(Result::Loaded)
-                .also(::dispatch)
+        override fun executeAction(action: Unit, getState: () -> State) {
+            scope.launch {
+                val items = withContext(ioContext) { database.getAll() }
+                dispatch(Result.Loaded(items))
+            }
         }
 
-        override suspend fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
                 is Intent.ToggleDone -> toggleDone(intent.id, getState)
@@ -38,20 +40,20 @@ internal class TodoListStoreFactory(
             }.let {}
         }
 
-        private suspend fun delete(id: String) {
+        private fun delete(id: String) {
             dispatch(Result.Deleted(id))
 
-            withContext(ioContext) {
+            scope.launch(ioContext) {
                 database.delete(id)
             }
         }
 
-        private suspend fun toggleDone(id: String, state: () -> State) {
+        private fun toggleDone(id: String, state: () -> State) {
             dispatch(Result.DoneToggled(id))
 
             val item = state().items.find { it.id == id } ?: return
 
-            withContext(ioContext) {
+            scope.launch(ioContext) {
                 database.save(id, item.data)
             }
         }
