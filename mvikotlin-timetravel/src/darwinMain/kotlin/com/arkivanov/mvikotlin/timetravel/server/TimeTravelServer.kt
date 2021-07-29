@@ -6,7 +6,10 @@ import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
 import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventvalue.TimeTravelEventValue
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueParser
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.arkivanov.mvikotlin.utils.internal.AtomicRef
@@ -64,9 +67,9 @@ class TimeTravelServer(
     private fun onClientConnected(socket: Int) {
         runOnMainThreadIfNotDisposed { holder ->
             val reader =
-                ReaderThread(
+                ReaderThread<TimeTravelCommand>(
                     socket = socket,
-                    onRead = ::onCommandReceived,
+                    onRead = { onCommandReceived(command = it, socket = socket) },
                     onDisconnected = { onClientDisconnected(socket) }
                 )
 
@@ -98,7 +101,7 @@ class TimeTravelServer(
         clients.forEach { close(it.socket) }
     }
 
-    private fun onCommandReceived(command: TimeTravelCommand) {
+    private fun onCommandReceived(command: TimeTravelCommand, socket: Int) {
         runOnMainThreadIfNotDisposed { holder ->
             when (command) {
                 is TimeTravelCommand.StartRecording -> holder.controller.startRecording()
@@ -109,6 +112,7 @@ class TimeTravelServer(
                 is TimeTravelCommand.MoveToEnd -> holder.controller.moveToEnd()
                 is TimeTravelCommand.Cancel -> holder.controller.cancel()
                 is TimeTravelCommand.DebugEvent -> holder.controller.debugEvent(eventId = command.eventId)
+                is TimeTravelCommand.AnalyzeEvent -> analyzeEvent(eventId = command.eventId, holder = holder, socket = socket)
                 is TimeTravelCommand.ExportEvents -> Unit // Not supported
                 is TimeTravelCommand.ImportEvents -> Unit // Not supported
             }.let {}
@@ -132,6 +136,16 @@ class TimeTravelServer(
 
     private fun removeHolder(): Holder? =
         holderRef.getAndUpdate { null }?.value
+
+    private fun analyzeEvent(eventId: Long, holder: Holder, socket: Int) {
+        val event = holder.controller.state.events.firstOrNull { it.id == eventId } ?: return
+        val parsedValue = ValueParser().parseValue(event.value)
+        holder.sendData(clientSocket = socket, protoObject = TimeTravelEventValue(eventId = eventId, value = parsedValue))
+    }
+
+    private fun Holder.sendData(clientSocket: Int, protoObject: ProtoObject) {
+        clients[clientSocket]?.writer?.submit(protoObject)
+    }
 
     private class Holder(
         val controller: TimeTravelController,

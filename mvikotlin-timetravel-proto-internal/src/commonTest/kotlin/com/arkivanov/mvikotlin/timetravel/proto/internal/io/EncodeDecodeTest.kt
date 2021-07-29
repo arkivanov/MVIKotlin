@@ -6,7 +6,6 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.T
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventsupdate.TimeTravelEventsUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ParsedValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -22,13 +21,13 @@ class EncodeDecodeTest {
                             id = 1L,
                             storeName = "store",
                             type = StoreEventType.INTENT,
-                            value = ParsedValue.Object.String(value = "string")
+                            valueType = "value_type_1"
                         ),
                         TimeTravelEvent(
                             id = 2L,
                             storeName = "store",
                             type = StoreEventType.ACTION,
-                            value = ParsedValue.Object.Unparsed(type = "unparsedType", value = "unparsedValue")
+                            valueType = "value_type_2"
                         )
                     )
                 ),
@@ -48,13 +47,13 @@ class EncodeDecodeTest {
                             id = 1L,
                             storeName = "store",
                             type = StoreEventType.INTENT,
-                            value = ParsedValue.Object.String(value = "string")
+                            valueType = "value_type_1"
                         ),
                         TimeTravelEvent(
                             id = 2L,
                             storeName = "store",
                             type = StoreEventType.ACTION,
-                            value = ParsedValue.Object.Unparsed(type = "unparsedType", value = "unparsedValue")
+                            valueType = "value_type_2"
                         )
                     )
                 ),
