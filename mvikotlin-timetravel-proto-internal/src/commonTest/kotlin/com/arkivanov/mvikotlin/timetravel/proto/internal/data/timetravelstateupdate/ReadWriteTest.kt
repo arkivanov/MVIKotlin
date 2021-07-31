@@ -4,7 +4,6 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.AbstractReadWriteT
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.storeeventtype.StoreEventType
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventsupdate.TimeTravelEventsUpdate
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ParsedValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.DataReader
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.DataWriter
 import kotlin.test.Test
@@ -21,13 +20,13 @@ internal class ReadWriteTest : AbstractReadWriteTest<TimeTravelStateUpdate>() {
                             id = 1L,
                             storeName = "store",
                             type = StoreEventType.INTENT,
-                            value = ParsedValue.Object.String(value = "string")
+                            valueType = "value_type_1"
                         ),
                         TimeTravelEvent(
                             id = 2L,
                             storeName = "store",
                             type = StoreEventType.ACTION,
-                            value = ParsedValue.Object.Unparsed(type = "unparsedType", value = "unparsedValue")
+                            valueType = "value_type_2"
                         )
                     )
                 ),

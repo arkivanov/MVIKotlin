@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal.client
 
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ParsedValue
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 
 interface TimeTravelClient {
@@ -30,7 +30,7 @@ interface TimeTravelClient {
         val currentEventIndex: Int,
         val buttons: Buttons,
         val selectedEventIndex: Int,
-        val selectedEventValue: ParsedValue?,
+        val selectedEventValue: ValueNode?,
         val errorText: String?
     ) {
         data class Buttons(

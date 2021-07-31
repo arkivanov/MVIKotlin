@@ -5,7 +5,6 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTrave
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.Label
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.State
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import com.badoo.reaktive.disposable.Disposable
 

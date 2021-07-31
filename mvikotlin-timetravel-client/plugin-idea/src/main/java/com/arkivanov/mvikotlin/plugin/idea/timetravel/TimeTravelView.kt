@@ -3,9 +3,7 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 import com.arkivanov.mvikotlin.core.utils.diff
 import com.arkivanov.mvikotlin.core.view.ViewRenderer
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient.Model
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ParsedValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.toTree
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
@@ -85,8 +83,8 @@ internal class TimeTravelView(
         list.selectedIndex = index
     }
 
-    private fun renderSelectedEventValue(value: ParsedValue?) {
-        treeModel.setRoot(value?.toTree()?.toTreeNode())
+    private fun renderSelectedEventValue(value: ValueNode?) {
+        treeModel.setRoot(value?.toTreeNode())
     }
 
     private fun ValueNode.toTreeNode(): MutableTreeNode =

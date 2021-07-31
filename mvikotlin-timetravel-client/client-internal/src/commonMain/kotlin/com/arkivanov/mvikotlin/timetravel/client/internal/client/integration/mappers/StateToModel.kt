@@ -2,10 +2,10 @@ package com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.ma
 
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient.Model
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.State
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.storeeventtype.StoreEventType
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.type
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
 
 internal val stateToModel: State.() -> Model =
     {
@@ -32,11 +32,11 @@ private fun connectedModel(connection: State.Connection.Connected, errorText: St
         currentEventIndex = connection.currentEventIndex,
         buttons = connection.toButtons(),
         selectedEventIndex = connection.selectedEventIndex,
-        selectedEventValue = connection.events.getOrNull(connection.selectedEventIndex)?.value,
+        selectedEventValue = connection.events.getOrNull(connection.selectedEventIndex)?.let { it.value ?: ValueNode(type = "...") },
         errorText = errorText
     )
 
-private val TimeTravelEvent.text: String get() = "[$storeName]: ${type.title}.${value.type}"
+private val TimeTravelEvent.text: String get() = "[$storeName]: ${type.title}.$valueType"
 
 private fun State.Connection.toButtons(): Model.Buttons =
     Model.Buttons(

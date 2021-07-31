@@ -1,7 +1,5 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent
 
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.readValue
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.writeValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.DataReader
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.DataWriter
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.readEnum
@@ -15,7 +13,7 @@ internal fun DataWriter.writeTimeTravelEvent(timeTravelEvent: TimeTravelEvent) {
     writeLong(timeTravelEvent.id)
     writeString(timeTravelEvent.storeName)
     writeEnum(timeTravelEvent.type)
-    writeValue(timeTravelEvent.value)
+    writeString(timeTravelEvent.valueType)
 }
 
 internal fun DataReader.readTimeTravelEvent(): TimeTravelEvent =
@@ -23,5 +21,5 @@ internal fun DataReader.readTimeTravelEvent(): TimeTravelEvent =
         id = readLong(),
         storeName = readString()!!,
         type = readEnum(),
-        value = readValue()
+        valueType = readString()!!
     )

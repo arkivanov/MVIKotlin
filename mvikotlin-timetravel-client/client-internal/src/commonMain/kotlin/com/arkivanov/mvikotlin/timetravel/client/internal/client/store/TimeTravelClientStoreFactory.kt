@@ -9,14 +9,15 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTrave
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.State
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.State.Connection
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventsupdate.TimeTravelEventsUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
 import com.badoo.reaktive.annotations.EventsOnMainScheduler
 import com.badoo.reaktive.disposable.Disposable
 import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.observable.doOnBeforeFinally
 import com.badoo.reaktive.observable.doOnBeforeSubscribe
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent as TimeTravelEventProto
 
 internal class TimeTravelClientStoreFactory(
     private val storeFactory: StoreFactory,
@@ -36,6 +37,7 @@ internal class TimeTravelClientStoreFactory(
         object Disconnected : Result()
         data class StateUpdate(val stateUpdate: TimeTravelStateUpdate) : Result()
         data class EventSelected(val index: Int) : Result()
+        data class EventValue(val eventId: Long, val value: ValueNode) : Result()
         data class ErrorChanged(val text: String?) : Result()
     }
 
@@ -52,7 +54,7 @@ internal class TimeTravelClientStoreFactory(
                 is Intent.MoveToEnd -> sendIfNeeded(getState()) { TimeTravelCommand.MoveToEnd }
                 is Intent.Cancel -> sendIfNeeded(getState()) { TimeTravelCommand.Cancel }
                 is Intent.DebugEvent -> debugEventIfNeeded(getState())
-                is Intent.SelectEvent -> selectEvent(intent.index)
+                is Intent.SelectEvent -> selectEvent(intent.index, getState())
                 is Intent.ExportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ExportEvents }
                 is Intent.ImportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ImportEvents(intent.data) }
                 is Intent.RaiseError -> dispatch(Result.ErrorChanged(text = intent.errorText))
@@ -78,8 +80,9 @@ internal class TimeTravelClientStoreFactory(
             when (event) {
                 is Connector.Event.Connected -> dispatch(Result.Connected(event.writer))
                 is Connector.Event.StateUpdate -> dispatch(Result.StateUpdate(event.stateUpdate))
+                is Connector.Event.EventValue -> dispatch(Result.EventValue(eventId = event.eventId, value = event.value))
                 is Connector.Event.ExportEvents -> publish(Label.ExportEvents(event.data))
-                is Connector.Event.Error -> dispatch(Result.ErrorChanged(event.text))
+                is Connector.Event.Error -> dispatch(Result.ErrorChanged(text = event.text))
             }
 
         private fun disconnectIfNeeded(state: State) {
@@ -106,22 +109,23 @@ internal class TimeTravelClientStoreFactory(
 
         private fun debugEventIfNeeded(state: State) {
             sendIfNeeded(state) {
-                when (val connection = state.connection) {
-                    is Connection.Disconnected,
-                    is Connection.Connecting -> null
-
-                    is Connection.Connected ->
-                        connection
-                            .events
-                            .getOrNull(connection.selectedEventIndex)
-                            ?.id
-                            ?.let(TimeTravelCommand::DebugEvent)
-                }
+                events
+                    .getOrNull(selectedEventIndex)
+                    ?.id
+                    ?.let(TimeTravelCommand::DebugEvent)
             }
         }
 
-        private fun selectEvent(index: Int) {
+        private fun selectEvent(index: Int, state: State) {
             dispatch(Result.EventSelected(index = index))
+
+            sendIfNeeded(state) {
+                events
+                    .getOrNull(index)
+                    ?.takeIf { it.value == null }
+                    ?.id
+                    ?.let(TimeTravelCommand::AnalyzeEvent)
+            }
         }
     }
 
@@ -133,6 +137,7 @@ internal class TimeTravelClientStoreFactory(
                 is Result.Disconnected -> copy(connection = Connection.Disconnected)
                 is Result.StateUpdate -> copy(connection = connection.applyStateUpdate(result))
                 is Result.EventSelected -> copy(connection = connection.applyEventSelected(result))
+                is Result.EventValue -> copy(connection = connection.applyEventValue(result))
                 is Result.ErrorChanged -> copy(errorText = result.text)
             }
 
@@ -160,15 +165,37 @@ internal class TimeTravelClientStoreFactory(
 
         private fun List<TimeTravelEvent>.applyUpdate(update: TimeTravelEventsUpdate): List<TimeTravelEvent> =
             when (update) {
-                is TimeTravelEventsUpdate.All -> update.events
-                is TimeTravelEventsUpdate.New -> this + update.events
+                is TimeTravelEventsUpdate.All -> update.events.map { it.toDomain() }
+                is TimeTravelEventsUpdate.New -> this + update.events.map { it.toDomain() }
             }
+
+        private fun TimeTravelEventProto.toDomain(): TimeTravelEvent =
+            TimeTravelEvent(
+                id = id,
+                storeName = storeName,
+                type = type,
+                valueType = valueType,
+                value = null
+            )
 
         private fun Connection.applyEventSelected(result: Result.EventSelected): Connection =
             when (this) {
                 is Connection.Disconnected,
                 is Connection.Connecting -> this
                 is Connection.Connected -> copy(selectedEventIndex = result.index)
+            }
+
+        private fun Connection.applyEventValue(result: Result.EventValue): Connection =
+            when (this) {
+                is Connection.Disconnected,
+                is Connection.Connecting -> this
+
+                is Connection.Connected ->
+                    copy(
+                        events = events.map { event ->
+                            event.takeIf { it.id == result.eventId }?.copy(value = result.value) ?: event
+                        }
+                    )
             }
     }
 
@@ -179,6 +206,7 @@ internal class TimeTravelClientStoreFactory(
         sealed class Event {
             class Connected(val writer: (TimeTravelCommand) -> Unit) : Event()
             class StateUpdate(val stateUpdate: TimeTravelStateUpdate) : Event()
+            class EventValue(val eventId: Long, val value: ValueNode) : Event()
             class ExportEvents(val data: ByteArray) : Event()
             class Error(val text: String?) : Event()
         }

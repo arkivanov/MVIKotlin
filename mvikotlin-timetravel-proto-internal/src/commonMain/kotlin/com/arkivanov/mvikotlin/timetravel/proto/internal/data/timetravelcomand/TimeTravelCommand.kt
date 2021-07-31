@@ -12,6 +12,7 @@ sealed class TimeTravelCommand : ProtoObject {
     object MoveToEnd : TimeTravelCommand()
     object Cancel : TimeTravelCommand()
     data class DebugEvent(val eventId: Long) : TimeTravelCommand()
+    data class AnalyzeEvent(val eventId: Long) : TimeTravelCommand()
     object ExportEvents : TimeTravelCommand()
     class ImportEvents(val data: ByteArray) : TimeTravelCommand()
 }

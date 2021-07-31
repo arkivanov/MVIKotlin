@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTrave
 import com.arkivanov.mvikotlin.timetravel.client.internal.closeSafe
 import com.arkivanov.mvikotlin.timetravel.client.internal.closeSafeAsync
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventvalue.TimeTravelEventValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
@@ -45,6 +46,7 @@ internal actual class TimeTravelClientStoreConnector actual constructor(
                     onNext(
                         when (it) {
                             is TimeTravelStateUpdate -> Connector.Event.StateUpdate(it)
+                            is TimeTravelEventValue -> Connector.Event.EventValue(eventId = it.eventId, value = it.value)
                             is TimeTravelExport -> Connector.Event.ExportEvents(it.data)
                             else -> {
                                 onError(UnsupportedOperationException("Unsupported proto object type: $it"))

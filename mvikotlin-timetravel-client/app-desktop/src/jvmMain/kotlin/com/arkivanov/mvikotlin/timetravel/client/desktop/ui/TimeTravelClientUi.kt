@@ -54,8 +54,7 @@ import androidx.compose.ui.unit.sp
 import com.arkivanov.mvikotlin.timetravel.client.desktop.subscribeAsState
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient.Model
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ParsedValue
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.toTree
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
 
 @Composable
 fun TimeTravelClientUi(component: TimeTravelClient) {
@@ -262,7 +261,7 @@ private fun Events(
     events: List<String>,
     currentEventIndex: Int,
     selectedEventIndex: Int,
-    selectedEventValue: ParsedValue?,
+    selectedEventValue: ValueNode?,
     wrapEventDetails: Boolean,
     onClick: (Int) -> Unit
 ) {
@@ -343,7 +342,7 @@ private fun EventList(
 
 @Composable
 private fun EventDetails(
-    value: ParsedValue?,
+    value: ValueNode?,
     wrap: Boolean,
     modifier: Modifier
 ) {
@@ -360,7 +359,7 @@ private fun EventDetails(
         ) {
             if (value != null) {
                 ValueTree(
-                    node = value.toTree(),
+                    node = value,
                     title = { text ->
                         Text(
                             text = text,
