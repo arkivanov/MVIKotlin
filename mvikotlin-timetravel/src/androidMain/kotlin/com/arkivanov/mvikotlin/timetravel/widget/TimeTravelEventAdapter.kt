@@ -91,7 +91,12 @@ internal class TimeTravelEventAdapter : RecyclerView.Adapter<RecyclerView.ViewHo
             eventValueTextView.text = event.text()
         }
 
-        private fun TimeTravelEvent.text(): String = "${type.title}.${valueParser.parseType(obj = value)}"
+        private fun TimeTravelEvent.text(): String {
+            val eventType = type.name.lowercase().replaceFirstChar { it.uppercase() }
+            val valueType = valueParser.parseType(obj = value)
+
+            return "$eventType.$valueType"
+        }
     }
 
     private class SeparatorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
