@@ -39,7 +39,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "mvikotlin-time-travel-client"
-            version = property("mvikotlinVersion") as String
+            version = "1.0.0"
 
             windows {
                 menuGroup = "MVIKotlin"
