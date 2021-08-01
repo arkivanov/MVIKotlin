@@ -48,13 +48,14 @@ Recommended minimum Gradle version is 5.3. Please read first the documentation a
 [metadata publishing mode](https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#experimental-metadata-publishing-mode).
 
 There are a number of modules published to Maven Central:
+
 - `mvikotlin` - core interfaces and functionality (multiplatform)
 - `mvikotlin-main` - the main module with the default `Store` implementation (mutiplatform)
 - `mvikotlin-logging` - logging functionality (mutiplatform)
 - `mvikotlin-timetravel` - time travel feature (mutiplatform)
 - `mvikotlin-extensions-reaktive` - extensions set for Reaktive library (multiplatform)
 - `mvikotlin-extensions-coroutines` - extensions set for coroutines (multiplatform)
-- `keepers` - provides `StateKeeper` and `InstanceKeeper` API for state preservation and objects retaining
+- ~~`keepers` - provides `StateKeeper` and `InstanceKeeper` API for state preservation and objects retaining~~ (deprecated)
 - `rx` - a tiny module with abstractions over rx and coroutines (multiplatform)
 
 Add required modules to your module`s build.gradle file:
@@ -68,14 +69,15 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 * Extensions for [Reaktive](https://github.com/badoo/Reaktive) library
 * Extensions for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 * Multithreading friendly (freezable in Kotlin Native if needed)
+* Lifecycle-aware connections (bindins) between inputs and outputs
 * Logging functionality with customizable logger and formatter
 * Time travel feature:
-  * Multiplatform for all supported targets
-  * Plug-and-play UI for Android
-  * Plug-and-play UI for iOS (copy-paste from the sample app)
-  * Export/import events for Android
-  * IDEA and Android Studio [plugin](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel) for Android apps
-  * MacOS [client application](mvikotlin-timetravel-client/app-macos) for iOS and macOS apps
+    * Multiplatform for all supported targets
+    * Plug-and-play UI for Android
+    * Plug-and-play UI for iOS (copy-paste from the sample app)
+    * Export/import events for Android
+    * IntelliJ IDEA and Android Studio [plugin](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel) for Android apps
+    * Desktop [client application](mvikotlin-timetravel-client/app-desktop) for Android, Java and native Apple (iOS, watchOS, tvOS, macOS) apps
 
 ## Documentation
 
@@ -84,7 +86,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 ## Sample project
 
 The sample project is a todo list with details view.
-* Shared module using Reaktive is [here](sample/todo-reaktive)   
+* Shared module using Reaktive is [here](sample/todo-reaktive)
 * Shared module using coroutines is [here](sample/todo-coroutines)
 * Sample Android application with both Reaktive and coroutines implementations, plus logging and time travel is [here](sample/todo-app-android)
 * Sample iOS application with Reaktive implementation only, plus logging and time travel is [here](sample/todo-app-ios)
