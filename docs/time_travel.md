@@ -100,3 +100,10 @@ The time travel client application for desktop is not published yet so you will 
 The time travel client for desktop is implemented using [Compose for Desktop](https://github.com/JetBrains/compose-jb). So it is possible to assemble a distributable version. Please read the corresponding [documentation page](https://github.com/JetBrains/compose-jb/tree/master/tutorials/Native_distributions_and_local_execution).
 
 [Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | Time travel
+
+#### Demo videos
+
+Check out the video demonstrating the time travel client app for macOS:
+
+[![Debugging iOS application using MVIKotlin time travel client app](https://img.youtube.com/vi/rj6GwA2ZQkk/0.jpg)](https://youtu.be/rj6GwA2ZQkk)
+
