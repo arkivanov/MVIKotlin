@@ -22,7 +22,7 @@ class LoggingStoreFactory(
     private val delegate: StoreFactory,
     logger: Logger = DefaultLogger,
     logFormatter: LogFormatter = DefaultLogFormatter()
-) : StoreFactory {
+) : StoreFactory by delegate {
 
     constructor(delegate: StoreFactory) : this(delegate, DefaultLogger, DefaultLogFormatter())
 
@@ -30,6 +30,7 @@ class LoggingStoreFactory(
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String?,
+        isAutoInit: Boolean,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
@@ -37,6 +38,7 @@ class LoggingStoreFactory(
     ): Store<Intent, State, Label> {
         if (name == null) {
             return delegate.create(
+                isAutoInit = isAutoInit,
                 initialState = initialState,
                 bootstrapper = bootstrapper,
                 executorFactory = executorFactory,
@@ -44,37 +46,36 @@ class LoggingStoreFactory(
             )
         }
 
-        loggerWrapper.log("$name: created")
+        loggerWrapper.log("$name: creating")
 
         val delegateStore =
             delegate.create(
                 name = name,
+                isAutoInit = false,
                 initialState = initialState,
                 bootstrapper = bootstrapper,
-                executorFactory = { executorFactory().wrap(name) },
-                reducer = reducer.wrap(name)
+                executorFactory = {
+                    LoggingExecutor(
+                        delegate = executorFactory(),
+                        logger = loggerWrapper,
+                        storeName = name
+                    )
+                },
+                reducer = LoggingReducer(
+                    delegate = reducer,
+                    logger = loggerWrapper,
+                    storeName = name
+                )
             )
 
         return LoggingStore(
             delegate = delegateStore,
             logger = loggerWrapper,
             name = name
-        )
+        ).apply {
+            if (isAutoInit) {
+                init()
+            }
+        }
     }
-
-    private fun <Intent : Any, Action : Any, State : Any, Result : Any, Label : Any> Executor<Intent, Action, State, Result, Label>.wrap(
-        storeName: String
-    ): Executor<Intent, Action, State, Result, Label> =
-        LoggingExecutor(
-            delegate = this,
-            logger = loggerWrapper,
-            storeName = storeName
-        )
-
-    private fun <State : Any, Result : Any> Reducer<State, Result>.wrap(storeName: String): Reducer<State, Result> =
-        LoggingReducer(
-            delegate = this,
-            logger = loggerWrapper,
-            storeName = storeName
-        )
 }

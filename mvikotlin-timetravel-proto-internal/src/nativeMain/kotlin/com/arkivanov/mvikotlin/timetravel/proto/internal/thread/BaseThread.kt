@@ -10,7 +10,7 @@ open class BaseThread {
     val isInterrupted: Boolean get() = _isInterrupted.value != 0
 
     open fun interrupt() {
-        if (!_isInterrupted.compareAndSet(0, 1)) {
+        if (_isInterrupted.compareAndSet(0, 1)) {
             worker.requestTermination(processScheduledJobs = false)
         }
     }

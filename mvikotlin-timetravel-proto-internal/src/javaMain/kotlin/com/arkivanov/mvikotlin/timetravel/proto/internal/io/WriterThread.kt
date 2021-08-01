@@ -1,14 +1,13 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
-import java.io.IOException
 import java.net.Socket
 import java.util.concurrent.LinkedBlockingQueue
 
 class WriterThread(
     private val socket: Socket,
     private val onDisconnected: () -> Unit = {},
-    private val onError: (IOException) -> Unit = {}
+    private val onError: (Exception) -> Unit = {}
 ) : Thread() {
 
     private val queue = LinkedBlockingQueue<ProtoObject>()
@@ -22,10 +21,10 @@ class WriterThread(
                 protoEncoder.encode(queue.take())
                 output.flush()
             }
-        } catch (e: IOException) {
-            onError(e)
         } catch (e: InterruptedException) {
             interrupt()
+        } catch (e: Exception) {
+            onError(e)
         } finally {
             socket.closeSafe()
             onDisconnected()

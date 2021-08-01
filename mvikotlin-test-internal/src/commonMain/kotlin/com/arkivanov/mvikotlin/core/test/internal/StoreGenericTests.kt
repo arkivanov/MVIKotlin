@@ -472,5 +472,7 @@ fun StoreGenericTests(
             executorFactory: () -> Executor<String, String, String, String, String> = { TestExecutor() },
             reducer: Reducer<String, String> = reducer()
         ): Store<String, String, String> =
-            storeFactory(initialState, bootstrapper, executorFactory, reducer).freeze()
+            storeFactory(initialState, bootstrapper, executorFactory, reducer)
+                .freeze()
+                .apply { init() }
     }

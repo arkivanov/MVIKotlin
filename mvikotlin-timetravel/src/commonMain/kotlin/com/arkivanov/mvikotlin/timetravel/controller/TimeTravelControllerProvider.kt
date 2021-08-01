@@ -17,8 +17,10 @@ val timeTravelController: TimeTravelController
     }
 
 @MainThread
-internal fun attachTimeTravelStore(store: TimeTravelStore<*, *, *>, name: String) {
-    TimeTravelControllerHolder.impl.attachStore(store, name)
+internal fun TimeTravelStore<*, *, *>.attachToController(name: String) {
+    assertOnMainThread()
+
+    TimeTravelControllerHolder.impl.attachStore(this, name)
 }
 
 @ThreadLocal

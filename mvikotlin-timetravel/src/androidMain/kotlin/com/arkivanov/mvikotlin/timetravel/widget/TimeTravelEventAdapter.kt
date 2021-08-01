@@ -13,7 +13,7 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.timetravel.R
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.getFullTypeName
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueParser
 
 internal class TimeTravelEventAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -63,7 +63,8 @@ internal class TimeTravelEventAdapter : RecyclerView.Adapter<RecyclerView.ViewHo
         private val LAYOUT_SEPARATOR = R.layout.item_time_travel_separator
     }
 
-    private inner class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val valueParser = ValueParser()
         private val debugButton = itemView.findViewById<View>(R.id.button_debug)
         private val storeNameTextView = itemView.findViewById<TextView>(R.id.text_store_name)
         private val eventValueTextView = itemView.findViewById<TextView>(R.id.text_event_value)
@@ -72,7 +73,7 @@ internal class TimeTravelEventAdapter : RecyclerView.Adapter<RecyclerView.ViewHo
         init {
             itemView.setOnClickListener {
                 AlertDialog.Builder(itemView.context)
-                    .setTitle(boundEvent.text)
+                    .setTitle(boundEvent.text())
                     .setMessage(R.string.mvi_time_travel_loading)
                     .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
                     .show()
@@ -87,10 +88,15 @@ internal class TimeTravelEventAdapter : RecyclerView.Adapter<RecyclerView.ViewHo
             boundEvent = event
             debugButton.isVisible = event.type !== StoreEventType.STATE
             storeNameTextView.text = event.storeName
-            eventValueTextView.text = event.text
+            eventValueTextView.text = event.text()
         }
 
-        private val TimeTravelEvent.text: String get() = "${type.title}.${getFullTypeName(value)}"
+        private fun TimeTravelEvent.text(): String {
+            val eventType = type.name.lowercase().replaceFirstChar { it.uppercase() }
+            val valueType = valueParser.parseType(obj = value)
+
+            return "$eventType.$valueType"
+        }
     }
 
     private class SeparatorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

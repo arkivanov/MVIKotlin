@@ -10,7 +10,7 @@ import TodoLib
 
 class LifecycleWrapper {
 
-    let lifecycle = LifecycleRegistry()
+    let lifecycle = LifecycleRegistryKt.LifecycleRegistry()
     
     init() {
         self.lifecycle.onCreate()

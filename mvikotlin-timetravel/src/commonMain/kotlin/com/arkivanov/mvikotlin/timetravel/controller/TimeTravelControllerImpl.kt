@@ -43,8 +43,6 @@ internal class TimeTravelControllerImpl : TimeTravelController {
                 onNext = { onEvent(TimeTravelEvent(id = eventId++, storeName = name, type = it.type, value = it.value, state = it.state)) }
             )
         )
-
-        store.init()
     }
 
     override fun startRecording() {

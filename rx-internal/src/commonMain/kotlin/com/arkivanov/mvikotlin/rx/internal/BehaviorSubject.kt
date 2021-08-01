@@ -13,20 +13,20 @@ interface BehaviorSubject<T> : Subject<T> {
 @Suppress("FunctionName")
 fun <T> BehaviorSubject(initialValue: T): BehaviorSubject<T> = BehaviorSubjectImpl(initialValue)
 
-private class BehaviorSubjectImpl<T>(initialValue: T) : ThreadLocalSubject<T>(), BehaviorSubject<T> {
+private class BehaviorSubjectImpl<T>(initialValue: T) : BaseSubject<T>(), BehaviorSubject<T> {
 
     override var value: T by atomic(initialValue)
         private set
 
-    override fun onSubscribed(observer: Observer<T>) {
-        super.onSubscribed(observer)
+    override fun onAfterSubscribe(observer: Observer<T>) {
+        super.onAfterSubscribe(observer)
 
         observer.onNext(value)
     }
 
-    override fun onNext(value: T) {
-        this.value = value
+    override fun onBeforeNext(value: T) {
+        super.onBeforeNext(value)
 
-        super.onNext(value)
+        this.value = value
     }
 }

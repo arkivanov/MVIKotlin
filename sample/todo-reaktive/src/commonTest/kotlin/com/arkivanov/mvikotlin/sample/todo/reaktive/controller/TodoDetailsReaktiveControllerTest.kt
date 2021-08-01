@@ -1,8 +1,8 @@
 package com.arkivanov.mvikotlin.sample.todo.reaktive.controller
 
-import com.arkivanov.mvikotlin.core.lifecycle.Lifecycle
-import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
-import com.arkivanov.mvikotlin.core.lifecycle.resume
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -34,7 +34,7 @@ class TodoDetailsReaktiveControllerTest {
 
     private val dependencies =
         object : Dependencies {
-            override val storeFactory: StoreFactory = DefaultStoreFactory
+            override val storeFactory: StoreFactory = DefaultStoreFactory()
             override val database: TodoDatabase = this@TodoDetailsReaktiveControllerTest.database
             override val lifecycle: Lifecycle = this@TodoDetailsReaktiveControllerTest.lifecycle
             override val itemId: String get() = this@TodoDetailsReaktiveControllerTest.itemId

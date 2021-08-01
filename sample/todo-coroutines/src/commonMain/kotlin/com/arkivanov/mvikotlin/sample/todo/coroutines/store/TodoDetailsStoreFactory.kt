@@ -2,12 +2,14 @@ package com.arkivanov.mvikotlin.sample.todo.coroutines.store
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.SuspendExecutor
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Intent
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.Label
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStore.State
 import com.arkivanov.mvikotlin.sample.todo.common.internal.store.details.TodoDetailsStoreAbstractFactory
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -23,16 +25,15 @@ internal class TodoDetailsStoreFactory(
 
     override fun createExecutor(): Executor<Intent, Unit, State, Result, Label> = ExecutorImpl()
 
-    private inner class ExecutorImpl : SuspendExecutor<Intent, Unit, State, Result, Label>(mainContext = mainContext) {
-        override suspend fun executeAction(action: Unit, getState: () -> State) {
-            withContext(ioContext) {
-                database.get(itemId)
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Result, Label>(mainContext = mainContext) {
+        override fun executeAction(action: Unit, getState: () -> State) {
+            scope.launch {
+                val item: TodoItem? = withContext(ioContext) { database.get(itemId) }
+                dispatch(item?.data?.let(Result::Loaded) ?: Result.Finished)
             }
-                .let { it?.data?.let(Result::Loaded) ?: Result.Finished }
-                .also(::dispatch)
         }
 
-        override suspend fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.SetText -> handleTextChanged(intent.text, getState)
                 is Intent.ToggleDone -> toggleDone(getState)
@@ -40,33 +41,35 @@ internal class TodoDetailsStoreFactory(
             }.let {}
         }
 
-        private suspend fun handleTextChanged(text: String, state: () -> State) {
+        private fun handleTextChanged(text: String, state: () -> State) {
             dispatch(Result.TextChanged(text))
             save(state())
         }
 
-        private suspend fun toggleDone(state: () -> State) {
+        private fun toggleDone(state: () -> State) {
             dispatch(Result.DoneToggled)
             save(state())
         }
 
-        private suspend fun save(state: State) {
+        private fun save(state: State) {
             val data = state.data ?: return
             publish(Label.Changed(itemId, data))
 
-            withContext(ioContext) {
+            scope.launch(ioContext) {
                 database.save(itemId, data)
             }
         }
 
-        private suspend fun delete() {
+        private fun delete() {
             publish(Label.Deleted(itemId))
 
-            withContext(ioContext) {
-                database.delete(itemId)
-            }
+            scope.launch {
+                withContext(ioContext) {
+                    database.delete(itemId)
+                }
 
-            dispatch(Result.Finished)
+                dispatch(Result.Finished)
+            }
         }
     }
 }

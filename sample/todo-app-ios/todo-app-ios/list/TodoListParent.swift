@@ -24,7 +24,7 @@ private class ControllerHolder {
                 storeFactory: deps.storeFactory,
                 database: deps.database,
                 lifecycle: lifecycle.lifecycle,
-                instanceKeeper: DefaultInstanceKeeper(),
+                instanceKeeper: InstanceKeeperDispatcherKt.InstanceKeeperDispatcher(),
                 listOutput: output
             )
         )
@@ -52,7 +52,7 @@ struct TodoListParent: View {
             if (self.controller == nil) {
                 self.controller = ControllerHolder(deps: self.deps, input: self.input, output: self.output)
             }
-            let viewLifecycle = LifecycleRegistry()
+            let viewLifecycle = LifecycleRegistryKt.LifecycleRegistry()
             self.viewLifecycle = viewLifecycle
             self.controller?.controller.onViewCreated(todoListView: self.listView, todoAddView: self.addView, viewLifecycle: viewLifecycle)
             self.controller?.lifecycle.start()

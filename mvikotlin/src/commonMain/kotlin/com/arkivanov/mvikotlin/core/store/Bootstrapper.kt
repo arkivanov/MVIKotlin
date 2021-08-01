@@ -24,8 +24,7 @@ interface Bootstrapper<out Action : Any> {
     fun init(actionConsumer: (Action) -> Unit)
 
     /**
-     * Called by the [Store] at some point during instantiation.
-     * Use the `actionConsumer` provided in the `init` method to dispatch `Actions`.
+     * Called by the [Store] at some point during initialization
      */
     @MainThread
     operator fun invoke()

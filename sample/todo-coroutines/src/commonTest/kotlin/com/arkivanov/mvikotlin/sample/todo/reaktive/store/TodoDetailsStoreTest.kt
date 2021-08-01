@@ -145,7 +145,7 @@ class TodoDetailsStoreTest {
     private fun createStore() {
         store =
             TodoDetailsStoreFactory(
-                storeFactory = DefaultStoreFactory,
+                storeFactory = DefaultStoreFactory(),
                 database = database,
                 itemId = itemId,
                 mainContext = Dispatchers.Unconfined,

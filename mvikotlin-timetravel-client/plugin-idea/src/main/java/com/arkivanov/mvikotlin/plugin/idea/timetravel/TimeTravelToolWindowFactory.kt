@@ -1,37 +1,43 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.initMainScheduler
+import com.arkivanov.mvikotlin.core.utils.setMainThreadId
+import com.badoo.reaktive.scheduler.overrideSchedulers
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
-import javax.swing.SwingUtilities
 
 class TimeTravelToolWindowFactory : ToolWindowFactory {
 
-    init {
-        initMainScheduler {
-            SwingUtilities.invokeLater(Runnable(it))
-        }
-    }
-
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        toolWindow.setIcon(AllIcons.Debugger.Db_muted_dep_line_breakpoint)
+        initIfNeeded()
+
+        toolWindow.icon = AllIcons.Debugger.Db_muted_dep_line_breakpoint
 
         toolWindow.contentManager.addContent(
             ContentFactory
                 .SERVICE
                 .getInstance()
                 .createContent(
-                    TimeTravelToolWindow(
-                        AdbPathProvider(project),
-                        Exporter(project),
-                        Importer(project)
-                    ).content,
+                    TimeTravelToolWindow(project).getContent(TimeTravelToolWindowListener.getLifecycle()),
                     "",
                     false
                 )
         )
+    }
+
+    companion object {
+        const val TOOL_WINDOW_ID: String = "MVIKotlin Time Travel"
+        private var isInitialized = false
+
+        fun initIfNeeded() {
+            if (!isInitialized) {
+                isInitialized = true
+
+                overrideSchedulers(main = ::SwingMainScheduler)
+                setMainThreadId(Thread.currentThread().id)
+            }
+        }
     }
 }

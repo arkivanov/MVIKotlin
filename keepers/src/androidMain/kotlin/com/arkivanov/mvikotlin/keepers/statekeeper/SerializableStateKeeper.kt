@@ -6,6 +6,7 @@ import java.io.Serializable
 import kotlin.reflect.KClass
 
 @ExperimentalStateKeeperApi
+@Deprecated(message = "This API is now provided by Essenty library: github.com/arkivanov/Essenty")
 internal class SerializableStateKeeper<T : Serializable>(
     registry: SavedStateRegistry,
     clazz: KClass<out T>,

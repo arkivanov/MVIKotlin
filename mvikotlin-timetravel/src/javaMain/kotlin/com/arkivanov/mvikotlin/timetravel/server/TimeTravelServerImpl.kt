@@ -5,8 +5,10 @@ import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExportSerializer
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventvalue.TimeTravelEventValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.TimeTravelExport
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueParser
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.closeSafe
@@ -53,7 +55,7 @@ internal class TimeTravelServerImpl(
             val reader =
                 ReaderThread<TimeTravelCommand>(
                     socket = socket,
-                    onRead = { onCommandReceived(it, socket) },
+                    onRead = { onCommandReceived(command = it, sender = socket) },
                     onDisconnected = { onClientDisconnected(socket) }
                 )
 
@@ -102,10 +104,17 @@ internal class TimeTravelServerImpl(
                 is TimeTravelCommand.MoveToEnd -> controller.moveToEnd()
                 is TimeTravelCommand.Cancel -> controller.cancel()
                 is TimeTravelCommand.DebugEvent -> controller.debugEvent(eventId = command.eventId)
+                is TimeTravelCommand.AnalyzeEvent -> analyzeEvent(eventId = command.eventId, sender = sender)
                 is TimeTravelCommand.ExportEvents -> exportEvents(sender)
                 is TimeTravelCommand.ImportEvents -> importEvents(command.data)
             }.let {}
         }
+    }
+
+    private fun analyzeEvent(eventId: Long, sender: Socket) {
+        val event = controller.state.events.firstOrNull { it.id == eventId } ?: return
+        val parsedValue = ValueParser().parseValue(event.value)
+        sendData(sender, TimeTravelEventValue(eventId = eventId, value = parsedValue))
     }
 
     private fun exportEvents(sender: Socket) {
@@ -129,7 +138,7 @@ internal class TimeTravelServerImpl(
                 when (result) {
                     is TimeTravelExportSerializer.Result.Success -> controller.import(result.data)
                     is TimeTravelExportSerializer.Result.Error -> onError(result.exception)
-                }
+                }.let {}
             }
         }
     }

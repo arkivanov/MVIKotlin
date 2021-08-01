@@ -400,7 +400,7 @@ naming:
     active: true
     mustBeFirst: true
   MemberNameEqualsClassName:
-    active: true
+    active: false
     ignoreOverridden: true
   NonBooleanPropertyPrefixedWithIs:
     active: false
@@ -533,7 +533,7 @@ style:
     includeLineWrapping: false
   ForbiddenComment:
     active: true
-    values: ['TODO:', 'FIXME:', 'STOPSHIP:']
+    values: ['FIXME:', 'STOPSHIP:']
     allowedPatterns: ''
   ForbiddenImport:
     active: false
@@ -563,7 +563,7 @@ style:
     active: true
     maxJumpCount: 1
   MagicNumber:
-    active: true
+    active: false
     excludes: ['**/test/**', '**/*Test/**']
     ignoreNumbers: ['-1', '0', '1', '2']
     ignoreHashCodeFunction: true

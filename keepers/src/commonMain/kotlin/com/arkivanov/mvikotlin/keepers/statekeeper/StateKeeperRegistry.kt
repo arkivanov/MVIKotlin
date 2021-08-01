@@ -6,6 +6,7 @@ import kotlin.reflect.KClass
  * Provides and manages [StateKeeper]s
  */
 @ExperimentalStateKeeperApi
+@Deprecated(message = "This API is now provided by Essenty library: github.com/arkivanov/Essenty")
 interface StateKeeperRegistry<in T : Any> {
 
     /**

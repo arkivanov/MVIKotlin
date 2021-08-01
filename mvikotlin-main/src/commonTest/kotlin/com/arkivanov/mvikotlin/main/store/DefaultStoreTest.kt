@@ -10,7 +10,7 @@ class DefaultStoreTest : StoreGenericTests by StoreGenericTests(
         DefaultStore(
             initialState = initialState,
             bootstrapper = bootstrapper,
-            executorFactory = executorFactory,
+            executor = executorFactory(),
             reducer = reducer
         )
     }

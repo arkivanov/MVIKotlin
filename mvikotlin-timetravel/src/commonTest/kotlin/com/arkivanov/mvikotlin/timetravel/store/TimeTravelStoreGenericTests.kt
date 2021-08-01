@@ -22,7 +22,6 @@ class TimeTravelStoreGenericTests : StoreGenericTests by StoreGenericTests(
             reducer = reducer
         ).apply {
             events(observer { process(it.type, it.value) })
-            init()
         }
     }
 ) {

@@ -5,12 +5,15 @@
 `Store` is the place for business logic. In MVIKotlin it is represented by the `Store` interface which is located in the `mvikotlin` module. You can check its definition [here](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Store.kt).
 
 It has the following features:
-- There are three generic parameters: input `Intent` and output `State` and `Label`
-- The property named `state` returns the current `State` of the `Store`
-- Its `states(Observer<State>)` method is used to subscribe for `State` updates. When subscribed it emits the current `State` of the `Store`.
-- The `labels(Observer<Label>)` method is used to subscribe for `Labels`
-- The `accept(Intent)`  method supplies the `Store` with the `Intents`
-- The `dispose()` method disposes the `Store` and cancels all its async operations
+
+- There are three generic parameters: input `Intent` and output `State` and `Label`.
+- The property named `state` returns the current `State` of the `Store`.
+- Can be instantiated (created) on any thread.
+- Its `states(Observer<State>)` method is used to subscribe for `State` updates. When subscribed it emits the current `State` of the `Store`. Can be called (subscribed) on any thread, `States` are emitted always on the main thread.
+- The `labels(Observer<Label>)` method is used to subscribe for `Labels`. Can be called (subscribed) on any thread, `Labels` are emitted always on the main thread.
+- The `accept(Intent)`  method supplies the `Store` with the `Intents`, must be called only on the main thread.
+- The `init()` method initializes the `Store` and triggers the `Bootstrapper` if applicable, must be called only on the main thread.
+- The `dispose()` method disposes the `Store` and cancels all its async operations, must be called only on the main thread.
 
 > ⚠️ Usually you don't need to use `states(Observer)` or `labels(Observer)` methods directly. There are extensions available for `Reaktive` and `kotlinx.coroutines` libraries (see [Binding and Lifecycle](binding_and_lifecycle.md) for more information). However you will need these methods if you implement custom extensions.
 
@@ -20,19 +23,19 @@ Every `Store` has up to three components: `Bootstrapper`, `Executor` and `Reduce
 
 ### Bootstrapper
 
-This component bootstraps (kick-starts) the `Store`. If passed to the `StoreFactory` it will be called at some point during `Store` creation. `Bootstrapper` produces `Actions` that are processed by the `Executor`.
+This component bootstraps (kick-starts) the `Store`. If passed to the `StoreFactory` it will be called at some point during `Store` initialization. The `Bootstrapper` produces `Actions` that are processed by the `Executor`. The `Bootstrapper` is executed always on the main thread, `Actions` must be also dispatched only on the main thread. However you are free to switch threads while the `Bootstrapper` is being executed.
 
 > ⚠️ Please note that `Bootstrappers` are stateful and so can not be `object`s (singletons).
 
 ### Executor
 
-This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from the `Bootstrapper`. Also the `Executor` has two outputs: `Results` and `Labels`. `Results` are passed to the `Reducer` and `Labels` are emitted straight to the outside world. `Executor` has constant access to a current `State`, a new `State` is visible for the `Executor` right after the `Result` is dispatched.
+This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from the `Bootstrapper`. The `Executor` has two outputs: `Results` and `Labels`. `Results` are passed to the `Reducer`, `Labels` are emitted straight to the outside world. The `Executor` has constant access to the current `State` of the `Store`, a new `State` is visible for the `Executor` right after the `Result` is dispatched. The `Executor` is executed always on the main thread, `Results` and `Labels` must be also dispatched only on the main thread. However you are free to switch threads while processing `Action` or `Intents`.
 
 > ⚠️ Please note that `Executors` are stateful and so can not be `object`s (singletons).
 
 ### Reducer
 
-This component is basically a function that accepts a `Result` from the `Executor` and a current `State` of the `Store` and returns a new `State`. The `Reducer` is called for every `Result` produced by the `Executor` and the new `State` is applied and emitted as soon as the `Reducer` call returns.
+This component is basically a function that accepts a `Result` from the `Executor` and a current `State` of the `Store` and returns a new `State`. The `Reducer` is called for every `Result` produced by the `Executor` and the new `State` is applied and emitted as soon as the `Reducer` call returns. The `Reducer` is always called on the main thread.
 
 ## Creating a Store
 
@@ -42,6 +45,12 @@ There are a number of factories provided by MVIKotlin:
 - [DefaultStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-main/src/commonMain/kotlin/com/arkivanov/mvikotlin/main/store/DefaultStoreFactory.kt) creates a default implementation of `Store` and is provided by the `mvikotlin-main` module.
 - [LoggingStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-logging/src/commonMain/kotlin/com/arkivanov/mvikotlin/logging/store/LoggingStoreFactory.kt) wraps another `StoreFactory` and adds logging, it's provided by the `mvikotlin-logging` module.
 - [TimeTravelStoreFactory](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/commonMain/kotlin/com/arkivanov/mvikotlin/timetravel/store/TimeTravelStoreFactory.kt) is provided by the `mvikotlin-timetravel` module, it creates a `Store` with time travel functionality.
+
+### Initializing a Store
+
+By default `Stores` are initialized automatically by the `StoreFactory`. You can opt-out from the automatic initialization by passing `isAutoInit=false` argument to the `StoreFactory.create(...)` function. It is also possible to disable the automatic initialization for entire `DefaultStoreFactory` by passing `isAutoInitByDefault=false` argument to the its constructor.
+
+> ⚠️ When automatic initialization is disabled, you should manually call the `Store.init()` method.
 
 ### Simplest example
 
@@ -145,8 +154,9 @@ There is only one possible `Result.Value(Long)` which just replaces whatever val
 Now it's time for the `Executor`. If you are interested you can find the interface [here](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Executor.kt). Luckily we don't need to implement this entire interface. Instead we can extend a base implementation.
 
 There are two base `Executors` provided by `MVIKotlin`:
+
 - [ReaktiveExecutor](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutor.kt) - this implementation is based on the [Reaktive](https://github.com/badoo/Reaktive) library and is provided by `mvikotlin-extensions-reaktive` module
-- [SuspendExecutor](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-coroutines/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/coroutines/SuspendExecutor.kt) - this implementation is based on the [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) library and is provided by `mvikotlin-extensions-coroutines` module
+- [CoroutineExecutor](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-coroutines/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutor.kt) - this implementation is based on the [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) library and is provided by `mvikotlin-extensions-coroutines` module
 
 Let's try both.
 
@@ -178,28 +188,30 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-So we extended the `ReaktiveExecutor` class and implemented the `executeIntent` method. This method gives us an `Intent` and supplier of a current `State` supplier. For `Intent.Increment` and `Intent.Decrement` we simply send the `Result` with a new value using the `dispatch` method. But for `Intent.Sum` we use `Reaktive` for multithreading. We calculate the sum on the `computationScheduler` and then switch to the `mainScheduler` and `dispatch` the `Result`.
+So we extended the `ReaktiveExecutor` class and implemented the `executeIntent` method. This method gives us an `Intent` and a supplier of the current `State`. For `Intent.Increment` and `Intent.Decrement` we simply send the `Result` with a new value using the `dispatch` method. But for `Intent.Sum` we use `Reaktive` for multithreading. We calculate the sum on the `computationScheduler` and then switch to the `mainScheduler` and `dispatch` the `Result`.
 
 > ⚠️ `ReaktiveExecutor` implements Reaktive's [DisposableScope](https://github.com/badoo/Reaktive#subscription-management-with-disposablescope) which provides a bunch of additional extension functions. We used one of those functions - `subscribeScoped`. This ensures that the subscription is disposed when the `Store` (and so the `Executor`) is disposed.
 
-#### SuspendExecutor
+#### CoroutineExecutor
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class ExecutorImpl : SuspendExecutor<Intent, Nothing, State, Result, Nothing>() {
-        override suspend fun executeIntent(intent: Intent, getState: () -> State) =
+    private class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Result, Nothing>() {
+        override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
                 is Intent.Increment -> dispatch(Result.Value(getState().value + 1))
                 is Intent.Decrement -> dispatch(Result.Value(getState().value - 1))
                 is Intent.Sum -> sum(intent.n)
             }
 
-        private suspend fun sum(n: Int) {
-            val sum = withContext(Dispatchers.Default) { (1L..n.toLong()).sum() }
-            dispatch(Result.Value(sum))
+        private fun sum(n: Int) {
+            scope.launch {
+                val sum = withContext(Dispatchers.Default) { (1L..n.toLong()).sum() }
+                dispatch(Result.Value(sum))
+            }
         }
     }
 
@@ -207,7 +219,9 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-Here we extended the `SuspendExecutor` class. This gives us the `suspend fun executeIntent` method so we can use coroutines. The sum is calculated on the `Default` dispatcher and the `Result` is dispatched from on the `Main` thread.
+Here we extended the `CoroutineExecutor` class. The sum is calculated on the `Default` dispatcher and the `Result` is dispatched on the `Main` thread.
+
+> ⚠️ `CoroutineExecutor` provides the `CoroutineScope` property named `scope`, which can be used to run asynchronous tasks. The scope uses `Dispatchers.Main` dispatcher by default, which can be overriden by passing different `CoroutineContext` to the `CoroutineExecutor` constructor. The scope is automatically cancelled when the `Store` is disposed.
 
 #### Publishing Labels
 
@@ -276,15 +290,15 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-And same for the `SuspendExecutor`:
+And same for the `CoroutineExecutor`:
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class ExecutorImpl : SuspendExecutor<Intent, Action, State, Result, Nothing>() {
-        override suspend fun executeAction(action: Action, getState: () -> State) =
+    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Result, Nothing>() {
+        override fun executeAction(action: Action, getState: () -> State) =
             when (action) {
                 is Action.Sum -> sum(action.n)
             }
@@ -335,7 +349,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
     private sealed class Action {
         class SetValue(val value: Long): Action() // <-- Use another Action
     }
-    
+
     // ...
 
     private class BootstrapperImpl : ReaktiveBootstrapper<Action>() {
@@ -361,7 +375,9 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-Using `SuspendBootstrapper` from the `mvikotlin-extensions-coroutines` module:
+> ⚠️ `ReaktiveBootstrapper` also implements `DisposableScope`, same as `ReaktiveExecutor`. So we can use `subscribeScoped` extension functions here as well.
+
+Using `CoroutineBootstrapper` from the `mvikotlin-extensions-coroutines` module:
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
@@ -382,15 +398,17 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class BootstrapperImpl : SuspendBootstrapper<Action>() {
-        override suspend fun bootstrap() {
-            val sum = withContext(Dispatchers.Default) { (1L..1000000.toLong()).sum() }
-            dispatch(Action.SetValue(sum))
+    private class BootstrapperImpl : CoroutineBootstrapper<Action>() {
+        override fun invoke() {
+            scope.launch {
+                val sum = withContext(Dispatchers.Default) { (1L..1000000.toLong()).sum() }
+                dispatch(Action.SetValue(sum))
+            }
         }
     }
 
-    private class ExecutorImpl : SuspendExecutor<Intent, Action, State, Result, Nothing>() {
-        override suspend fun executeAction(action: Action, getState: () -> State) =
+    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Result, Nothing>() {
+        override fun executeAction(action: Action, getState: () -> State) =
             when (action) {
                 is Action.SetValue -> dispatch(Result.Value(action.value))
             }
@@ -401,5 +419,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
     // ...
 }
 ```
+
+> ⚠️ `CoroutineBootstrapper` also provides the `CoroutineScope` property named `scope`, same as `CoroutineExecutor`. So we can use it run asynchronous tasks.
 
 [Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
