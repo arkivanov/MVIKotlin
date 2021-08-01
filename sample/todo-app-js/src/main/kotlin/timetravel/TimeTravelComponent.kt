@@ -26,13 +26,12 @@ class TimeTravelComponent(prps: TimeTravelComponentProps) :
     private var disposable: Disposable? = null
 
     init {
-        state = TimeTravelComponentState(
-            events = listOf(),
-            mode = TimeTravelState.Mode.IDLE,
-            selectedEventIndex = -1,
-            dialogOpen = false,
-            currentEvent = null
-        )
+        state = js("{}") as TimeTravelComponentState
+        state.events = listOf()
+        state.mode = TimeTravelState.Mode.IDLE
+        state.selectedEventIndex = -1
+        state.dialogOpen = false
+        state.currentEvent = null
     }
 
     override fun componentDidMount() {
@@ -74,7 +73,7 @@ class TimeTravelComponent(prps: TimeTravelComponentProps) :
             }
             state.currentEvent?.let { event ->
                 infoDialog(
-                    open = state.dialogOpen,
+                    open = state.dialogOpen == true,
                     event = event,
                     onClose = { hideDialog() }
                 )
@@ -114,13 +113,13 @@ external interface TimeTravelComponentProps : RProps {
     var onClose: () -> Unit
 }
 
-class TimeTravelComponentState(
-    var events: List<TimeTravelEvent>,
-    var mode: TimeTravelState.Mode,
-    var selectedEventIndex: Int,
-    var dialogOpen: Boolean,
+external interface TimeTravelComponentState : RState {
+    var events: List<TimeTravelEvent>
+    var mode: TimeTravelState.Mode
+    var selectedEventIndex: Int
+    var dialogOpen: Boolean?
     var currentEvent: TimeTravelEvent?
-) : RState
+}
 
 fun RBuilder.timeTravel(onClose: () -> Unit): ReactElement =
     child(TimeTravelComponent::class) {
