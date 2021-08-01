@@ -77,7 +77,7 @@ external interface TimeTravelEventsProps : RProps {
     var onItemClick: (TimeTravelEvent) -> Unit
 }
 
-class TimeTravelEventsState : RState
+external interface TimeTravelEventsState : RState
 
 fun RBuilder.timeTravelEventsView(
     events: List<TimeTravelEvent>,
