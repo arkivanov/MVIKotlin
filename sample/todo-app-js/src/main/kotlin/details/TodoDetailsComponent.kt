@@ -42,7 +42,8 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
     private lateinit var controller: TodoDetailsController
 
     init {
-        state = TodoDetailsParentState(TodoDetailsView.Model("", false))
+        state = js("{}") as TodoDetailsParentState
+        state.model = TodoDetailsView.Model("", false)
     }
 
     override fun componentDidMount() {
@@ -146,9 +147,9 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
 
 }
 
-class TodoDetailsParentState(
+external interface TodoDetailsParentState : RState {
     var model: TodoDetailsView.Model
-) : RState
+}
 
 external interface TodoDetailsParentProps : RProps {
     var dependencies: TodoDetailsComponent.Dependencies

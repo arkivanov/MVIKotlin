@@ -57,7 +57,9 @@ abstract class App : RComponent<AppProps, AppState>() {
     private val detailsOutput: (TodoDetailsController.Output) -> Unit = ::detailsOutput
 
     init {
-        state = AppState(todoId = "", showDebugDrawer = false)
+        state = js("{}") as AppState
+        state.todoId = ""
+        state.showDebugDrawer = false
     }
 
     override fun RBuilder.render() {
@@ -84,7 +86,7 @@ abstract class App : RComponent<AppProps, AppState>() {
                     }
                 )
             }
-            if (DEBUG && state.showDebugDrawer) {
+            if (DEBUG && state.showDebugDrawer == true) {
                 timeTravel(onClose = ::closeDebug)
             }
         }
@@ -187,10 +189,10 @@ abstract class App : RComponent<AppProps, AppState>() {
     }
 }
 
-class AppState(
-    var todoId: String,
-    var showDebugDrawer: Boolean
-) : RState
+external interface AppState : RState {
+    var todoId: String
+    var showDebugDrawer: Boolean?
+}
 
 external interface AppProps : RProps {
     var dependecies: App.Dependencies

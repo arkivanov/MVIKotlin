@@ -43,7 +43,9 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
     private lateinit var controller: TodoListController
 
     init {
-        state = TodoListParentState(TodoListView.Model(listOf()), TodoAddView.Model(""))
+        state = js("{}") as TodoListParentState
+        state.listModel = TodoListView.Model(listOf())
+        state.addModel = TodoAddView.Model("")
     }
 
     override fun componentDidMount() {
@@ -127,10 +129,10 @@ external interface TodoListParentProps : RProps {
     var dependencies: TodoListParentComponent.Dependencies
 }
 
-class TodoListParentState(
-    var listModel: TodoListView.Model,
+external interface TodoListParentState : RState {
+    var listModel: TodoListView.Model
     var addModel: TodoAddView.Model
-) : RState
+}
 
 fun RBuilder.todoContainer(dependencies: TodoListParentComponent.Dependencies): ReactElement =
     child(TodoListParentComponent::class) {
