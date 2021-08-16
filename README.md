@@ -63,6 +63,10 @@ Add required modules to your module`s build.gradle file:
 implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 ```
 
+### IDEA Live Templates
+
+To speed up the creation of new Stores, you can use the following [IDEA Live Templates](https://gist.github.com/arkivanov/34bb84e73e56c22a4e7c752421d5f02c).
+
 ## Features
 * Multiplatform: Android, JVM, JavaScript, iosX64, iosArm64, macosX64, linuxX64
 * Does not depend on any reactive library or coroutines
