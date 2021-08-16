@@ -52,6 +52,10 @@ By default `Stores` are initialized automatically by the `StoreFactory`. You can
 
 > ⚠️ When automatic initialization is disabled, you should manually call the `Store.init()` method.
 
+### IDEA Live Templates
+
+To speed up the creation of new Stores, you can use the following [IDEA Live Templates](https://gist.github.com/arkivanov/34bb84e73e56c22a4e7c752421d5f02c).
+
 ### Simplest example
 
 Let's start from a very basic example. We will create a simple counter `Store` that will increment and decrement its value.
