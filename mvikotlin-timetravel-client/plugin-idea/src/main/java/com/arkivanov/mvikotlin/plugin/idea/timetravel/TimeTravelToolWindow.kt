@@ -102,8 +102,8 @@ class TimeTravelToolWindow(
         }
     }
 
-    private fun selectAdbPath(): String? =
-        chooseFile(
+    private fun selectAdbPath(): String? {
+        val path = chooseFile(
             createSingleFileDescriptor()
                 .withFileFilter { it.name == "adb" }
                 .withTitle("Select ADB executable"),
@@ -112,6 +112,16 @@ class TimeTravelToolWindow(
                 .takeIf(File::exists)
                 ?.let { LocalFileSystem.getInstance().findFileByIoFile(it) }
         )?.path
+        return if(path != null && isValidAdbExecutable(File(path))) {
+            path
+        } else {
+            null
+        }
+    }
+
+    private fun isValidAdbExecutable(file: File): Boolean {
+        return file.nameWithoutExtension == "adb"
+    }
 
     private class TimeTravelViewListener(
         private val client: TimeTravelClient

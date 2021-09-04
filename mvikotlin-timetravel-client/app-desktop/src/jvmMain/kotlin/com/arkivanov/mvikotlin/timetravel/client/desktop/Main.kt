@@ -24,6 +24,7 @@ import com.russhwolf.settings.JvmPreferencesSettings
 import kotlinx.coroutines.Dispatchers
 import java.awt.FileDialog
 import java.awt.Frame
+import java.io.File
 import java.io.FilenameFilter
 import java.util.prefs.Preferences
 
@@ -104,10 +105,18 @@ private fun exportEvents(data: ByteArray) {
 
 private fun selectAdbPath(): String? {
     val dialog = FileDialog(null as Frame?, "Select ADB executable path", FileDialog.LOAD)
-    dialog.filenameFilter = FilenameFilter { _, name -> name == "adb" }
     dialog.isVisible = true
 
-    return dialog
-        .selectedFile
-        ?.absolutePath
+    val selectedFile = dialog.selectedFile
+
+    return if(selectedFile!= null && isValidAdbExecutable(selectedFile)) {
+        selectedFile.absolutePath
+    } else {
+        null
+    }
+
+}
+
+private fun isValidAdbExecutable(file: File): Boolean {
+    return file.nameWithoutExtension == "adb"
 }
