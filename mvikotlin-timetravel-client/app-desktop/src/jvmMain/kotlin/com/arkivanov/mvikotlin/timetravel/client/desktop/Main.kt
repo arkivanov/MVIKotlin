@@ -105,6 +105,7 @@ private fun exportEvents(data: ByteArray) {
 
 private fun selectAdbPath(): String? {
     val dialog = FileDialog(null as Frame?, "Select ADB executable path", FileDialog.LOAD)
+    dialog.filenameFilter = FilenameFilter { _, name -> name == "adb" }
     dialog.isVisible = true
 
     val selectedFile = dialog.selectedFile
