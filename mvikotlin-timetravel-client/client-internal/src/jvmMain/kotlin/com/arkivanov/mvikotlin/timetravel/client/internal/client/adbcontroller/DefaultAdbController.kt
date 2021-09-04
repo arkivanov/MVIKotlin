@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller
 
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.AdbController.Result
+import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
@@ -19,7 +20,7 @@ class DefaultAdbController(
         try {
             var adbPath: String? = storage[KEY_ADB_PATH]
 
-            if (adbPath == null || !isValidAdbExecutable(File(adbPath))) {
+            if (adbPath == null || !File(adbPath).isValidAdbExecutable()) {
                 adbPath = selectAdbPath() ?: return Result.Error(text = "ADB executable path was not selected")
                 storage[KEY_ADB_PATH] = adbPath
             }
@@ -51,7 +52,4 @@ class DefaultAdbController(
         private const val KEY_ADB_PATH = "ADB_PATH"
     }
 
-    private fun isValidAdbExecutable(file: File): Boolean {
-        return file.nameWithoutExtension == "adb"
-    }
 }

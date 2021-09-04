@@ -18,6 +18,7 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClien
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.DefaultAdbController
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.TimeTravelClientComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.SettingsConfig
+import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
 import com.badoo.reaktive.coroutinesinterop.asScheduler
 import com.badoo.reaktive.scheduler.overrideSchedulers
 import com.russhwolf.settings.JvmPreferencesSettings
@@ -103,21 +104,16 @@ private fun exportEvents(data: ByteArray) {
         ?.writeBytes(data)
 }
 
+/**
+ * [FilenameFilter] works on Ubuntu but looks like it doesn't work on MacOS
+ */
 private fun selectAdbPath(): String? {
     val dialog = FileDialog(null as Frame?, "Select ADB executable path", FileDialog.LOAD)
     dialog.filenameFilter = FilenameFilter { _, name -> name == "adb" }
     dialog.isVisible = true
 
-    val selectedFile = dialog.selectedFile
-
-    return if(selectedFile!= null && isValidAdbExecutable(selectedFile)) {
-        selectedFile.absolutePath
-    } else {
-        null
-    }
-
-}
-
-private fun isValidAdbExecutable(file: File): Boolean {
-    return file.nameWithoutExtension == "adb"
+    return dialog
+        .selectedFile
+        ?.takeIf(File::isValidAdbExecutable)
+        ?.absolutePath
 }
