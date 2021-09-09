@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClien
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.DefaultAdbController
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.TimeTravelClientComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.SettingsConfig
+import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
 import com.badoo.reaktive.disposable.Disposable
 import com.badoo.reaktive.observable.subscribe
 import com.intellij.openapi.fileChooser.FileChooser.chooseFile
@@ -102,8 +103,8 @@ class TimeTravelToolWindow(
         }
     }
 
-    private fun selectAdbPath(): String? =
-        chooseFile(
+    private fun selectAdbPath(): String? {
+        return chooseFile(
             createSingleFileDescriptor()
                 .withFileFilter { it.name == "adb" }
                 .withTitle("Select ADB executable"),
@@ -112,6 +113,8 @@ class TimeTravelToolWindow(
                 .takeIf(File::exists)
                 ?.let { LocalFileSystem.getInstance().findFileByIoFile(it) }
         )?.path
+            ?.takeIf { File(it).isValidAdbExecutable() }
+    }
 
     private class TimeTravelViewListener(
         private val client: TimeTravelClient
