@@ -111,29 +111,14 @@ private void setupMultiplatformCommon(Project project) {
                 }
             }
 
-            jvmJsMain {
-                dependsOn commonMain
-            }
+            jvmJsMain.dependsOn commonMain
+            jvmJsTest.dependsOn commonTest
 
-            jvmJsTest {
-                dependsOn commonTest
-            }
+            jsNativeMain.dependsOn commonMain
+            jsNativeTest.dependsOn commonTest
 
-            jsNativeMain {
-                dependsOn commonMain
-            }
-
-            jsNativeTest {
-                dependsOn commonTest
-            }
-
-            jvmNativeMain {
-                dependsOn commonMain
-            }
-
-            jvmNativeTest {
-                dependsOn commonTest
-            }
+            jvmNativeMain.dependsOn commonMain
+            jvmNativeTest.dependsOn commonTest
 
             javaMain {
                 dependsOn jvmJsMain
@@ -155,13 +140,8 @@ private void setupMultiplatformCommon(Project project) {
                 dependsOn jvmNativeTest
             }
 
-            darwinMain {
-                dependsOn nativeMain
-            }
-
-            darwinTest {
-                dependsOn nativeTest
-            }
+            darwinMain.dependsOn nativeMain
+            darwinTest.dependsOn nativeTest
         }
     }
 }
@@ -171,9 +151,7 @@ private void setupMultiplatformAndroid(Project project) {
         android()
 
         sourceSets {
-            androidMain {
-                dependsOn javaMain
-            }
+            androidMain.dependsOn javaMain
 
             androidTest {
                 dependsOn javaTest
@@ -191,9 +169,7 @@ private void setupMultiplatformJvm(Project project) {
         jvm()
 
         sourceSets {
-            jvmMain {
-                dependsOn javaMain
-            }
+            jvmMain.dependsOn javaMain
 
             jvmTest {
                 dependsOn javaTest
@@ -211,45 +187,48 @@ private void setupMultiplatformLinuxX64(Project project) {
         linuxX64()
 
         sourceSets {
-            linuxX64Main {
-                dependsOn nativeMain
-            }
-
-            linuxX64Test {
-                dependsOn nativeTest
-            }
+            linuxX64Main.dependsOn nativeMain
+            linuxX64Test.dependsOn nativeTest
         }
     }
 }
 
 private void setupMultiplatformIos(Project project) {
     project.kotlin {
-        ios()
+        iosArm64()
+        iosX64()
 
         sourceSets {
-            iosMain {
-                dependsOn darwinMain
-            }
+            iosMain.dependsOn darwinMain
+            iosTest.dependsOn darwinTest
 
-            iosTest {
-                dependsOn darwinTest
-            }
+            iosArm64Main.dependsOn iosMain
+            iosArm64Test.dependsOn iosTest
+
+            iosX64Main.dependsOn iosMain
+            iosX64Test.dependsOn iosTest
         }
     }
 }
 
 private void setupMultiplatformWatchos(Project project) {
     project.kotlin {
-        watchos()
+        watchosArm32()
+        watchosArm64()
+        watchosX64()
 
         sourceSets {
-            watchosMain {
-                dependsOn darwinMain
-            }
+            watchosMain.dependsOn darwinMain
+            watchosTest.dependsOn darwinTest
 
-            watchosTest {
-                dependsOn darwinTest
-            }
+            watchosArm32Main.dependsOn watchosMain
+            watchosArm32Test.dependsOn watchosTest
+
+            watchosArm64Main.dependsOn watchosMain
+            watchosArm64Test.dependsOn watchosTest
+
+            watchosX64Main.dependsOn watchosMain
+            watchosX64Test.dependsOn watchosTest
         }
     }
 }
@@ -259,13 +238,8 @@ private void setupMultiplatformMacosX64(Project project) {
         macosX64()
 
         sourceSets {
-            macosX64Main {
-                dependsOn darwinMain
-            }
-
-            macosX64Test {
-                dependsOn darwinTest
-            }
+            macosX64Main.dependsOn darwinMain
+            macosX64Test.dependsOn darwinTest
         }
     }
 }
