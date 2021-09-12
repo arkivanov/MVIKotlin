@@ -13,8 +13,6 @@
 		1F38433B23FDD21B00501F27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F38433A23FDD21B00501F27 /* Assets.xcassets */; };
 		1F38433E23FDD21B00501F27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F38433D23FDD21B00501F27 /* Preview Assets.xcassets */; };
 		1F38434123FDD21B00501F27 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F38433F23FDD21B00501F27 /* LaunchScreen.storyboard */; };
-		1F38434A23FDD36900501F27 /* TodoLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F38434923FDD36900501F27 /* TodoLib.framework */; };
-		1F38434B23FDD36900501F27 /* TodoLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1F38434923FDD36900501F27 /* TodoLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1F60093124034D65003AFD12 /* TodoAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F60093024034D65003AFD12 /* TodoAdd.swift */; };
 		1F6009372403E6E5003AFD12 /* TimeTravelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6009362403E6E5003AFD12 /* TimeTravelViewController.swift */; };
 		1F601887240481980081C459 /* TimeTravelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F601886240481980081C459 /* TimeTravelView.swift */; };
@@ -35,20 +33,6 @@
 		DCE8B86E246888C9002C4036 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE8B86D246888C9002C4036 /* RootView.swift */; };
 		DCE9B885246AF75E004E808B /* LifecycleRegistryExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE9B884246AF75E004E808B /* LifecycleRegistryExt.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		1F38434C23FDD36900501F27 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				1F38434B23FDD36900501F27 /* TodoLib.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0388B10CE980EDA4BC7C67AE /* TodoDatabaseImpl.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TodoDatabaseImpl.kt; path = "../todo-common/src/androidMain/kotlin/com/arkivanov/mvikotlin/sample/todo/common/database/TodoDatabaseImpl.kt"; sourceTree = "<group>"; };
@@ -106,7 +90,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F38434A23FDD36900501F27 /* TodoLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,7 +569,6 @@
 				1F38432D23FDD21900501F27 /* Sources */,
 				1F38432E23FDD21900501F27 /* Frameworks */,
 				1F38432F23FDD21900501F27 /* Resources */,
-				1F38434C23FDD36900501F27 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -659,7 +641,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd $SRCROOT/../..\n./gradlew :sample:todo-darwin-umbrella:packForXCode -PXCODE_CONFIGURATION=${CONFIGURATION}\ncd $SRCROOT\n";
+			shellScript = "cd $SRCROOT/../..\n./gradlew :sample:todo-darwin-umbrella:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -830,11 +812,16 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"todo-app-ios/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../todo-darwin-umbrella/build/xcode-frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../todo-darwin-umbrella/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = "todo-app-ios/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					TodoLib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.arkivanov.mvikotlin.sample.todo.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -850,11 +837,16 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"todo-app-ios/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../todo-darwin-umbrella/build/xcode-frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../todo-darwin-umbrella/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = "todo-app-ios/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					TodoLib,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.arkivanov.mvikotlin.sample.todo.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
