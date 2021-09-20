@@ -1,4 +1,7 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMultiplatformPlugin
+import org.jetbrains.kotlin.gradle.targets.js.KotlinJsTarget
+import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
 
 import javax.annotation.Nullable
 
@@ -53,42 +56,40 @@ boolean setupMultiplatform(Project project, List<Target> targets = Target.values
         return false
     }
 
-    doIfAndroidEnabled(project) {
-        if (Target.ANDROID in targets) {
-            project.plugins.apply("com.android.library")
-        }
+    if (Target.ANDROID in targets) {
+        project.plugins.apply("com.android.library")
     }
 
     project.plugins.apply("kotlin-multiplatform")
 
     setupMultiplatformCommon(project)
 
-    doIfAndroidEnabled(project) {
+    if (Target.ANDROID in targets) {
         setupMultiplatformAndroid(project)
         setupAndroid(project)
     }
 
-    doIfJvmEnabled(project) {
+    if (Target.JVM in targets) {
         setupMultiplatformJvm(project)
     }
 
-    doIfLinuxX64Enabled(project) {
+    if (Target.LINUX_X64 in targets) {
         setupMultiplatformLinuxX64(project)
     }
 
-    doIfIosEnabled(project) {
+    if (Target.IOS in targets) {
         setupMultiplatformIos(project)
     }
 
-    doIfWatchosEnabled(project) {
+    if (Target.WATCHOS in targets) {
         setupMultiplatformWatchos(project)
     }
 
-    doIfMacosX64Enabled(project) {
+    if (Target.MACOS_X64 in targets) {
         setupMultiplatformMacosX64(project)
     }
 
-    doIfJsEnabled(project) {
+    if (Target.JS_IR in targets || Target.JS_LEGACY in targets) {
         setupMultiplatformJs(project, Target.JS_IR in targets, Target.JS_LEGACY in targets)
     }
 
@@ -168,7 +169,11 @@ private void setupMultiplatformCommon(Project project) {
 
 private void setupMultiplatformAndroid(Project project) {
     project.kotlin {
-        android()
+        android { androidTarget ->
+            if (!isTargetEnabled(project, Target.ANDROID)) {
+                disableCompilations(androidTarget)
+            }
+        }
 
         sourceSets {
             androidMain {
@@ -188,7 +193,11 @@ private void setupMultiplatformAndroid(Project project) {
 
 private void setupMultiplatformJvm(Project project) {
     project.kotlin {
-        jvm()
+        jvm { jvmTarget ->
+            if (!isTargetEnabled(project, Target.JVM)) {
+                disableCompilations(jvmTarget)
+            }
+        }
 
         sourceSets {
             jvmMain {
@@ -208,7 +217,11 @@ private void setupMultiplatformJvm(Project project) {
 
 private void setupMultiplatformLinuxX64(Project project) {
     project.kotlin {
-        linuxX64()
+        linuxX64 { linuxX64Target ->
+            if (!isTargetEnabled(project, Target.LINUX_X64)) {
+                disableCompilations(linuxX64Target)
+            }
+        }
 
         sourceSets {
             linuxX64Main {
@@ -224,7 +237,11 @@ private void setupMultiplatformLinuxX64(Project project) {
 
 private void setupMultiplatformIos(Project project) {
     project.kotlin {
-        ios()
+        ios { iosTarget ->
+            if (!isTargetEnabled(project, Target.IOS)) {
+                disableCompilations(iosTarget)
+            }
+        }
 
         sourceSets {
             iosMain {
@@ -240,7 +257,11 @@ private void setupMultiplatformIos(Project project) {
 
 private void setupMultiplatformWatchos(Project project) {
     project.kotlin {
-        watchos()
+        watchos { watchosTarget ->
+            if (!isTargetEnabled(project, Target.WATCHOS)) {
+                disableCompilations(watchosTarget)
+            }
+        }
 
         sourceSets {
             watchosMain {
@@ -256,7 +277,11 @@ private void setupMultiplatformWatchos(Project project) {
 
 private void setupMultiplatformMacosX64(Project project) {
     project.kotlin {
-        macosX64()
+        macosX64 { macosTarget ->
+            if (!isTargetEnabled(project, Target.MACOS_X64)) {
+                disableCompilations(macosTarget)
+            }
+        }
 
         sourceSets {
             macosX64Main {
@@ -272,9 +297,17 @@ private void setupMultiplatformMacosX64(Project project) {
 
 private void setupMultiplatformJs(Project project, boolean isIr, boolean isLegacy) {
     project.kotlin {
-        js(isIr ? (isLegacy ? BOTH : IR) : LEGACY) {
+        js(isIr ? (isLegacy ? BOTH : IR) : LEGACY) { jsTarget ->
             browser()
             nodejs()
+
+            if (jsTarget instanceof KotlinJsIrTarget && !isTargetEnabled(project, Target.JS_IR)) {
+                disableCompilations(jsTarget)
+            }
+
+            if (jsTarget instanceof KotlinJsTarget && !isTargetEnabled(project, Target.JS_LEGACY)) {
+                disableCompilations(jsTarget)
+            }
         }
 
         sourceSets {
@@ -417,42 +450,6 @@ static void doIfAndroidEnabled(Project project, Closure block) {
     }
 }
 
-static void doIfJvmEnabled(Project project, Closure block) {
-    if (isTargetEnabled(project, Target.JVM)) {
-        block()
-    }
-}
-
-static void doIfJsEnabled(Project project, Closure block) {
-    if (isTargetEnabled(project, Target.JS_LEGACY) || isTargetEnabled(project, Target.JS_IR)) {
-        block()
-    }
-}
-
-static void doIfLinuxX64Enabled(Project project, Closure block) {
-    if (isTargetEnabled(project, Target.LINUX_X64)) {
-        block()
-    }
-}
-
-static void doIfIosEnabled(Project project, Closure block) {
-    if (isTargetEnabled(project, Target.IOS)) {
-        block()
-    }
-}
-
-static void doIfWatchosEnabled(Project project, Closure block) {
-    if (isTargetEnabled(project, Target.WATCHOS)) {
-        block()
-    }
-}
-
-static void doIfMacosX64Enabled(Project project, Closure block) {
-    if (isTargetEnabled(project, Target.MACOS_X64)) {
-        block()
-    }
-}
-
 static boolean isTargetEnabled(Project project, Target target) {
     final Set<Target> requiredTargets = getRequiredTargets(project) ?: getAllTargets()
 
@@ -483,3 +480,8 @@ private static Set<Target> getAllTargets() {
     return EnumSet.allOf(Target.class)
 }
 
+private static void disableCompilations(KotlinTarget target) {
+    target.compilations.configureEach {
+        compileKotlinTask.enabled = false
+    }
+}
