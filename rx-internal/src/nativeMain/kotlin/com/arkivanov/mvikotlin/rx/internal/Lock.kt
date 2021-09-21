@@ -15,13 +15,6 @@ import platform.posix.pthread_mutexattr_t
 import kotlin.native.concurrent.freeze
 import kotlin.native.internal.createCleaner
 
-/**
- * Wrapper for platform.posix.PTHREAD_MUTEX_RECURSIVE which
- * is represented as kotlin.Int on darwin platforms and kotlin.UInt on linuxX64
- * See: // https://youtrack.jetbrains.com/issue/KT-41509
- */
-internal expect val PTHREAD_MUTEX_RECURSIVE: Int
-
 @Suppress("ACTUAL_WITHOUT_EXPECT", "EmptyDefaultConstructor")
 internal actual class Lock actual constructor() {
 
