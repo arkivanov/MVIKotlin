@@ -3,7 +3,6 @@ package com.arkivanov.mvikotlin.rx.internal
 import kotlinx.cinterop.Arena
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.ptr
-import platform.posix.PTHREAD_MUTEX_RECURSIVE
 import platform.posix.pthread_mutex_destroy
 import platform.posix.pthread_mutex_init
 import platform.posix.pthread_mutex_lock
@@ -40,7 +39,7 @@ internal actual class Lock actual constructor() {
 
         init {
             pthread_mutexattr_init(attr.ptr)
-            pthread_mutexattr_settype(attr.ptr, PTHREAD_MUTEX_RECURSIVE.toInt())
+            pthread_mutexattr_settype(attr.ptr, PTHREAD_MUTEX_RECURSIVE)
             pthread_mutex_init(mutex.ptr, attr.ptr)
             freeze()
         }

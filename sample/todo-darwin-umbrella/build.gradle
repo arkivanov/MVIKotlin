@@ -14,18 +14,17 @@ kotlin {
         }
     }
 
-    doIfIosEnabled(project) {
-        ios {
-            binaries {
-                framework {
-                    baseName = "TodoLib"
-                    transitiveExport = true
 
-                    export project(":mvikotlin-main")
-                    export project(":mvikotlin-logging")
-                    export project(":mvikotlin-timetravel")
-                    export project(":sample:todo-reaktive")
-                }
+    ios {
+        binaries {
+            framework {
+                baseName = "TodoLib"
+                transitiveExport = true
+
+                export project(":mvikotlin-main")
+                export project(":mvikotlin-logging")
+                export project(":mvikotlin-timetravel")
+                export project(":sample:todo-reaktive")
             }
         }
     }
