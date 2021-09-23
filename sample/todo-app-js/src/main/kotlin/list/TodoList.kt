@@ -8,6 +8,7 @@ import com.ccfraser.muirwik.components.list.mListItemText
 import com.ccfraser.muirwik.components.mCheckbox
 import com.ccfraser.muirwik.components.mTypography
 import react.RBuilder
+import react.buildElement
 
 fun RBuilder.listTodo(
     todos: List<TodoItem>,
@@ -15,7 +16,6 @@ fun RBuilder.listTodo(
     onDoneClick: (String) -> Unit,
     onDeleteClick: (String) -> Unit
 ) {
-    val builder2 = RBuilder()
     mList {
         todos.forEach { todoItem ->
             val id = todoItem.id
@@ -26,7 +26,7 @@ fun RBuilder.listTodo(
                     onChange = { _, _ -> onDoneClick(id) }
                 )
                 mListItemText(
-                    primary = builder2.mTypography(text = todoItem.data.text, noWrap = true)
+                    primary = buildElement { mTypography(text = todoItem.data.text, noWrap = true) }
                 ) {
                     attrs.onClick = { onClick(id) }
                 }
