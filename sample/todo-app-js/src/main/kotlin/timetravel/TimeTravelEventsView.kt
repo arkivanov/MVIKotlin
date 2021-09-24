@@ -11,11 +11,12 @@ import com.ccfraser.muirwik.components.list.mListItemSecondaryAction
 import com.ccfraser.muirwik.components.list.mListItemText
 import com.ccfraser.muirwik.components.mTypography
 import org.w3c.dom.Element
+import react.Props
 import react.RBuilder
 import react.RComponent
-import react.RProps
-import react.RState
-import react.ReactElement
+import react.RefCallback
+import react.State
+import react.buildElement
 import react.dom.findDOMNode
 import react.dom.span
 import root.App.TodoStyles.eventItemCss
@@ -33,7 +34,6 @@ class TimeTravelEventsView(prps: TimeTravelEventsProps) :
     }
 
     override fun RBuilder.render() {
-        val altBuilder = RBuilder()
         mList {
             props.events.forEachIndexed { index, event ->
                 val selected = props.selectedEventIndex == index
@@ -43,18 +43,18 @@ class TimeTravelEventsView(prps: TimeTravelEventsProps) :
                     selected = selected
                 ) {
                     if (selected) {
-                        ref {
-                            buttonRef = findDOMNode(it)
-                        }
+                        ref = RefCallback<dynamic> { buttonRef = findDOMNode(it) }
                     }
                     mListItemText(
-                        primary = altBuilder.span { +event.storeName },
-                        secondary = altBuilder.span {
-                            mTypography(
-                                text = event.value.toString(),
-                                component = "span",
-                                variant = MTypographyVariant.body2
-                            ) { css(eventItemCss) }
+                        primary = buildElement { span { +event.storeName } },
+                        secondary = buildElement {
+                            span {
+                                mTypography(
+                                    text = event.value.toString(),
+                                    component = "span",
+                                    variant = MTypographyVariant.body2
+                                ) { css(eventItemCss) }
+                            }
                         }
                     )
                     if (event.type !== StoreEventType.STATE)
@@ -70,24 +70,25 @@ class TimeTravelEventsView(prps: TimeTravelEventsProps) :
     }
 }
 
-external interface TimeTravelEventsProps : RProps {
+external interface TimeTravelEventsProps : Props {
     var events: List<TimeTravelEvent>
     var selectedEventIndex: Int
     var onDebugEventClick: (Long) -> Unit
     var onItemClick: (TimeTravelEvent) -> Unit
 }
 
-external interface TimeTravelEventsState : RState
+external interface TimeTravelEventsState : State
 
 fun RBuilder.timeTravelEventsView(
     events: List<TimeTravelEvent>,
     selectedEventIndex: Int,
     onDebugEventClick: (Long) -> Unit,
     onItemClick: (TimeTravelEvent) -> Unit
-): ReactElement =
+) {
     child(TimeTravelEventsView::class) {
         attrs.events = events
         attrs.selectedEventIndex = selectedEventIndex
         attrs.onDebugEventClick = onDebugEventClick
         attrs.onItemClick = onItemClick
     }
+}

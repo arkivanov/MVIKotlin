@@ -20,11 +20,10 @@ import com.ccfraser.muirwik.components.mContainer
 import com.ccfraser.muirwik.components.mTextFieldMultiLine
 import com.ccfraser.muirwik.components.mTypography
 import com.ccfraser.muirwik.components.targetInputValue
+import react.Props
 import react.RBuilder
 import react.RComponent
-import react.RProps
-import react.RState
-import react.ReactElement
+import react.State
 import react.setState
 import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.detailsButtonsCss
@@ -147,17 +146,18 @@ class TodoDetailsComponent(props: TodoDetailsParentProps) :
 
 }
 
-external interface TodoDetailsParentState : RState {
+external interface TodoDetailsParentState : State {
     var model: TodoDetailsView.Model
 }
 
-external interface TodoDetailsParentProps : RProps {
+external interface TodoDetailsParentProps : Props {
     var dependencies: TodoDetailsComponent.Dependencies
 }
 
 fun RBuilder.todoDetails(
     dependencies: TodoDetailsComponent.Dependencies
-): ReactElement =
+) {
     child(TodoDetailsComponent::class) {
         attrs.dependencies = dependencies
     }
+}

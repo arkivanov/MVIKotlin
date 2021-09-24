@@ -24,8 +24,7 @@ import com.ccfraser.muirwik.components.mTypography
 import react.RBuilder
 import react.RComponent
 import react.RProps
-import react.RState
-import react.ReactElement
+import react.State
 import react.setState
 import root.App.TodoStyles.addCss
 import root.App.TodoStyles.columnCss
@@ -129,12 +128,13 @@ external interface TodoListParentProps : RProps {
     var dependencies: TodoListParentComponent.Dependencies
 }
 
-external interface TodoListParentState : RState {
+external interface TodoListParentState : State {
     var listModel: TodoListView.Model
     var addModel: TodoAddView.Model
 }
 
-fun RBuilder.todoContainer(dependencies: TodoListParentComponent.Dependencies): ReactElement =
+fun RBuilder.todoContainer(dependencies: TodoListParentComponent.Dependencies) {
     child(TodoListParentComponent::class) {
         attrs.dependencies = dependencies
     }
+}
