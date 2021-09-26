@@ -1,7 +1,12 @@
-import com.arkivanov.gradle.kotlin
-import com.arkivanov.gradle.setupMultiplatform
+plugins {
+    id("kotlin-multiplatform")
+    id("com.android.library")
+    id("com.arkivanov.gradle.setup")
+}
 
-setupMultiplatform()
+setup {
+    multiplatform()
+}
 
 kotlin {
     sourceSets {

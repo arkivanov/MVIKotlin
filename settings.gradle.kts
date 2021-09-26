@@ -9,6 +9,25 @@ dependencyResolutionManagement {
     }
 }
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven("https://jitpack.io")
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.toString() == "com.arkivanov.gradle.setup") {
+                useModule("com.github.arkivanov:gradle-setup-plugin:aa1bb718ee")
+            }
+        }
+    }
+
+    plugins {
+        id("com.arkivanov.gradle.setup")
+    }
+}
+
 include(":utils-internal")
 include(":rx")
 include(":rx-internal")

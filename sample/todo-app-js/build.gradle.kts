@@ -1,17 +1,10 @@
-import com.arkivanov.gradle.disableCompilationsIfNeeded
-
 plugins {
     id("org.jetbrains.kotlin.js")
+    id("com.arkivanov.gradle.setup")
 }
 
-kotlin {
-    js(IR) {
-        browser {
-            binaries.executable()
-        }
-
-        disableCompilationsIfNeeded()
-    }
+setup {
+    jsApp()
 }
 
 dependencies {
@@ -27,7 +20,7 @@ dependencies {
     implementation(deps.essenty.instanceKeeper)
 
     implementation(enforcedPlatform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:0.0.1-pre.236-kotlin-${deps.versions.kotlin.get()}"))
-    implementation( "org.jetbrains.kotlin-wrappers:kotlin-react")
+    implementation("org.jetbrains.kotlin-wrappers:kotlin-react")
     implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
     implementation("org.jetbrains.kotlin-wrappers:kotlin-styled")
     implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions")
