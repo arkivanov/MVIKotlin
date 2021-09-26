@@ -1,8 +1,14 @@
 import com.arkivanov.gradle.Target
-import com.arkivanov.gradle.kotlin
-import com.arkivanov.gradle.setupMultiplatform
 
-setupMultiplatform(Target.Android, Target.Js(mode = Target.Js.Mode.IR))
+plugins {
+    id("kotlin-multiplatform")
+    id("com.android.library")
+    id("com.arkivanov.gradle.setup")
+}
+
+setup {
+    multiplatform(Target.Android, Target.Js(mode = Target.Js.Mode.IR))
+}
 
 kotlin {
     sourceSets {

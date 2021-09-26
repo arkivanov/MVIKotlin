@@ -1,8 +1,10 @@
+import com.arkivanov.gradle.PublicationConfig
 import io.gitlab.arturbosch.detekt.detekt
 
 buildscript {
     repositories {
         gradlePluginPortal()
+        google()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 
@@ -18,6 +20,29 @@ buildscript {
 
 plugins {
     id("io.gitlab.arturbosch.detekt").version("1.14.2")
+    id("com.arkivanov.gradle.setup")
+}
+
+publicationDefaults {
+    config =
+        PublicationConfig(
+            group = "com.arkivanov.mvikotlin",
+            version = deps.versions.mvikotlin.get(),
+            projectName = "MVIKotlin",
+            projectDescription = "Kotlin Multiplatform MVI framework",
+            projectUrl = "https://github.com/arkivanov/MVIKotlin",
+            scmUrl = "scm:git:git://github.com/arkivanov/MVIKotlin.git",
+            licenseName = "The Apache License, Version 2.0",
+            licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt",
+            developerId = "arkivanov",
+            developerName = "Arkadii Ivanov",
+            developerEmail = "arkann1985@gmail.com",
+            signingKey = System.getenv("SIGNING_KEY"),
+            signingPassword = System.getenv("SIGNING_PASSWORD"),
+            repositoryUrl = "https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${System.getenv("SONATYPE_REPOSITORY_ID")}",
+            repositoryUserName = "arkivanov",
+            repositoryPassword = System.getenv("SONATYPE_PASSWORD"),
+        )
 }
 
 allprojects {

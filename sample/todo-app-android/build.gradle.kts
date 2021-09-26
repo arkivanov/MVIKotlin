@@ -1,23 +1,19 @@
-import com.arkivanov.gradle.isTargetCompilationAllowed
-import com.arkivanov.gradle.setupAndroid
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.arkivanov.gradle.Target
-
 plugins {
+    id("com.arkivanov.gradle.setup")
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-parcelize")
 }
 
-setupAndroid()
+setup {
+    androidApp(
+        applicationId = "com.arkivanov.rxkotlin.sample.todo.android",
+        versionCode = 1,
+        versionName = "1.0",
+    )
+}
 
 android {
-    defaultConfig {
-        applicationId = "com.arkivanov.rxkotlin.sample.todo.android"
-        versionCode = 1
-        versionName = "1.0"
-    }
-
     packagingOptions {
         exclude("META-INF/*")
     }
@@ -40,8 +36,4 @@ dependencies {
     implementation(deps.kotlinx.kotlinxCoroutinesCore)
     implementation(deps.kotlinx.kotlinxCoroutinesAndroid)
     implementation(deps.essenty.instanceKeeper)
-}
-
-tasks.withType<KotlinCompile> {
-    enabled = isTargetCompilationAllowed(Target.Android::class)
 }
