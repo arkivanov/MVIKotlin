@@ -160,6 +160,7 @@ private fun ButtonBar(
             VerticalDivider()
 
             ToolbarButton(
+                toolTip = "Settings",
                 imageVector = Icons.Default.Settings,
                 onClick = events.onEditSettings
             )
@@ -173,11 +174,13 @@ private fun ConnectionButtons(
     events: ButtonBarEvents
 ) {
     ToolbarButton(
+        toolTip = "Connect to application",
         imageVector = Icons.Default.Phonelink,
         enabled = buttons.isConnectEnabled,
         onClick = events.onConnect
     )
     ToolbarButton(
+        toolTip = "Disconnect from application",
         imageVector = Icons.Default.PhonelinkOff,
         enabled = buttons.isDisconnectEnabled,
         onClick = events.onDisconnect
@@ -190,48 +193,56 @@ private fun ControlButtons(
     events: ButtonBarEvents
 ) {
     ToolbarButton(
+        toolTip = "Start recording",
         imageVector = Icons.Default.FiberManualRecord,
         enabled = buttons.isStartRecordingEnabled,
         onClick = events.onStartRecording
     )
 
     ToolbarButton(
+        toolTip = "Stop recording",
         imageVector = Icons.Default.Stop,
         enabled = buttons.isStopRecordingEnabled,
         onClick = events.onStopRecording
     )
 
     ToolbarButton(
+        toolTip = "Move to start",
         imageVector = Icons.Default.SkipPrevious,
         enabled = buttons.isMoveToStartEnabled,
         onClick = events.onMoveToStart
     )
 
     ToolbarButton(
+        toolTip = "Step backward",
         imageVector = Icons.Default.ChevronLeft,
         enabled = buttons.isStepBackwardEnabled,
         onClick = events.onStepBackward
     )
 
     ToolbarButton(
+        toolTip = "Step forward",
         imageVector = Icons.Default.ChevronRight,
         enabled = buttons.isStepForwardEnabled,
         onClick = events.onStepForward
     )
 
     ToolbarButton(
+        toolTip = "Move to end",
         imageVector = Icons.Default.SkipNext,
         enabled = buttons.isMoveToEndEnabled,
         onClick = events.onMoveToEnd
     )
 
     ToolbarButton(
+        toolTip = "Cancel",
         imageVector = Icons.Default.Close,
         enabled = buttons.isCancelEnabled,
         onClick = events.onCancel
     )
 
     ToolbarButton(
+        toolTip = "Debug the selected event",
         imageVector = Icons.Default.BugReport,
         enabled = buttons.isDebugEventEnabled,
         onClick = events.onDebug
@@ -244,12 +255,14 @@ private fun ExportImportButtons(
     events: ButtonBarEvents
 ) {
     ToolbarButton(
+        toolTip = "Export events",
         imageVector = Icons.Default.Share,
         enabled = buttons.isExportEventsEnabled,
         onClick = events.onExportEvents
     )
 
     ToolbarButton(
+        toolTip = "Import events",
         imageVector = Icons.Default.Download,
         enabled = buttons.isImportEventsEnabled,
         onClick = events.onImportEvents
