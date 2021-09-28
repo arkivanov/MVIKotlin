@@ -1,4 +1,8 @@
 import com.arkivanov.gradle.PublicationConfig
+import com.arkivanov.gradle.darwinSet
+import com.arkivanov.gradle.javaSet
+import com.arkivanov.gradle.named
+import com.arkivanov.gradle.Target
 import io.gitlab.arturbosch.detekt.detekt
 
 buildscript {
@@ -13,6 +17,7 @@ buildscript {
         val deps = project.extensions.getByType<VersionCatalogsExtension>().named("deps") as org.gradle.accessors.dm.LibrariesForDeps
 
         classpath(deps.kotlin.kotlinGradlePlug)
+        classpath(deps.android.gradle)
         classpath(deps.intellij.gradleIntellijPlug)
         classpath(deps.compose.composeGradlePlug)
     }
@@ -23,8 +28,32 @@ plugins {
     id("com.arkivanov.gradle.setup")
 }
 
-publicationDefaults {
-    config =
+setupDefaults {
+    multiplatformTargets(
+        Target.Android,
+        Target.Jvm,
+        Target.Js(),
+        Target.Linux,
+        Target.Ios,
+        Target.WatchOs,
+        Target.MacOs,
+    )
+
+    multiplatformSourceSets {
+        val jvmJs by named(common)
+        val jvmNative by named(common)
+        val jsNative by named(common)
+        val native by named(jvmNative, jsNative)
+        val darwin by named(native)
+        val java by named(jvmJs, jvmNative)
+
+        js.dependsOn(jvmJs, jsNative)
+        javaSet.dependsOn(java)
+        linuxX64.dependsOn(native)
+        darwinSet.dependsOn(darwin)
+    }
+
+    publicationConfig(
         PublicationConfig(
             group = "com.arkivanov.mvikotlin",
             version = deps.versions.mvikotlin.get(),
@@ -43,6 +72,7 @@ publicationDefaults {
             repositoryUserName = "arkivanov",
             repositoryPassword = System.getenv("SONATYPE_PASSWORD"),
         )
+    )
 }
 
 allprojects {
