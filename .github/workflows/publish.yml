@@ -36,7 +36,7 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish -Dpublish_metadata
+        run: ./gradlew publish -Dmetadata_only
   linux-publish:
     name: Publish on Linux
     runs-on: ubuntu-latest
