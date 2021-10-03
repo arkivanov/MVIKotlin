@@ -6,7 +6,7 @@ plugins {
 }
 
 setup {
-    multiplatform(Target.Ios)
+    multiplatform(Target.Ios(isAppleSiliconEnabled = false))
 }
 
 kotlin {
