@@ -40,7 +40,7 @@ russhwolf-multiplatformSettings = { group = "com.russhwolf", name = "multiplatfo
 
 compose-composeGradlePlug = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "compose" }
 
-android-gradle = { group = "com.android.tools.build", name = "gradle", version ="4.2.0" }
+android-gradle = { group = "com.android.tools.build", name = "gradle", version ="7.0.1" }
 androidx-lifecycle-lifecycleViewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidxLifecycle" }
 androidx-lifecycle-lifecycleViewmodelSavedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "androidxLifecycle" }
 androidx-lifecycle-lifecycleRuntime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "androidxLifecycle" }

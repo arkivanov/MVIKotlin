@@ -1,8 +1,9 @@
+import com.arkivanov.gradle.AndroidConfig
 import com.arkivanov.gradle.PublicationConfig
+import com.arkivanov.gradle.Target
 import com.arkivanov.gradle.darwinSet
 import com.arkivanov.gradle.javaSet
 import com.arkivanov.gradle.named
-import com.arkivanov.gradle.Target
 import io.gitlab.arturbosch.detekt.detekt
 
 buildscript {
@@ -52,6 +53,14 @@ setupDefaults {
         linuxX64.dependsOn(native)
         darwinSet.dependsOn(darwin)
     }
+
+    androidConfig(
+        AndroidConfig(
+            minSdkVersion = 15,
+            compileSdkVersion = 31,
+            targetSdkVersion = 31,
+        )
+    )
 
     publicationConfig(
         PublicationConfig(
