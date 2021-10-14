@@ -13,6 +13,7 @@ import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore
 import com.arkivanov.mvikotlin.utils.internal.ensureNeverFrozen
+import com.arkivanov.mvikotlin.utils.internal.logE
 import kotlin.collections.set
 
 internal class TimeTravelControllerImpl : TimeTravelController {
@@ -30,11 +31,22 @@ internal class TimeTravelControllerImpl : TimeTravelController {
     override fun states(observer: Observer<TimeTravelState>): Disposable = stateSubject.subscribe(observer)
 
     @MainThread
-    fun attachStore(store: TimeTravelStore<*, *, *>, name: String) {
+    fun attachStore(store: TimeTravelStore<*, *, *>, name: String?) {
         assertOnMainThread()
 
-        check(!stores.containsKey(name)) { "Duplicate store: $name" }
+        if (name != null) {
+            if (name !in stores) {
+                addStore(store = store, name = name)
+                return
+            }
 
+            logE("Could not enable time travel for the store: $name. Duplicate store name.")
+        }
+
+        bypassStore(store)
+    }
+
+    private fun addStore(store: TimeTravelStore<*, *, *>, name: String) {
         stores[name] = store
 
         store.events(
@@ -42,6 +54,14 @@ internal class TimeTravelControllerImpl : TimeTravelController {
                 onComplete = { stores -= name },
                 onNext = { onEvent(TimeTravelEvent(id = eventId++, storeName = name, type = it.type, value = it.value, state = it.state)) }
             )
+        )
+    }
+
+    private fun bypassStore(store: TimeTravelStore<*, *, *>) {
+        store.events(
+            observer { event ->
+                store.process(type = event.type, value = event.value)
+            }
         )
     }
 

@@ -5,16 +5,12 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.timetravel.controller.attachToController
+import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelControllerHolder
 
 /**
  * An implementation of [StoreFactory] that creates [Store]s with time travel functionality
- *
- * @param fallback a [StoreFactory] to be used when no name is supplied
  */
-class TimeTravelStoreFactory(
-    private val fallback: StoreFactory,
-) : StoreFactory by fallback {
+class TimeTravelStoreFactory : StoreFactory {
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String?,
@@ -24,25 +20,16 @@ class TimeTravelStoreFactory(
         executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
         reducer: Reducer<State, Result>
     ): Store<Intent, State, Label> =
-        if (name == null) {
-            fallback.create(
-                isAutoInit = isAutoInit,
-                initialState = initialState,
-                bootstrapper = bootstrapper,
-                executorFactory = executorFactory,
-                reducer = reducer
-            )
-        } else {
-            TimeTravelStoreImpl(
-                initialState = initialState,
-                bootstrapper = bootstrapper,
-                executorFactory = executorFactory,
-                reducer = reducer
-            ).apply {
-                attachToController(name = name)
-                if (isAutoInit) {
-                    init()
-                }
+        TimeTravelStoreImpl(
+            initialState = initialState,
+            bootstrapper = bootstrapper,
+            executorFactory = executorFactory,
+            reducer = reducer
+        ).also { store ->
+            TimeTravelControllerHolder.impl.attachStore(store = store, name = name)
+            if (isAutoInit) {
+                store.init()
             }
         }
+
 }
