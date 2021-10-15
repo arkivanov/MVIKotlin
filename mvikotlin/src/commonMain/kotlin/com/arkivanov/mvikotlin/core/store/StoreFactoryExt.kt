@@ -4,9 +4,15 @@ import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.initialize
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 
+/**
+ * A convenience extension function that creates an implementation of [Store]
+ * without [Executor] and [Bootstrapper]. [Intent]s are processed directly by the [Reducer].
+ *
+ * See [StoreFactory.create] for more information.
+ */
 fun <Intent : Any, State : Any> StoreFactory.create(
     name: String? = null,
-    isAutoInit: Boolean = isAutoInitByDefault,
+    isAutoInit: Boolean = true,
     initialState: State,
     reducer: Reducer<State, Intent>
 ): Store<Intent, State, Nothing> =
