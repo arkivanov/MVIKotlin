@@ -8,16 +8,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 
 /**
  * An implementation of the [StoreFactory] that creates default implementations of the [Store].
- *
- * @param isAutoInitByDefault the value is used as default for [StoreFactory.create] (`initialState`) argument
  */
-class DefaultStoreFactory(
-    override val isAutoInitByDefault: Boolean = true
-) : StoreFactory {
-
-    constructor() : this(
-        isAutoInitByDefault = true
-    )
+class DefaultStoreFactory : StoreFactory {
 
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String?,

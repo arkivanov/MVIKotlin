@@ -8,8 +8,6 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 
 internal object TestStoreFactory : StoreFactory {
 
-    override val isAutoInitByDefault: Boolean = false
-
     override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
         name: String?,
         isAutoInit: Boolean,
