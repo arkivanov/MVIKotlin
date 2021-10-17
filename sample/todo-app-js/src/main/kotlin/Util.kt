@@ -7,7 +7,7 @@ const val DEBUG: Boolean = true
 
 val storeFactoryInstance: StoreFactory =
     if (DEBUG) {
-        LoggingStoreFactory(delegate = TimeTravelStoreFactory(fallback = DefaultStoreFactory()))
+        LoggingStoreFactory(delegate = TimeTravelStoreFactory())
     } else {
         DefaultStoreFactory()
     }

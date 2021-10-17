@@ -16,7 +16,7 @@ import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
 
 val storeFactoryInstance: StoreFactory =
     if (BuildConfig.DEBUG) {
-        LoggingStoreFactory(delegate = TimeTravelStoreFactory(fallback = DefaultStoreFactory()))
+        LoggingStoreFactory(delegate = TimeTravelStoreFactory())
     } else {
         DefaultStoreFactory()
     }
