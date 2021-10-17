@@ -1,6 +1,6 @@
 [versions]
 
-mvikotlin = "3.0.0-alpha01"
+mvikotlin = "3.0.0-alpha02"
 kotlin = "1.5.30"
 kotlinxCoroutines = "1.5.2"
 intellijGradlePlugin = "0.4.18"
