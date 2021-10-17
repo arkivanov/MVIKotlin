@@ -2,8 +2,9 @@ import com.arkivanov.gradle.kotlin
 import com.arkivanov.gradle.setupMultiplatform
 import com.arkivanov.gradle.setupMultiplatformPublications
 
-setupMultiplatform()
-setupMultiplatformPublications()
+setupMultiplatform {
+    targets()
+}
 
 repositories {
     maven("https://oss.sonatype.org/content/groups/staging/") {

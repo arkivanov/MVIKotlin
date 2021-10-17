@@ -4,7 +4,8 @@ plugins {
     id("com.arkivanov.gradle.setup")
 }
 
-setup {
-    multiplatform()
-    multiplatformPublications()
+setupMultiplatform {
+    targets()
+    publications()
+    binaryCompatibilityValidator()
 }

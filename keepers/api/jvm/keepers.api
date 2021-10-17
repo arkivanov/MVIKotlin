@@ -1,0 +1,34 @@
+public final class com/arkivanov/mvikotlin/keepers/instancekeeper/DefaultInstanceKeeper : com/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper {
+	public fun <init> ()V
+	public final fun destroy ()V
+	public fun get (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)Lcom/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper$Instance;
+}
+
+public abstract interface annotation class com/arkivanov/mvikotlin/keepers/instancekeeper/ExperimentalInstanceKeeperApi : java/lang/annotation/Annotation {
+}
+
+public abstract interface class com/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper {
+	public abstract fun get (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)Lcom/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper$Instance;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/keepers/instancekeeper/InstanceKeeper$Instance {
+	public abstract fun onDestroy ()V
+}
+
+public abstract interface annotation class com/arkivanov/mvikotlin/keepers/statekeeper/ExperimentalStateKeeperApi : java/lang/annotation/Annotation {
+}
+
+public abstract interface class com/arkivanov/mvikotlin/keepers/statekeeper/StateKeeper {
+	public abstract fun consume ()Ljava/lang/Object;
+	public abstract fun register (Lkotlin/jvm/functions/Function0;)V
+	public abstract fun unregister ()V
+}
+
+public abstract interface class com/arkivanov/mvikotlin/keepers/statekeeper/StateKeeperRegistry {
+	public abstract fun get (Lkotlin/reflect/KClass;Ljava/lang/String;)Lcom/arkivanov/mvikotlin/keepers/statekeeper/StateKeeper;
+}
+
+public final class com/arkivanov/mvikotlin/keepers/statekeeper/StateKeeperRegistry$DefaultImpls {
+	public static synthetic fun get$default (Lcom/arkivanov/mvikotlin/keepers/statekeeper/StateKeeperRegistry;Lkotlin/reflect/KClass;Ljava/lang/String;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/keepers/statekeeper/StateKeeper;
+}
+

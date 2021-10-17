@@ -1,0 +1,39 @@
+public final class com/arkivanov/mvikotlin/logging/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public final class com/arkivanov/mvikotlin/logging/logger/DefaultLogFormatter : com/arkivanov/mvikotlin/logging/logger/LogFormatter {
+	public static final field Companion Lcom/arkivanov/mvikotlin/logging/logger/DefaultLogFormatter$Companion;
+	public static final field DEFAULT_VALUE_LENGTH_LIMIT I
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun format (Ljava/lang/String;Lcom/arkivanov/mvikotlin/core/store/StoreEventType;Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/arkivanov/mvikotlin/logging/logger/DefaultLogFormatter$Companion {
+}
+
+public final class com/arkivanov/mvikotlin/logging/logger/DefaultLogger : com/arkivanov/mvikotlin/logging/logger/Logger {
+	public static final field INSTANCE Lcom/arkivanov/mvikotlin/logging/logger/DefaultLogger;
+	public fun log (Ljava/lang/String;)V
+}
+
+public abstract interface class com/arkivanov/mvikotlin/logging/logger/LogFormatter {
+	public abstract fun format (Ljava/lang/String;Lcom/arkivanov/mvikotlin/core/store/StoreEventType;Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/logging/logger/Logger {
+	public abstract fun log (Ljava/lang/String;)V
+}
+
+public final class com/arkivanov/mvikotlin/logging/store/LoggingStoreFactory : com/arkivanov/mvikotlin/core/store/StoreFactory {
+	public fun <init> (Lcom/arkivanov/mvikotlin/core/store/StoreFactory;)V
+	public fun <init> (Lcom/arkivanov/mvikotlin/core/store/StoreFactory;Lcom/arkivanov/mvikotlin/logging/logger/Logger;Lcom/arkivanov/mvikotlin/logging/logger/LogFormatter;)V
+	public synthetic fun <init> (Lcom/arkivanov/mvikotlin/core/store/StoreFactory;Lcom/arkivanov/mvikotlin/logging/logger/Logger;Lcom/arkivanov/mvikotlin/logging/logger/LogFormatter;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun create (Ljava/lang/String;ZLjava/lang/Object;Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;Lkotlin/jvm/functions/Function0;Lcom/arkivanov/mvikotlin/core/store/Reducer;)Lcom/arkivanov/mvikotlin/core/store/Store;
+}
+

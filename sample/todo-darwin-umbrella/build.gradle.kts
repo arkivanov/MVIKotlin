@@ -5,8 +5,8 @@ plugins {
     id("com.arkivanov.gradle.setup")
 }
 
-setup {
-    multiplatform(Target.Ios(isAppleSiliconEnabled = false))
+setupMultiplatform {
+    targets(Target.Ios(isAppleSiliconEnabled = false))
 }
 
 kotlin {

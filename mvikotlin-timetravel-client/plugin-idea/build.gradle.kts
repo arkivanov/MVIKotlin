@@ -4,7 +4,7 @@ plugins {
     id("com.arkivanov.gradle.setup")
 }
 
-setup {
+setupIdeaPlugin {
     ideaPlugin(
         group = "org.arkivanov.mvikotlin.plugin.idea.timetravel",
         version = deps.versions.mvikotlin.get(),

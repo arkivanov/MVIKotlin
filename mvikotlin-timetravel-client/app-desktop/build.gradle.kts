@@ -8,8 +8,8 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-setup {
-    multiplatform(Target.Jvm)
+setupMultiplatform {
+    targets(Target.Jvm)
 }
 
 kotlin {

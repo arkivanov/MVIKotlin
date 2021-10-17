@@ -5,8 +5,8 @@ plugins {
     id("com.arkivanov.gradle.setup")
 }
 
-setup {
-    multiplatform(Target.Jvm)
+setupMultiplatform {
+    targets(Target.Jvm)
 }
 
 kotlin {

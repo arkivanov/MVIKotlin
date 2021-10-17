@@ -1,0 +1,129 @@
+public final class com/arkivanov/mvikotlin/timetravel/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/TimeTravelEvent : com/arkivanov/mvikotlin/core/utils/JvmSerializable {
+	public fun <init> (JLjava/lang/String;Lcom/arkivanov/mvikotlin/core/store/StoreEventType;Ljava/lang/Object;Ljava/lang/Object;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
+	public final fun component4 ()Ljava/lang/Object;
+	public final fun component5 ()Ljava/lang/Object;
+	public final fun copy (JLjava/lang/String;Lcom/arkivanov/mvikotlin/core/store/StoreEventType;Ljava/lang/Object;Ljava/lang/Object;)Lcom/arkivanov/mvikotlin/timetravel/TimeTravelEvent;
+	public static synthetic fun copy$default (Lcom/arkivanov/mvikotlin/timetravel/TimeTravelEvent;JLjava/lang/String;Lcom/arkivanov/mvikotlin/core/store/StoreEventType;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/timetravel/TimeTravelEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()J
+	public final fun getState ()Ljava/lang/Object;
+	public final fun getStoreName ()Ljava/lang/String;
+	public final fun getType ()Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
+	public final fun getValue ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/TimeTravelState {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;ILcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;)V
+	public synthetic fun <init> (Ljava/util/List;ILcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()I
+	public final fun component3 ()Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+	public final fun copy (Ljava/util/List;ILcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;)Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState;
+	public static synthetic fun copy$default (Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState;Ljava/util/List;ILcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEvents ()Ljava/util/List;
+	public final fun getMode ()Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+	public final fun getSelectedEventIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode : java/lang/Enum {
+	public static final field IDLE Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+	public static final field RECORDING Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+	public static final field STOPPED Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+	public static fun valueOf (Ljava/lang/String;)Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+	public static fun values ()[Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/timetravel/controller/TimeTravelController {
+	public abstract fun cancel ()V
+	public abstract fun debugEvent (J)V
+	public abstract fun export ()Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExport;
+	public abstract fun getState ()Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState;
+	public abstract fun import (Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExport;)V
+	public abstract fun moveToEnd ()V
+	public abstract fun moveToStart ()V
+	public abstract fun startRecording ()V
+	public abstract fun states (Lcom/arkivanov/mvikotlin/rx/Observer;)Lcom/arkivanov/mvikotlin/rx/Disposable;
+	public abstract fun stepBackward ()V
+	public abstract fun stepForward ()V
+	public abstract fun stopRecording ()V
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/controller/TimeTravelControllerProviderKt {
+	public static final fun getTimeTravelController ()Lcom/arkivanov/mvikotlin/timetravel/controller/TimeTravelController;
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/export/DefaultTimeTravelExportSerializer : com/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer {
+	public static final field INSTANCE Lcom/arkivanov/mvikotlin/timetravel/export/DefaultTimeTravelExportSerializer;
+	public fun deserialize ([B)Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result;
+	public fun serialize (Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExport;)Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result;
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/export/TimeTravelExport : com/arkivanov/mvikotlin/core/utils/JvmSerializable {
+	public fun <init> (Ljava/util/List;Ljava/util/Map;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/List;Ljava/util/Map;)Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExport;
+	public static synthetic fun copy$default (Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExport;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExport;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRecordedEvents ()Ljava/util/List;
+	public final fun getUnusedStoreStates ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer {
+	public abstract fun deserialize ([B)Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result;
+	public abstract fun serialize (Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExport;)Lcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result;
+}
+
+public abstract class com/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result {
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result$Error : com/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result {
+	public fun <init> (Ljava/lang/Exception;)V
+	public final fun getException ()Ljava/lang/Exception;
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result$Success : com/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer$Result {
+	public fun <init> (Ljava/lang/Object;)V
+	public final fun getData ()Ljava/lang/Object;
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer {
+	public fun <init> ()V
+	public fun <init> (Lcom/arkivanov/mvikotlin/timetravel/controller/TimeTravelController;ILcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lcom/arkivanov/mvikotlin/timetravel/controller/TimeTravelController;ILcom/arkivanov/mvikotlin/timetravel/export/TimeTravelExportSerializer;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun start ()V
+	public final fun stop ()V
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/store/TimeTravelStoreFactory : com/arkivanov/mvikotlin/core/store/StoreFactory {
+	public fun <init> ()V
+	public fun create (Ljava/lang/String;ZLjava/lang/Object;Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;Lkotlin/jvm/functions/Function0;Lcom/arkivanov/mvikotlin/core/store/Reducer;)Lcom/arkivanov/mvikotlin/core/store/Store;
+}
+
+public final class com/arkivanov/mvikotlin/timetravel/widget/TimeTravelView : android/widget/FrameLayout {
+	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
+	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun setOnExportEventsListener (Lkotlin/jvm/functions/Function0;)V
+	public final fun setOnImportEventsListener (Lkotlin/jvm/functions/Function0;)V
+}
+

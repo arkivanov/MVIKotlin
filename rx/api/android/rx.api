@@ -1,0 +1,22 @@
+public final class com/arkivanov/mvikotlin/rx/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public abstract interface class com/arkivanov/mvikotlin/rx/Disposable {
+	public abstract fun dispose ()V
+	public abstract fun isDisposed ()Z
+}
+
+public abstract interface class com/arkivanov/mvikotlin/rx/Observer {
+	public abstract fun onComplete ()V
+	public abstract fun onNext (Ljava/lang/Object;)V
+}
+
+public final class com/arkivanov/mvikotlin/rx/ObserverBuilderKt {
+	public static final fun observer (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/arkivanov/mvikotlin/rx/Observer;
+	public static synthetic fun observer$default (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/rx/Observer;
+}
+
