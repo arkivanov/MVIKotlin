@@ -1,0 +1,5 @@
+public final class com/arkivanov/mvikotlin/main/store/DefaultStoreFactory : com/arkivanov/mvikotlin/core/store/StoreFactory {
+	public fun <init> ()V
+	public fun create (Ljava/lang/String;ZLjava/lang/Object;Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;Lkotlin/jvm/functions/Function0;Lcom/arkivanov/mvikotlin/core/store/Reducer;)Lcom/arkivanov/mvikotlin/core/store/Store;
+}
+

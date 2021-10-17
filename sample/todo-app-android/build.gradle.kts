@@ -5,7 +5,7 @@ plugins {
     id("kotlin-parcelize")
 }
 
-setup {
+setupAndroidApp {
     androidApp(
         applicationId = "com.arkivanov.rxkotlin.sample.todo.android",
         versionCode = 1,

@@ -6,8 +6,8 @@ plugins {
     id("com.arkivanov.gradle.setup")
 }
 
-setup {
-    multiplatform(Target.Android, Target.Js(mode = Target.Js.Mode.IR), Target.Ios(isAppleSiliconEnabled = false))
+setupMultiplatform {
+    targets(Target.Android, Target.Js(mode = Target.Js.Mode.IR), Target.Ios(isAppleSiliconEnabled = false))
 }
 
 kotlin {

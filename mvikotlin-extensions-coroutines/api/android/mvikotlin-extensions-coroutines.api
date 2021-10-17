@@ -1,0 +1,79 @@
+public final class com/arkivanov/mvikotlin/extensions/coroutines/BinderKt {
+	public static final fun bind (Lcom/arkivanov/essenty/lifecycle/Lifecycle;Lcom/arkivanov/mvikotlin/core/binder/BinderLifecycleMode;Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;)Lcom/arkivanov/mvikotlin/core/binder/Binder;
+	public static final fun bind (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;)Lcom/arkivanov/mvikotlin/core/binder/Binder;
+	public static synthetic fun bind$default (Lcom/arkivanov/essenty/lifecycle/Lifecycle;Lcom/arkivanov/mvikotlin/core/binder/BinderLifecycleMode;Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/core/binder/Binder;
+	public static synthetic fun bind$default (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/core/binder/Binder;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/extensions/coroutines/BindingsBuilder {
+	public abstract fun bindTo (Lkotlinx/coroutines/flow/Flow;Lcom/arkivanov/mvikotlin/core/store/Store;)V
+	public abstract fun bindTo (Lkotlinx/coroutines/flow/Flow;Lcom/arkivanov/mvikotlin/core/view/ViewRenderer;)V
+	public abstract fun bindTo (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;)V
+}
+
+public final class com/arkivanov/mvikotlin/extensions/coroutines/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public abstract class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineBootstrapper : com/arkivanov/mvikotlin/core/store/Bootstrapper {
+	public fun <init> ()V
+	public fun <init> (Lkotlin/coroutines/CoroutineContext;)V
+	public synthetic fun <init> (Lkotlin/coroutines/CoroutineContext;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected final fun dispatch (Ljava/lang/Object;)V
+	public fun dispose ()V
+	protected final fun getScope ()Lkotlinx/coroutines/CoroutineScope;
+	public final fun init (Lkotlin/jvm/functions/Function1;)V
+}
+
+public class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutor : com/arkivanov/mvikotlin/core/store/Executor {
+	public fun <init> ()V
+	public fun <init> (Lkotlin/coroutines/CoroutineContext;)V
+	public synthetic fun <init> (Lkotlin/coroutines/CoroutineContext;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected final fun dispatch (Ljava/lang/Object;)V
+	public fun dispose ()V
+	protected fun executeAction (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
+	protected fun executeIntent (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
+	protected final fun getScope ()Lkotlinx/coroutines/CoroutineScope;
+	public final fun handleAction (Ljava/lang/Object;)V
+	public final fun handleIntent (Ljava/lang/Object;)V
+	public final fun init (Lcom/arkivanov/mvikotlin/core/store/Executor$Callbacks;)V
+	protected final fun publish (Ljava/lang/Object;)V
+}
+
+public final class com/arkivanov/mvikotlin/extensions/coroutines/StoreExtKt {
+	public static final fun getLabels (Lcom/arkivanov/mvikotlin/core/store/Store;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun getStates (Lcom/arkivanov/mvikotlin/core/store/Store;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public abstract class com/arkivanov/mvikotlin/extensions/coroutines/SuspendBootstrapper : com/arkivanov/mvikotlin/core/store/Bootstrapper {
+	public fun <init> ()V
+	public fun <init> (Lkotlin/coroutines/CoroutineContext;)V
+	public synthetic fun <init> (Lkotlin/coroutines/CoroutineContext;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public abstract fun bootstrap (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun dispatch (Ljava/lang/Object;)V
+	public fun dispose ()V
+	public final fun init (Lkotlin/jvm/functions/Function1;)V
+	public final fun invoke ()V
+}
+
+public class com/arkivanov/mvikotlin/extensions/coroutines/SuspendExecutor : com/arkivanov/mvikotlin/core/store/Executor {
+	public fun <init> ()V
+	public fun <init> (Lkotlin/coroutines/CoroutineContext;)V
+	public synthetic fun <init> (Lkotlin/coroutines/CoroutineContext;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected final fun dispatch (Ljava/lang/Object;)V
+	public fun dispose ()V
+	protected fun executeAction (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected fun executeIntent (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun handleAction (Ljava/lang/Object;)V
+	public final fun handleIntent (Ljava/lang/Object;)V
+	public final fun init (Lcom/arkivanov/mvikotlin/core/store/Executor$Callbacks;)V
+	protected final fun publish (Ljava/lang/Object;)V
+}
+
+public final class com/arkivanov/mvikotlin/extensions/coroutines/ViewExtKt {
+	public static final fun getEvents (Lcom/arkivanov/mvikotlin/core/view/ViewEvents;)Lkotlinx/coroutines/flow/Flow;
+}
+
