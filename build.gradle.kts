@@ -36,9 +36,9 @@ setupDefaults {
         Target.Jvm,
         Target.Js(),
         Target.Linux,
-        Target.Ios(isAppleSiliconEnabled = false),
-        Target.WatchOs(isAppleSiliconEnabled = false),
-        Target.MacOs(isAppleSiliconEnabled = false),
+        Target.Ios(),
+        Target.WatchOs(),
+        Target.MacOs(),
     )
 
     multiplatformSourceSets {
