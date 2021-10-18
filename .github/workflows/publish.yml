@@ -72,7 +72,7 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish -Dsplit_targets
+        run: ./gradlew publish -Dsplit_targets --info
   close-staging-repository:
     name: Close staging repository
     runs-on: ubuntu-latest
