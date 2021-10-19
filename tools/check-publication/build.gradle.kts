@@ -1,6 +1,8 @@
-import com.arkivanov.gradle.kotlin
-import com.arkivanov.gradle.setupMultiplatform
-import com.arkivanov.gradle.setupMultiplatformPublications
+plugins {
+    id("kotlin-multiplatform")
+    id("com.android.library")
+    id("com.arkivanov.gradle.setup")
+}
 
 setupMultiplatform {
     targets()
