@@ -31,7 +31,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 It accepts a `StoreFactory` and uses it to create an implementation of the `CalculatorStore`. You can now pass any `StoreFactory` here. So if you want to enable time travel just pass an instance of the `TimeTravelStoreFactory`:
 
 ```kotlin
-val storeFactory = TimeTravelStoreFactory(DefaultStoreFactory)
+val storeFactory = TimeTravelStoreFactory()
 
 CalculatorStoreFactory(storeFactory).create()
 ```
@@ -39,7 +39,7 @@ CalculatorStoreFactory(storeFactory).create()
 You can also combine it with the `LoggingStoreFactory` in the following way:
 
 ```kotlin
-val storeFactory = LoggingStoreFactory(TimeTravelStoreFactory(DefaultStoreFactory))
+val storeFactory = LoggingStoreFactory(TimeTravelStoreFactory())
 
 CalculatorStoreFactory(storeFactory).create()
 ```
