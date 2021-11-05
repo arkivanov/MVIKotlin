@@ -14,7 +14,7 @@ import com.arkivanov.mvikotlin.sample.todo.common.controller.TodoDetailsControll
 import com.arkivanov.mvikotlin.sample.todo.common.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.todo.coroutines.controller.TodoDetailsCoroutinesController
 import com.arkivanov.mvikotlin.sample.todo.reaktive.controller.TodoDetailsReaktiveController
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 class TodoDetailsFragment(
     private val dependencies: Dependencies
