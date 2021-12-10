@@ -6,9 +6,21 @@
 
 Should you have any questions or ideas please welcome to the Slack channel: [#mvikotlin](https://kotlinlang.slack.com/archives/C01403U1ZGW)
 
-## Inspiration
+## ⚡⚡⚡ Why is this repository a fork?
 
-This project is inspired by [Badoo MVICore](https://github.com/badoo/MVICore) library.
+Having spent 5 years working on a variety of projects for Badoo/Bumble, I’m now off to another adventure. As part of that transition I was asked to transfer this repository to [Badoo GitHub account](https://github.com/badoo).
+
+Now I **continue my work** on this project **as a fork**.
+
+There should be no breaking changes related to this transfer. All the external links remain the same and should not be broken. The repository link is also the same: [arkivanov/MVIKotlin](https://github.com/arkivanov/MVIKotlin).
+
+Here is what is mostly affected by the transfer:
+
+- All the stars were transferred
+- All the Issues and Discussions were transferred as well. I will do all my best to fill the gap here.
+- All pull requests with all the comment history are also gone.
+
+I will continue doing all my best for this project and for the community! Business as usual!
 
 ## Overview
 
