@@ -23,6 +23,10 @@ Here is what is mostly affected by the transfer:
 
 I will continue doing all my best for this project and for the community! Business as usual!
 
+Additional resources:
+
+- [A thread on Hacker News](https://news.ycombinator.com/item?id=29447854)
+
 ## Overview
 
 ### What is MVI
