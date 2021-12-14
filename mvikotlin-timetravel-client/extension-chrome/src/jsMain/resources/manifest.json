@@ -1,0 +1,17 @@
+{
+  "name": "MVIKotlin Time Travel",
+  "description": "Chrome Developer Tools panel for time travelling with MVIKotlin (experimental)",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "icons": {
+    "48": "icons/mvikotlin-48.png",
+    "128": "icons/mvikotlin-128.png"
+  },
+  "devtools_page": "devtools.html",
+  "permissions": [
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*/"
+  ]
+}

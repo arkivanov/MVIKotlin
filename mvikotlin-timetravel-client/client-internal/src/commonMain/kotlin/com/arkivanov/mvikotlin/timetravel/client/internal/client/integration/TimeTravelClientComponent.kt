@@ -5,44 +5,27 @@ import com.arkivanov.mvikotlin.core.binder.BinderLifecycleMode
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.Connector
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient
-import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.AdbController
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.mappers.stateToModel
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.Intent
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.Label
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStoreFactory
-import com.arkivanov.mvikotlin.timetravel.client.internal.settings.SettingsConfig
-import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings
-import com.arkivanov.mvikotlin.timetravel.client.internal.settings.integration.TimeTravelSettingsComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.utils.mapState
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
-import com.russhwolf.settings.Settings
 
 class TimeTravelClientComponent(
     lifecycle: Lifecycle,
     storeFactory: StoreFactory,
-    settingsFactory: Settings.Factory,
-    settingsConfig: SettingsConfig,
-    private val adbController: AdbController,
+    connector: Connector,
     private val onImportEvents: () -> ByteArray?,
     private val onExportEvents: (ByteArray) -> Unit
 ) : TimeTravelClient {
 
-    override val settings: TimeTravelSettings =
-        TimeTravelSettingsComponent(
-            lifecycle = lifecycle,
-            storeFactory = storeFactory,
-            settingsFactory = settingsFactory,
-            settingsConfig = settingsConfig
-        )
-
     private val store =
         TimeTravelClientStoreFactory(
             storeFactory = storeFactory,
-            connector = TimeTravelClientStoreConnector(
-                host = { getSettings().host },
-                port = { getSettings().port }
-            ),
+            connector = connector,
         ).create()
 
     override val models: BehaviorObservable<TimeTravelClient.Model> = store.mapState(lifecycle, stateToModel)
@@ -59,16 +42,7 @@ class TimeTravelClientComponent(
         }
 
     override fun onConnectClicked() {
-        val settings = getSettings()
-
-        if (settings.connectViaAdb) {
-            when (val result = adbController.forwardPort(port = settings.port)) {
-                is AdbController.Result.Success -> store.accept(Intent.Connect)
-                is AdbController.Result.Error -> store.accept(Intent.RaiseError(errorText = result.text))
-            }.let {}
-        } else {
-            store.accept(Intent.Connect)
-        }
+        store.accept(Intent.Connect)
     }
 
     override fun onDisconnectClicked() {
@@ -107,10 +81,6 @@ class TimeTravelClientComponent(
         store.accept(Intent.DebugEvent)
     }
 
-    override fun onEditSettingsClicked() {
-        settings.onEditClicked()
-    }
-
     override fun onEventSelected(index: Int) {
         store.accept(Intent.SelectEvent(index = index))
     }
@@ -128,7 +98,4 @@ class TimeTravelClientComponent(
     override fun onDismissErrorClicked() {
         store.accept(Intent.DismissError)
     }
-
-    private fun getSettings(): TimeTravelSettings.Model.Settings =
-        settings.models.value.settings
 }

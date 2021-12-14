@@ -11,15 +11,19 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.mvikotlin.core.utils.setMainThreadId
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.arkivanov.mvikotlin.timetravel.client.desktop.ui.TimeTravelClientUi
+import com.arkivanov.mvikotlin.timetravel.client.desktop.ui.RootUi
 import com.arkivanov.mvikotlin.timetravel.client.desktop.ui.theme.TimeTravelClientTheme
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.AdbController
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.DefaultConnector
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient
-import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.DefaultAdbController
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.TimeTravelClientComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.SettingsConfig
+import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings
+import com.arkivanov.mvikotlin.timetravel.client.internal.settings.integration.TimeTravelSettingsComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
 import com.badoo.reaktive.coroutinesinterop.asScheduler
 import com.badoo.reaktive.scheduler.overrideSchedulers
+import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.JvmPreferencesSettings
 import kotlinx.coroutines.Dispatchers
 import java.awt.FileDialog
@@ -31,10 +35,10 @@ import java.util.prefs.Preferences
 fun main() {
     overrideSchedulers(main = Dispatchers.Main::asScheduler)
 
-    val client =
+    val components =
         invokeOnAwtSync {
             setMainThreadId(Thread.currentThread().id)
-            client()
+            components()
         }
 
     application {
@@ -42,7 +46,7 @@ fun main() {
             onCloseRequest = ::exitApplication,
             title = "MVIKotlin Time Travel Client",
         ) {
-            val settings by client.settings.models.subscribeAsState()
+            val settings by components.settings.models.subscribeAsState()
 
             TimeTravelClientTheme(
                 isDarkMode = settings.settings.isDarkMode
@@ -51,35 +55,64 @@ fun main() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    TimeTravelClientUi(client)
+                    RootUi(
+                        client = components.client,
+                        settings = components.settings
+                    )
                 }
             }
         }
     }
 }
 
-private fun client(): TimeTravelClient {
+@OptIn(ExperimentalSettingsImplementation::class)
+private fun components(): Components {
     val lifecycle = LifecycleRegistry()
-    val preferencesFactory = JvmPreferencesSettings.Factory(Preferences.userNodeForPackage(PreferencesKey::class.java))
+    val settingsFactory = JvmPreferencesSettings.Factory(Preferences.userNodeForPackage(PreferencesKey::class.java))
 
-    return TimeTravelClientComponent(
-        lifecycle = lifecycle,
-        storeFactory = DefaultStoreFactory(),
-        settingsFactory = preferencesFactory,
-        settingsConfig = SettingsConfig(
-            defaults = SettingsConfig.Defaults(
-                connectViaAdb = false
-            )
-        ),
-        adbController = DefaultAdbController(
-            settingsFactory = preferencesFactory,
-            selectAdbPath = ::selectAdbPath
-        ),
-        onImportEvents = ::importEvents,
-        onExportEvents = ::exportEvents
-    ).also {
-        lifecycle.resume()
-    }
+    val settingsComponent =
+        TimeTravelSettingsComponent(
+            lifecycle = lifecycle,
+            storeFactory = DefaultStoreFactory(),
+            settingsFactory = settingsFactory,
+            settingsConfig = SettingsConfig(
+                defaults = SettingsConfig.Defaults(
+                    connectViaAdb = false
+                )
+            ),
+        )
+
+    val adbController =
+        AdbController(
+            settingsFactory = settingsFactory,
+            selectAdbPath = ::selectAdbPath,
+        )
+
+    fun getSettings(): TimeTravelSettings.Model.Settings = settingsComponent.models.value.settings
+
+    val clientComponent =
+        TimeTravelClientComponent(
+            lifecycle = lifecycle,
+            storeFactory = DefaultStoreFactory(),
+            connector = DefaultConnector(
+                forwardAdbPort = {
+                    val settings = getSettings()
+                    if (settings.connectViaAdb) {
+                        adbController.forwardPort(port = settings.port)?.let { DefaultConnector.Error(text = it.text) }
+                    } else {
+                        null
+                    }
+                },
+                host = { getSettings().host },
+                port = { getSettings().port },
+            ),
+            onImportEvents = ::importEvents,
+            onExportEvents = ::exportEvents,
+        )
+
+    lifecycle.resume()
+
+    return Components(settingsComponent, clientComponent)
 }
 
 private fun importEvents(): ByteArray? {
@@ -115,3 +148,8 @@ private fun selectAdbPath(): String? {
         ?.takeIf(File::isValidAdbExecutable)
         ?.absolutePath
 }
+
+private class Components(
+    val settings: TimeTravelSettings,
+    val client: TimeTravelClient,
+)

@@ -1,3 +1,6 @@
+public abstract interface annotation class com/arkivanov/mvikotlin/timetravel/ExperimentalTimeTravelApi : java/lang/annotation/Annotation {
+}
+
 public final class com/arkivanov/mvikotlin/timetravel/TimeTravelEvent : com/arkivanov/mvikotlin/core/utils/JvmSerializable {
 	public fun <init> (JLjava/lang/String;Lcom/arkivanov/mvikotlin/core/store/StoreEventType;Ljava/lang/Object;Ljava/lang/Object;)V
 	public final fun component1 ()J

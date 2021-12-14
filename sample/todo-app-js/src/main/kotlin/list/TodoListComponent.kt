@@ -30,7 +30,6 @@ import root.App.TodoStyles.addCss
 import root.App.TodoStyles.columnCss
 import root.App.TodoStyles.headerMarginCss
 import root.App.TodoStyles.listCss
-import root.debugLog
 import styled.css
 import styled.styledDiv
 
@@ -111,7 +110,6 @@ class TodoListParentComponent(props: TodoListParentProps) : RComponent<TodoListP
     }
 
     override fun componentWillUnmount() {
-        debugLog("componentWillUnmount")
         lifecycleRegistry.destroy()
     }
 

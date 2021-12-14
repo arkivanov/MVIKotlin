@@ -26,6 +26,10 @@ naming:
   MemberNameEqualsClassName:
     active: false
 
+performance:
+  SpreadOperator:
+    active: false
+
 style:
   ForbiddenComment:
     values: ['FIXME:', 'STOPSHIP:']
