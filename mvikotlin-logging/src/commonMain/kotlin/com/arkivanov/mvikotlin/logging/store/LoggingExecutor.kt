@@ -14,8 +14,6 @@ internal class LoggingExecutor<in Intent : Any, in Action : Any, State : Any, Re
     override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
         delegate.init(
             object : Executor.Callbacks<State, Result, Label> {
-                override val state: State get() = callbacks.state
-
                 override fun onResult(result: Result) {
                     logger.log(storeName = storeName, eventType = StoreEventType.RESULT, value = result)
                     callbacks.onResult(result)
@@ -29,13 +27,13 @@ internal class LoggingExecutor<in Intent : Any, in Action : Any, State : Any, Re
         )
     }
 
-    override fun handleAction(action: Action) {
+    override fun executeAction(action: Action, getState: () -> State) {
         logger.log(storeName = storeName, eventType = StoreEventType.ACTION, value = action)
-        delegate.handleAction(action)
+        delegate.executeAction(action, getState)
     }
 
-    override fun handleIntent(intent: Intent) {
+    override fun executeIntent(intent: Intent, getState: () -> State) {
         logger.log(storeName = storeName, eventType = StoreEventType.INTENT, value = intent)
-        delegate.handleIntent(intent)
+        delegate.executeIntent(intent, getState)
     }
 }

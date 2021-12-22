@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
 import com.arkivanov.mvikotlin.core.store.Reducer
@@ -15,49 +14,32 @@ import kotlinx.coroutines.cancel
 import kotlin.coroutines.CoroutineContext
 
 /**
- * An abstract implementation of the [Executor] that provides interoperability with coroutines.
- * All coroutines are launched in a scope which closes when the [Executor] is disposed.
+ * An abstract implementation of the [Executor] that exposes a [CoroutineScope] for coroutines launching.
+ *
+ * @param mainContext a [CoroutineContext] to be used by the exposed [CoroutineScope]
  */
 open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, Result : Any, Label : Any>(
     mainContext: CoroutineContext = Dispatchers.Main
 ) : Executor<Intent, Action, State, Result, Label> {
 
     private val callbacks = atomic<Callbacks<State, Result, Label>>()
-    private val getState: () -> State = { callbacks.requireValue().state }
+
+    /**
+     * A [CoroutineScope] that can be used by the [CoroutineExecutor] descendants to launch coroutines.
+     * The [CoroutineScope] is automatically cancelled on dispose.
+     */
     protected val scope: CoroutineScope = CoroutineScope(mainContext)
 
     final override fun init(callbacks: Callbacks<State, Result, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
-    final override fun handleIntent(intent: Intent) {
-        executeIntent(intent, getState)
+    override fun executeIntent(intent: Intent, getState: () -> State) {
+        // no-op
     }
 
-    /**
-     * A suspending variant of the [Executor.handleIntent] method.
-     * The coroutine is launched in a scope which closes when the [Executor] is disposed.
-     *
-     * @param intent an `Intent` received by the [Store]
-     * @param getState a `State` supplier that returns the *current* `State` of the [Store]
-     */
-    @MainThread
-    protected open fun executeIntent(intent: Intent, getState: () -> State) {
-    }
-
-    final override fun handleAction(action: Action) {
-        executeAction(action, getState)
-    }
-
-    /**
-     * Called for every `Action` produced by the [Executor]
-     * The coroutine is launched in a scope which closes when the [Executor] is disposed.
-     *
-     * @param action an `Action` produced by the [Bootstrapper]
-     * @param getState a `State` supplier that returns the *current* `State` of the [Store]
-     */
-    @MainThread
-    protected open fun executeAction(action: Action, getState: () -> State) {
+    override fun executeAction(action: Action, getState: () -> State) {
+        // no-op
     }
 
     override fun dispose() {

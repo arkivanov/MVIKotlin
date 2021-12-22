@@ -31,8 +31,6 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Result :
     override fun init() {
         executor.init(
             object : Executor.Callbacks<State, Result, Label> {
-                override val state: State get() = this@TestStore.state
-
                 override fun onResult(result: Result) {
                     this@TestStore.state = reducer.run { state.reduce(result) }
                 }
@@ -43,7 +41,10 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Result :
             }
         )
 
-        bootstrapper?.init(executor::handleAction)
+        bootstrapper?.init {
+            executor.executeAction(action = it, getState = { state })
+        }
+
         bootstrapper?.invoke()
     }
 
@@ -52,7 +53,7 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Result :
     override fun labels(observer: Observer<Label>): Disposable = error("Not required")
 
     override fun accept(intent: Intent) {
-        executor.handleIntent(intent)
+        executor.executeIntent(intent = intent, getState = { state })
     }
 
     override fun dispose() {

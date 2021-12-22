@@ -25,6 +25,12 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
 
+    private val getState: () -> State =
+        {
+            assertOnMainThread()
+            stateSubject.value
+        }
+
     override fun init() {
         assertOnMainThread()
 
@@ -32,8 +38,6 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
 
         executor.init(
             object : Executor.Callbacks<State, Result, Label> {
-                override val state: State get() = stateSubject.value
-
                 override fun onResult(result: Result) {
                     assertOnMainThread()
 
@@ -56,7 +60,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
             assertOnMainThread()
 
             doIfNotDisposed {
-                executor.handleAction(action)
+                executor.executeAction(action, getState)
             }
         }
 
@@ -81,7 +85,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
 
     private fun onIntent(intent: Intent) {
         doIfNotDisposed {
-            executor.handleIntent(intent)
+            executor.executeIntent(intent, getState)
         }
     }
 

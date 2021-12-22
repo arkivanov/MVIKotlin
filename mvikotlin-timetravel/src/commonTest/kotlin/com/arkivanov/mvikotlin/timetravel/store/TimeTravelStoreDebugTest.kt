@@ -111,7 +111,7 @@ class TimeTravelStoreDebugTest {
 
         store.debug(type = StoreEventType.INTENT, value = "", state = "old_state")
 
-        assertEquals("old_state", executors[1].state)
+        assertEquals("old_state", executors[1].lastStateSupplier())
     }
 
     @Test
@@ -121,7 +121,7 @@ class TimeTravelStoreDebugTest {
 
         store.debug(type = StoreEventType.ACTION, value = "", state = "old_state")
 
-        assertEquals("old_state", executors[1].state)
+        assertEquals("old_state", executors[1].lastStateSupplier())
     }
 
     @Test
@@ -132,7 +132,7 @@ class TimeTravelStoreDebugTest {
         store.debug(type = StoreEventType.INTENT, value = "", state = "state")
         executors[1].dispatch("result")
 
-        assertEquals("state_result", executors[1].state)
+        assertEquals("state_result", executors[1].lastStateSupplier())
     }
 
     @Test
@@ -143,29 +143,31 @@ class TimeTravelStoreDebugTest {
         store.debug(type = StoreEventType.ACTION, value = "", state = "state")
         executors[1].dispatch("result")
 
-        assertEquals("state_result", executors[1].state)
+        assertEquals("state_result", executors[1].lastStateSupplier())
     }
 
     @Test
     fun old_executor_reads_old_state_WHEN_debug_intent_and_result_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
+        store.process(type = StoreEventType.INTENT, value = "intent")
 
         store.debug(type = StoreEventType.INTENT, value = "", state = "")
         executors[1].dispatch("result")
 
-        assertEquals("initial_state", executors[0].state)
+        assertEquals("initial_state", executors[0].lastStateSupplier())
     }
 
     @Test
     fun old_executor_reads_old_state_WHEN_debug_action_and_result_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
+        store.process(type = StoreEventType.INTENT, value = "intent")
 
         store.debug(type = StoreEventType.ACTION, value = "", state = "")
         executors[1].dispatch("result")
 
-        assertEquals("initial_state", executors[0].state)
+        assertEquals("initial_state", executors[0].lastStateSupplier())
     }
 
     @Test
@@ -268,10 +270,11 @@ class TimeTravelStoreDebugTest {
     fun old_executor_reads_main_state_WHEN_debug_result() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
+        store.process(type = StoreEventType.INTENT, value = "intent")
 
         store.debug(type = StoreEventType.RESULT, value = "", state = "old_state")
 
-        assertEquals("initial_state", executors[0].state)
+        assertEquals("initial_state", executors[0].lastStateSupplier())
     }
 
     @Test

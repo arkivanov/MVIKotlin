@@ -12,6 +12,7 @@ import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.rx.internal.Disposable
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
+import com.arkivanov.mvikotlin.utils.internal.AtomicRef
 import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.setValue
@@ -34,10 +35,17 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     private val eventProcessor = EventProcessor()
     private val eventDebugger = EventDebugger()
 
+    private val getState: () -> State =
+        {
+            assertOnMainThread()
+            internalState
+        }
+
+
     override fun states(observer: Observer<State>): Disposable =
         stateSubject.subscribe(observer)
 
-    override fun labels(observer: Observer<Label>): Disposable =labelSubject.subscribe(observer)
+    override fun labels(observer: Observer<Label>): Disposable = labelSubject.subscribe(observer)
 
     override fun events(observer: Observer<Event>): Disposable {
         val disposables = eventSubjects.values.map { it.subscribe(observer) }
@@ -72,8 +80,6 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
 
         executor.init(
             object : Executor.Callbacks<State, Result, Label> {
-                override val state: State get() = internalState
-
                 override fun onResult(result: Result) {
                     onEvent(StoreEventType.RESULT, result, state)
                 }
@@ -132,8 +138,8 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
 
             doIfNotDisposed {
                 when (type) {
-                    StoreEventType.INTENT -> executor.handleIntent(value as Intent)
-                    StoreEventType.ACTION -> executor.handleAction(value as Action)
+                    StoreEventType.INTENT -> executor.executeIntent(value as Intent, getState)
+                    StoreEventType.ACTION -> executor.executeAction(value as Action, getState)
                     StoreEventType.RESULT -> processResult(value as Result)
                     StoreEventType.STATE -> changeState(value as State)
                     StoreEventType.LABEL -> labelSubject.onNext(value as Label)
@@ -167,30 +173,28 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         }
 
         private fun debugIntent(intent: Intent, initialState: State) {
-            debugExecutor(initialState) {
-                handleIntent(intent)
+            val stateRef = atomic(initialState)
+            debugExecutor(stateRef) {
+                executeIntent(intent = intent, getState = { stateRef.value })
             }
         }
 
         private fun debugAction(action: Action, initialState: State) {
-            debugExecutor(initialState) {
-                handleAction(action)
+            val stateRef = atomic(initialState)
+            debugExecutor(stateRef) {
+                executeAction(action = action, getState = { stateRef.value })
             }
         }
 
-        private fun debugExecutor(initialState: State, execute: Executor<Intent, Action, State, Result, Label>.() -> Unit) {
-            var localState by atomic(initialState)
-
+        private fun debugExecutor(stateRef: AtomicRef<State>, execute: Executor<Intent, Action, State, Result, Label>.() -> Unit) {
             val executor =
                 executorFactory().apply {
                     init(
                         object : Executor.Callbacks<State, Result, Label> {
-                            override val state: State get() = localState
-
                             override fun onResult(result: Result) {
                                 assertOnMainThread()
 
-                                localState = reducer.run { localState.reduce(result) }
+                                stateRef.value = reducer.run { stateRef.value.reduce(result) }
                             }
 
                             override fun onLabel(label: Label) {

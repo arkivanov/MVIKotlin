@@ -16,7 +16,9 @@ class TestExecutor(
 
     private val callbacks = atomic<Callbacks<String, String, String>>()
     val isInitialized: Boolean get() = callbacks.value != null
-    val state: String get() = callbacks.requireValue().state
+
+    var lastStateSupplier: () -> String by atomic { error("Not initialized") }
+        private set
 
     var isDisposed: Boolean by atomic(false)
         private set
@@ -26,11 +28,13 @@ class TestExecutor(
         init()
     }
 
-    override fun handleIntent(intent: String) {
+    override fun executeIntent(intent: String, getState: () -> String) {
+        lastStateSupplier = getState
         handleIntent.invoke(this, intent)
     }
 
-    override fun handleAction(action: String) {
+    override fun executeAction(action: String, getState: () -> String) {
+        lastStateSupplier = getState
         handleAction.invoke(this, action)
     }
 

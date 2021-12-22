@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
@@ -24,39 +23,18 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Re
     DisposableScope {
 
     private val callbacks = atomic<Executor.Callbacks<State, Result, Label>>()
-    private val getState: () -> State = { callbacks.requireValue().state }
     private val scope = DisposableScope()
 
     final override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
-    final override fun handleIntent(intent: Intent) {
-        executeIntent(intent, getState)
+    override fun executeIntent(intent: Intent, getState: () -> State) {
+        // no-op
     }
 
-    /**
-     * The companion of the [Executor.handleIntent] method
-     *
-     * @param intent an `Intent` received by the [Store]
-     * @param getState a `State` supplier that returns the *current* `State` of the [Store]
-     */
-    @MainThread
-    protected open fun executeIntent(intent: Intent, getState: () -> State) {
-    }
-
-    final override fun handleAction(action: Action) {
-        executeAction(action, getState)
-    }
-
-    /**
-     * The companion of the [Executor.handleAction] method
-     *
-     * @param action an `Action` produced by the [Bootstrapper]
-     * @param getState a `State` supplier that returns the *current* `State` of the [Store]
-     */
-    @MainThread
-    protected open fun executeAction(action: Action, getState: () -> State) {
+    override fun executeAction(action: Action, getState: () -> State) {
+        // no-op
     }
 
     override fun dispose() {

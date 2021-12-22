@@ -58,19 +58,22 @@ interface StoreGenericTests {
     fun does_not_deliver_intents_to_executor_WHEN_disposed_and_new_intents()
 
     @Test
-    fun executor_can_read_initial_state()
+    fun executor_can_read_state_in_executeIntent()
 
     @Test
-    fun executor_can_read_new_state_WHEN_state_changed()
+    fun executor_can_read_new_state_in_executeIntent()
+
+    @Test
+    fun executor_can_read_state_in_executeAction()
+
+    @Test
+    fun executor_can_read_new_state_in_executeAction()
 
     @Test
     fun delivers_results_from_executor_to_reducer()
 
     @Test
     fun state_val_returns_new_state_WHEN_new_state_returned_from_reducer()
-
-    @Test
-    fun executor_can_read_new_state_WHEN_new_state_returned_from_reducer()
 
     @Test
     fun bootstrapper_disposed_WHEN_store_disposed()
@@ -260,20 +263,48 @@ fun StoreGenericTests(
             assertEquals(emptyList(), intents)
         }
 
-        override fun executor_can_read_initial_state() {
+        override fun executor_can_read_state_in_executeIntent() {
             val executor = TestExecutor()
-            store(initialState = "initial", executorFactory = { executor })
+            val store = store(initialState = "initial", executorFactory = { executor })
 
-            assertEquals("initial", executor.state)
+            store.accept("intent")
+            val state = executor.lastStateSupplier()
+
+            assertEquals("initial", state)
         }
 
-        override fun executor_can_read_new_state_WHEN_state_changed() {
+        override fun executor_can_read_new_state_in_executeIntent() {
             val executor = TestExecutor()
-            store(executorFactory = { executor }, reducer = reducer { it })
+            val store = store(initialState = "initial", executorFactory = { executor }, reducer = { it })
 
+            store.accept("intent")
             executor.dispatch("result")
+            val state = executor.lastStateSupplier()
 
-            assertEquals("result", executor.state)
+            assertEquals("result", state)
+        }
+
+        override fun executor_can_read_state_in_executeAction() {
+            val bootstrapper = TestBootstrapper()
+            val executor = TestExecutor()
+            store(initialState = "initial", bootstrapper = bootstrapper, executorFactory = { executor })
+
+            bootstrapper.dispatch("action")
+            val state = executor.lastStateSupplier()
+
+            assertEquals("initial", state)
+        }
+
+        override fun executor_can_read_new_state_in_executeAction() {
+            val bootstrapper = TestBootstrapper()
+            val executor = TestExecutor()
+            store(initialState = "initial", bootstrapper = bootstrapper, executorFactory = { executor }, reducer = { it })
+
+            bootstrapper.dispatch("action")
+            executor.dispatch("result")
+            val state = executor.lastStateSupplier()
+
+            assertEquals("result", state)
         }
 
         override fun delivers_results_from_executor_to_reducer() {
@@ -304,18 +335,6 @@ fun StoreGenericTests(
             executor.dispatch("result")
 
             assertEquals("result", store.state)
-        }
-
-        override fun executor_can_read_new_state_WHEN_new_state_returned_from_reducer() {
-            val executor = TestExecutor()
-            store(
-                executorFactory = { executor },
-                reducer = reducer { it }
-            )
-
-            executor.dispatch("result")
-
-            assertEquals("result", executor.state)
         }
 
         override fun bootstrapper_disposed_WHEN_store_disposed() {

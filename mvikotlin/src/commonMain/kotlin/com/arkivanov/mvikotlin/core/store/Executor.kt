@@ -27,17 +27,21 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
      * Called by the [Store] for every received `Intent`
      *
      * @param intent an `Intent` received by the [Store]
+     * @param getState a function that returns the current `State` of the [Store], must be called on Main thread
      */
     @JsName("handleIntent")
     @MainThread
-    fun handleIntent(intent: Intent)
+    fun executeIntent(intent: Intent, @MainThread getState: () -> State)
 
     /**
      * Called by the [Store] for every `Action` produced by the [Bootstrapper]
+     *
+     * @param action an `Action` produced by the [Bootstrapper]
+     * @param getState a function that returns the current `State` of the [Store], must be called on Main thread
      */
     @JsName("handleAction")
     @MainThread
-    fun handleAction(action: Action)
+    fun executeAction(action: Action, @MainThread getState: () -> State)
 
     /**
      * Disposes the [Executor], called by the [Store] when disposed
@@ -49,11 +53,6 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
      * A set of callbacks used for communication between the [Bootstrapper] and the [Store]
      */
     interface Callbacks<out State, in Result, in Label> {
-        /**
-         * Returns current `State` of the [Store]
-         */
-        val state: State
-
         /**
          * Dispatches the `Result` to the [Store], it then goes to the [Reducer].
          * A new `State` will be immediately available after this method returns.
