@@ -173,7 +173,7 @@ Check out the video demonstrating how you can export/import the time travel data
 
 ### Time travel client app for desktop
 
-This is a standalone time travel client for desktop. It can connect to any application running the [TimeTravelServer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/darwinCommonMain/kotlin/com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer.kt). It can be an Android, or an iOS, or even macOS app.
+This is a standalone time travel client for desktop. It can connect to any application running the `TimeTravelServer`. It can be an Android, or an iOS, or even macOS app.
 
 Check out examples of [iOS app](https://github.com/arkivanov/MVIKotlin/tree/master/sample/todo-app-ios) and [Android app](https://github.com/arkivanov/MVIKotlin/tree/master/sample/todo-app-android) running `TimeTravelServer`.
 
@@ -181,7 +181,7 @@ Check out examples of [iOS app](https://github.com/arkivanov/MVIKotlin/tree/mast
 
 #### How to install
 
-The time travel client application for desktop is not published yet so you will need to build and run it from [sources](/home/aivanov/dev/workspace/MVIKotlin/mvikotlin-timetravel-client/app-desktop). To run the client, run the following command (the minimum JDK version 11 is required):
+The time travel client application for desktop is not published yet so you will need to build and run it from [sources](https://github.com/arkivanov/MVIKotlin/tree/master/mvikotlin-timetravel-client/app-desktop). To run the client, run the following command (the minimum JDK version 11 is required):
 
 ```
 ./gradlew :mvikotlin-timetravel-client:app-desktop:run
@@ -207,7 +207,6 @@ The time travel client for desktop is implemented using [Compose for Desktop](ht
 
 #### Demo videos
 
-Check out the video demonstrating the time travel client app for macOS:
+Check out the video demonstrating how you can debug an iOS app using the time travel client app:
 
 [![Debugging iOS application using MVIKotlin time travel client app](https://img.youtube.com/vi/rj6GwA2ZQkk/0.jpg)](https://youtu.be/rj6GwA2ZQkk)
-
