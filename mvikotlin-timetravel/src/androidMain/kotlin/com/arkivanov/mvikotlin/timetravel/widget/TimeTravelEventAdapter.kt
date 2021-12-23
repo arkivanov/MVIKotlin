@@ -33,7 +33,7 @@ internal class TimeTravelEventAdapter : RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as? EventViewHolder)?.bind(events.get(position)!!)
+        (holder as? EventViewHolder)?.bind(requireNotNull(events.get(position)))
     }
 
     override fun getItemCount(): Int = events.items.size + 1
