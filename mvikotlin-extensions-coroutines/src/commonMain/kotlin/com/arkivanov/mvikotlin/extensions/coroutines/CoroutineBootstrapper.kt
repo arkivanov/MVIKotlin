@@ -11,14 +11,20 @@ import kotlinx.coroutines.cancel
 import kotlin.coroutines.CoroutineContext
 
 /**
- * An abstract implementation of the [Bootstrapper] that provides interoperability with coroutines.
- * All coroutines are launched in a scope which closes when the [Bootstrapper] is disposed.
+ * An abstract implementation of the [Bootstrapper] that exposes a [CoroutineScope] for coroutines launching.
+ *
+ * @param mainContext a [CoroutineContext] to be used by the exposed [CoroutineScope]
  */
 abstract class CoroutineBootstrapper<Action : Any>(
     mainContext: CoroutineContext = Dispatchers.Main
 ) : Bootstrapper<Action> {
 
     private val actionConsumer = atomic<(Action) -> Unit>()
+
+    /**
+     * A [CoroutineScope] that can be used by the [CoroutineBootstrapper] descendants to launch coroutines.
+     * The [CoroutineScope] is automatically cancelled on dispose.
+     */
     protected val scope: CoroutineScope = CoroutineScope(mainContext)
 
     final override fun init(actionConsumer: (Action) -> Unit) {
