@@ -31,11 +31,11 @@ private class BypassExecutor<Intent : Any, in State : Any> : Executor<Intent, No
         this.callbacks.initialize(callbacks)
     }
 
-    override fun handleIntent(intent: Intent) {
+    override fun executeIntent(intent: Intent) {
         callbacks.requireValue().onResult(intent)
     }
 
-    override fun handleAction(action: Nothing) {
+    override fun executeAction(action: Nothing) {
         // no-op
     }
 

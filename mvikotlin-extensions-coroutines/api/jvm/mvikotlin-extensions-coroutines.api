@@ -27,11 +27,11 @@ public class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutor : c
 	public synthetic fun <init> (Lkotlin/coroutines/CoroutineContext;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	protected final fun dispatch (Ljava/lang/Object;)V
 	public fun dispose ()V
+	public final fun executeAction (Ljava/lang/Object;)V
 	protected fun executeAction (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
+	public final fun executeIntent (Ljava/lang/Object;)V
 	protected fun executeIntent (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
 	protected final fun getScope ()Lkotlinx/coroutines/CoroutineScope;
-	public final fun handleAction (Ljava/lang/Object;)V
-	public final fun handleIntent (Ljava/lang/Object;)V
 	public final fun init (Lcom/arkivanov/mvikotlin/core/store/Executor$Callbacks;)V
 	protected final fun publish (Ljava/lang/Object;)V
 }
@@ -58,10 +58,10 @@ public class com/arkivanov/mvikotlin/extensions/coroutines/SuspendExecutor : com
 	public synthetic fun <init> (Lkotlin/coroutines/CoroutineContext;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	protected final fun dispatch (Ljava/lang/Object;)V
 	public fun dispose ()V
+	public final fun executeAction (Ljava/lang/Object;)V
 	protected fun executeAction (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun executeIntent (Ljava/lang/Object;)V
 	protected fun executeIntent (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun handleAction (Ljava/lang/Object;)V
-	public final fun handleIntent (Ljava/lang/Object;)V
 	public final fun init (Lcom/arkivanov/mvikotlin/core/store/Executor$Callbacks;)V
 	protected final fun publish (Ljava/lang/Object;)V
 }

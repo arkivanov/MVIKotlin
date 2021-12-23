@@ -35,14 +35,14 @@ open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Res
         this.callbacks.initialize(callbacks)
     }
 
-    final override fun handleIntent(intent: Intent) {
+    final override fun executeIntent(intent: Intent) {
         scope.launch {
             executeIntent(intent, getState)
         }
     }
 
     /**
-     * A suspending variant of the [Executor.handleIntent] method.
+     * A suspending variant of the [Executor.executeIntent] method.
      * The coroutine is launched in a scope which closes when the [Executor] is disposed.
      *
      * @param intent an `Intent` received by the [Store]
@@ -52,7 +52,7 @@ open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Res
     protected open suspend fun executeIntent(intent: Intent, getState: () -> State) {
     }
 
-    final override fun handleAction(action: Action) {
+    final override fun executeAction(action: Action) {
         scope.launch {
             executeAction(action, getState)
         }

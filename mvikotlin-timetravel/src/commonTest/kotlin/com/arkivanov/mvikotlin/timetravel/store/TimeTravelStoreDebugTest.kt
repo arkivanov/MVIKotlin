@@ -40,7 +40,7 @@ class TimeTravelStoreDebugTest {
                 if (index == 0) {
                     TestExecutor()
                 } else {
-                    TestExecutor(handleIntent = { intent.value = it })
+                    TestExecutor(executeIntent = { intent.value = it })
                 }
             }
         val store = store(executorFactory = executors::next)
@@ -56,7 +56,7 @@ class TimeTravelStoreDebugTest {
         val executors =
             ExecutorQueue { index ->
                 if (index == 0) {
-                    TestExecutor(handleAction = { isCalled = true })
+                    TestExecutor(executeAction = { isCalled = true })
                 } else {
                     TestExecutor()
                 }
@@ -76,7 +76,7 @@ class TimeTravelStoreDebugTest {
                 if (index == 0) {
                     TestExecutor()
                 } else {
-                    TestExecutor(handleAction = { action.value = it })
+                    TestExecutor(executeAction = { action.value = it })
                 }
             }
         val store = store(executorFactory = executors::next)
@@ -92,7 +92,7 @@ class TimeTravelStoreDebugTest {
         val executors =
             ExecutorQueue { index ->
                 if (index == 0) {
-                    TestExecutor(handleAction = { isCalled = true })
+                    TestExecutor(executeAction = { isCalled = true })
                 } else {
                     TestExecutor()
                 }

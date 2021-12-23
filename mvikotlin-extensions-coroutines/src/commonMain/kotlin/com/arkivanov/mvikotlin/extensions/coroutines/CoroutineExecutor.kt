@@ -36,7 +36,7 @@ open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, R
         this.callbacks.initialize(callbacks)
     }
 
-    final override fun handleIntent(intent: Intent) {
+    final override fun executeIntent(intent: Intent) {
         executeIntent(intent, getState)
     }
 
@@ -50,7 +50,7 @@ open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, R
     protected open fun executeIntent(intent: Intent, @MainThread getState: () -> State) {
     }
 
-    final override fun handleAction(action: Action) {
+    final override fun executeAction(action: Action) {
         executeAction(action, getState)
     }
 

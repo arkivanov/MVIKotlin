@@ -43,7 +43,7 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Result :
             }
         )
 
-        bootstrapper?.init(executor::handleAction)
+        bootstrapper?.init(executor::executeAction)
         bootstrapper?.invoke()
     }
 
@@ -52,7 +52,7 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Result :
     override fun labels(observer: Observer<Label>): Disposable = error("Not required")
 
     override fun accept(intent: Intent) {
-        executor.handleIntent(intent)
+        executor.executeIntent(intent)
     }
 
     override fun dispose() {
