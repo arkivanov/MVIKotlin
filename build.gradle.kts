@@ -4,7 +4,6 @@ import com.arkivanov.gradle.Target
 import com.arkivanov.gradle.darwinSet
 import com.arkivanov.gradle.javaSet
 import com.arkivanov.gradle.named
-import io.gitlab.arturbosch.detekt.Detekt
 
 buildscript {
     repositories {
@@ -22,15 +21,15 @@ buildscript {
         classpath(deps.intellij.gradleIntellijPlug)
         classpath(deps.compose.composeGradlePlug)
         classpath(deps.kotlinx.binaryCompatibilityValidatorGradlePlug)
+        classpath(deps.detekt.gradleDetektPlug)
     }
 }
 
 plugins {
-    id("io.gitlab.arturbosch.detekt").version("1.19.0")
     id("com.arkivanov.gradle.setup")
 }
 
-setupDefaults {
+setupAllProjects {
     multiplatformTargets(
         Target.Android,
         Target.Jvm,
@@ -83,6 +82,8 @@ setupDefaults {
             repositoryPassword = System.getenv("SONATYPE_PASSWORD"),
         )
     )
+
+    detekt()
 }
 
 allprojects {
@@ -90,24 +91,5 @@ allprojects {
         mavenCentral()
         google()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-
-    plugins.apply("io.gitlab.arturbosch.detekt")
-
-    detekt {
-        parallel = true
-        buildUponDefaultConfig = true
-        config = files("$rootDir/detekt.yml")
-        source = files(file("src").listFiles()?.find { it.isDirectory } ?: emptyArray<Any>())
-    }
-
-    tasks.register("detektAll") {
-        dependsOn(tasks.withType<Detekt>())
-    }
-
-    tasks.configureEach {
-        if (name == "build") {
-            dependsOn("detektAll")
-        }
     }
 }
