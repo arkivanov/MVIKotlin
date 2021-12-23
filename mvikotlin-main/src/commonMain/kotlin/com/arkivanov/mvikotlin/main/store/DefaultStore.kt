@@ -56,7 +56,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
             assertOnMainThread()
 
             doIfNotDisposed {
-                executor.handleAction(action)
+                executor.executeAction(action)
             }
         }
 
@@ -81,7 +81,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
 
     private fun onIntent(intent: Intent) {
         doIfNotDisposed {
-            executor.handleIntent(intent)
+            executor.executeIntent(intent)
         }
     }
 

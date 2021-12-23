@@ -173,7 +173,7 @@ fun StoreGenericTests(
 
             store(
                 bootstrapper = bootstrapper,
-                executorFactory = { TestExecutor(handleAction = { actions = actions + it }) }
+                executorFactory = { TestExecutor(executeAction = { actions = actions + it }) }
             )
 
             bootstrapper.dispatch("action1")
@@ -190,7 +190,7 @@ fun StoreGenericTests(
                     dispatch("action1")
                     dispatch("action2")
                 },
-                executorFactory = { TestExecutor(handleAction = { actions = actions + it }) }
+                executorFactory = { TestExecutor(executeAction = { actions = actions + it }) }
             )
 
             assertEquals(listOf("action1", "action2"), actions)
@@ -203,7 +203,7 @@ fun StoreGenericTests(
             val store =
                 store(
                     bootstrapper = bootstrapper,
-                    executorFactory = { TestExecutor(handleAction = { actions = actions + it }) }
+                    executorFactory = { TestExecutor(executeAction = { actions = actions + it }) }
                 )
 
             store.dispose()
@@ -241,7 +241,7 @@ fun StoreGenericTests(
 
         override fun delivers_intents_to_executor() {
             var intents by atomic(emptyList<String>())
-            val store = store(executorFactory = { TestExecutor(handleIntent = { intents = intents + it }) })
+            val store = store(executorFactory = { TestExecutor(executeIntent = { intents = intents + it }) })
 
             store.accept("intent1")
             store.accept("intent2")
@@ -251,7 +251,7 @@ fun StoreGenericTests(
 
         override fun does_not_deliver_intents_to_executor_WHEN_disposed_and_new_intents() {
             var intents by atomic(emptyList<String>())
-            val store = store(executorFactory = { TestExecutor(handleIntent = { intents = intents + it }) })
+            val store = store(executorFactory = { TestExecutor(executeIntent = { intents = intents + it }) })
 
             store.dispose()
             store.accept("intent1")
@@ -418,7 +418,7 @@ fun StoreGenericTests(
                 store(
                     executorFactory = {
                         TestExecutor(
-                            handleIntent = {
+                            executeIntent = {
                                 if (it == "intent1") {
                                     isProcessingIntent = true
                                     publish("label")
@@ -446,7 +446,7 @@ fun StoreGenericTests(
                 store(
                     executorFactory = {
                         TestExecutor(
-                            handleIntent = {
+                            executeIntent = {
                                 if (it == "intent1") {
                                     isProcessingIntent = true
                                     publish("label")

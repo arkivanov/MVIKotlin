@@ -10,8 +10,8 @@ import com.arkivanov.mvikotlin.utils.internal.setValue
 
 class TestExecutor(
     private val init: () -> Unit = {},
-    private val handleIntent: TestExecutor.(String) -> Unit = {},
-    private val handleAction: TestExecutor.(String) -> Unit = {}
+    private val executeIntent: TestExecutor.(String) -> Unit = {},
+    private val executeAction: TestExecutor.(String) -> Unit = {}
 ) : Executor<String, String, String, String, String> {
 
     private val callbacks = atomic<Callbacks<String, String, String>>()
@@ -26,12 +26,12 @@ class TestExecutor(
         init()
     }
 
-    override fun handleIntent(intent: String) {
-        handleIntent.invoke(this, intent)
+    override fun executeIntent(intent: String) {
+        executeIntent.invoke(this, intent)
     }
 
-    override fun handleAction(action: String) {
-        handleAction.invoke(this, action)
+    override fun executeAction(action: String) {
+        executeAction.invoke(this, action)
     }
 
     override fun dispose() {

@@ -29,13 +29,13 @@ internal class LoggingExecutor<in Intent : Any, in Action : Any, State : Any, Re
         )
     }
 
-    override fun handleAction(action: Action) {
+    override fun executeAction(action: Action) {
         logger.log(storeName = storeName, eventType = StoreEventType.ACTION, value = action)
-        delegate.handleAction(action)
+        delegate.executeAction(action)
     }
 
-    override fun handleIntent(intent: Intent) {
+    override fun executeIntent(intent: Intent) {
         logger.log(storeName = storeName, eventType = StoreEventType.INTENT, value = intent)
-        delegate.handleIntent(intent)
+        delegate.executeIntent(intent)
     }
 }

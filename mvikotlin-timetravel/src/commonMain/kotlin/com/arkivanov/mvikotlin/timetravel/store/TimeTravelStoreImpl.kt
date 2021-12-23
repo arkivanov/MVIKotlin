@@ -132,8 +132,8 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
 
             doIfNotDisposed {
                 when (type) {
-                    StoreEventType.INTENT -> executor.handleIntent(value as Intent)
-                    StoreEventType.ACTION -> executor.handleAction(value as Action)
+                    StoreEventType.INTENT -> executor.executeIntent(value as Intent)
+                    StoreEventType.ACTION -> executor.executeAction(value as Action)
                     StoreEventType.RESULT -> processResult(value as Result)
                     StoreEventType.STATE -> changeState(value as State)
                     StoreEventType.LABEL -> labelSubject.onNext(value as Label)
@@ -168,13 +168,13 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
 
         private fun debugIntent(intent: Intent, initialState: State) {
             debugExecutor(initialState) {
-                handleIntent(intent)
+                executeIntent(intent)
             }
         }
 
         private fun debugAction(action: Action, initialState: State) {
             debugExecutor(initialState) {
-                handleAction(action)
+                executeAction(action)
             }
         }
 

@@ -37,8 +37,8 @@ public abstract interface class com/arkivanov/mvikotlin/core/store/Bootstrapper 
 
 public abstract interface class com/arkivanov/mvikotlin/core/store/Executor {
 	public abstract fun dispose ()V
-	public abstract fun handleAction (Ljava/lang/Object;)V
-	public abstract fun handleIntent (Ljava/lang/Object;)V
+	public abstract fun executeAction (Ljava/lang/Object;)V
+	public abstract fun executeIntent (Ljava/lang/Object;)V
 	public abstract fun init (Lcom/arkivanov/mvikotlin/core/store/Executor$Callbacks;)V
 }
 

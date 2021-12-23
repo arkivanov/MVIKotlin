@@ -5,7 +5,7 @@ import kotlin.js.JsName
 
 /**
  * Used for [Store] bootstrapping. Dispatch initial `Actions`, subscribe to data sources or do any other initializations.
- * All the dispatched `Actions` will be passed to the [Executor] via its [Executor.handleAction] method.
+ * All the dispatched `Actions` will be passed to the [Executor] via its [Executor.executeAction] method.
  *
  * @param Action type of Action
  *
