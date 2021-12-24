@@ -5,6 +5,7 @@ kotlin = "1.5.30"
 kotlinxBinaryCompatibilityValidatorGradlePlugin = "0.8.0-RC"
 kotlinxCoroutines = "1.5.2"
 intellijGradlePlugin = "0.4.18"
+detektGradlePlugin = "1.19.0"
 essenty = "0.2.2"
 reaktive = "1.2.1"
 multiplatformSettings = "0.7.6"
@@ -30,6 +31,8 @@ kotlinx-kotlinxCoroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotli
 kotlinx-kotlinxCoroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 
 intellij-gradleIntellijPlug = { group = "gradle.plugin.org.jetbrains.intellij.plugins", name = "gradle-intellij-plugin", version.ref = "intellijGradlePlugin" }
+
+detekt-gradleDetektPlug = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detektGradlePlugin" }
 
 essenty-lifecycle = { group = "com.arkivanov.essenty", name = "lifecycle", version.ref = "essenty" }
 essenty-instanceKeeper = { group = "com.arkivanov.essenty", name = "instance-keeper", version.ref = "essenty" }
