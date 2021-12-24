@@ -8,8 +8,8 @@ import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 import com.arkivanov.mvikotlin.sample.todo.android.R
+import com.arkivanov.mvikotlin.sample.todo.common.database.TodoItem
 
 class TodoListAdapter(
     private val listener: Listener
@@ -79,10 +79,8 @@ class TodoListAdapter(
         private val textView = itemView.findViewById<TextView>(R.id.text)
 
         init {
-            itemView.findViewById<View>(R.id.delete_button).apply {
-                setOnClickListener {
-                    listener.onItemDeleteClick(boundItem.id)
-                }
+            itemView.findViewById<View>(R.id.delete_button).setOnClickListener {
+                listener.onItemDeleteClick(boundItem.id)
             }
         }
 

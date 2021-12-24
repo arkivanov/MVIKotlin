@@ -4,7 +4,7 @@ import com.arkivanov.gradle.Target
 import com.arkivanov.gradle.darwinSet
 import com.arkivanov.gradle.javaSet
 import com.arkivanov.gradle.named
-import io.gitlab.arturbosch.detekt.detekt
+import io.gitlab.arturbosch.detekt.Detekt
 
 buildscript {
     repositories {
@@ -26,7 +26,7 @@ buildscript {
 }
 
 plugins {
-    id("io.gitlab.arturbosch.detekt").version("1.14.2")
+    id("io.gitlab.arturbosch.detekt").version("1.19.0")
     id("com.arkivanov.gradle.setup")
 }
 
@@ -95,17 +95,19 @@ allprojects {
     plugins.apply("io.gitlab.arturbosch.detekt")
 
     detekt {
-        toolVersion = "1.14.2"
         parallel = true
+        buildUponDefaultConfig = true
         config = files("$rootDir/detekt.yml")
-        input = files(file("src").listFiles()?.find { it.isDirectory } ?: emptyArray<Any>())
+        source = files(file("src").listFiles()?.find { it.isDirectory } ?: emptyArray<Any>())
     }
 
-    // Workaround until Detekt is updated: https://github.com/detekt/detekt/issues/3840.
-    // The current version depends on kotlinx-html-jvm:0.7.2 which is not in Maven Central.
-    configurations.named("detekt") {
-        resolutionStrategy {
-            force("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
+    tasks.register("detektAll") {
+        dependsOn(tasks.withType<Detekt>())
+    }
+
+    tasks.configureEach {
+        if (name == "build") {
+            dependsOn("detektAll")
         }
     }
 }

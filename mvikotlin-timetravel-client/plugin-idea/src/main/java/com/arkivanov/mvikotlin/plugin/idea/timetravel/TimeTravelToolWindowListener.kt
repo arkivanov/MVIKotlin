@@ -33,7 +33,7 @@ class TimeTravelToolWindowListener(
                 lifecycleRegistry = LifecycleRegistry()
             }
 
-            return lifecycleRegistry!!
+            return requireNotNull(lifecycleRegistry)
         }
     }
 }

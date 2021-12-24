@@ -26,7 +26,7 @@ private fun ensureLogger(): Logger {
         }
     }
 
-    return logger!!
+    return requireNotNull(logger)
 }
 
 private fun createLogger(): Logger = if (isAndroidLoggerAvailable()) AndroidLogger() else SystemLogger()
