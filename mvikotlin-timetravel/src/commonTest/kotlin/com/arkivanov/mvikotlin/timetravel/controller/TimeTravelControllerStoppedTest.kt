@@ -47,7 +47,7 @@ class TimeTravelControllerStoppedTest {
     fun points_to_last_event_WHEN_recorded_and_not_stopped() {
         env.produceIntentEventForStore1()
         env.produceActionEventForStore2()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore2()
         env.produceLabelEventForStore1()
 
@@ -57,7 +57,7 @@ class TimeTravelControllerStoppedTest {
     @Test
     fun points_to_last_event_WHEN_recorded_and_not_stopped_and_step_backward() {
         env.produceStateEventForStore1()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.controller.stepBackward()
 
         assertEquals(1, env.state.selectedEventIndex)
@@ -67,7 +67,7 @@ class TimeTravelControllerStoppedTest {
     fun points_to_previous_state_WHEN_stopped_and_step_backward() {
         env.produceIntentEventForStore1()
         env.produceActionEventForStore2()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore2()
         env.produceLabelEventForStore1()
         env.controller.stopRecording()
@@ -80,12 +80,12 @@ class TimeTravelControllerStoppedTest {
     fun points_to_past_previous_state_WHEN_stopped_and_step_backward_twice() {
         env.produceIntentEventForStore1()
         env.produceActionEventForStore1()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore1()
         env.produceLabelEventForStore1()
         env.produceIntentEventForStore2()
         env.produceActionEventForStore2()
-        env.produceResultEventForStore2()
+        env.produceMessageEventForStore2()
         env.produceStateEventForStore2()
         env.produceLabelEventForStore2()
         env.controller.stopRecording()
@@ -98,7 +98,7 @@ class TimeTravelControllerStoppedTest {
     @Test
     fun points_to_start_WHEN_stopped_and_step_backward_until_end() {
         env.produceStateEventForStore1()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.controller.stopRecording()
         env.controller.stepBackward()
         env.controller.stepBackward()
@@ -110,7 +110,7 @@ class TimeTravelControllerStoppedTest {
     fun points_to_last_state_WHEN_stopped_and_step_backward_and_step_forward() {
         env.produceStateEventForStore2()
         env.produceStateEventForStore1()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.controller.stopRecording()
         env.controller.stepBackward()
         env.controller.stepForward()
@@ -122,7 +122,7 @@ class TimeTravelControllerStoppedTest {
     fun points_to_start_WHEN_stopped_and_move_to_start() {
         env.produceStateEventForStore2()
         env.produceStateEventForStore1()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.controller.stopRecording()
         env.controller.moveToStart()
 
@@ -133,7 +133,7 @@ class TimeTravelControllerStoppedTest {
     fun points_to_last_event_WHEN_recorded_and_move_to_start_and_move_to_end() {
         env.produceStateEventForStore2()
         env.produceStateEventForStore1()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.controller.stopRecording()
         env.controller.moveToStart()
         env.controller.moveToEnd()
@@ -144,7 +144,7 @@ class TimeTravelControllerStoppedTest {
     @Test
     fun no_events_processed_WHEN_moved_from_end_to_last_state() {
         env.produceStateEventForStore1()
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.controller.stopRecording()
         env.store1.eventProcessor.reset()
         env.controller.stepBackward()
@@ -154,7 +154,7 @@ class TimeTravelControllerStoppedTest {
 
     @Test
     fun previous_state_processed_WHEN_moved_from_last_state_to_previous_event() {
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore2(state = "previous_state")
         env.controller.stopRecording()
         env.store2.eventProcessor.reset()
@@ -164,7 +164,7 @@ class TimeTravelControllerStoppedTest {
 
     @Test
     fun state_processed_WHEN_moved_from_event_past_state_to_state() {
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore2(state = "previous_state")
         env.controller.stopRecording()
         env.controller.stepBackward()
@@ -176,16 +176,16 @@ class TimeTravelControllerStoppedTest {
 
     @Test
     fun switched_to_first_state_for_all_stores_WHEN_moved_from_start() {
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore1(value = "state_1_2", state = "state_1_1")
-        env.produceResultEventForStore2()
+        env.produceMessageEventForStore2()
         env.produceStateEventForStore2(value = "state_2_2", state = "state_2_1")
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore1(value = "state_1_3", state = "state_1_2")
-        env.produceResultEventForStore2()
+        env.produceMessageEventForStore2()
         env.produceStateEventForStore2(value = "state_2_3", state = "state_2_2")
-        env.produceResultEventForStore1()
-        env.produceResultEventForStore2()
+        env.produceMessageEventForStore1()
+        env.produceMessageEventForStore2()
         env.controller.stopRecording()
         env.store1.eventProcessor.reset()
         env.store2.eventProcessor.reset()
@@ -197,16 +197,16 @@ class TimeTravelControllerStoppedTest {
 
     @Test
     fun switched_to_last_state_for_all_stores_WHEN_moved_from_start_to_last_event() {
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore1(value = "state_1_2", state = "state_1_1")
-        env.produceResultEventForStore2()
+        env.produceMessageEventForStore2()
         env.produceStateEventForStore2(value = "state_2_2", state = "state_2_1")
-        env.produceResultEventForStore1()
+        env.produceMessageEventForStore1()
         env.produceStateEventForStore1(value = "state_1_3", state = "state_1_2")
-        env.produceResultEventForStore2()
+        env.produceMessageEventForStore2()
         env.produceStateEventForStore2(value = "state_2_3", state = "state_2_2")
-        env.produceResultEventForStore1()
-        env.produceResultEventForStore2()
+        env.produceMessageEventForStore1()
+        env.produceMessageEventForStore2()
         env.controller.stopRecording()
         env.controller.moveToStart()
         env.store1.eventProcessor.reset()
@@ -243,8 +243,8 @@ class TimeTravelControllerStoppedTest {
 
     @Test
     fun state_restored_in_all_stores_WHEN_recorded_and_cancelled() {
-        env.produceResultEventForStore1()
-        env.produceResultEventForStore2()
+        env.produceMessageEventForStore1()
+        env.produceMessageEventForStore2()
         env.controller.stopRecording()
         env.controller.cancel()
 
@@ -258,7 +258,7 @@ class TimeTravelControllerStoppedTest {
             listOf(
                 env.produceIntentEventForStore1(),
                 env.produceActionEventForStore1(),
-                env.produceResultEventForStore1(),
+                env.produceMessageEventForStore1(),
                 env.produceStateEventForStore1(),
                 env.produceLabelEventForStore1()
             )
@@ -298,7 +298,7 @@ class TimeTravelControllerStoppedTest {
         env.store2.state = "store2_state1"
         env.controller.startRecording()
 
-        val store2Event = env.produceResultEventForStore2(value = "store2_result", state = "store2_state1")
+        val store2Event = env.produceMessageEventForStore2(value = "store2_message", state = "store2_state1")
         env.controller.stopRecording()
         val export = env.controller.export()
 

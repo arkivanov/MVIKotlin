@@ -174,7 +174,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
             Mode.IDLE -> process(event)
 
             Mode.STOPPED ->
-                if (event.type === StoreEventType.RESULT) {
+                if (event.type === StoreEventType.MESSAGE) {
                     process(event)
                 } else {
                     postponedEvents += event

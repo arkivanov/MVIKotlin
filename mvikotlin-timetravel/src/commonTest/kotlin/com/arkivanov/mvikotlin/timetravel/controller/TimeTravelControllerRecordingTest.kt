@@ -45,10 +45,10 @@ class TimeTravelControllerRecordingTest {
     }
 
     @Test
-    fun processes_result_WHEN_result_emitted_in_recording_state() {
-        env.produceResultEventForStore1()
+    fun processes_messages_WHEN_message_emitted_in_recording_state() {
+        env.produceMessageEventForStore1()
 
-        env.store1.eventProcessor.assertProcessedEvent(StoreEventType.RESULT, "result1")
+        env.store1.eventProcessor.assertProcessedEvent(StoreEventType.MESSAGE, "message1")
     }
 
     @Test
@@ -71,7 +71,7 @@ class TimeTravelControllerRecordingTest {
             listOf(
                 env.produceIntentEventForStore1(),
                 env.produceActionEventForStore1(),
-                env.produceResultEventForStore1(),
+                env.produceMessageEventForStore1(),
                 env.produceStateEventForStore1(),
                 env.produceLabelEventForStore1()
             )

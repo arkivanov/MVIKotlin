@@ -24,11 +24,11 @@ import kotlin.js.JsName
  * All the `Actions` dispatched by the [Bootstrapper] are passed to the [Executor].
  * Please note that the [Bootstrapper] is stateful and so can not be `object` (singleton).
  *
- * The [Executor] is the main component of the [Store]. It accepts `Intents` and `Actions` and produces `Results` and `Labels`.
- * `Results` are then passed to the [Reducer]. `Labels` are just emitted from the `Store` as side effects.
+ * The [Executor] is the main component of the [Store]. It accepts `Intents` and `Actions` and produces `Messages` and `Labels`.
+ * `Messages` are passed to the [Reducer]. `Labels` are just emitted from the `Store` as side effects.
  * Please note that the [Executor] is stateful and so can not be `object` (singleton).
  *
- * The [Reducer] accepts a current `State` and a `Result` and transforms it to a new `State`.
+ * The [Reducer] accepts the current `State` and a `Message` and transforms it to a new `State`.
  * The new `State` then applied to the [Store] and emitted.
  *
  * Here is the suggested implementation template of the `Store`:
@@ -64,8 +64,8 @@ import kotlin.js.JsName
  *         // Action entries
  *     }
  *
- *     private sealed class Result {
- *         // Result entries
+ *     private sealed class Message {
+ *         // Message entries
  *     }
  *
  *     private class BootstrapperImpl: /* Extend either ReaktiveBootstrapper or CoroutineBootstrapper */ {
@@ -76,10 +76,10 @@ import kotlin.js.JsName
  *         // Implementation here
  *     }
  *
- *     private object ReducerImpl : Reducer<State, Result> {
- *         override fun State.reduce(result: Result): State =
- *             when (result) {
- *                 // Handle all possible results here and return a new State
+ *     private object ReducerImpl : Reducer<State, Message> {
+ *         override fun State.reduce(msg: Message): State =
+ *             when (msg) {
+ *                 // Handle all possible messages here and return a new State
  *             }
  *     }
  * }

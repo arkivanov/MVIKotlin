@@ -5,14 +5,14 @@ import kotlin.js.JsName
 
 /**
  * `Executor` is the place for business logic.
- * It accepts `Intents` and `Actions` and produces `Results` and `Labels`.
+ * It accepts `Intents` and `Actions` and produces `Messages` and `Labels`.
  * **Important**: please pay attention that it must not be a singleton.
  *
  * @see Store
  * @see Reducer
  * @see Bootstrapper
  */
-interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result : Any, out Label : Any> {
+interface Executor<in Intent : Any, in Action : Any, in State : Any, out Message : Any, out Label : Any> {
 
     /**
      * Initializes the [Executor], called internally by the [Store]
@@ -21,7 +21,7 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
      */
     @JsName("init")
     @MainThread
-    fun init(callbacks: Callbacks<State, Result, Label>)
+    fun init(callbacks: Callbacks<State, Message, Label>)
 
     /**
      * Called by the [Store] for every received `Intent`
@@ -48,21 +48,21 @@ interface Executor<in Intent : Any, in Action : Any, in State : Any, out Result 
     /**
      * A set of callbacks used for communication between the [Bootstrapper] and the [Store]
      */
-    interface Callbacks<out State, in Result, in Label> {
+    interface Callbacks<out State, in Message, in Label> {
         /**
          * Returns current `State` of the [Store]
          */
         val state: State
 
         /**
-         * Dispatches the `Result` to the [Store], it then goes to the [Reducer].
+         * Dispatches the `Message` to the [Store], it then goes to the [Reducer].
          * A new `State` will be immediately available after this method returns.
          *
-         * @param result a `Result` to be dispatched
+         * @param message a `Message` to be dispatched to the [Reducer]
          */
-        @JsName("onResult")
+        @JsName("onMessage")
         @MainThread
-        fun onResult(result: Result)
+        fun onMessage(message: Message)
 
         /**
          * Publishes the `Label`, it then will be emitted by the [Store]

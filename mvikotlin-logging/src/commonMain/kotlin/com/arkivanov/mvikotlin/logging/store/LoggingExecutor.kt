@@ -5,20 +5,20 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.logging.logger.LoggerWrapper
 import com.arkivanov.mvikotlin.logging.logger.log
 
-internal class LoggingExecutor<in Intent : Any, in Action : Any, State : Any, Result : Any, Label : Any>(
-    private val delegate: Executor<Intent, Action, State, Result, Label>,
+internal class LoggingExecutor<in Intent : Any, in Action : Any, State : Any, Message : Any, Label : Any>(
+    private val delegate: Executor<Intent, Action, State, Message, Label>,
     private val logger: LoggerWrapper,
     private val storeName: String
-) : Executor<Intent, Action, State, Result, Label> by delegate {
+) : Executor<Intent, Action, State, Message, Label> by delegate {
 
-    override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
+    override fun init(callbacks: Executor.Callbacks<State, Message, Label>) {
         delegate.init(
-            object : Executor.Callbacks<State, Result, Label> {
+            object : Executor.Callbacks<State, Message, Label> {
                 override val state: State get() = callbacks.state
 
-                override fun onResult(result: Result) {
-                    logger.log(storeName = storeName, eventType = StoreEventType.RESULT, value = result)
-                    callbacks.onResult(result)
+                override fun onMessage(message: Message) {
+                    logger.log(storeName = storeName, eventType = StoreEventType.MESSAGE, value = message)
+                    callbacks.onMessage(message)
                 }
 
                 override fun onLabel(label: Label) {

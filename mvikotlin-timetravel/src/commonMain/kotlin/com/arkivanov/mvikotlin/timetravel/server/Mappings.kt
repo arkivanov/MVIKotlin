@@ -26,7 +26,7 @@ private fun StoreEventType.toProto(): StoreEventTypeProto =
     when (this) {
         StoreEventType.INTENT -> StoreEventTypeProto.INTENT
         StoreEventType.ACTION -> StoreEventTypeProto.ACTION
-        StoreEventType.RESULT -> StoreEventTypeProto.RESULT
+        StoreEventType.MESSAGE -> StoreEventTypeProto.MESSAGE
         StoreEventType.STATE -> StoreEventTypeProto.STATE
         StoreEventType.LABEL -> StoreEventTypeProto.LABEL
     }

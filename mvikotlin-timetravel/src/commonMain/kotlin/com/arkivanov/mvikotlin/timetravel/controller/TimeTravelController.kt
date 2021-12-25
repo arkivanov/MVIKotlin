@@ -79,10 +79,10 @@ interface TimeTravelController {
      * Please note that events of type [StoreEventType.STATE] can not be debugged.
      * - If event type is [StoreEventType.INTENT] or [StoreEventType.ACTION], executes the [Executor] of the appropriate Store.
      * A new temporary instance of the [Executor] will be created, its `State` will be same as when original event was recorded,
-     * any dispatched `Results` will be redirected to the [Reducer] and `State` of this temporary [Executor] will be updated,
+     * any dispatched `Messages` will be redirected to the [Reducer] and `State` of this temporary [Executor] will be updated,
      * any dispatched `Labels` will be dropped.
      * Original [Executor] will not be executed and `State` of the [Store] will not be changed.
-     * - If event type is [StoreEventType.RESULT], executes the [Reducer] of the appropriate [Store]. Resulting `State` will be dropped.
+     * - If event type is [StoreEventType.MESSAGE], executes the [Reducer] of the appropriate [Store]. Resulting `State` will be dropped.
      * - If event type is [StoreEventType.STATE], throws an exception as events of type [StoreEventType.STATE] can not be debugged
      * - If event type is [StoreEventType.LABEL], emits the `Label` from the appropriate [Store]
      *

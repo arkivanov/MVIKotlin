@@ -32,7 +32,7 @@ private class BypassExecutor<Intent : Any, in State : Any> : Executor<Intent, No
     }
 
     override fun executeIntent(intent: Intent) {
-        callbacks.requireValue().onResult(intent)
+        callbacks.requireValue().onMessage(intent)
     }
 
     override fun executeAction(action: Nothing) {

@@ -4,23 +4,24 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
 import kotlin.js.JsName
 
 /**
- * Applies `Results` to `States`. Normally should be a singleton.
+ * A [Reducer] is a function that takes the current `State` and a `Message`
+ * as arguments, and returns a new `State` as a result.
  *
  * @see Store
  * @see Executor
  */
-fun interface Reducer<State, in Result> {
+fun interface Reducer<State, in Message> {
 
     /**
-     * Accepts the current `State` and the `Result` and produces the new `State`.
-     * Called for every `Result` produced by the `Executor`.
+     * Accepts the current `State` and a `Message` and produces a new `State`.
+     * Called for every `Message` produced by the [Executor].
      *
-     * @receiver current `State` of the `Store`
-     * @param result a `Result` dispatched by the `Executor`
+     * @receiver the current `State` of the [Store]
+     * @param msg a `Message` dispatched by the [Executor]
      *
      * @return a new `State`
      */
     @JsName("reduce")
     @MainThread
-    fun State.reduce(result: Result): State
+    fun State.reduce(msg: Message): State
 }

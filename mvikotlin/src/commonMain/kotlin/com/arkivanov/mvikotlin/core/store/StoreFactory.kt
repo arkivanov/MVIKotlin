@@ -18,14 +18,14 @@ interface StoreFactory {
      * otherwise call [Store.init] manually, default value is `true`
      */
     @JsName("create")
-    fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
+    fun <Intent : Any, Action : Any, Message : Any, State : Any, Label : Any> create(
         name: String? = null,
         isAutoInit: Boolean = true,
         initialState: State,
         bootstrapper: Bootstrapper<Action>? = null,
-        executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
+        executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
         @Suppress("UNCHECKED_CAST")
-        reducer: Reducer<State, Result> = bypassReducer as Reducer<State, Any>
+        reducer: Reducer<State, Message> = bypassReducer as Reducer<State, Any>
     ): Store<Intent, State, Label>
 
     private companion object {

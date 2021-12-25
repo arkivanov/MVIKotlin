@@ -22,12 +22,12 @@ internal class TodoAddStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Nothing, State, Result, Label> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Nothing, State, Msg, Label> = ExecutorImpl()
 
-    private inner class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Result, Label>(mainContext = mainContext) {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Msg, Label>(mainContext = mainContext) {
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.SetText -> dispatch(Result.TextChanged(intent.text))
+                is Intent.SetText -> dispatch(Msg.TextChanged(intent.text))
                 is Intent.Add -> addItem(getState())
             }.let {}
         }
@@ -35,7 +35,7 @@ internal class TodoAddStoreFactory(
         private fun addItem(state: State) {
             val text = state.text.takeUnless(String::isBlank) ?: return
 
-            dispatch(Result.TextChanged(""))
+            dispatch(Msg.TextChanged(""))
 
             scope.launch {
                 val item = withContext(ioContext) { database.create(TodoItem.Data(text = text)) }

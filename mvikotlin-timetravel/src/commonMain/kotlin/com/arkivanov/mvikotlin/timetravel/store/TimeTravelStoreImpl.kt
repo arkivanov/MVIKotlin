@@ -1,6 +1,5 @@
 package com.arkivanov.mvikotlin.timetravel.store
 
-import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
@@ -16,11 +15,11 @@ import com.arkivanov.mvikotlin.utils.internal.atomic
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.setValue
 
-internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
+internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message : Any, out State : Any, Label : Any>(
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
-    private val executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
-    private val reducer: Reducer<State, Result>
+    private val executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
+    private val reducer: Reducer<State, Message>
 ) : TimeTravelStore<Intent, State, Label> {
 
     private val executor = executorFactory()
@@ -37,7 +36,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
     override fun states(observer: Observer<State>): Disposable =
         stateSubject.subscribe(observer)
 
-    override fun labels(observer: Observer<Label>): Disposable =labelSubject.subscribe(observer)
+    override fun labels(observer: Observer<Label>): Disposable = labelSubject.subscribe(observer)
 
     override fun events(observer: Observer<Event>): Disposable {
         val disposables = eventSubjects.values.map { it.subscribe(observer) }
@@ -71,11 +70,11 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
         assertOnMainThread()
 
         executor.init(
-            object : Executor.Callbacks<State, Result, Label> {
+            object : Executor.Callbacks<State, Message, Label> {
                 override val state: State get() = internalState
 
-                override fun onResult(result: Result) {
-                    onEvent(StoreEventType.RESULT, result, state)
+                override fun onMessage(message: Message) {
+                    onEvent(StoreEventType.MESSAGE, message, state)
                 }
 
                 override fun onLabel(label: Label) {
@@ -134,16 +133,16 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
                 when (type) {
                     StoreEventType.INTENT -> executor.executeIntent(value as Intent)
                     StoreEventType.ACTION -> executor.executeAction(value as Action)
-                    StoreEventType.RESULT -> processResult(value as Result)
+                    StoreEventType.MESSAGE -> processMessage(value as Message)
                     StoreEventType.STATE -> changeState(value as State)
                     StoreEventType.LABEL -> labelSubject.onNext(value as Label)
                 }.let {}
             }
         }
 
-        private fun processResult(result: Result) {
+        private fun processMessage(message: Message) {
             val previousState = internalState
-            val newState = reducer.run { previousState.reduce(result) }
+            val newState = reducer.run { previousState.reduce(message) }
             internalState = newState
 
             onEvent(StoreEventType.STATE, newState, previousState)
@@ -159,7 +158,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
                 when (type) {
                     StoreEventType.INTENT -> debugIntent(value as Intent, state as State)
                     StoreEventType.ACTION -> debugAction(value as Action, state as State)
-                    StoreEventType.RESULT -> debugResult(value as Result, state as State)
+                    StoreEventType.MESSAGE -> debugMessage(value as Message, state as State)
                     StoreEventType.STATE -> throw IllegalArgumentException("Can't debug event of type: $type")
                     StoreEventType.LABEL -> debugLabel(value as Label)
                 }.let {}
@@ -178,19 +177,19 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
             }
         }
 
-        private fun debugExecutor(initialState: State, execute: Executor<Intent, Action, State, Result, Label>.() -> Unit) {
+        private fun debugExecutor(initialState: State, execute: Executor<Intent, Action, State, Message, Label>.() -> Unit) {
             var localState by atomic(initialState)
 
             val executor =
                 executorFactory().apply {
                     init(
-                        object : Executor.Callbacks<State, Result, Label> {
+                        object : Executor.Callbacks<State, Message, Label> {
                             override val state: State get() = localState
 
-                            override fun onResult(result: Result) {
+                            override fun onMessage(message: Message) {
                                 assertOnMainThread()
 
-                                localState = reducer.run { localState.reduce(result) }
+                                localState = reducer.run { localState.reduce(message) }
                             }
 
                             override fun onLabel(label: Label) {
@@ -206,9 +205,9 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Result :
             debuggingExecutor = executor
         }
 
-        private fun debugResult(result: Result, initialState: State) {
+        private fun debugMessage(message: Message, initialState: State) {
             with(reducer) {
-                initialState.reduce(result)
+                initialState.reduce(message)
             }
         }
 

@@ -64,7 +64,7 @@ interface StoreGenericTests {
     fun executor_can_read_new_state_WHEN_state_changed()
 
     @Test
-    fun delivers_results_from_executor_to_reducer()
+    fun delivers_messages_from_executor_to_reducer()
 
     @Test
     fun state_val_returns_new_state_WHEN_new_state_returned_from_reducer()
@@ -271,26 +271,26 @@ fun StoreGenericTests(
             val executor = TestExecutor()
             store(executorFactory = { executor }, reducer = reducer { it })
 
-            executor.dispatch("result")
+            executor.dispatch("message")
 
-            assertEquals("result", executor.state)
+            assertEquals("message", executor.state)
         }
 
-        override fun delivers_results_from_executor_to_reducer() {
-            var results by atomic(emptyList<String>())
+        override fun delivers_messages_from_executor_to_reducer() {
+            var messages by atomic(emptyList<String>())
             val executor = TestExecutor()
             store(
                 executorFactory = { executor },
                 reducer = reducer {
-                    results = results + it
+                    messages = messages + it
                     this
                 }
             )
 
-            executor.dispatch("result1")
-            executor.dispatch("result2")
+            executor.dispatch("message1")
+            executor.dispatch("message2")
 
-            assertEquals(listOf("result1", "result2"), results)
+            assertEquals(listOf("message1", "message2"), messages)
         }
 
         override fun state_val_returns_new_state_WHEN_new_state_returned_from_reducer() {
@@ -301,9 +301,9 @@ fun StoreGenericTests(
                     reducer = reducer { it }
                 )
 
-            executor.dispatch("result")
+            executor.dispatch("message")
 
-            assertEquals("result", store.state)
+            assertEquals("message", store.state)
         }
 
         override fun executor_can_read_new_state_WHEN_new_state_returned_from_reducer() {
@@ -313,9 +313,9 @@ fun StoreGenericTests(
                 reducer = reducer { it }
             )
 
-            executor.dispatch("result")
+            executor.dispatch("message")
 
-            assertEquals("result", executor.state)
+            assertEquals("message", executor.state)
         }
 
         override fun bootstrapper_disposed_WHEN_store_disposed() {

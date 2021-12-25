@@ -45,10 +45,10 @@ class TimeTravelControllerIdleTest {
     }
 
     @Test
-    fun processes_result_WHEN_result_emitted_in_idle_state() {
-        env.produceResultEventForStore1()
+    fun processes_message_WHEN_message_emitted_in_idle_state() {
+        env.produceMessageEventForStore1()
 
-        env.store1.eventProcessor.assertProcessedEvent(StoreEventType.RESULT, "result1")
+        env.store1.eventProcessor.assertProcessedEvent(StoreEventType.MESSAGE, "message1")
     }
 
     @Test

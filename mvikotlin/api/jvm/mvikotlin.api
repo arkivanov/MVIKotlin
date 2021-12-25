@@ -38,7 +38,7 @@ public abstract interface class com/arkivanov/mvikotlin/core/store/Executor {
 public abstract interface class com/arkivanov/mvikotlin/core/store/Executor$Callbacks {
 	public abstract fun getState ()Ljava/lang/Object;
 	public abstract fun onLabel (Ljava/lang/Object;)V
-	public abstract fun onResult (Ljava/lang/Object;)V
+	public abstract fun onMessage (Ljava/lang/Object;)V
 }
 
 public abstract interface class com/arkivanov/mvikotlin/core/store/Reducer {
@@ -66,7 +66,7 @@ public final class com/arkivanov/mvikotlin/core/store/StoreEventType : java/lang
 	public static final field ACTION Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 	public static final field INTENT Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 	public static final field LABEL Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
-	public static final field RESULT Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
+	public static final field MESSAGE Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 	public static final field STATE Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 	public static fun valueOf (Ljava/lang/String;)Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 	public static fun values ()[Lcom/arkivanov/mvikotlin/core/store/StoreEventType;

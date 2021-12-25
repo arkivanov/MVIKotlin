@@ -26,8 +26,8 @@ internal class TimeTravelControllerTestingEnvironment {
     fun createActionEvent(value: String = "action1", state: String = "state1"): Event =
         Event(StoreEventType.ACTION, value, state)
 
-    fun createResultEvent(value: String = "result1", state: String = "state1"): Event =
-        Event(StoreEventType.RESULT, value, state)
+    fun createMessageEvent(value: String = "message1", state: String = "state1"): Event =
+        Event(StoreEventType.MESSAGE, value, state)
 
     fun createStateEvent(value: String = "state1", state: String = "state1"): Event =
         Event(StoreEventType.STATE, value, state)
@@ -41,8 +41,8 @@ internal class TimeTravelControllerTestingEnvironment {
     fun produceActionEventForStore1(value: String = "action1", state: String = "state1"): Event =
         createActionEvent(value, state).also(store1::sendEvent)
 
-    fun produceResultEventForStore1(value: String = "result1", state: String = "state1"): Event =
-        createResultEvent(value, state).also(store1::sendEvent)
+    fun produceMessageEventForStore1(value: String = "message1", state: String = "state1"): Event =
+        createMessageEvent(value, state).also(store1::sendEvent)
 
     fun produceStateEventForStore1(value: String = "state1", state: String = "state1"): Event =
         createStateEvent(value, state).also(store1::sendEvent)
@@ -56,8 +56,8 @@ internal class TimeTravelControllerTestingEnvironment {
     fun produceActionEventForStore2(value: String = "action2", state: String = "state2"): Event =
         createActionEvent(value, state).also(store2::sendEvent)
 
-    fun produceResultEventForStore2(value: String = "result2", state: String = "state2"): Event =
-        createResultEvent(value, state).also(store2::sendEvent)
+    fun produceMessageEventForStore2(value: String = "message2", state: String = "state2"): Event =
+        createMessageEvent(value, state).also(store2::sendEvent)
 
     fun produceStateEventForStore2(value: String = "state2", state: String = "state2"): Event =
         createStateEvent(value, state).also(store2::sendEvent)

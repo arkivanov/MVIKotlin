@@ -29,22 +29,22 @@ abstract class TodoDetailsStoreAbstractFactory(
         ) {
         }
 
-    protected abstract fun createExecutor(): Executor<Intent, Unit, State, Result, Label>
+    protected abstract fun createExecutor(): Executor<Intent, Unit, State, Msg, Label>
 
-    protected sealed class Result : JvmSerializable {
-        data class Loaded(val data: TodoItem.Data) : Result()
-        object Finished : Result()
-        data class TextChanged(val text: String) : Result()
-        object DoneToggled : Result()
+    protected sealed class Msg : JvmSerializable {
+        data class Loaded(val data: TodoItem.Data) : Msg()
+        object Finished : Msg()
+        data class TextChanged(val text: String) : Msg()
+        object DoneToggled : Msg()
     }
 
-    private object ReducerImpl : Reducer<State, Result> {
-        override fun State.reduce(result: Result): State =
-            when (result) {
-                is Result.Loaded -> copy(data = result.data)
-                is Result.Finished -> copy(isFinished = true)
-                is Result.TextChanged -> copy(data = data?.copy(text = result.text))
-                is Result.DoneToggled -> copy(data = data?.copy(isDone = !data.isDone))
+    private object ReducerImpl : Reducer<State, Msg> {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.Loaded -> copy(data = msg.data)
+                is Msg.Finished -> copy(isFinished = true)
+                is Msg.TextChanged -> copy(data = data?.copy(text = msg.text))
+                is Msg.DoneToggled -> copy(data = data?.copy(isDone = !data.isDone))
             }
     }
 }

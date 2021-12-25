@@ -93,7 +93,7 @@ private fun StoreEventType.isDebuggable(): Boolean =
     when (this) {
         StoreEventType.INTENT,
         StoreEventType.ACTION,
-        StoreEventType.RESULT,
+        StoreEventType.MESSAGE,
         StoreEventType.LABEL -> true
         StoreEventType.STATE -> false
     }

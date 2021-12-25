@@ -1,6 +1,5 @@
 package com.arkivanov.mvikotlin.main.store
 
-import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
@@ -12,11 +11,11 @@ import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.rx.observer
 
-internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, out State : Any, Label : Any> @MainThread constructor(
+internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, out State : Any, Label : Any>(
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
-    private val executor: Executor<Intent, Action, State, Result, Label>,
-    private val reducer: Reducer<State, Result>
+    private val executor: Executor<Intent, Action, State, Message, Label>,
+    private val reducer: Reducer<State, Message>
 ) : Store<Intent, State, Label> {
 
     private val intentSubject = PublishSubject<Intent>()
@@ -31,15 +30,15 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Result : Any, o
         intentSubject.subscribe(observer(onNext = ::onIntent))
 
         executor.init(
-            object : Executor.Callbacks<State, Result, Label> {
+            object : Executor.Callbacks<State, Message, Label> {
                 override val state: State get() = stateSubject.value
 
-                override fun onResult(result: Result) {
+                override fun onMessage(message: Message) {
                     assertOnMainThread()
 
                     doIfNotDisposed {
                         changeState { oldState ->
-                            reducer.run { oldState.reduce(result) }
+                            reducer.run { oldState.reduce(message) }
                         }
                     }
                 }
