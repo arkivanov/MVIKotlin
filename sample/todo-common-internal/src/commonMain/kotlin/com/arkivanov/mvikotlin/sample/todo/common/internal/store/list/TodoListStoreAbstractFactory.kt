@@ -29,24 +29,24 @@ abstract class TodoListStoreAbstractFactory(
         ) {
         }
 
-    protected sealed class Result : JvmSerializable {
-        data class Loaded(val items: List<TodoItem>) : Result()
-        data class Deleted(val id: String) : Result()
-        data class DoneToggled(val id: String) : Result()
-        data class Added(val item: TodoItem) : Result()
-        data class Changed(val id: String, val data: TodoItem.Data) : Result()
+    protected sealed class Msg : JvmSerializable {
+        data class Loaded(val items: List<TodoItem>) : Msg()
+        data class Deleted(val id: String) : Msg()
+        data class DoneToggled(val id: String) : Msg()
+        data class Added(val item: TodoItem) : Msg()
+        data class Changed(val id: String, val data: TodoItem.Data) : Msg()
     }
 
-    protected abstract fun createExecutor(): Executor<Intent, Unit, State, Result, Nothing>
+    protected abstract fun createExecutor(): Executor<Intent, Unit, State, Msg, Nothing>
 
-    private object ReducerImpl : Reducer<State, Result> {
-        override fun State.reduce(result: Result): State =
-            when (result) {
-                is Result.Loaded -> copy(items = result.items)
-                is Result.Deleted -> copy(items = items.filterNot { it.id == result.id })
-                is Result.DoneToggled -> copy(items = items.update(result.id) { copy(isDone = !isDone) })
-                is Result.Added -> copy(items = items + result.item)
-                is Result.Changed -> copy(items = items.update(result.id) { result.data })
+    private object ReducerImpl : Reducer<State, Msg> {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.Loaded -> copy(items = msg.items)
+                is Msg.Deleted -> copy(items = items.filterNot { it.id == msg.id })
+                is Msg.DoneToggled -> copy(items = items.update(msg.id) { copy(isDone = !isDone) })
+                is Msg.Added -> copy(items = items + msg.item)
+                is Msg.Changed -> copy(items = items.update(msg.id) { msg.data })
             }
     }
 }

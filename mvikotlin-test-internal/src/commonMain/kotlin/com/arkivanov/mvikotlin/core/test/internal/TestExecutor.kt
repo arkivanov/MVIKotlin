@@ -38,8 +38,8 @@ class TestExecutor(
         isDisposed = true
     }
 
-    fun dispatch(result: String) {
-        callbacks.requireValue().onResult(result)
+    fun dispatch(message: String) {
+        callbacks.requireValue().onMessage(message)
     }
 
     fun publish(label: String) {

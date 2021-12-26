@@ -21,17 +21,17 @@ import kotlin.coroutines.CoroutineContext
  */
 @Deprecated(
     message = "Please use CoroutineExecutor",
-    replaceWith = ReplaceWith("CoroutineExecutor<Intent, Action, State, Result, Label>")
+    replaceWith = ReplaceWith("CoroutineExecutor<Intent, Action, State, Message, Label>")
 )
-open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Result : Any, Label : Any>(
+open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Message : Any, Label : Any>(
     mainContext: CoroutineContext = Dispatchers.Main
-) : Executor<Intent, Action, State, Result, Label> {
+) : Executor<Intent, Action, State, Message, Label> {
 
-    private val callbacks = atomic<Callbacks<State, Result, Label>>()
+    private val callbacks = atomic<Callbacks<State, Message, Label>>()
     private val getState: () -> State = { callbacks.requireValue().state }
     private val scope = CoroutineScope(mainContext)
 
-    final override fun init(callbacks: Callbacks<State, Result, Label>) {
+    final override fun init(callbacks: Callbacks<State, Message, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
@@ -74,14 +74,14 @@ open class SuspendExecutor<in Intent : Any, in Action : Any, in State : Any, Res
     }
 
     /**
-     * Dispatches the provided `Result` to the [Reducer].
+     * Dispatches the provided `Message` to the [Reducer].
      * The updated `State` will be available immediately after this method returns.
      *
-     * @param result a `Result` to be dispatched to the `Reducer`
+     * @param message a `Message` to be dispatched to the `Reducer`
      */
     @MainThread
-    protected fun dispatch(result: Result) {
-        callbacks.requireValue().onResult(result)
+    protected fun dispatch(message: Message) {
+        callbacks.requireValue().onMessage(message)
     }
 
     /**

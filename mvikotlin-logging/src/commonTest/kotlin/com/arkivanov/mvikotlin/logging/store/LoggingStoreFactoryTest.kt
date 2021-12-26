@@ -72,13 +72,13 @@ class LoggingStoreFactoryTest {
     }
 
     @Test
-    fun logs_results() {
+    fun logs_messages() {
         val executor = TestExecutor()
         store(executorFactory = { executor }, reducer = reducer { "new_state" })
 
-        executor.dispatch("some_result")
+        executor.dispatch("some_message")
 
-        logger.assertLoggedEvent(StoreEventType.RESULT, "some_result")
+        logger.assertLoggedEvent(StoreEventType.MESSAGE, "some_message")
     }
 
     @Test
@@ -96,9 +96,9 @@ class LoggingStoreFactoryTest {
         val executor = TestExecutor()
         store(initialState = "initial_state", executorFactory = { executor }, reducer = reducer { "${this}_$it" })
 
-        executor.dispatch("some_result")
+        executor.dispatch("some_message")
 
-        logger.assertLoggedEvent(StoreEventType.STATE, "initial_state_some_result")
+        logger.assertLoggedEvent(StoreEventType.STATE, "initial_state_some_message")
     }
 
     @Test

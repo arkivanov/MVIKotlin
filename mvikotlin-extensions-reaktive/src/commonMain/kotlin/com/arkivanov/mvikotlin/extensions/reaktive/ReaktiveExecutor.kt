@@ -19,15 +19,15 @@ import com.badoo.reaktive.single.Single
  * An abstract implementation of the [Executor] that provides interoperability with Reaktive.
  * Implements [DisposableScope] which disposes when the [Executor] is disposed.
  */
-open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Result : Any, Label : Any> :
-    Executor<Intent, Action, State, Result, Label>,
+open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Message : Any, Label : Any> :
+    Executor<Intent, Action, State, Message, Label>,
     DisposableScope {
 
-    private val callbacks = atomic<Executor.Callbacks<State, Result, Label>>()
+    private val callbacks = atomic<Executor.Callbacks<State, Message, Label>>()
     private val getState: () -> State = { callbacks.requireValue().state }
     private val scope = DisposableScope()
 
-    final override fun init(callbacks: Executor.Callbacks<State, Result, Label>) {
+    final override fun init(callbacks: Executor.Callbacks<State, Message, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
@@ -64,14 +64,14 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Re
     }
 
     /**
-     * Dispatches the provided `Result` to the [Reducer].
+     * Dispatches the provided `Message` to the [Reducer].
      * The updated `State` will be available immediately after this method returns.
      *
-     * @param result a `Result` to be dispatched to the `Reducer`
+     * @param message a `Message` to be dispatched to the `Reducer`
      */
     @MainThread
-    protected fun dispatch(result: Result) {
-        callbacks.requireValue().onResult(result)
+    protected fun dispatch(message: Message) {
+        callbacks.requireValue().onMessage(message)
     }
 
     /**

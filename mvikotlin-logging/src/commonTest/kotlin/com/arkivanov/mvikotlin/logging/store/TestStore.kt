@@ -11,11 +11,11 @@ import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.setValue
 
-internal class TestStore<in Intent : Any, Action : Any, State : Any, in Result : Any, Label : Any>(
+internal class TestStore<in Intent : Any, Action : Any, State : Any, in Message : Any, Label : Any>(
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
-    executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
-    private val reducer: Reducer<State, Result>
+    executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
+    private val reducer: Reducer<State, Message>
 ) : Store<Intent, State, Label> {
 
     override var state: State by atomic(initialState)
@@ -30,11 +30,11 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Result :
 
     override fun init() {
         executor.init(
-            object : Executor.Callbacks<State, Result, Label> {
+            object : Executor.Callbacks<State, Message, Label> {
                 override val state: State get() = this@TestStore.state
 
-                override fun onResult(result: Result) {
-                    this@TestStore.state = reducer.run { state.reduce(result) }
+                override fun onMessage(message: Message) {
+                    this@TestStore.state = reducer.run { state.reduce(message) }
                 }
 
                 override fun onLabel(label: Label) {

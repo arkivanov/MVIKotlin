@@ -29,13 +29,13 @@ This component bootstraps (kick-starts) the `Store`. If passed to the `StoreFact
 
 ### Executor
 
-This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from the `Bootstrapper`. The `Executor` has two outputs: `Results` and `Labels`. `Results` are passed to the `Reducer`, `Labels` are emitted straight to the outside world. The `Executor` has constant access to the current `State` of the `Store`, a new `State` is visible for the `Executor` right after the `Result` is dispatched. The `Executor` is executed always on the main thread, `Results` and `Labels` must be also dispatched only on the main thread. However you are free to switch threads while processing `Action` or `Intents`.
+This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from the `Bootstrapper`. The `Executor` has two outputs: `Messages` and `Labels`. `Messages` are passed to the `Reducer`, `Labels` are emitted straight to the outside world. The `Executor` has constant access to the current `State` of the `Store`, a new `State` is visible for the `Executor` right after the `Message` is dispatched. The `Executor` is executed always on the main thread, `Messages` and `Labels` must be also dispatched only on the main thread. However you are free to switch threads while processing `Action` or `Intents`.
 
 > ⚠️ Please note that `Executors` are stateful and so can not be `object`s (singletons).
 
 ### Reducer
 
-This component is basically a function that accepts a `Result` from the `Executor` and a current `State` of the `Store` and returns a new `State`. The `Reducer` is called for every `Result` produced by the `Executor` and the new `State` is applied and emitted as soon as the `Reducer` call returns. The `Reducer` is always called on the main thread.
+This component is basically a function that accepts a `Message` from the `Executor` and the current `State` of the `Store` and returns a new `State`. The `Reducer` is called for every `Message` produced by the `Executor` and the new `State` is applied and emitted as soon as the `Reducer` call returns. The `Reducer` is always called on the main thread.
 
 ## Creating a Store
 
@@ -92,8 +92,8 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         }
 
     private object ReducerImpl : Reducer<State, Intent> {
-        override fun State.reduce(result: Intent): State =
-            when (result) {
+        override fun State.reduce(msg: Intent): State =
+            when (msg) {
                 is Intent.Increment -> copy(value = value + 1L)
                 is Intent.Decrement -> copy(value = value - 1L)
             }
@@ -122,38 +122,38 @@ internal interface CalculatorStore : Store<Intent, State, Nothing> {
 }
 ```
 
-The idea is that `CalculatorStore` will accept `Intent.Sum(N)`, calculate the sum of numbers from 1 to N and update the `State` with a result. But the calculation may take some time, so it should be performed in a background thread. For this we need the `Executor`.
+The idea is that `CalculatorStore` will accept `Intent.Sum(N)`, calculate the sum of numbers from 1 to N and update the `State` with the result. But the calculation may take some time, so it should be performed on a background thread. For this we need the `Executor`.
 
-So that our `Executor` could communicate with the `Reducer` we will need `Results`:
+So that our `Executor` could communicate with the `Reducer` we will need `Messages`:
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
-    private sealed class Result {
-        class Value(val value: Long) : Result()
+    private sealed class Msg {
+        class Value(val value: Long) : Msg()
     }
 }
 ```
 
-We will need a new `Reducer` because now it will accept `Results` instead of `Intents`:
+We will need a new `Reducer` because now it will accept `Messages` instead of `Intents`:
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
-    private sealed class Result {
-        class Value(val value: Long) : Result()
+    private sealed class Msg {
+        class Value(val value: Long) : Msg()
     }
 
-    private object ReducerImpl : Reducer<State, Result> {
-        override fun State.reduce(result: Result): State =
-            when (result) {
-                is Result.Value -> copy(value = result.value)
+    private object ReducerImpl : Reducer<State, Msg> {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.Value -> copy(value = msg.value)
             }
     }
 }
 ```
 
-There is only one possible `Result.Value(Long)` which just replaces whatever value in `State`.
+There is only one possible `Msg.Value(Long)` which just replaces whatever value in `State`.
 
 Now it's time for the `Executor`. If you are interested you can find the interface [here](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Executor.kt). Luckily we don't need to implement this entire interface. Instead we can extend a base implementation.
 
@@ -171,18 +171,18 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Result, Nothing>() {
+    private class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Msg, Nothing>() {
         override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
-                is Intent.Increment -> dispatch(Result.Value(getState().value + 1))
-                is Intent.Decrement -> dispatch(Result.Value(getState().value - 1))
+                is Intent.Increment -> dispatch(Msg.Value(getState().value + 1))
+                is Intent.Decrement -> dispatch(Msg.Value(getState().value - 1))
                 is Intent.Sum -> sum(intent.n)
             }
 
         private fun sum(n: Int) {
             singleFromFunction { (1L..n.toLong()).sum() }
                 .subscribeOn(computationScheduler)
-                .map(Result::Value)
+                .map(Msg::Value)
                 .observeOn(mainScheduler)
                 .subscribeScoped(onSuccess = ::dispatch)
         }
@@ -192,7 +192,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-So we extended the `ReaktiveExecutor` class and implemented the `executeIntent` method. This method gives us an `Intent` and a supplier of the current `State`. For `Intent.Increment` and `Intent.Decrement` we simply send the `Result` with a new value using the `dispatch` method. But for `Intent.Sum` we use `Reaktive` for multithreading. We calculate the sum on the `computationScheduler` and then switch to the `mainScheduler` and `dispatch` the `Result`.
+So we extended the `ReaktiveExecutor` class and implemented the `executeIntent` method. This method gives us an `Intent` and a supplier of the current `State`. For `Intent.Increment` and `Intent.Decrement` we simply send the `Message` with a new value using the `dispatch` method. But for `Intent.Sum` we use `Reaktive` for multithreading. We calculate the sum on the `computationScheduler` and then switch to the `mainScheduler` and `dispatch` the `Message`.
 
 > ⚠️ `ReaktiveExecutor` implements Reaktive's [DisposableScope](https://github.com/badoo/Reaktive#subscription-management-with-disposablescope) which provides a bunch of additional extension functions. We used one of those functions - `subscribeScoped`. This ensures that the subscription is disposed when the `Store` (and so the `Executor`) is disposed.
 
@@ -203,18 +203,18 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Result, Nothing>() {
+    private class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Msg, Nothing>() {
         override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
-                is Intent.Increment -> dispatch(Result.Value(getState().value + 1))
-                is Intent.Decrement -> dispatch(Result.Value(getState().value - 1))
+                is Intent.Increment -> dispatch(Msg.Value(getState().value + 1))
+                is Intent.Decrement -> dispatch(Msg.Value(getState().value - 1))
                 is Intent.Sum -> sum(intent.n)
             }
 
         private fun sum(n: Int) {
             scope.launch {
                 val sum = withContext(Dispatchers.Default) { (1L..n.toLong()).sum() }
-                dispatch(Result.Value(sum))
+                dispatch(Msg.Value(sum))
             }
         }
     }
@@ -223,7 +223,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-Here we extended the `CoroutineExecutor` class. The sum is calculated on the `Default` dispatcher and the `Result` is dispatched on the `Main` thread.
+Here we extended the `CoroutineExecutor` class. The sum is calculated on the `Default` dispatcher and the `Message` is dispatched on the `Main` thread.
 
 > ⚠️ `CoroutineExecutor` provides the `CoroutineScope` property named `scope`, which can be used to run asynchronous tasks. The scope uses `Dispatchers.Main` dispatcher by default, which can be overriden by passing different `CoroutineContext` to the `CoroutineExecutor` constructor. The scope is automatically cancelled when the `Store` is disposed.
 
@@ -281,7 +281,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class ExecutorImpl : ReaktiveExecutor<Intent, Action, State, Result, Nothing>() {
+    private class ExecutorImpl : ReaktiveExecutor<Intent, Action, State, Msg, Nothing>() {
         override fun executeAction(action: Action, getState: () -> State) =
             when (action) {
                 is Action.Sum -> sum(action.n)
@@ -301,7 +301,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Result, Nothing>() {
+    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Nothing>() {
         override fun executeAction(action: Action, getState: () -> State) =
             when (action) {
                 is Action.Sum -> sum(action.n)
@@ -366,10 +366,10 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         }
     }
 
-    private class ExecutorImpl : ReaktiveExecutor<Intent, Action, State, Result, Nothing>() {
+    private class ExecutorImpl : ReaktiveExecutor<Intent, Action, State, Msg, Nothing>() {
         override fun executeAction(action: Action, getState: () -> State) =
             when (action) {
-                is Action.SetValue -> dispatch(Result.Value(action.value)) // <-- Handle the Action
+                is Action.SetValue -> dispatch(Msg.Value(action.value)) // <-- Handle the Action
             }
 
         // ...
@@ -411,10 +411,10 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         }
     }
 
-    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Result, Nothing>() {
+    private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Nothing>() {
         override fun executeAction(action: Action, getState: () -> State) =
             when (action) {
-                is Action.SetValue -> dispatch(Result.Value(action.value))
+                is Action.SetValue -> dispatch(Msg.Value(action.value))
             }
 
         // ...

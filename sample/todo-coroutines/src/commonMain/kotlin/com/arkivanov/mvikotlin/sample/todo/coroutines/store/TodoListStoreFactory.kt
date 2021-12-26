@@ -20,13 +20,13 @@ internal class TodoListStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Unit, State, Result, Nothing> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Unit, State, Msg, Nothing> = ExecutorImpl()
 
-    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Result, Nothing>(mainContext = mainContext) {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Nothing>(mainContext = mainContext) {
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
                 val items = withContext(ioContext) { database.getAll() }
-                dispatch(Result.Loaded(items))
+                dispatch(Msg.Loaded(items))
             }
         }
 
@@ -34,14 +34,14 @@ internal class TodoListStoreFactory(
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
                 is Intent.ToggleDone -> toggleDone(intent.id, getState)
-                is Intent.AddToState -> dispatch(Result.Added(intent.item))
-                is Intent.DeleteFromState -> dispatch(Result.Deleted(intent.id))
-                is Intent.UpdateInState -> dispatch(Result.Changed(intent.id, intent.data))
+                is Intent.AddToState -> dispatch(Msg.Added(intent.item))
+                is Intent.DeleteFromState -> dispatch(Msg.Deleted(intent.id))
+                is Intent.UpdateInState -> dispatch(Msg.Changed(intent.id, intent.data))
             }.let {}
         }
 
         private fun delete(id: String) {
-            dispatch(Result.Deleted(id))
+            dispatch(Msg.Deleted(id))
 
             scope.launch(ioContext) {
                 database.delete(id)
@@ -49,7 +49,7 @@ internal class TodoListStoreFactory(
         }
 
         private fun toggleDone(id: String, state: () -> State) {
-            dispatch(Result.DoneToggled(id))
+            dispatch(Msg.DoneToggled(id))
 
             val item = state().items.find { it.id == id } ?: return
 

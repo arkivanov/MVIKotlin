@@ -28,13 +28,13 @@ class LoggingStoreFactory(
 
     private val loggerWrapper = LoggerWrapper(logger, logFormatter)
 
-    override fun <Intent : Any, Action : Any, Result : Any, State : Any, Label : Any> create(
+    override fun <Intent : Any, Action : Any, Message : Any, State : Any, Label : Any> create(
         name: String?,
         isAutoInit: Boolean,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
-        executorFactory: () -> Executor<Intent, Action, State, Result, Label>,
-        reducer: Reducer<State, Result>
+        executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
+        reducer: Reducer<State, Message>
     ): Store<Intent, State, Label> {
         if (name == null) {
             return delegate.create(

@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 class DefaultLogFormatterTest {
 
     @Test
-    fun result_contains_whole_value_WHEN_valueLengthLimit_not_exceeded() {
+    fun message_contains_whole_value_WHEN_valueLengthLimit_not_exceeded() {
         val formatter = DefaultLogFormatter(valueLengthLimit = 10)
         val value = "abcdefghij"
 
@@ -20,7 +20,7 @@ class DefaultLogFormatterTest {
     }
 
     @Test
-    fun result_contains_truncated_value_WHEN_valueLengthLimit_exceeded() {
+    fun message_contains_truncated_value_WHEN_valueLengthLimit_exceeded() {
         val formatter = DefaultLogFormatter(valueLengthLimit = 10)
         val value = "abcdefghijk"
 
@@ -31,7 +31,7 @@ class DefaultLogFormatterTest {
     }
 
     @Test
-    fun result_does_not_contain_whole_value_WHEN_valueLengthLimit_exceeded() {
+    fun message_does_not_contain_whole_value_WHEN_valueLengthLimit_exceeded() {
         val formatter = DefaultLogFormatter(valueLengthLimit = 10)
         val value = "abcdefghijk"
 
@@ -42,7 +42,7 @@ class DefaultLogFormatterTest {
     }
 
     @Test
-    fun result_does_not_contain_value_WHEN_valueLengthLimit_is_0() {
+    fun message_does_not_contain_value_WHEN_valueLengthLimit_is_0() {
         val formatter = DefaultLogFormatter(valueLengthLimit = 0)
         val value = "12345"
 

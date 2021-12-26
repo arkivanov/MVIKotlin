@@ -26,16 +26,16 @@ abstract class TodoAddStoreAbstractFactory(
         ){
         }
 
-    protected abstract fun createExecutor(): Executor<Intent, Nothing, State, Result, Label>
+    protected abstract fun createExecutor(): Executor<Intent, Nothing, State, Msg, Label>
 
-    protected sealed class Result : JvmSerializable {
-        data class TextChanged(val text: String) : Result()
+    protected sealed class Msg : JvmSerializable {
+        data class TextChanged(val text: String) : Msg()
     }
 
-    private object ReducerImpl : Reducer<State, Result> {
-        override fun State.reduce(result: Result): State =
-            when (result) {
-                is Result.TextChanged -> copy(text = result.text)
+    private object ReducerImpl : Reducer<State, Msg> {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.TextChanged -> copy(text = msg.text)
             }
     }
 }

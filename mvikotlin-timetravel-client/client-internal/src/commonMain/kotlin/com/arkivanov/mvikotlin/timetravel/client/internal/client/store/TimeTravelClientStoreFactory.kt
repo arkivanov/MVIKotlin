@@ -31,17 +31,17 @@ internal class TimeTravelClientStoreFactory(
             reducer = ReducerImpl
         ) {}
 
-    private sealed class Result {
-        data class Connecting(val disposable: Disposable) : Result()
-        data class Connected(val writer: (TimeTravelCommand) -> Unit) : Result()
-        object Disconnected : Result()
-        data class StateUpdate(val stateUpdate: TimeTravelStateUpdate) : Result()
-        data class EventSelected(val index: Int) : Result()
-        data class EventValue(val eventId: Long, val value: ValueNode) : Result()
-        data class ErrorChanged(val text: String?) : Result()
+    private sealed class Msg {
+        data class Connecting(val disposable: Disposable) : Msg()
+        data class Connected(val writer: (TimeTravelCommand) -> Unit) : Msg()
+        object Disconnected : Msg()
+        data class StateUpdate(val stateUpdate: TimeTravelStateUpdate) : Msg()
+        data class EventSelected(val index: Int) : Msg()
+        data class EventValue(val eventId: Long, val value: ValueNode) : Msg()
+        data class ErrorChanged(val text: String?) : Msg()
     }
 
-    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Result, Label>() {
+    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Msg, Label>() {
         override fun executeIntent(intent: Intent, getState: () -> State): Unit =
             when (intent) {
                 is Intent.Connect -> connectIfNeeded(getState())
@@ -57,8 +57,8 @@ internal class TimeTravelClientStoreFactory(
                 is Intent.SelectEvent -> selectEvent(intent.index, getState())
                 is Intent.ExportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ExportEvents }
                 is Intent.ImportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ImportEvents(intent.data) }
-                is Intent.RaiseError -> dispatch(Result.ErrorChanged(text = intent.errorText))
-                is Intent.DismissError -> dispatch(Result.ErrorChanged(text = null))
+                is Intent.RaiseError -> dispatch(Msg.ErrorChanged(text = intent.errorText))
+                is Intent.DismissError -> dispatch(Msg.ErrorChanged(text = null))
             }
 
         private fun connectIfNeeded(state: State): Unit =
@@ -71,18 +71,18 @@ internal class TimeTravelClientStoreFactory(
         private fun connect() {
             connector
                 .connect()
-                .doOnBeforeSubscribe { dispatch(Result.Connecting(it)) }
-                .doOnBeforeFinally { dispatch(Result.Disconnected) }
+                .doOnBeforeSubscribe { dispatch(Msg.Connecting(it)) }
+                .doOnBeforeFinally { dispatch(Msg.Disconnected) }
                 .subscribeScoped(onNext = ::onEvent)
         }
 
         private fun onEvent(event: Connector.Event): Unit =
             when (event) {
-                is Connector.Event.Connected -> dispatch(Result.Connected(event.writer))
-                is Connector.Event.StateUpdate -> dispatch(Result.StateUpdate(event.stateUpdate))
-                is Connector.Event.EventValue -> dispatch(Result.EventValue(eventId = event.eventId, value = event.value))
+                is Connector.Event.Connected -> dispatch(Msg.Connected(event.writer))
+                is Connector.Event.StateUpdate -> dispatch(Msg.StateUpdate(event.stateUpdate))
+                is Connector.Event.EventValue -> dispatch(Msg.EventValue(eventId = event.eventId, value = event.value))
                 is Connector.Event.ExportEvents -> publish(Label.ExportEvents(event.data))
-                is Connector.Event.Error -> dispatch(Result.ErrorChanged(text = event.text))
+                is Connector.Event.Error -> dispatch(Msg.ErrorChanged(text = event.text))
             }
 
         private fun disconnectIfNeeded(state: State) {
@@ -94,7 +94,7 @@ internal class TimeTravelClientStoreFactory(
                 }
 
             disposable.dispose()
-            dispatch(Result.Disconnected)
+            dispatch(Msg.Disconnected)
         }
 
         private inline fun sendIfNeeded(state: State, command: Connection.Connected.() -> TimeTravelCommand?): Unit =
@@ -117,7 +117,7 @@ internal class TimeTravelClientStoreFactory(
         }
 
         private fun selectEvent(index: Int, state: State) {
-            dispatch(Result.EventSelected(index = index))
+            dispatch(Msg.EventSelected(index = index))
 
             sendIfNeeded(state) {
                 events
@@ -129,30 +129,30 @@ internal class TimeTravelClientStoreFactory(
         }
     }
 
-    private object ReducerImpl : Reducer<State, Result> {
-        override fun State.reduce(result: Result): State =
-            when (result) {
-                is Result.Connecting -> copy(connection = Connection.Connecting(disposable = result.disposable))
-                is Result.Connected -> copy(connection = connection.applyConnected(result))
-                is Result.Disconnected -> copy(connection = Connection.Disconnected)
-                is Result.StateUpdate -> copy(connection = connection.applyStateUpdate(result))
-                is Result.EventSelected -> copy(connection = connection.applyEventSelected(result))
-                is Result.EventValue -> copy(connection = connection.applyEventValue(result))
-                is Result.ErrorChanged -> copy(errorText = result.text)
+    private object ReducerImpl : Reducer<State, Msg> {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.Connecting -> copy(connection = Connection.Connecting(disposable = msg.disposable))
+                is Msg.Connected -> copy(connection = connection.applyConnected(msg))
+                is Msg.Disconnected -> copy(connection = Connection.Disconnected)
+                is Msg.StateUpdate -> copy(connection = connection.applyStateUpdate(msg))
+                is Msg.EventSelected -> copy(connection = connection.applyEventSelected(msg))
+                is Msg.EventValue -> copy(connection = connection.applyEventValue(msg))
+                is Msg.ErrorChanged -> copy(errorText = msg.text)
             }
 
-        private fun Connection.applyConnected(result: Result.Connected): Connection =
+        private fun Connection.applyConnected(msg: Msg.Connected): Connection =
             when (this) {
                 is Connection.Disconnected,
                 is Connection.Connected -> this
-                is Connection.Connecting -> Connection.Connected(disposable = disposable, writer = result.writer)
+                is Connection.Connecting -> Connection.Connected(disposable = disposable, writer = msg.writer)
             }
 
-        private fun Connection.applyStateUpdate(result: Result.StateUpdate): Connection =
+        private fun Connection.applyStateUpdate(msg: Msg.StateUpdate): Connection =
             when (this) {
                 is Connection.Disconnected,
                 is Connection.Connecting -> this
-                is Connection.Connected -> applyUpdate(result.stateUpdate)
+                is Connection.Connected -> applyUpdate(msg.stateUpdate)
             }
 
         private fun Connection.Connected.applyUpdate(update: TimeTravelStateUpdate): Connection.Connected =
@@ -178,14 +178,14 @@ internal class TimeTravelClientStoreFactory(
                 value = null
             )
 
-        private fun Connection.applyEventSelected(result: Result.EventSelected): Connection =
+        private fun Connection.applyEventSelected(msg: Msg.EventSelected): Connection =
             when (this) {
                 is Connection.Disconnected,
                 is Connection.Connecting -> this
-                is Connection.Connected -> copy(selectedEventIndex = result.index)
+                is Connection.Connected -> copy(selectedEventIndex = msg.index)
             }
 
-        private fun Connection.applyEventValue(result: Result.EventValue): Connection =
+        private fun Connection.applyEventValue(msg: Msg.EventValue): Connection =
             when (this) {
                 is Connection.Disconnected,
                 is Connection.Connecting -> this
@@ -193,7 +193,7 @@ internal class TimeTravelClientStoreFactory(
                 is Connection.Connected ->
                     copy(
                         events = events.map { event ->
-                            event.takeIf { it.id == result.eventId }?.copy(value = result.value) ?: event
+                            event.takeIf { it.id == msg.eventId }?.copy(value = msg.value) ?: event
                         }
                     )
             }

@@ -26,15 +26,15 @@ internal class TodoDetailsStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Unit, State, Result, Label> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Unit, State, Msg, Label> = ExecutorImpl()
 
-    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Result, Label>() {
+    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Msg, Label>() {
         override fun executeAction(action: Unit, getState: () -> State) {
             singleFromFunction {
                 database.get(itemId)
             }
                 .subscribeOn(ioScheduler)
-                .map { it?.data?.let(Result::Loaded) ?: Result.Finished }
+                .map { it?.data?.let(Msg::Loaded) ?: Msg.Finished }
                 .observeOn(mainScheduler)
                 .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
         }
@@ -48,12 +48,12 @@ internal class TodoDetailsStoreFactory(
         }
 
         private fun handleTextChanged(text: String, state: () -> State) {
-            dispatch(Result.TextChanged(text))
+            dispatch(Msg.TextChanged(text))
             save(state())
         }
 
         private fun toggleDone(state: () -> State) {
-            dispatch(Result.DoneToggled)
+            dispatch(Msg.DoneToggled)
             save(state())
         }
 
@@ -77,7 +77,7 @@ internal class TodoDetailsStoreFactory(
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeScoped(isThreadLocal = true) {
-                    dispatch(Result.Finished)
+                    dispatch(Msg.Finished)
                 }
         }
     }

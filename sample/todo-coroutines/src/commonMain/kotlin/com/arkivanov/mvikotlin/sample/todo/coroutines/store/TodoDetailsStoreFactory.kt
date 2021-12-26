@@ -23,13 +23,13 @@ internal class TodoDetailsStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Unit, State, Result, Label> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Unit, State, Msg, Label> = ExecutorImpl()
 
-    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Result, Label>(mainContext = mainContext) {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>(mainContext = mainContext) {
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
                 val item: TodoItem? = withContext(ioContext) { database.get(itemId) }
-                dispatch(item?.data?.let(Result::Loaded) ?: Result.Finished)
+                dispatch(item?.data?.let(Msg::Loaded) ?: Msg.Finished)
             }
         }
 
@@ -42,12 +42,12 @@ internal class TodoDetailsStoreFactory(
         }
 
         private fun handleTextChanged(text: String, state: () -> State) {
-            dispatch(Result.TextChanged(text))
+            dispatch(Msg.TextChanged(text))
             save(state())
         }
 
         private fun toggleDone(state: () -> State) {
-            dispatch(Result.DoneToggled)
+            dispatch(Msg.DoneToggled)
             save(state())
         }
 
@@ -68,7 +68,7 @@ internal class TodoDetailsStoreFactory(
                     database.delete(itemId)
                 }
 
-                dispatch(Result.Finished)
+                dispatch(Msg.Finished)
             }
         }
     }

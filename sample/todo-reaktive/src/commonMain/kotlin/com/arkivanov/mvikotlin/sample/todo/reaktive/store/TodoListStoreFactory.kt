@@ -23,13 +23,13 @@ internal class TodoListStoreFactory(
     storeFactory = storeFactory
 ) {
 
-    override fun createExecutor(): Executor<Intent, Unit, State, Result, Nothing> = ExecutorImpl()
+    override fun createExecutor(): Executor<Intent, Unit, State, Msg, Nothing> = ExecutorImpl()
 
-    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Result, Nothing>() {
+    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Msg, Nothing>() {
         override fun executeAction(action: Unit, getState: () -> State) {
             singleFromFunction(database::getAll)
                 .subscribeOn(ioScheduler)
-                .map(Result::Loaded)
+                .map(Msg::Loaded)
                 .observeOn(mainScheduler)
                 .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
         }
@@ -38,14 +38,14 @@ internal class TodoListStoreFactory(
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
                 is Intent.ToggleDone -> toggleDone(intent.id, getState)
-                is Intent.AddToState -> dispatch(Result.Added(intent.item))
-                is Intent.DeleteFromState -> dispatch(Result.Deleted(intent.id))
-                is Intent.UpdateInState -> dispatch(Result.Changed(intent.id, intent.data))
+                is Intent.AddToState -> dispatch(Msg.Added(intent.item))
+                is Intent.DeleteFromState -> dispatch(Msg.Deleted(intent.id))
+                is Intent.UpdateInState -> dispatch(Msg.Changed(intent.id, intent.data))
             }.let {}
         }
 
         private fun delete(id: String) {
-            dispatch(Result.Deleted(id))
+            dispatch(Msg.Deleted(id))
 
             singleFromFunction { database.delete(id) }
                 .subscribeOn(ioScheduler)
@@ -53,7 +53,7 @@ internal class TodoListStoreFactory(
         }
 
         private fun toggleDone(id: String, state: () -> State) {
-            dispatch(Result.DoneToggled(id))
+            dispatch(Msg.DoneToggled(id))
 
             val item = state().items.find { it.id == id } ?: return
 

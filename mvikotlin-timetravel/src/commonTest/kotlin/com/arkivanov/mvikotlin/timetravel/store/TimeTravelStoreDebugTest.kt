@@ -125,51 +125,51 @@ class TimeTravelStoreDebugTest {
     }
 
     @Test
-    fun new_executor_reads_new_state_WHEN_debug_intent_and_result_dispatched_by_new_executor() {
+    fun new_executor_reads_new_state_WHEN_debug_intent_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
 
         store.debug(type = StoreEventType.INTENT, value = "", state = "state")
-        executors[1].dispatch("result")
+        executors[1].dispatch("message")
 
-        assertEquals("state_result", executors[1].state)
+        assertEquals("state_message", executors[1].state)
     }
 
     @Test
-    fun new_executor_reads_new_state_WHEN_debug_action_and_result_dispatched_by_new_executor() {
+    fun new_executor_reads_new_state_WHEN_debug_action_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
 
         store.debug(type = StoreEventType.ACTION, value = "", state = "state")
-        executors[1].dispatch("result")
+        executors[1].dispatch("message")
 
-        assertEquals("state_result", executors[1].state)
+        assertEquals("state_message", executors[1].state)
     }
 
     @Test
-    fun old_executor_reads_old_state_WHEN_debug_intent_and_result_dispatched_by_new_executor() {
+    fun old_executor_reads_old_state_WHEN_debug_intent_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
         store.debug(type = StoreEventType.INTENT, value = "", state = "")
-        executors[1].dispatch("result")
+        executors[1].dispatch("message")
 
         assertEquals("initial_state", executors[0].state)
     }
 
     @Test
-    fun old_executor_reads_old_state_WHEN_debug_action_and_result_dispatched_by_new_executor() {
+    fun old_executor_reads_old_state_WHEN_debug_action_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
         store.debug(type = StoreEventType.ACTION, value = "", state = "")
-        executors[1].dispatch("result")
+        executors[1].dispatch("message")
 
         assertEquals("initial_state", executors[0].state)
     }
 
     @Test
-    fun state_not_emitted_WHEN_debug_intent_and_result_dispatched_by_new_executor() {
+    fun state_not_emitted_WHEN_debug_intent_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
         var states by atomic(emptyList<String>())
@@ -177,13 +177,13 @@ class TimeTravelStoreDebugTest {
         states = emptyList()
 
         store.debug(type = StoreEventType.INTENT, value = "", state = "")
-        executors[1].dispatch("result")
+        executors[1].dispatch("message")
 
         assertTrue(states.isEmpty())
     }
 
     @Test
-    fun state_not_emitted_WHEN_debug_action_and_result_dispatched_by_new_executor() {
+    fun state_not_emitted_WHEN_debug_action_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
         var states by atomic(emptyList<String>())
@@ -191,29 +191,29 @@ class TimeTravelStoreDebugTest {
         states = emptyList()
 
         store.debug(type = StoreEventType.ACTION, value = "", state = "")
-        executors[1].dispatch("result")
+        executors[1].dispatch("message")
 
         assertTrue(states.isEmpty())
     }
 
     @Test
-    fun state_not_changed_WHEN_debug_intent_and_result_dispatched_by_new_executor() {
+    fun state_not_changed_WHEN_debug_intent_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
         store.debug(type = StoreEventType.INTENT, value = "", state = "")
-        executors[1].dispatch("result")
+        executors[1].dispatch("message")
 
         assertEquals("initial_state", store.state)
     }
 
     @Test
-    fun state_not_changed_WHEN_debug_action_and_result_dispatched_by_new_executor() {
+    fun state_not_changed_WHEN_debug_action_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
         store.debug(type = StoreEventType.ACTION, value = "", state = "")
-        executors[1].dispatch("result")
+        executors[1].dispatch("message")
 
         assertEquals("initial_state", store.state)
     }
@@ -245,54 +245,54 @@ class TimeTravelStoreDebugTest {
     }
 
     @Test
-    fun reducer_called_with_original_state_and_result_WHEN_debug_result() {
+    fun reducer_called_with_original_state_and_message_WHEN_debug_message() {
         val state = atomic<String>()
-        val result = atomic<String>()
+        val message = atomic<String>()
 
         val store =
             store(
                 reducer = reducer {
                     state.value = this
-                    result.value = it
+                    message.value = it
                     this
                 }
             )
 
-        store.debug(type = StoreEventType.RESULT, value = "result", state = "old_state")
+        store.debug(type = StoreEventType.MESSAGE, value = "message", state = "old_state")
 
         assertEquals("old_state", state.requireValue())
-        assertEquals("result", result.requireValue())
+        assertEquals("message", message.requireValue())
     }
 
     @Test
-    fun old_executor_reads_main_state_WHEN_debug_result() {
+    fun old_executor_reads_main_state_WHEN_debug_message() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
-        store.debug(type = StoreEventType.RESULT, value = "", state = "old_state")
+        store.debug(type = StoreEventType.MESSAGE, value = "", state = "old_state")
 
         assertEquals("initial_state", executors[0].state)
     }
 
     @Test
-    fun state_not_emitted_WHEN_debug_result() {
+    fun state_not_emitted_WHEN_debug_message() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
         var states by atomic(emptyList<String>())
         store.states(observer(onNext = { states = states + it }))
         states = emptyList()
 
-        store.debug(type = StoreEventType.RESULT, value = "", state = "old_state")
+        store.debug(type = StoreEventType.MESSAGE, value = "", state = "old_state")
 
         assertTrue(states.isEmpty())
     }
 
     @Test
-    fun state_not_changed_WHEN_debug_result() {
+    fun state_not_changed_WHEN_debug_message() {
         val executors = ExecutorQueue()
         val store = store(initialState = "initial_state", executorFactory = executors::next)
 
-        store.debug(type = StoreEventType.RESULT, value = "", state = "old_state")
+        store.debug(type = StoreEventType.MESSAGE, value = "", state = "old_state")
 
         assertEquals("initial_state", store.state)
     }
