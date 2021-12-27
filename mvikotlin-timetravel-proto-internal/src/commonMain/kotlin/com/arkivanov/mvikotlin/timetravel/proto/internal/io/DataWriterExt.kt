@@ -25,7 +25,7 @@ internal fun DataWriter.writeShort(value: Short) {
 }
 
 internal fun DataWriter.writeChar(value: Char) {
-    writeInt(value.toInt())
+    writeInt(value.code)
 }
 
 internal expect fun DataWriter.writeFloat(value: Float)
@@ -38,7 +38,6 @@ internal fun DataWriter.writeBoolean(value: Boolean) {
     writeByte(if (value) 1 else 0)
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 internal fun DataWriter.writeString(value: String?) {
     writeByteArray(value?.encodeToByteArray())
 }

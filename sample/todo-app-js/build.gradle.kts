@@ -19,7 +19,7 @@ dependencies {
     implementation(deps.kotlinx.kotlinxCoroutinesCore)
     implementation(deps.essenty.instanceKeeper)
 
-    implementation(enforcedPlatform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:0.0.1-pre.236-kotlin-${deps.versions.kotlin.get()}"))
+    implementation(enforcedPlatform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:0.0.1-pre.236-kotlin-1.5.30"))
     implementation("org.jetbrains.kotlin-wrappers:kotlin-react")
     implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
     implementation("org.jetbrains.kotlin-wrappers:kotlin-styled")

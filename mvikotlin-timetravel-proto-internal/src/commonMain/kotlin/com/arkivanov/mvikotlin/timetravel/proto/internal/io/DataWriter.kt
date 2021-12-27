@@ -31,7 +31,6 @@ internal class DataWriter {
         }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     private fun Int.getNextPowerOfTwo(): Int =
         takeHighestOneBit()
             .takeUnless { it == this }

@@ -17,7 +17,7 @@ internal inline fun <T, R> T.toFlow(
             subscribe(
                 observer(
                     onComplete = { channel.close() },
-                    onNext = { channel.offer(it) }
+                    onNext = { channel.trySend(it) }
                 )
             )
 
