@@ -9,12 +9,7 @@ setupMultiplatform {
 }
 
 repositories {
-    maven("https://oss.sonatype.org/content/groups/staging/") {
-        credentials {
-            username = "arkivanov"
-            password = System.getenv("SONATYPE_PASSWORD")
-        }
-    }
+    maven("https://oss.sonatype.org/content/groups/staging/")
 }
 
 kotlin {
