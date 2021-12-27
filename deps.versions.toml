@@ -1,6 +1,6 @@
 [versions]
 
-mvikotlin = "3.0.0-alpha02"
+mvikotlin = "3.0.0-alpha03"
 kotlin = "1.6.10"
 kotlinxBinaryCompatibilityValidatorGradlePlugin = "0.8.0"
 kotlinxCoroutines = "1.6.0"
