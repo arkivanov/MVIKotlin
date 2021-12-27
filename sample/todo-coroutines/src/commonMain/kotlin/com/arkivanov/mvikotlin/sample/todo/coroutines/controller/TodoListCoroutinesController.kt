@@ -65,7 +65,7 @@ class TodoListCoroutinesController internal constructor(
         ).create()
 
     private val inputChannel = BroadcastChannel<Input>(Channel.BUFFERED)
-    override val input: (Input) -> Unit = { inputChannel.offer(it) }
+    override val input: (Input) -> Unit = { inputChannel.trySend(it) }
 
     init {
         bind(dependencies.lifecycle, BinderLifecycleMode.CREATE_DESTROY, mainContext) {

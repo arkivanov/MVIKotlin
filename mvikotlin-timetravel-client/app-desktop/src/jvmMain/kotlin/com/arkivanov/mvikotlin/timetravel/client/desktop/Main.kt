@@ -1,13 +1,12 @@
 package com.arkivanov.mvikotlin.timetravel.client.desktop
 
-import androidx.compose.desktop.DesktopTheme
-import androidx.compose.desktop.Window
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.mvikotlin.core.utils.setMainThreadId
@@ -29,7 +28,6 @@ import java.io.File
 import java.io.FilenameFilter
 import java.util.prefs.Preferences
 
-@OptIn(ExperimentalFoundationApi::class)
 fun main() {
     overrideSchedulers(main = Dispatchers.Main::asScheduler)
 
@@ -39,16 +37,16 @@ fun main() {
             client()
         }
 
-    Window(
-        title = "MVIKotlin Time Travel Client",
-        size = getPreferredWindowSize(desiredWidth = 1920, desiredHeight = 1080)
-    ) {
-        val settings by client.settings.models.subscribeAsState()
-
-        TimeTravelClientTheme(
-            isDarkMode = settings.settings.isDarkMode
+    application {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "MVIKotlin Time Travel Client",
         ) {
-            DesktopTheme {
+            val settings by client.settings.models.subscribeAsState()
+
+            TimeTravelClientTheme(
+                isDarkMode = settings.settings.isDarkMode
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background

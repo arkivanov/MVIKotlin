@@ -28,7 +28,6 @@ internal fun DataReader.readDouble(): Double = Double.fromBits(readLong())
 
 internal fun DataReader.readBoolean(): Boolean = readByte() != 0.toByte()
 
-@OptIn(ExperimentalStdlibApi::class)
 internal fun DataReader.readString(): String? =
     readByteArray()
         ?.decodeToString()
