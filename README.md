@@ -72,7 +72,7 @@ There are a number of modules published to Maven Central:
 - `mvikotlin-timetravel` - time travel feature (mutiplatform)
 - `mvikotlin-extensions-reaktive` - extensions set for Reaktive library (multiplatform)
 - `mvikotlin-extensions-coroutines` - extensions set for coroutines (multiplatform)
-- ~~`keepers` - provides `StateKeeper` and `InstanceKeeper` API for state preservation and objects retaining~~ (deprecated)
+- ~~`keepers` - provides `StateKeeper` and `InstanceKeeper` API for state preservation and objects retaining~~ (deprecated, see the [documentation](https://arkivanov.github.io/MVIKotlin/state_preservation.html))
 - `rx` - a tiny module with abstractions over rx and coroutines (multiplatform)
 
 Add required modules to your module`s build.gradle file:
