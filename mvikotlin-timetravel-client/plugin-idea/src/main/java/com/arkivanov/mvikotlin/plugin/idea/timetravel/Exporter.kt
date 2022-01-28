@@ -3,6 +3,7 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import java.io.FileOutputStream
 import java.io.IOException
 
@@ -14,8 +15,8 @@ internal class Exporter(
         var path =
             FileChooserFactory
                 .getInstance()
-                .createSaveFileDialog(FileSaverDescriptor("Save file", "MVIKotlin time travel export", "tte"), project)
-                .save(null, null)
+                .createSaveFileDialog(FileSaverDescriptor("Save File", "MVIKotlin time travel export", "tte"), project)
+                .save(null as VirtualFile?, null as String?)
                 ?.file
                 ?.absolutePath
                 ?: return

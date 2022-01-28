@@ -13,7 +13,7 @@ class TimeTravelToolWindowFactory : ToolWindowFactory {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         initIfNeeded()
 
-        toolWindow.icon = AllIcons.Debugger.Db_muted_dep_line_breakpoint
+        toolWindow.setIcon(AllIcons.Debugger.Db_muted_dep_line_breakpoint)
 
         toolWindow.contentManager.addContent(
             ContentFactory

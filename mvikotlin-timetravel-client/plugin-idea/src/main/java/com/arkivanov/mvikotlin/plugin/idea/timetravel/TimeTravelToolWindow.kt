@@ -16,6 +16,7 @@ import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.JvmPreferencesSettings
 import org.apache.commons.lang.SystemUtils.getUserHome
@@ -83,8 +84,8 @@ class TimeTravelToolWindow(
         var path =
             FileChooserFactory
                 .getInstance()
-                .createSaveFileDialog(FileSaverDescriptor("Save file", "MVIKotlin time travel export", "tte"), project)
-                .save(null, null)
+                .createSaveFileDialog(FileSaverDescriptor("Save File", "MVIKotlin time travel export", "tte"), project)
+                .save(null as VirtualFile?, null as String?)
                 ?.file
                 ?.absolutePath
                 ?: return

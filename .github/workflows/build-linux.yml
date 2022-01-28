@@ -29,22 +29,3 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Build on Linux
         run: ./gradlew build -Dsplit_targets
-  macos-build:
-    name: Build on macOS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Set up cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Build on macOS
-        run: ./gradlew build -Dsplit_targets
