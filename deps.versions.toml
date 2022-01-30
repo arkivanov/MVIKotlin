@@ -4,12 +4,13 @@ mvikotlin = "3.0.0-alpha03"
 kotlin = "1.6.10"
 kotlinxBinaryCompatibilityValidatorGradlePlugin = "0.8.0"
 kotlinxCoroutines = "1.6.0"
-intellijGradlePlugin = "0.4.18"
+intellijGradlePlugin = "1.3.1"
 detektGradlePlugin = "1.19.0"
 essenty = "0.2.2"
 reaktive = "1.2.1"
 multiplatformSettings = "0.8.1"
 compose = "1.0.1"
+androidGradle = "7.1.0"
 androidxLifecycle = "2.2.0"
 androidxCore = "1.1.0"
 androidxAppcompat = "1.1.0"
@@ -30,7 +31,7 @@ kotlinx-binaryCompatibilityValidatorGradlePlug = { group = "org.jetbrains.kotlin
 kotlinx-kotlinxCoroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-kotlinxCoroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 
-intellij-gradleIntellijPlug = { group = "gradle.plugin.org.jetbrains.intellij.plugins", name = "gradle-intellij-plugin", version.ref = "intellijGradlePlugin" }
+intellij-gradleIntellijPlug = { group = "org.jetbrains.intellij.plugins", name = "gradle-intellij-plugin", version.ref = "intellijGradlePlugin" }
 
 detekt-gradleDetektPlug = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detektGradlePlugin" }
 
@@ -46,7 +47,8 @@ russhwolf-multiplatformSettings = { group = "com.russhwolf", name = "multiplatfo
 
 compose-composeGradlePlug = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "compose" }
 
-android-gradle = { group = "com.android.tools.build", name = "gradle", version ="7.0.1" }
+android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref ="androidGradle" }
+
 androidx-lifecycle-lifecycleViewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidxLifecycle" }
 androidx-lifecycle-lifecycleViewmodelSavedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "androidxLifecycle" }
 androidx-lifecycle-lifecycleRuntime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "androidxLifecycle" }
