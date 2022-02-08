@@ -22,13 +22,15 @@ struct RootView: View {
             ensureDetailsDestroyed()
         }
 
-        return VStack {
-            TodoListParent(deps: controllerDeps, input: listInput.eraseToAnyPublisher(), output: listOutput)
+        return NavigationView {
+            VStack {
+                TodoListParent(deps: controllerDeps, input: listInput.eraseToAnyPublisher(), output: listOutput)
 
-            NavigationLink(
-                destination: LazyView(TodoDetailsParent(deps: self.controllerDeps, itemId: self.selectedItemId!, output: self.detailsOutput)),
-                isActive: $isDetails
-            ) { EmptyView() }
+                NavigationLink(
+                    destination: LazyView(TodoDetailsParent(deps: self.controllerDeps, itemId: self.selectedItemId!, output: self.detailsOutput)),
+                    isActive: $isDetails
+                ) { EmptyView() }
+            }.navigationBarTitle(Text("MviKotlin"))
         }
     }
     
