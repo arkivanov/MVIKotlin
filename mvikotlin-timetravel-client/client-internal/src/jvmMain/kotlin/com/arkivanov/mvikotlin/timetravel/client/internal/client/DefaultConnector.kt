@@ -1,6 +1,6 @@
-package com.arkivanov.mvikotlin.timetravel.client.internal.client.integration
+package com.arkivanov.mvikotlin.timetravel.client.internal.client
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStoreFactory.Connector
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.Connector.Event
 import com.arkivanov.mvikotlin.timetravel.client.internal.closeSafe
 import com.arkivanov.mvikotlin.timetravel.client.internal.closeSafeAsync
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
@@ -9,29 +9,48 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.T
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
-import com.badoo.reaktive.disposable.Disposable
+import com.badoo.reaktive.base.setCancellable
+import com.badoo.reaktive.maybe.asObservable
+import com.badoo.reaktive.maybe.map
 import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.observable.ObservableEmitter
+import com.badoo.reaktive.observable.concat
 import com.badoo.reaktive.observable.observable
 import com.badoo.reaktive.observable.observeOn
 import com.badoo.reaktive.observable.onErrorReturn
 import com.badoo.reaktive.observable.subscribeOn
+import com.badoo.reaktive.observable.takeUntil
 import com.badoo.reaktive.scheduler.ioScheduler
 import com.badoo.reaktive.scheduler.mainScheduler
+import com.badoo.reaktive.single.notNull
+import com.badoo.reaktive.single.singleFromFunction
+import com.badoo.reaktive.single.subscribeOn
 import java.net.Socket
 
-internal actual class TimeTravelClientStoreConnector actual constructor(
+class DefaultConnector(
+    private val forwardAdbPort: () -> Error?,
     private val host: () -> String,
-    private val port: () -> Int
+    private val port: () -> Int,
 ) : Connector {
 
-    override fun connect(): Observable<Connector.Event> =
-        observable<Connector.Event> { it.connect() }
-            .onErrorReturn { Connector.Event.Error(it.message) }
+    override fun connect(): Observable<Event> =
+        concat(forwardPort(), connectSocket())
+            .takeUntil { it is Event.Error }
+            .onErrorReturn { Event.Error(it.message) }
+
+    private fun forwardPort(): Observable<Event> =
+        singleFromFunction(forwardAdbPort)
+            .subscribeOn(mainScheduler)
+            .notNull()
+            .map { Event.Error(text = it.text) }
+            .asObservable()
+
+    private fun connectSocket(): Observable<Event> =
+        observable<Event> { it.connectSocket() }
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
 
-    private fun ObservableEmitter<Connector.Event>.connect() {
+    private fun ObservableEmitter<Event>.connectSocket() {
         val socket = Socket(host(), port())
 
         if (isDisposed) {
@@ -45,13 +64,10 @@ internal actual class TimeTravelClientStoreConnector actual constructor(
                 onRead = {
                     onNext(
                         when (it) {
-                            is TimeTravelStateUpdate -> Connector.Event.StateUpdate(it)
-                            is TimeTravelEventValue -> Connector.Event.EventValue(eventId = it.eventId, value = it.value)
-                            is TimeTravelExport -> Connector.Event.ExportEvents(it.data)
-                            else -> {
-                                onError(UnsupportedOperationException("Unsupported proto object type: $it"))
-                                return@ReaderThread
-                            }
+                            is TimeTravelStateUpdate -> Event.StateUpdate(it)
+                            is TimeTravelEventValue -> Event.EventValue(eventId = it.eventId, value = it.value)
+                            is TimeTravelExport -> Event.ExportEvents(it.data)
+                            else -> Event.Error(text = "Unsupported proto object type: $it")
                         }
                     )
                 },
@@ -60,17 +76,17 @@ internal actual class TimeTravelClientStoreConnector actual constructor(
 
         val writer = WriterThread(socket = socket, onError = ::onError)
 
-        onNext(Connector.Event.Connected(writer::write))
+        onNext(Event.Connected(writer::write))
 
         reader.start()
         writer.start()
 
-        setDisposable(
-            Disposable {
-                reader.interrupt()
-                writer.interrupt()
-                socket.closeSafeAsync()
-            }
-        )
+        setCancellable {
+            reader.interrupt()
+            writer.interrupt()
+            socket.closeSafeAsync()
+        }
     }
+
+    data class Error(val text: String)
 }

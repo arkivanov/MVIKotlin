@@ -1,13 +1,11 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal.client
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 
 interface TimeTravelClient {
 
     val models: BehaviorObservable<Model>
-    val settings: TimeTravelSettings
 
     fun onConnectClicked()
     fun onDisconnectClicked()
@@ -19,7 +17,6 @@ interface TimeTravelClient {
     fun onMoveToEndClicked()
     fun onCancelClicked()
     fun onDebugEventClicked()
-    fun onEditSettingsClicked()
     fun onEventSelected(index: Int)
     fun onExportEventsClicked()
     fun onImportEventsClicked()

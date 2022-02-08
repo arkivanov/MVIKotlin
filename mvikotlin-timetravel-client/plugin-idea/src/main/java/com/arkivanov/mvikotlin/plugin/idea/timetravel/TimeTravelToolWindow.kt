@@ -3,10 +3,13 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.essenty.lifecycle.subscribe
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.AdbController
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.DefaultConnector
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient
-import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.DefaultAdbController
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.TimeTravelClientComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.SettingsConfig
+import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings
+import com.arkivanov.mvikotlin.timetravel.client.internal.settings.integration.TimeTravelSettingsComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
 import com.badoo.reaktive.disposable.Disposable
 import com.badoo.reaktive.observable.subscribe
@@ -32,12 +35,12 @@ class TimeTravelToolWindow(
 ) {
 
     fun getContent(lifecycle: Lifecycle): JComponent {
-        val client = client()
-        val view = TimeTravelView(TimeTravelViewListener(client))
+        val components = components()
+        val view = TimeTravelView(TimeTravelViewListener(components.client))
 
         var disposable: Disposable? = null
         lifecycle.subscribe(
-            onCreate = { disposable = client.models.subscribe(onNext = view::render) },
+            onCreate = { disposable = components.client.models.subscribe(onNext = view::render) },
             onDestroy = {
                 disposable?.dispose()
                 disposable = null
@@ -48,25 +51,51 @@ class TimeTravelToolWindow(
     }
 
     @OptIn(ExperimentalSettingsImplementation::class)
-    private fun client(): TimeTravelClient {
-        val preferencesFactory = JvmPreferencesSettings.Factory(Preferences.userNodeForPackage(PreferencesKey::class.java))
+    private fun components(): Components {
+        val lifecycle = TimeTravelToolWindowListener.getLifecycle()
+        val settingsFactory = JvmPreferencesSettings.Factory(Preferences.userNodeForPackage(PreferencesKey::class.java))
 
-        return TimeTravelClientComponent(
-            lifecycle = TimeTravelToolWindowListener.getLifecycle(),
-            storeFactory = DefaultStoreFactory(),
-            settingsFactory = preferencesFactory,
-            settingsConfig = SettingsConfig(
-                defaults = SettingsConfig.Defaults(
-                    connectViaAdb = true
-                )
-            ),
-            adbController = DefaultAdbController(
-                settingsFactory = preferencesFactory,
-                selectAdbPath = ::selectAdbPath
-            ),
-            onImportEvents = ::importEvents,
-            onExportEvents = ::exportEvents
-        )
+        val settingsComponent =
+            TimeTravelSettingsComponent(
+                lifecycle = lifecycle,
+                storeFactory = DefaultStoreFactory(),
+                settingsFactory = settingsFactory,
+                settingsConfig = SettingsConfig(
+                    defaults = SettingsConfig.Defaults(
+                        connectViaAdb = true
+                    )
+                ),
+            )
+
+        val adbController =
+            AdbController(
+                settingsFactory = settingsFactory,
+                selectAdbPath = ::selectAdbPath,
+            )
+
+        fun getSettings(): TimeTravelSettings.Model.Settings = settingsComponent.models.value.settings
+
+        val clientComponent =
+            TimeTravelClientComponent(
+                lifecycle = lifecycle,
+                storeFactory = DefaultStoreFactory(),
+                connector = DefaultConnector(
+                    forwardAdbPort = {
+                        val settings = getSettings()
+                        if (settings.connectViaAdb) {
+                            adbController.forwardPort(port = settings.port)?.let { DefaultConnector.Error(text = it.text) }
+                        } else {
+                            null
+                        }
+                    },
+                    host = { getSettings().host },
+                    port = { getSettings().port },
+                ),
+                onImportEvents = ::importEvents,
+                onExportEvents = ::exportEvents,
+            )
+
+        return Components(settingsComponent, clientComponent)
     }
 
     private fun importEvents(): ByteArray? {
@@ -173,3 +202,8 @@ class TimeTravelToolWindow(
         }
     }
 }
+
+private class Components(
+    val settings: TimeTravelSettings,
+    val client: TimeTravelClient,
+)

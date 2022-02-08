@@ -57,13 +57,17 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClien
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
 
 @Composable
-fun TimeTravelClientUi(component: TimeTravelClient) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        val model by component.models.subscribeAsState()
+fun TimeTravelClientUi(
+    component: TimeTravelClient,
+    wrapEventDetails: Boolean,
+    onEditSettingsClicked: () -> Unit,
+) {
+    val model by component.models.subscribeAsState()
 
+    Box(modifier = Modifier.fillMaxSize()) {
         Client(
             model = model,
-            wrapEventDetails = component.settings.models.value.settings.wrapEventDetails,
+            wrapEventDetails = wrapEventDetails,
             buttonBarEvents = ButtonBarEvents(
                 onConnect = component::onConnectClicked,
                 onDisconnect = component::onDisconnectClicked,
@@ -77,18 +81,37 @@ fun TimeTravelClientUi(component: TimeTravelClient) {
                 onDebug = component::onDebugEventClicked,
                 onExportEvents = component::onExportEventsClicked,
                 onImportEvents = component::onImportEventsClicked,
-                onEditSettings = component::onEditSettingsClicked
+                onEditSettings = onEditSettingsClicked
             ),
             onEventClick = component::onEventSelected
         )
-
-        TimeTravelSettingsUi(component.settings)
 
         model.errorText?.also {
             Error(
                 error = it,
                 onDismiss = component::onDismissErrorClicked
             )
+        }
+    }
+}
+
+@Composable
+private fun Error(error: String, onDismiss: () -> Unit) {
+    PopupDialog(title = "Error", onDismissRequest = onDismiss) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = error,
+                modifier = Modifier.width(IntrinsicSize.Max).widthIn(max = 640.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onDismiss,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text(text = "Close")
+            }
         }
     }
 }
@@ -116,27 +139,6 @@ private fun Client(
             wrapEventDetails = wrapEventDetails,
             onClick = onEventClick
         )
-    }
-}
-
-@Composable
-private fun Error(error: String, onDismiss: () -> Unit) {
-    PopupDialog(title = "Error", onDismissRequest = onDismiss) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = error,
-                modifier = Modifier.width(IntrinsicSize.Max).widthIn(max = 640.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = onDismiss,
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Text(text = "Close")
-            }
-        }
     }
 }
 

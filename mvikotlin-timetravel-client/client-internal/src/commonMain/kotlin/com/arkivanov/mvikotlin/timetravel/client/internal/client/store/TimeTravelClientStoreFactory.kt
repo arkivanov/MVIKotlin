@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.Connector
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.Intent
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.Label
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.State
@@ -12,9 +13,7 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.T
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventsupdate.TimeTravelEventsUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
-import com.badoo.reaktive.annotations.EventsOnMainScheduler
 import com.badoo.reaktive.disposable.Disposable
-import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.observable.doOnBeforeFinally
 import com.badoo.reaktive.observable.doOnBeforeSubscribe
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent as TimeTravelEventProto
@@ -57,7 +56,6 @@ internal class TimeTravelClientStoreFactory(
                 is Intent.SelectEvent -> selectEvent(intent.index, getState())
                 is Intent.ExportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ExportEvents }
                 is Intent.ImportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ImportEvents(intent.data) }
-                is Intent.RaiseError -> dispatch(Msg.ErrorChanged(text = intent.errorText))
                 is Intent.DismissError -> dispatch(Msg.ErrorChanged(text = null))
             }
 
@@ -197,18 +195,5 @@ internal class TimeTravelClientStoreFactory(
                         }
                     )
             }
-    }
-
-    interface Connector {
-        @EventsOnMainScheduler
-        fun connect(): Observable<Event>
-
-        sealed class Event {
-            class Connected(val writer: (TimeTravelCommand) -> Unit) : Event()
-            class StateUpdate(val stateUpdate: TimeTravelStateUpdate) : Event()
-            class EventValue(val eventId: Long, val value: ValueNode) : Event()
-            class ExportEvents(val data: ByteArray) : Event()
-            class Error(val text: String?) : Event()
-        }
     }
 }

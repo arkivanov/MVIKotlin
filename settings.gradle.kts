@@ -18,7 +18,7 @@ pluginManagement {
     resolutionStrategy {
         eachPlugin {
             if (requested.id.toString() == "com.arkivanov.gradle.setup") {
-                useModule("com.github.arkivanov:gradle-setup-plugin:b2e04a7e89")
+                useModule("com.github.arkivanov:gradle-setup-plugin:f2c5cae84a")
             }
         }
     }
@@ -42,6 +42,7 @@ if (!startParameter.projectProperties.containsKey("check_publication")) {
     include(":mvikotlin-timetravel-client:client-internal")
     include(":mvikotlin-timetravel-client:plugin-idea")
     include(":mvikotlin-timetravel-client:app-desktop")
+    include(":mvikotlin-timetravel-client:extension-chrome")
     include(":mvikotlin-extensions-reaktive")
     include(":mvikotlin-extensions-coroutines")
     include(":sample:todo-common")

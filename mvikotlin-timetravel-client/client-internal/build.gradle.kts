@@ -6,7 +6,7 @@ plugins {
 }
 
 setupMultiplatform {
-    targets(Target.Jvm)
+    targets(Target.Jvm, Target.Js(Target.Js.Mode.IR))
 }
 
 kotlin {

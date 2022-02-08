@@ -1,6 +1,5 @@
-package com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller
+package com.arkivanov.mvikotlin.timetravel.client.internal.client
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.AdbController.Result
 import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
@@ -9,19 +8,19 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 
-class DefaultAdbController(
+class AdbController(
     settingsFactory: Settings.Factory,
     private val selectAdbPath: () -> String?
-) : AdbController {
+) {
 
     private val storage = settingsFactory.create(name = "AdbPortForwarderSettings")
 
-    override fun forwardPort(port: Int): Result {
+    fun forwardPort(port: Int): Error? {
         try {
             var adbPath: String? = storage[KEY_ADB_PATH]
 
             if (adbPath == null || !File(adbPath).isValidAdbExecutable()) {
-                adbPath = selectAdbPath() ?: return Result.Error(text = "ADB executable path was not selected")
+                adbPath = selectAdbPath() ?: return Error(text = "ADB executable path was not selected")
                 storage[KEY_ADB_PATH] = adbPath
             }
 
@@ -29,12 +28,12 @@ class DefaultAdbController(
             val process = exec(params)
 
             if (process.waitFor() != 0) {
-                return Result.Error(text = "Failed to forward the port: \"${process.readError()}\"")
+                return Error(text = "Failed to forward the port: \"${process.readError()}\"")
             }
 
-            return Result.Success
+            return null
         } catch (e: Exception) {
-            return Result.Error(text = "Failed to forward the port: \"${e.message}\"")
+            return Error(text = "Failed to forward the port: \"${e.message}\"")
         }
     }
 
@@ -52,4 +51,5 @@ class DefaultAdbController(
         private const val KEY_ADB_PATH = "ADB_PATH"
     }
 
+    data class Error(val text: String)
 }

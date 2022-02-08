@@ -11,7 +11,7 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.utils.mapState
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.russhwolf.settings.Settings
 
-internal class TimeTravelSettingsComponent(
+class TimeTravelSettingsComponent(
     lifecycle: Lifecycle,
     storeFactory: StoreFactory,
     settingsFactory: Settings.Factory,
