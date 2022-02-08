@@ -13,22 +13,15 @@ class MainActivity : AppCompatActivity() {
 
     private val fragmentFactory = MainActivityFragmentFactoryImpl()
 
-    @IdRes
-    private val contentId: Int = if (BuildConfig.DEBUG) R.id.content else android.R.id.content
-
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.fragmentFactory = fragmentFactory
 
         super.onCreate(savedInstanceState)
 
-        if (BuildConfig.DEBUG) {
-            setContentView(R.layout.main_activity_debug)
-        }
-
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(contentId, fragmentFactory.rootFragment())
+                .add(android.R.id.content, fragmentFactory.rootFragment())
                 .commit()
         }
     }

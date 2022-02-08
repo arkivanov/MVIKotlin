@@ -18,6 +18,10 @@ import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
  * Provides time travel controls like (record, stop, step back and forward, etc.) and displays list of recorded events.
  * Tap on event to show its details. Tap on Bug icon to debug the event. Uses [TimeTravelController].
  */
+@Deprecated(
+    "Please use either the IntelliJ IDEA plugin or the standalone client app. " +
+        "See the docs: https://arkivanov.github.io/MVIKotlin/time_travel.html"
+)
 class TimeTravelView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
 ) : FrameLayout(context, attrs, defStyle) {

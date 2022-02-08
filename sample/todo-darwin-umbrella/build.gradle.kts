@@ -1,4 +1,5 @@
 import com.arkivanov.gradle.Target
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     id("kotlin-multiplatform")
@@ -21,7 +22,7 @@ kotlin {
         }
     }
 
-    ios {
+    fun KotlinNativeTarget.setupBinaries() {
         binaries {
             framework {
                 baseName = "TodoLib"
@@ -34,4 +35,8 @@ kotlin {
             }
         }
     }
+
+    iosX64 { setupBinaries() }
+    iosArm64 { setupBinaries() }
+    iosSimulatorArm64 { setupBinaries() }
 }

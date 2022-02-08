@@ -14,10 +14,6 @@
 		1F38433E23FDD21B00501F27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F38433D23FDD21B00501F27 /* Preview Assets.xcassets */; };
 		1F38434123FDD21B00501F27 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F38433F23FDD21B00501F27 /* LaunchScreen.storyboard */; };
 		1F60093124034D65003AFD12 /* TodoAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F60093024034D65003AFD12 /* TodoAdd.swift */; };
-		1F6009372403E6E5003AFD12 /* TimeTravelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6009362403E6E5003AFD12 /* TimeTravelViewController.swift */; };
-		1F601887240481980081C459 /* TimeTravelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F601886240481980081C459 /* TimeTravelView.swift */; };
-		1F601889240483920081C459 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F601888240483920081C459 /* ContentView.swift */; };
-		1F743D242405D36D00C1F544 /* DebugDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F743D232405D36D00C1F544 /* DebugDrawer.swift */; };
 		1F79AF562401B26900CC6AEA /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF552401B26900CC6AEA /* TodoRow.swift */; };
 		1F79AF582401B4A700CC6AEA /* TodoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF572401B4A700CC6AEA /* TodoList.swift */; };
 		1F79AF5A2401B54500CC6AEA /* TodoItemExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F79AF592401B54500CC6AEA /* TodoItemExt.swift */; };
@@ -49,10 +45,6 @@
 		1F38434223FDD21B00501F27 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F38434923FDD36900501F27 /* TodoLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TodoLib.framework; path = "../todo-darwin-umbrella/build/bin/iosX64/debugFramework/TodoLib.framework"; sourceTree = "<group>"; };
 		1F60093024034D65003AFD12 /* TodoAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAdd.swift; sourceTree = "<group>"; };
-		1F6009362403E6E5003AFD12 /* TimeTravelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTravelViewController.swift; sourceTree = "<group>"; };
-		1F601886240481980081C459 /* TimeTravelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTravelView.swift; sourceTree = "<group>"; };
-		1F601888240483920081C459 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		1F743D232405D36D00C1F544 /* DebugDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugDrawer.swift; sourceTree = "<group>"; };
 		1F79AF552401B26900CC6AEA /* TodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRow.swift; sourceTree = "<group>"; };
 		1F79AF572401B4A700CC6AEA /* TodoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoList.swift; sourceTree = "<group>"; };
 		1F79AF592401B54500CC6AEA /* TodoItemExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemExt.swift; sourceTree = "<group>"; };
@@ -185,10 +177,6 @@
 				1F38434223FDD21B00501F27 /* Info.plist */,
 				1F38433C23FDD21B00501F27 /* Preview Content */,
 				1F79AF592401B54500CC6AEA /* TodoItemExt.swift */,
-				1F6009362403E6E5003AFD12 /* TimeTravelViewController.swift */,
-				1F601886240481980081C459 /* TimeTravelView.swift */,
-				1F601888240483920081C459 /* ContentView.swift */,
-				1F743D232405D36D00C1F544 /* DebugDrawer.swift */,
 				2ED8034F2444E9AD00DC7094 /* ControllerDeps.swift */,
 				2E2DF1552459F6D40076A9F7 /* LifecycleWrapper.swift */,
 				1F89C8B1245E10C70081D185 /* LazyView.swift */,
@@ -652,13 +640,9 @@
 			files = (
 				1F89C8B2245E10C70081D185 /* LazyView.swift in Sources */,
 				1F79AF602401CB0300CC6AEA /* TodoAddViewProxy.swift in Sources */,
-				1F601889240483920081C459 /* ContentView.swift in Sources */,
 				2ED803502444E9AD00DC7094 /* ControllerDeps.swift in Sources */,
 				DCE8B86E246888C9002C4036 /* RootView.swift in Sources */,
 				1F3158FC24635D130021449A /* TodoListParent.swift in Sources */,
-				1F601887240481980081C459 /* TimeTravelView.swift in Sources */,
-				1F6009372403E6E5003AFD12 /* TimeTravelViewController.swift in Sources */,
-				1F743D242405D36D00C1F544 /* DebugDrawer.swift in Sources */,
 				1F79AF5A2401B54500CC6AEA /* TodoItemExt.swift in Sources */,
 				1F79AF582401B4A700CC6AEA /* TodoList.swift in Sources */,
 				DCD30EB4246A067B00A159BD /* AutoCancellable.swift in Sources */,

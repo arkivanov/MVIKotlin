@@ -46,19 +46,6 @@ CalculatorStoreFactory(storeFactory).create()
 
 Normally you should define a global `StoreFactory` somewhere in the main app and pass it down to all the dependencies.
 
-### Time travel UI
-
-You can integrate a special UI into your app which provides controls for time travel and displays a list of recorded events. It is also possible to explore and debug any recorded event. Debugging means you can put a breakpoint in your code and fire a previously recorded event. You can do usual debugging when the breakpoint is triggered.
-
-For Android you can use the [TimeTravelView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/androidMain/kotlin/com/arkivanov/mvikotlin/timetravel/widget/TimeTravelView.kt).
-For iOS you can copy-paste [TimeTravelViewController](https://github.com/arkivanov/MVIKotlin/blob/master/sample/todo-app-ios/todo-app-ios/TimeTravelViewController.swift) from the sample app.
-
-Check out the following videos demonstrating time travel UI: 
-- [Debugging Android application with MVIKotlin](https://youtu.be/_bbxR503-u0)
-- [Debugging iOS application with MVIKotlin](https://youtu.be/MJCYQzeL-w8)
-
-Alternatively you can create your own time travel UI. Please refer to [TimeTravelController](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/commonMain/kotlin/com/arkivanov/mvikotlin/timetravel/controller/TimeTravelController.kt) for more information.
-
 ### TimeTravelServer
 
 If using the time travel plugin or desktop app for debugging described later in this document, then the `TimeTravelServer` needs to be running on the application being debugged. The default port of the `TimeTravelServer` is 6379 unless explicitly changed in the application setup.
@@ -147,7 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 ### Time travel plugin for IntelliJ IDEA and Android Studio
 
-There is a more convenient tool for Android - time travel IDEA plugin. This can be used directly from IDE so there is no need to integrate any additional UI.
+There is a convenient tool for Android - time travel IDEA plugin, which can be used directly from IDE.
 
 You will need to run the [TimeTravelServer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/androidMain/kotlin/com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer.kt) in your Android app so the plugin could connect to it. Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample/todo-app-android) for more examples.
 
