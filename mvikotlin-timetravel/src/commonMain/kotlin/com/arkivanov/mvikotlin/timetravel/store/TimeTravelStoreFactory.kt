@@ -14,7 +14,7 @@ class TimeTravelStoreFactory : StoreFactory {
 
     override fun <Intent : Any, Action : Any, Message : Any, State : Any, Label : Any> create(
         name: String?,
-        isAutoInit: Boolean,
+        autoInit: Boolean,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
@@ -27,7 +27,7 @@ class TimeTravelStoreFactory : StoreFactory {
             reducer = reducer
         ).also { store ->
             TimeTravelControllerHolder.impl.attachStore(store = store, name = name)
-            if (isAutoInit) {
+            if (autoInit) {
                 store.init()
             }
         }

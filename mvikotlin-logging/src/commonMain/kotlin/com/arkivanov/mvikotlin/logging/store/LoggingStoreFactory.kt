@@ -30,7 +30,7 @@ class LoggingStoreFactory(
 
     override fun <Intent : Any, Action : Any, Message : Any, State : Any, Label : Any> create(
         name: String?,
-        isAutoInit: Boolean,
+        autoInit: Boolean,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
@@ -38,7 +38,7 @@ class LoggingStoreFactory(
     ): Store<Intent, State, Label> {
         if (name == null) {
             return delegate.create(
-                isAutoInit = isAutoInit,
+                autoInit = autoInit,
                 initialState = initialState,
                 bootstrapper = bootstrapper,
                 executorFactory = executorFactory,
@@ -51,7 +51,7 @@ class LoggingStoreFactory(
         val delegateStore =
             delegate.create(
                 name = name,
-                isAutoInit = false,
+                autoInit = false,
                 initialState = initialState,
                 bootstrapper = bootstrapper,
                 executorFactory = {
@@ -73,7 +73,7 @@ class LoggingStoreFactory(
             logger = loggerWrapper,
             name = name
         ).apply {
-            if (isAutoInit) {
+            if (autoInit) {
                 init()
             }
         }

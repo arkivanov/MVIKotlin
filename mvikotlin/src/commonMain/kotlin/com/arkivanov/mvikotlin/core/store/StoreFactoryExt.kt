@@ -12,13 +12,13 @@ import com.arkivanov.mvikotlin.utils.internal.requireValue
  */
 fun <Intent : Any, State : Any> StoreFactory.create(
     name: String? = null,
-    isAutoInit: Boolean = true,
+    autoInit: Boolean = true,
     initialState: State,
     reducer: Reducer<State, Intent>
 ): Store<Intent, State, Nothing> =
     create(
         name = name,
-        isAutoInit = isAutoInit,
+        autoInit = autoInit,
         initialState = initialState,
         executorFactory = ::BypassExecutor,
         reducer = reducer
