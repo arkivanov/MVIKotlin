@@ -14,6 +14,7 @@ kotlin {
             dependencies {
                 implementation(project(":mvikotlin"))
                 implementation(project(":rx"))
+                implementation(project(":rx-internal"))
                 implementation(project(":utils-internal"))
                 implementation(deps.kotlin.kotlinTestCommon)
                 implementation(deps.kotlin.kotlinTestAnnotationsCommon)

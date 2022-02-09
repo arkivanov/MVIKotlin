@@ -19,7 +19,8 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
     initialState: State,
     private val bootstrapper: Bootstrapper<Action>?,
     private val executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
-    private val reducer: Reducer<State, Message>
+    private val reducer: Reducer<State, Message>,
+    private val onInit: (TimeTravelStore<Intent, State, Label>) -> Unit = {},
 ) : TimeTravelStore<Intent, State, Label> {
 
     private val executor = executorFactory()
@@ -68,6 +69,8 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
 
     override fun init() {
         assertOnMainThread()
+
+        onInit(this)
 
         executor.init(
             object : Executor.Callbacks<State, Message, Label> {
