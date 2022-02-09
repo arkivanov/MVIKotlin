@@ -48,7 +48,7 @@ There are a number of factories provided by MVIKotlin:
 
 ### Initializing a Store
 
-By default `Stores` are initialized automatically by the `StoreFactory`. You can opt-out from the automatic initialization by passing `isAutoInit=false` argument to the `StoreFactory.create(...)` function.
+By default `Stores` are initialized automatically by the `StoreFactory`. You can opt-out from the automatic initialization by passing `autoInit=false` argument to the `StoreFactory.create(...)` function.
 
 > ⚠️ When automatic initialization is disabled, you should manually call the `Store.init()` method.
 

@@ -10,7 +10,7 @@ internal object TestStoreFactory : StoreFactory {
 
     override fun <Intent : Any, Action : Any, Message : Any, State : Any, Label : Any> create(
         name: String?,
-        isAutoInit: Boolean,
+        autoInit: Boolean,
         initialState: State,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
@@ -22,7 +22,7 @@ internal object TestStoreFactory : StoreFactory {
             executorFactory = executorFactory,
             reducer = reducer
         ).apply {
-            if (isAutoInit) {
+            if (autoInit) {
                 init()
             }
         }

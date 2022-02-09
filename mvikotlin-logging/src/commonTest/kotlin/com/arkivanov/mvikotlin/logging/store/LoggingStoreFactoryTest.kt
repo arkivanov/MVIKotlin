@@ -23,22 +23,22 @@ class LoggingStoreFactoryTest {
     }
 
     @Test
-    fun logs_initializing_WHEN_isAutoInit_true() {
-        store(isAutoInit = true)
+    fun logs_initializing_WHEN_autoInit_true() {
+        store(autoInit = true)
 
         logger.assertLoggedText("$STORE_NAME: initializing")
     }
 
     @Test
-    fun does_not_log_initializing_WHEN_isAutoInit_false() {
-        store(isAutoInit = false)
+    fun does_not_log_initializing_WHEN_autoInit_false() {
+        store(autoInit = false)
 
         logger.assertNoLoggedText("$STORE_NAME: initializing")
     }
 
     @Test
-    fun logs_initializing_WHEN_isAutoInit_false_and_init_called() {
-        val store = store(isAutoInit = false)
+    fun logs_initializing_WHEN_autoInit_false_and_init_called() {
+        val store = store(autoInit = false)
 
         store.init()
 
@@ -124,7 +124,7 @@ class LoggingStoreFactoryTest {
 
     private fun store(
         name: String? = STORE_NAME,
-        isAutoInit: Boolean = true,
+        autoInit: Boolean = true,
         initialState: String = "initial",
         bootstrapper: Bootstrapper<String>? = null,
         executorFactory: () -> Executor<String, String, String, String, String> = { TestExecutor() },
@@ -134,7 +134,7 @@ class LoggingStoreFactoryTest {
 
         return factory.create(
             name = name,
-            isAutoInit = isAutoInit,
+            autoInit = autoInit,
             initialState = initialState,
             bootstrapper = bootstrapper,
             executorFactory = executorFactory,
