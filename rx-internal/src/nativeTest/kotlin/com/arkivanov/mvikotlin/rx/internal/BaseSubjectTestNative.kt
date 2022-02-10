@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.utils.internal.isFrozen
+import com.arkivanov.mvikotlin.utils.internal.runOnBackgroundBlocking
 import com.arkivanov.mvikotlin.utils.internal.setValue
 import platform.posix.pthread_self
 import kotlin.test.AfterTest
@@ -15,9 +16,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class ThreadLocalSubjectTestNative {
+class BaseSubjectTestNative {
 
-    private val subject = ThreadLocalSubject<Int?>().freeze()
+    private val subject = BaseSubject<Int?>().freeze()
 
     @BeforeTest
     fun before() {
@@ -42,7 +43,7 @@ class ThreadLocalSubjectTestNative {
     fun produces_values_WHEN_subscribed_on_background_thread_and_onNext_called_on_main_thread() {
         var values by atomic<List<Int?>>(emptyList())
         val mainThreadId = pthread_self()
-        val subject = ThreadLocalSubject<Int?>(isOnMainThread = { pthread_self() == mainThreadId })
+        val subject = BaseSubject<Int?>(isOnMainThread = { pthread_self() == mainThreadId })
 
         runOnBackgroundBlocking {
             subject.subscribe(observer(onNext = { values += it }))
@@ -59,7 +60,7 @@ class ThreadLocalSubjectTestNative {
     fun completes_WHEN_subscribed_on_background_thread_and_onComplete_called_on_main_thread() {
         var isCompleted by atomic(false)
         val mainThreadId = pthread_self()
-        val subject = ThreadLocalSubject<Int?>(isOnMainThread = { pthread_self() == mainThreadId })
+        val subject = BaseSubject<Int?>(isOnMainThread = { pthread_self() == mainThreadId })
 
         runOnBackgroundBlocking {
             subject.subscribe(observer(onComplete = { isCompleted = true }))

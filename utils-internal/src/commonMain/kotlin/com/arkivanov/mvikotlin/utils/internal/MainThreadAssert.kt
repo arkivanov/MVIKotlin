@@ -1,7 +1,10 @@
 package com.arkivanov.mvikotlin.utils.internal
 
+import kotlin.native.concurrent.SharedImmutable
+
 var isAssertOnMainThreadEnabled: Boolean by atomic(true)
 
+@SharedImmutable
 private val mainThreadIdRef = atomic<MainThreadIdHolder?>(null)
 
 fun assertOnMainThread() {

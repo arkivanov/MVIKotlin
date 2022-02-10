@@ -1,8 +1,5 @@
-package com.arkivanov.mvikotlin.rx.internal
+package com.arkivanov.mvikotlin.utils.internal
 
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
 import kotlin.native.concurrent.freeze

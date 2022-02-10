@@ -24,9 +24,9 @@ class TimeTravelStoreFactory : StoreFactory {
             initialState = initialState,
             bootstrapper = bootstrapper,
             executorFactory = executorFactory,
-            reducer = reducer
+            reducer = reducer,
+            onInit = { TimeTravelControllerHolder.impl.attachStore(store = it, name = name) },
         ).also { store ->
-            TimeTravelControllerHolder.impl.attachStore(store = store, name = name)
             if (autoInit) {
                 store.init()
             }
