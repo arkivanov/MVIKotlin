@@ -99,6 +99,7 @@ To speed up the creation of new Stores, you can use the following [IDEA Live Tem
     * Export/import events for Android
     * IntelliJ IDEA and Android Studio [plugin](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel) for Android apps
     * Desktop [client application](mvikotlin-timetravel-client/app-desktop) for Android, Java and native Apple (iOS, watchOS, tvOS, macOS) apps
+    * Chrome DevTools [extension](https://chrome.google.com/webstore/detail/mvikotlin-time-travel/johehgbnhfknbbdndfcablclpopcoaee) for Web browser apps
 
 ## Documentation
 
