@@ -30,11 +30,13 @@ Additional resources:
 ## Overview
 
 ### What is MVI
+
 MVI stands for Model-View-Intent. It is an architectural pattern that utilizes unidirectional data flow. The data circulates between `Model` and `View` only in one direction - from `Model` to `View` and from `View` to `Model`.
 
 <img src="docs/media/mvi.jpg" alt="MVI" width="300"/>
 
 ### What is MVIKotlin
+
 MVIKotlin is a Kotlin Multiplatform framework that provides a way of (not only) writing
 shared code using MVI pattern. It also includes powerful debug tools like
 logging and time travel. The main functionality of the framework does not depend on any
@@ -45,12 +47,16 @@ provided as separate modules.
 <img src="docs/media/mvikotlin.jpg" alt="MVIKotlin" width="600"/>
 
 
-#### Responsibility
-MVIKotlin does not bring or enforce any particular architecture. Its responsibility can be described as follows:
+#### Responsibilities and architecture
 
-- To provide a single source of truth for `State` (the scope is not defined, it can be a whole app, a screen, a feature, or a part of a feature);
-- To provide an abstraction for UI with efficient updates (however this is not obligatory, you can use whatever you want);
-- To provide lifecycle aware connections (binding) between inputs and outputs (again this is not obligatory in any way).
+MVIKotlin does not bring or enforce any particular architecture. There is one primary responsibility of the library:
+
+- To provide a single source of truth for `State`. The scope is not defined, it can be a whole app, a screen, a feature, or a part of a feature.
+
+There are also two optional responsibilities, which the library can take care of for you: 
+
+- To provide an abstraction for UI with efficient updates (diffing).
+- To provide lifecycle aware connections (bindings) between inputs and outputs.
 
 Everything else is out of scope of the library, there are no definitions for "screens", "features", "modules", etc. Also, no particular reactive framework is enforced/exposed. This gives a lot of flexibility:
 
@@ -58,9 +64,12 @@ Everything else is out of scope of the library, there are no definitions for "sc
 - You can use/experiment with different architectures, approaches and/or libraries for navigation, UI, modularization, etc;
 - Use whatever reactive framework you like or don't use it at all.
 
-You can find one of the architecture options in the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample). Again, this is just an example of one possible solution.
+If you are using declarative UI frameworks (like [Jetpack Compose](https://developer.android.com/jetpack/compose), [Multiplatform Compose by JetBrains](https://github.com/JetBrains/compose-jb), SwiftUI, React, etc.), then consider using [Decompose](https://github.com/arkivanov/Decompose) for architecture. MVIKotlin plays nicely with Decompose - a very good example is [compose-jb/todoapp](https://github.com/JetBrains/compose-jb/tree/master/examples/todoapp).
+
+Also one of the architecture approaches can be found in the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample).
 
 ## Setup
+
 Recommended minimum Gradle version is 5.3. Please read first the documentation about
 [metadata publishing mode](https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#experimental-metadata-publishing-mode).
 
@@ -85,6 +94,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 To speed up the creation of new Stores, you can use the following [IDEA Live Templates](https://gist.github.com/arkivanov/34bb84e73e56c22a4e7c752421d5f02c).
 
 ## Features
+
 * Multiplatform: Android, JVM, JavaScript, iosX64, iosArm64, macosX64, linuxX64
 * Does not depend on any reactive library or coroutines
 * Extensions for [Reaktive](https://github.com/badoo/Reaktive) library
@@ -123,13 +133,17 @@ If you like this project you can always <a href="https://www.buymeacoffee.com/ar
 ## Watch video (time travel, logs, debug, etc.)
 
 #### Debugging Android application with MVIKotlin
+
 [![Debugging Android application with MVIKotlin](https://img.youtube.com/vi/_bbxR503-u0/0.jpg)](https://youtu.be/_bbxR503-u0)
 
 #### Debugging iOS application with MVIKotlin
+
 [![Debugging iOS application with MVIKotlin](https://img.youtube.com/vi/MJCYQzeL-w8/0.jpg)](https://youtu.be/MJCYQzeL-w8)
 
 #### Debugging Android application with IntelliJ IDEA time travel plugin
+
 [![Debugging Android application with IntelliJ IDEA time travel plugin](https://img.youtube.com/vi/Tr2ayOcVU34/0.jpg)](https://youtu.be/Tr2ayOcVU34)
 
 #### Debugging iOS application using MVIKotlin time travel client app
+
 [![Debugging iOS application using MVIKotlin time travel client app](https://img.youtube.com/vi/rj6GwA2ZQkk/0.jpg)](https://youtu.be/rj6GwA2ZQkk)
