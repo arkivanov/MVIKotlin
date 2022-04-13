@@ -25,15 +25,11 @@ import com.arkivanov.mvikotlin.sample.todo.coroutines.mainDispatcher
 import com.arkivanov.mvikotlin.sample.todo.coroutines.mapNotNull
 import com.arkivanov.mvikotlin.sample.todo.coroutines.store.TodoAddStoreFactory
 import com.arkivanov.mvikotlin.sample.todo.coroutines.store.TodoListStoreFactory
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
 import kotlin.coroutines.CoroutineContext
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class TodoListCoroutinesController internal constructor(
     private val dependencies: Dependencies,
     private val mainContext: CoroutineContext,
