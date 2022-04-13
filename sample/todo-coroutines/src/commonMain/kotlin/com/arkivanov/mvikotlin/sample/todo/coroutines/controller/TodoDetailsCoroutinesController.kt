@@ -17,12 +17,10 @@ import com.arkivanov.mvikotlin.sample.todo.coroutines.ioDispatcher
 import com.arkivanov.mvikotlin.sample.todo.coroutines.mainDispatcher
 import com.arkivanov.mvikotlin.sample.todo.coroutines.mapNotNull
 import com.arkivanov.mvikotlin.sample.todo.coroutines.store.TodoDetailsStoreFactory
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlin.coroutines.CoroutineContext
 
-@ExperimentalCoroutinesApi
 class TodoDetailsCoroutinesController internal constructor(
     private val dependencies: Dependencies,
     private val mainContext: CoroutineContext,
