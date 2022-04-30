@@ -67,9 +67,9 @@ The first thing we should do is to define an interface. This is how it will look
 ```kotlin
 internal interface CalculatorStore : Store<Intent, State, Nothing> {
 
-    sealed class Intent {
-        object Increment : Intent()
-        object Decrement : Intent()
+    sealed interface Intent {
+        object Increment : Intent
+        object Decrement : Intent
     }
 
     data class State(
@@ -112,10 +112,10 @@ Currently our `CalculatorStore` can only increment and decrement its value. But 
 ```kotlin
 internal interface CalculatorStore : Store<Intent, State, Nothing> {
 
-    sealed class Intent {
-        object Increment : Intent()
-        object Decrement : Intent()
-        data class Sum(val n: Int): Intent() // <-- Add this line
+    sealed interface Intent {
+        object Increment : Intent
+        object Decrement : Intent
+        data class Sum(val n: Int): Intent // <-- Add this line
     }
 
     data class State(
@@ -131,8 +131,8 @@ So that our `Executor` could communicate with the `Reducer` we will need `Messag
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
-    private sealed class Msg {
-        class Value(val value: Long) : Msg()
+    private sealed interface Msg {
+        class Value(val value: Long) : Msg
     }
 }
 ```
@@ -142,8 +142,8 @@ We will need a new `Reducer` because now it will accept `Messages` instead of `I
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
-    private sealed class Msg {
-        class Value(val value: Long) : Msg()
+    private sealed interface Msg {
+        class Value(val value: Long) : Msg
     }
 
     private object ReducerImpl : Reducer<State, Msg> {
@@ -267,8 +267,8 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
     // ...
 
-    private sealed class Action {
-        class Sum(val n: Int): Action()
+    private sealed interface Action {
+        class Sum(val n: Int): Action
     }
 
     // ...
@@ -351,8 +351,8 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         ) {
         }
 
-    private sealed class Action {
-        class SetValue(val value: Long): Action() // <-- Use another Action
+    private sealed interface Action {
+        class SetValue(val value: Long): Action // <-- Use another Action
     }
 
     // ...
@@ -396,8 +396,8 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         ) {
         }
 
-    private sealed class Action {
-        class SetValue(val value: Long): Action()
+    private sealed interface Action {
+        class SetValue(val value: Long): Action
     }
 
     // ...
@@ -475,11 +475,11 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         ) {
         }
 
-    private sealed class Action {
+    private sealed interface Action {
         // ...
     }
 
-    private sealed class Msg {
+    private sealed interface Msg {
         // ...
     }
 }
@@ -527,13 +527,54 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         ) {
         }
 
-    private sealed class Action {
+    private sealed interface Action {
         // ...
     }
 
-    private sealed class Msg {
+    private sealed interface Msg {
         // ...
     }
+}
+```
+
+### Alternative way of creating a Store
+
+If the amount of boilerplate code is still significant, there is an alternative way of creating a `Store`. Just get rid of the dedicated `Store` interface and put its content in top level.
+
+```kotlin
+internal sealed interface Intent {
+    // ...
+}
+
+internal data class State(
+    // ...
+)
+
+internal sealed interface Label {
+    // ...
+}
+
+internal fun CalculatorStore(storeFactory: StoreFactory): Store<Intent, State, Label> =
+    storeFactory.create<Intent, Action, Msg, State, Label>(
+        name = "CounterStore",
+        initialState = State(),
+        bootstrapper = coroutineBootstrapper { // Or reaktiveBootstrapper
+            // ...
+        },
+        executorFactory = coroutineExecutorFactory { // Or reaktiveExecutorFactory
+            // ...
+        },
+        reducer = { msg ->
+            // ...
+        }
+    )
+
+private sealed interface Action {
+    // ...
+}
+
+private sealed interface Msg {
+    // ...
 }
 ```
 
