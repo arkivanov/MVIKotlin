@@ -18,7 +18,7 @@ pluginManagement {
     resolutionStrategy {
         eachPlugin {
             if (requested.id.toString() == "com.arkivanov.gradle.setup") {
-                useModule("com.github.arkivanov:gradle-setup-plugin:f2c5cae84a")
+                useModule("com.github.arkivanov:gradle-setup-plugin:5c9dadd18a")
             }
         }
     }
@@ -45,13 +45,13 @@ if (!startParameter.projectProperties.containsKey("check_publication")) {
     include(":mvikotlin-timetravel-client:extension-chrome")
     include(":mvikotlin-extensions-reaktive")
     include(":mvikotlin-extensions-coroutines")
-    include(":sample:todo-common")
-    include(":sample:todo-common-internal")
-    include(":sample:todo-reaktive")
-    include(":sample:todo-coroutines")
-    include(":sample:todo-darwin-umbrella")
-    include(":sample:todo-app-android")
-    include(":sample:todo-app-js")
+    include(":sample:database")
+    include(":sample:reaktive:shared")
+    include(":sample:reaktive:app-android")
+    include(":sample:reaktive:app-js")
+    include(":sample:coroutines:shared")
+    include(":sample:coroutines:app-android")
+    include(":sample:coroutines:app-js")
 } else {
     include(":tools:check-publication")
 }

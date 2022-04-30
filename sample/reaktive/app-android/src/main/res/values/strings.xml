@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">MviKotlin</string>
+    <string name="details">Details</string>
+    <string name="add">Add</string>
+    <string name="add_todo_hint">Write ToDo</string>
+    <string name="completed">Completed</string>
+    <string name="delete">Delete</string>
+    <string name="time_travel_serialize_error">Error serializing time travel events</string>
+    <string name="time_travel_deserialize_error">Error deserializing time travel events</string>
+    <string name="time_travel_clipboard_empty">Clipboard does not contain any text</string>
+    <string name="time_travel_export_subject">MVIKotlin time travel events</string>
+    <string name="time_travel_export_chooser_title">MVIKotlin time travel</string>
+</resources>

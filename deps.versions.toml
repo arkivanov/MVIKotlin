@@ -10,6 +10,7 @@ essenty = "0.2.2"
 reaktive = "1.2.1"
 multiplatformSettings = "0.8.1"
 compose = "1.0.1"
+kotlinWrappers = "0.0.1-pre.325-kotlin-1.6.10"
 androidGradle = "7.1.0"
 androidxLifecycle = "2.2.0"
 androidxCore = "1.1.0"
@@ -25,6 +26,8 @@ kotlin-kotlinTestCommon = { group = "org.jetbrains.kotlin", name = "kotlin-test-
 kotlin-kotlinTestJs = { group = "org.jetbrains.kotlin", name = "kotlin-test-js", version.ref = "kotlin" }
 kotlin-kotlinTestJunit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
 kotlin-kotlinTestAnnotationsCommon = { group = "org.jetbrains.kotlin", name = "kotlin-test-annotations-common", version.ref = "kotlin" }
+
+kotlinWrappers-kotlinWrappersBom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-wrappers-bom", version.ref = "kotlinWrappers" }
 
 kotlinx-binaryCompatibilityValidatorGradlePlug = { group = "org.jetbrains.kotlinx.binary-compatibility-validator", name = "org.jetbrains.kotlinx.binary-compatibility-validator.gradle.plugin", version.ref = "kotlinxBinaryCompatibilityValidatorGradlePlugin" }
 

@@ -89,7 +89,7 @@ latest [release version](https://github.com/arkivanov/MVIKotlin/releases).
 implementation("com.arkivanov.mvikotlin:mvikotlin-timetravel:<version>")
 ```
 
-In the [`Application`](https://github.com/arkivanov/MVIKotlin/blob/master/sample/todo-app-android/src/main/java/com/arkivanov/mvikotlin/sample/todo/android/App.kt) class, start the [TimeTravelServer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/androidMain/kotlin/com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer.kt) during `onCreate()`.
+In `Application#onCreate`, start the [TimeTravelServer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/androidMain/kotlin/com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer.kt) during `onCreate()`.
 
 ```kotlin
 class App : Application() {
@@ -102,7 +102,7 @@ class App : Application() {
 }
 ```
 
-> ⚠️ Since the `TimeTravelServer` does use the internet on the device for communicating with the development machine, even if the app does not use the internet you will need to declare the uses internet permission in the [AndroidManifest.xml](https://github.com/arkivanov/MVIKotlin/blob/master/sample/todo-app-android/src/main/AndroidManifest.xml#L6).
+> ⚠️ Since the `TimeTravelServer` does use the internet on the device for communicating with the development machine, even if the app does not use the internet you will need to [declare](https://developer.android.com/training/basics/network-ops/connecting) the `android.permission.INTERNET` permission.
 
 #### Running the time travel server on a JVM app
 
@@ -124,11 +124,7 @@ fun main() {
 
 #### Running the time travel server on a Darwin/Apple app
 
-To set up the `TimeTravelServer` on a Darwin/Apple device, the `mvikotlin-timetravel` dependency must be exported into
-the shared module from
-the [`build.gradle.kts`](https://github.com/arkivanov/MVIKotlin/blob/4e0624946fe24a2fc47ecbfeb35a6fecaf09f709/sample/todo-darwin-umbrella/build.gradle.kts#L27)
-. Also, the `mvikotlin-timetravel` module must be added as `api` dependency, adding as `implementation` is not enough.
-This can be done in the `commonMain` source set, or just only in Darwin source sets.
+To set up the `TimeTravelServer` on a Darwin/Apple device, the `mvikotlin-timetravel` dependency must be exported into the shared module in `build.gradle.kts`. Also, the `mvikotlin-timetravel` module must be added as `api` dependency, adding as `implementation` is not enough. This can be done in the `commonMain` source set, or just only in a Darwin source sets.
 
 ```kotlin
 kotlin {
@@ -150,7 +146,7 @@ kotlin {
 }
 ```
 
-Then in the [AppDelegate](https://github.com/arkivanov/MVIKotlin/blob/master/sample/todo-app-ios/todo-app-ios/AppDelegate.swift), start an instance of the [TimeTravelServer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/darwinMain/kotlin/com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer.kt).
+Then in your app, create and `start` an instance of the [TimeTravelServer](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/darwinMain/kotlin/com/arkivanov/mvikotlin/timetravel/server/TimeTravelServer.kt).
 
 ```swift
 @UIApplicationMain
