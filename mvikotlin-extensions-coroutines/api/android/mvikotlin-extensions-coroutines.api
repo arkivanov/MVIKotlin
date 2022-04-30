@@ -28,6 +28,15 @@ public abstract class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineBoo
 	public final fun init (Lkotlin/jvm/functions/Function1;)V
 }
 
+public final class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineBootstrapperDslKt {
+	public static final fun coroutineBootstrapper (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;)Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;
+	public static synthetic fun coroutineBootstrapper$default (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineBootstrapperScope : kotlinx/coroutines/CoroutineScope {
+	public abstract fun dispatch (Ljava/lang/Object;)V
+}
+
 public class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutor : com/arkivanov/mvikotlin/core/store/Executor {
 	public fun <init> ()V
 	public fun <init> (Lkotlin/coroutines/CoroutineContext;)V
@@ -41,6 +50,20 @@ public class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutor : c
 	protected final fun getScope ()Lkotlinx/coroutines/CoroutineScope;
 	public final fun init (Lcom/arkivanov/mvikotlin/core/store/Executor$Callbacks;)V
 	protected final fun publish (Ljava/lang/Object;)V
+}
+
+public final class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutorDslKt {
+	public static final fun coroutineExecutorFactory (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;)Lkotlin/jvm/functions/Function0;
+	public static synthetic fun coroutineExecutorFactory$default (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlin/jvm/functions/Function0;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutorScope : kotlinx/coroutines/CoroutineScope {
+	public abstract fun dispatch (Ljava/lang/Object;)V
+	public abstract fun getState ()Ljava/lang/Object;
+	public abstract fun publish (Ljava/lang/Object;)V
+}
+
+public final class com/arkivanov/mvikotlin/extensions/coroutines/ExecutorBuilder {
 }
 
 public final class com/arkivanov/mvikotlin/extensions/coroutines/StoreExtKt {

@@ -1,11 +1,12 @@
 package com.arkivanov.mvikotlin.sample.reaktive.shared.details.store
 
-import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
-import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
+import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutorScope
+import com.arkivanov.mvikotlin.extensions.reaktive.reaktiveExecutorFactory
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Intent
@@ -27,13 +28,48 @@ internal class DetailsStoreFactory(
     private val itemId: String
 ) {
 
+    @OptIn(ExperimentalMviKotlinApi::class)
     fun create(): DetailsStore =
-        object : DetailsStore, Store<Intent, State, Label> by storeFactory.create(
+        object : DetailsStore, Store<Intent, State, Label> by storeFactory.create<Intent, Unit, Msg, State, Label>(
             name = "TodoDetailsStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = ::ExecutorImpl,
-            reducer = ReducerImpl
+            executorFactory = reaktiveExecutorFactory {
+                onAction<Unit> {
+                    singleFromFunction { database.get(itemId) }
+                        .subscribeOn(ioScheduler)
+                        .map { it?.data?.let(Msg::Loaded) ?: Msg.Finished }
+                        .observeOn(mainScheduler)
+                        .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
+                }
+
+                onIntent<Intent.SetText> {
+                    dispatch(Msg.TextChanged(it.text))
+                    save()
+                }
+
+                onIntent<Intent.ToggleDone> {
+                    dispatch(Msg.DoneToggled)
+                    save()
+                }
+
+                onIntent<Intent.Delete> {
+                    publish(Label.Deleted(itemId))
+
+                    completableFromFunction { database.delete(itemId) }
+                        .subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
+                        .subscribeScoped(isThreadLocal = true) { dispatch(Msg.Finished) }
+                }
+            },
+            reducer = { msg ->
+                when (msg) {
+                    is Msg.Loaded -> copy(data = msg.data)
+                    is Msg.Finished -> copy(isFinished = true)
+                    is Msg.TextChanged -> copy(data = data?.copy(text = msg.text))
+                    is Msg.DoneToggled -> copy(data = data?.copy(isDone = !data.isDone))
+                }
+            }
         ) {}
 
     // Serializable only for exporting events in Time Travel, no need otherwise.
@@ -44,67 +80,12 @@ internal class DetailsStoreFactory(
         object DoneToggled : Msg()
     }
 
-    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Msg, Label>() {
-        override fun executeAction(action: Unit, getState: () -> State) {
-            singleFromFunction {
-                database.get(itemId)
-            }
-                .subscribeOn(ioScheduler)
-                .map { it?.data?.let(Msg::Loaded) ?: Msg.Finished }
-                .observeOn(mainScheduler)
-                .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
-        }
+    private fun ReaktiveExecutorScope<Msg, State, Label>.save() {
+        val data = state.data ?: return
+        publish(Label.Changed(itemId, data))
 
-        override fun executeIntent(intent: Intent, getState: () -> State) {
-            when (intent) {
-                is Intent.SetText -> handleTextChanged(intent.text, getState)
-                is Intent.ToggleDone -> toggleDone(getState)
-                is Intent.Delete -> delete()
-            }.let {}
-        }
-
-        private fun handleTextChanged(text: String, state: () -> State) {
-            dispatch(Msg.TextChanged(text))
-            save(state())
-        }
-
-        private fun toggleDone(state: () -> State) {
-            dispatch(Msg.DoneToggled)
-            save(state())
-        }
-
-        private fun save(state: State) {
-            val data = state.data ?: return
-            publish(Label.Changed(itemId, data))
-
-            completableFromFunction {
-                database.save(itemId, data)
-            }
-                .subscribeOn(ioScheduler)
-                .subscribeScoped()
-        }
-
-        private fun delete() {
-            publish(Label.Deleted(itemId))
-
-            completableFromFunction {
-                database.delete(itemId)
-            }
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeScoped(isThreadLocal = true) {
-                    dispatch(Msg.Finished)
-                }
-        }
-    }
-
-    private object ReducerImpl : Reducer<State, Msg> {
-        override fun State.reduce(msg: Msg): State =
-            when (msg) {
-                is Msg.Loaded -> copy(data = msg.data)
-                is Msg.Finished -> copy(isFinished = true)
-                is Msg.TextChanged -> copy(data = data?.copy(text = msg.text))
-                is Msg.DoneToggled -> copy(data = data?.copy(isDone = !data.isDone))
-            }
+        completableFromFunction { database.save(itemId, data) }
+            .subscribeOn(ioScheduler)
+            .subscribeScoped()
     }
 }
