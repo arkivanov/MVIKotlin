@@ -1,0 +1,110 @@
+package com.arkivanov.mvikotlin.sample.reaktive.shared.details.store
+
+import com.arkivanov.mvikotlin.core.store.Reducer
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
+import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.JvmSerializable
+import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
+import com.arkivanov.mvikotlin.sample.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.database.TodoItem
+import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Intent
+import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Label
+import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.State
+import com.badoo.reaktive.completable.completableFromFunction
+import com.badoo.reaktive.completable.observeOn
+import com.badoo.reaktive.completable.subscribeOn
+import com.badoo.reaktive.scheduler.ioScheduler
+import com.badoo.reaktive.scheduler.mainScheduler
+import com.badoo.reaktive.single.map
+import com.badoo.reaktive.single.observeOn
+import com.badoo.reaktive.single.singleFromFunction
+import com.badoo.reaktive.single.subscribeOn
+
+internal class DetailsStoreFactory(
+    private val storeFactory: StoreFactory,
+    private val database: TodoDatabase,
+    private val itemId: String
+) {
+
+    fun create(): DetailsStore =
+        object : DetailsStore, Store<Intent, State, Label> by storeFactory.create(
+            name = "TodoDetailsStore",
+            initialState = State(),
+            bootstrapper = SimpleBootstrapper(Unit),
+            executorFactory = ::ExecutorImpl,
+            reducer = ReducerImpl
+        ) {}
+
+    // Serializable only for exporting events in Time Travel, no need otherwise.
+    private sealed class Msg : JvmSerializable {
+        data class Loaded(val data: TodoItem.Data) : Msg()
+        object Finished : Msg()
+        data class TextChanged(val text: String) : Msg()
+        object DoneToggled : Msg()
+    }
+
+    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Msg, Label>() {
+        override fun executeAction(action: Unit, getState: () -> State) {
+            singleFromFunction {
+                database.get(itemId)
+            }
+                .subscribeOn(ioScheduler)
+                .map { it?.data?.let(Msg::Loaded) ?: Msg.Finished }
+                .observeOn(mainScheduler)
+                .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
+        }
+
+        override fun executeIntent(intent: Intent, getState: () -> State) {
+            when (intent) {
+                is Intent.SetText -> handleTextChanged(intent.text, getState)
+                is Intent.ToggleDone -> toggleDone(getState)
+                is Intent.Delete -> delete()
+            }.let {}
+        }
+
+        private fun handleTextChanged(text: String, state: () -> State) {
+            dispatch(Msg.TextChanged(text))
+            save(state())
+        }
+
+        private fun toggleDone(state: () -> State) {
+            dispatch(Msg.DoneToggled)
+            save(state())
+        }
+
+        private fun save(state: State) {
+            val data = state.data ?: return
+            publish(Label.Changed(itemId, data))
+
+            completableFromFunction {
+                database.save(itemId, data)
+            }
+                .subscribeOn(ioScheduler)
+                .subscribeScoped()
+        }
+
+        private fun delete() {
+            publish(Label.Deleted(itemId))
+
+            completableFromFunction {
+                database.delete(itemId)
+            }
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeScoped(isThreadLocal = true) {
+                    dispatch(Msg.Finished)
+                }
+        }
+    }
+
+    private object ReducerImpl : Reducer<State, Msg> {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.Loaded -> copy(data = msg.data)
+                is Msg.Finished -> copy(isFinished = true)
+                is Msg.TextChanged -> copy(data = data?.copy(text = msg.text))
+                is Msg.DoneToggled -> copy(data = data?.copy(isDone = !data.isDone))
+            }
+    }
+}
