@@ -58,6 +58,8 @@ To speed up the creation of new Stores, you can use the following [IDEA Live Tem
 
 ### Simplest example
 
+> The following examples use the default full-featured API. For a simplified experimented DSL, please refer to the corresponding section - [The experimental DSL](#dsl).
+
 Let's start from a very basic example. We will create a simple counter `Store` that will increment and decrement its value.
 
 The first thing we should do is to define an interface. This is how it will look:
@@ -182,9 +184,8 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         private fun sum(n: Int) {
             singleFromFunction { (1L..n.toLong()).sum() }
                 .subscribeOn(computationScheduler)
-                .map(Msg::Value)
                 .observeOn(mainScheduler)
-                .subscribeScoped(onSuccess = ::dispatch)
+                .subscribeScoped { dispatch(Msg.Value(it)) }
         }
     }
 
@@ -333,7 +334,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-The `SimpleBootstrapper` just dispatches the provided `Actions`. But sometimes we need more, e.g. do some background work:
+The `SimpleBootstrapper` just dispatches the provided `Actions`. But sometimes we need more, e.g. do some background work.
 
 Using `ReaktiveBootstrapper` from the `mvikotlin-extensions-reaktive` module:
 
@@ -344,7 +345,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         object : CalculatorStore, Store<Intent, State, Nothing> by storeFactory.create(
             name = "CounterStore",
             initialState = State(),
-            bootstrapper = BootstrapperImpl, // <-- Pass BootstrapperImpl to the StoreFactory
+            bootstrapper = BootstrapperImpl(), // <-- Pass BootstrapperImpl to the StoreFactory
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {
@@ -360,9 +361,8 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         override fun invoke() {
             singleFromFunction { (1L..1000000.toLong()).sum() }
                 .subscribeOn(computationScheduler)
-                .map(Action::SetValue)
                 .observeOn(mainScheduler)
-                .subscribeScoped(onSuccess = ::dispatch)
+                .subscribeScoped { dispatch(Action.SetValue(it)) }
         }
     }
 
@@ -390,7 +390,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
         object : CalculatorStore, Store<Intent, State, Nothing> by storeFactory.create(
             name = "CounterStore",
             initialState = State(),
-            bootstrapper = BootstrapperImpl,
+            bootstrapper = BootstrapperImpl(),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {
@@ -425,5 +425,116 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 ```
 
 > ⚠️ `CoroutineBootstrapper` also provides the `CoroutineScope` property named `scope`, same as `CoroutineExecutor`. So we can use it run asynchronous tasks.
+
+<a name="dsl" ></a>
+### The experimental DSL
+
+The approach demonstrated above is default, but may be considered verbose. MVIKotlin provides additional experimental DSL API.
+
+#### Reaktive way
+
+```kotlin
+internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store<Intent, State, Nothing> by storeFactory.create<Intent, Action, Msg, State, Nothing>(
+            name = "CounterStore",
+            initialState = State(),
+            bootstrapper = reaktiveBootstrapper {
+                singleFromFunction { (1L..1000000.toLong()).sum() }
+                    .subscribeOn(computationScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeScoped { // Use the DisposableScope for scoped subscriptions
+                        dispatch(Action.SetValue(it)) // Dispatch an Action
+                    }
+            },
+            executorFactory = reaktiveExecutorFactory {
+                // Register a handler for Action.SetValue
+                onAction<Action.SetValue> { action ->
+                    dispatch(Msg.Value(action.value)) // Read the Action and dispatch a Message
+                }
+
+                // Register a handler for Intent.Increment
+                onIntent<Intent.Increment> {
+                    dispatch(Msg.Value(state.value + 1)) // Read the current state and dispatch a Message
+                }
+
+                onIntent<Intent.Decrement> { dispatch(Msg.Value(state.value - 1)) }
+
+                onIntent<Intent.Sum> { intent ->
+                    singleFromFunction { (1L..intent.n.toLong()).sum() }
+                        .subscribeOn(computationScheduler)
+                        .observeOn(mainScheduler)
+                        .subscribeScoped { dispatch(Msg.Value(it)) } // Use the DisposableScope for scoped subscriptions
+                }
+            },
+            reducer = { msg ->
+                when (msg) {
+                    is Msg.Value -> copy(value = msg.value)
+                }
+            }
+        ) {
+        }
+
+    private sealed class Action {
+        // ...
+    }
+
+    private sealed class Msg {
+        // ...
+    }
+}
+```
+
+#### Coroutines way
+
+```kotlin
+internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store<Intent, State, Nothing> by storeFactory.create<Intent, Action, Msg, State, Nothing>(
+            name = "CounterStore",
+            initialState = State(),
+            bootstrapper = coroutineBootstrapper {
+                launch { // Launch a coroutine
+                    val sum = withContext(Dispatchers.Default) { (1L..1000000.toLong()).sum() }
+                    dispatch(Action.SetValue(sum)) // Dispatch an Action
+                }
+            },
+            executorFactory = coroutineExecutorFactory {
+                // Register a handler for Action.SetValue
+                onAction<Action.SetValue> { action ->
+                    dispatch(Msg.Value(action.value)) // Read the Action and dispatch a Message
+                }
+
+                // Register a handler for Intent.Increment
+                onIntent<Intent.Increment> {
+                    dispatch(Msg.Value(state.value + 1)) // Read the current state and dispatch a Message
+                }
+
+                onIntent<Intent.Decrement> { dispatch(Msg.Value(state.value - 1)) }
+
+                onIntent<Intent.Sum> { intent ->
+                    launch { // Launch a coroutine
+                        val sum = withContext(Dispatchers.Default) { (1L..intent.n.toLong()).sum() }
+                        dispatch(Msg.Value(sum))
+                    }
+                }
+            },
+            reducer = { msg ->
+                when (msg) {
+                    is Msg.Value -> copy(value = msg.value)
+                }
+            }
+        ) {
+        }
+
+    private sealed class Action {
+        // ...
+    }
+
+    private sealed class Msg {
+        // ...
+    }
+}
+```
 
 [Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
