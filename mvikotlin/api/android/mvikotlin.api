@@ -102,6 +102,9 @@ public final class com/arkivanov/mvikotlin/core/utils/DiffKt {
 	public static final fun diff (Lkotlin/jvm/functions/Function1;)Lcom/arkivanov/mvikotlin/core/view/ViewRenderer;
 }
 
+public abstract interface annotation class com/arkivanov/mvikotlin/core/utils/ExperimentalMviKotlinApi : java/lang/annotation/Annotation {
+}
+
 public abstract interface class com/arkivanov/mvikotlin/core/utils/JvmSerializable : java/io/Serializable {
 }
 

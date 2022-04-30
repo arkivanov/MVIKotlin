@@ -10,6 +10,9 @@ public abstract interface class com/arkivanov/mvikotlin/extensions/reaktive/Bind
 	public abstract fun bindTo (Lcom/badoo/reaktive/observable/Observable;Lkotlin/jvm/functions/Function1;)V
 }
 
+public final class com/arkivanov/mvikotlin/extensions/reaktive/ExecutorBuilder {
+}
+
 public abstract class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveBootstrapper : com/arkivanov/mvikotlin/core/store/Bootstrapper, com/badoo/reaktive/disposable/scope/DisposableScope {
 	public fun <init> ()V
 	protected final fun dispatch (Ljava/lang/Object;)V
@@ -22,6 +25,14 @@ public abstract class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveBootst
 	public final fun subscribeScoped (Lcom/badoo/reaktive/maybe/Maybe;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/badoo/reaktive/disposable/Disposable;
 	public final fun subscribeScoped (Lcom/badoo/reaktive/observable/Observable;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/badoo/reaktive/disposable/Disposable;
 	public final fun subscribeScoped (Lcom/badoo/reaktive/single/Single;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lcom/badoo/reaktive/disposable/Disposable;
+}
+
+public final class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveBootstrapperDslKt {
+	public static final fun reaktiveBootstrapper (Lkotlin/jvm/functions/Function1;)Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveBootstrapperScope : com/badoo/reaktive/disposable/scope/DisposableScope {
+	public abstract fun dispatch (Ljava/lang/Object;)V
 }
 
 public class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutor : com/arkivanov/mvikotlin/core/store/Executor, com/badoo/reaktive/disposable/scope/DisposableScope {
@@ -41,6 +52,16 @@ public class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutor : com/
 	public final fun subscribeScoped (Lcom/badoo/reaktive/maybe/Maybe;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/badoo/reaktive/disposable/Disposable;
 	public final fun subscribeScoped (Lcom/badoo/reaktive/observable/Observable;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/badoo/reaktive/disposable/Disposable;
 	public final fun subscribeScoped (Lcom/badoo/reaktive/single/Single;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lcom/badoo/reaktive/disposable/Disposable;
+}
+
+public final class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutorDslKt {
+	public static final fun reaktiveExecutorFactory (Lkotlin/jvm/functions/Function1;)Lkotlin/jvm/functions/Function0;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutorScope : com/badoo/reaktive/disposable/scope/DisposableScope {
+	public abstract fun dispatch (Ljava/lang/Object;)V
+	public abstract fun getState ()Ljava/lang/Object;
+	public abstract fun publish (Ljava/lang/Object;)V
 }
 
 public final class com/arkivanov/mvikotlin/extensions/reaktive/StoreExtKt {

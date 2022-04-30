@@ -22,5 +22,11 @@ kotlin {
                 implementation(deps.reaktive.reaktiveAnnotations)
             }
         }
+
+        named("commonTest") {
+            dependencies {
+                implementation(deps.reaktive.reaktiveTesting)
+            }
+        }
     }
 }
