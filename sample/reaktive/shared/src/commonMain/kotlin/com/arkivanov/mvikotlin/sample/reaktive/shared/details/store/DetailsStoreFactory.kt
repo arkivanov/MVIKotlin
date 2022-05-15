@@ -22,13 +22,13 @@ import com.badoo.reaktive.single.observeOn
 import com.badoo.reaktive.single.singleFromFunction
 import com.badoo.reaktive.single.subscribeOn
 
+@OptIn(ExperimentalMviKotlinApi::class)
 internal class DetailsStoreFactory(
     private val storeFactory: StoreFactory,
     private val database: TodoDatabase,
     private val itemId: String
 ) {
 
-    @OptIn(ExperimentalMviKotlinApi::class)
     fun create(): DetailsStore =
         object : DetailsStore, Store<Intent, State, Label> by storeFactory.create<Intent, Unit, Msg, State, Label>(
             name = "TodoDetailsStore",
@@ -80,7 +80,7 @@ internal class DetailsStoreFactory(
         object DoneToggled : Msg()
     }
 
-    private fun ReaktiveExecutorScope<Msg, State, Label>.save() {
+    private fun ReaktiveExecutorScope<State, Msg, Label>.save() {
         val data = state.data ?: return
         publish(Label.Changed(itemId, data))
 
