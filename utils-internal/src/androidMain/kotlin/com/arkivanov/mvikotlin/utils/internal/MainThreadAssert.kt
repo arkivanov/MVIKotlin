@@ -8,7 +8,7 @@ internal actual fun getMainThreadId(): MainThreadId? =
     try {
         MainThreadId(Looper.getMainLooper().thread.id)
     } catch (e: Exception) {
-        e.printStackTrace()
+        logE("Unable to determine Main thread id: ${e.message}")
         null
     }
 
