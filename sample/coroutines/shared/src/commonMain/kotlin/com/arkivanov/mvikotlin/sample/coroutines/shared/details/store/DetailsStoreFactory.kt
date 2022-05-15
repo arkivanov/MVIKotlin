@@ -12,11 +12,11 @@ import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsSto
 import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsStore.State
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
+@OptIn(ExperimentalMviKotlinApi::class)
 internal class DetailsStoreFactory(
     private val storeFactory: StoreFactory,
     private val database: TodoDatabase,
@@ -25,7 +25,6 @@ internal class DetailsStoreFactory(
     private val itemId: String,
 ) {
 
-    @OptIn(ExperimentalMviKotlinApi::class)
     fun create(): DetailsStore =
         object : DetailsStore, Store<Intent, State, Label> by storeFactory.create<Intent, Unit, Msg, State, Label>(
             name = "TodoDetailsStore",
@@ -77,7 +76,7 @@ internal class DetailsStoreFactory(
         object DoneToggled : Msg()
     }
 
-    private fun CoroutineExecutorScope<Msg, State, Label>.save() {
+    private fun CoroutineExecutorScope<State, Msg, Label>.save() {
         val data = state.data ?: return
         publish(Label.Changed(itemId, data))
 

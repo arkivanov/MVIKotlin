@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -11,8 +12,9 @@ import kotlinx.coroutines.CoroutineScope
  *
  * @see coroutineExecutorFactory
  */
+@ExperimentalMviKotlinApi
 @CoroutineExecutorDslMaker
-interface CoroutineExecutorScope<in Message : Any, out State : Any, in Label : Any> : CoroutineScope {
+interface CoroutineExecutorScope<out State : Any, in Message : Any, in Label : Any> : CoroutineScope {
 
     /**
      * Returns the current [State] of the [Store][com.arkivanov.mvikotlin.core.store.Store].

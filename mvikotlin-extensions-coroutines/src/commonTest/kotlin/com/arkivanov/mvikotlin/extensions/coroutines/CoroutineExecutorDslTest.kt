@@ -104,7 +104,7 @@ class CoroutineExecutorDslTest {
         var readState: String? = null
 
         val executor =
-            coroutineExecutorFactory<Some, Nothing, Nothing, String, Nothing> {
+            coroutineExecutorFactory<Some, Nothing, String, Nothing, Nothing> {
                 onIntent<Some.A> { readState = state }
             }.invoke()
 
@@ -113,9 +113,11 @@ class CoroutineExecutorDslTest {
                 override val state: String = "state"
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
                 }
 
                 override fun onLabel(label: Nothing) {
+                    // no-op
                 }
             }
         )
@@ -130,7 +132,7 @@ class CoroutineExecutorDslTest {
         var readState: String? = null
 
         val executor =
-            coroutineExecutorFactory<Nothing, Some, Nothing, String, Nothing> {
+            coroutineExecutorFactory<Nothing, Some, String, Nothing, Nothing> {
                 onAction<Some.A> { readState = state }
             }.invoke()
 
@@ -139,9 +141,11 @@ class CoroutineExecutorDslTest {
                 override val state: String = "state"
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
                 }
 
                 override fun onLabel(label: Nothing) {
+                    // no-op
                 }
             }
         )
@@ -186,7 +190,7 @@ class CoroutineExecutorDslTest {
     @Test
     fun WHEN_dispatch_from_onAction_THEN_message_dispatched() {
         val executor =
-            coroutineExecutorFactory<Nothing, Some, String, Unit, Nothing> {
+            coroutineExecutorFactory<Nothing, Some, Unit, String, Nothing> {
                 onAction<Some.A> { dispatch("message") }
             }.invoke()
 
@@ -201,6 +205,7 @@ class CoroutineExecutorDslTest {
                 }
 
                 override fun onLabel(label: Nothing) {
+                    // no-op
                 }
             }
         )
@@ -213,7 +218,7 @@ class CoroutineExecutorDslTest {
     @Test
     fun WHEN_dispatch_from_onIntent_THEN_message_dispatched() {
         val executor =
-            coroutineExecutorFactory<Some, Nothing, String, Unit, Nothing> {
+            coroutineExecutorFactory<Some, Nothing, Unit, String, Nothing> {
                 onIntent<Some.A> { dispatch("message") }
             }.invoke()
 
@@ -228,6 +233,7 @@ class CoroutineExecutorDslTest {
                 }
 
                 override fun onLabel(label: Nothing) {
+                    // no-op
                 }
             }
         )
@@ -240,7 +246,7 @@ class CoroutineExecutorDslTest {
     @Test
     fun WHEN_publish_from_onAction_THEN_label_published() {
         val executor =
-            coroutineExecutorFactory<Nothing, Some, Nothing, Unit, String> {
+            coroutineExecutorFactory<Nothing, Some, Unit, Nothing, String> {
                 onAction<Some.A> { publish("label") }
             }.invoke()
 
@@ -251,6 +257,7 @@ class CoroutineExecutorDslTest {
                 override val state: Unit = Unit
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
                 }
 
                 override fun onLabel(label: String) {
@@ -268,7 +275,7 @@ class CoroutineExecutorDslTest {
     @Test
     fun WHEN_publish_from_onIntent_THEN_label_published() {
         val executor =
-            coroutineExecutorFactory<Some, Nothing, Nothing, Unit, String> {
+            coroutineExecutorFactory<Some, Nothing, Unit, Nothing, String> {
                 onIntent<Some.A> { publish("label") }
             }.invoke()
 
@@ -279,6 +286,7 @@ class CoroutineExecutorDslTest {
                 override val state: Unit = Unit
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
                 }
 
                 override fun onLabel(label: String) {
