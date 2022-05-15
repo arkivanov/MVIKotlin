@@ -102,7 +102,7 @@ class ReaktiveExecutorDslTest {
         var readState: String? = null
 
         val executor =
-            reaktiveExecutorFactory<Some, Nothing, Nothing, String, Nothing> {
+            reaktiveExecutorFactory<Some, Nothing, String, Nothing, Nothing> {
                 onIntent<Some.A> { readState = state }
             }.invoke()
 
@@ -111,9 +111,11 @@ class ReaktiveExecutorDslTest {
                 override val state: String = "state"
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
                 }
 
                 override fun onLabel(label: Nothing) {
+                    // no-op
                 }
             }
         )
@@ -128,7 +130,7 @@ class ReaktiveExecutorDslTest {
         var readState: String? = null
 
         val executor =
-            reaktiveExecutorFactory<Nothing, Some, Nothing, String, Nothing> {
+            reaktiveExecutorFactory<Nothing, Some, String, Nothing, Nothing> {
                 onAction<Some.A> { readState = state }
             }.invoke()
 
@@ -137,9 +139,11 @@ class ReaktiveExecutorDslTest {
                 override val state: String = "state"
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
                 }
 
                 override fun onLabel(label: Nothing) {
+                    // no-op
                 }
             }
         )
@@ -184,7 +188,7 @@ class ReaktiveExecutorDslTest {
     @Test
     fun WHEN_dispatch_from_onAction_THEN_message_dispatched() {
         val executor =
-            reaktiveExecutorFactory<Nothing, Some, String, Unit, Nothing> {
+            reaktiveExecutorFactory<Nothing, Some, Unit, String, Nothing> {
                 onAction<Some.A> { dispatch("message") }
             }.invoke()
 
@@ -199,6 +203,7 @@ class ReaktiveExecutorDslTest {
                 }
 
                 override fun onLabel(label: Nothing) {
+                    // no-op
                 }
             }
         )
@@ -211,7 +216,7 @@ class ReaktiveExecutorDslTest {
     @Test
     fun WHEN_dispatch_from_onIntent_THEN_message_dispatched() {
         val executor =
-            reaktiveExecutorFactory<Some, Nothing, String, Unit, Nothing> {
+            reaktiveExecutorFactory<Some, Nothing, Unit, String, Nothing> {
                 onIntent<Some.A> { dispatch("message") }
             }.invoke()
 
@@ -226,6 +231,7 @@ class ReaktiveExecutorDslTest {
                 }
 
                 override fun onLabel(label: Nothing) {
+                    // no-op
                 }
             }
         )
@@ -238,7 +244,7 @@ class ReaktiveExecutorDslTest {
     @Test
     fun WHEN_publish_from_onAction_THEN_label_published() {
         val executor =
-            reaktiveExecutorFactory<Nothing, Some, Nothing, Unit, String> {
+            reaktiveExecutorFactory<Nothing, Some, Unit, Nothing, String> {
                 onAction<Some.A> { publish("label") }
             }.invoke()
 
@@ -249,6 +255,7 @@ class ReaktiveExecutorDslTest {
                 override val state: Unit = Unit
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
                 }
 
                 override fun onLabel(label: String) {
@@ -266,7 +273,7 @@ class ReaktiveExecutorDslTest {
     @Test
     fun WHEN_publish_from_onIntent_THEN_label_published() {
         val executor =
-            reaktiveExecutorFactory<Some, Nothing, Nothing, Unit, String> {
+            reaktiveExecutorFactory<Some, Nothing, Unit, Nothing, String> {
                 onIntent<Some.A> { publish("label") }
             }.invoke()
 
@@ -277,6 +284,7 @@ class ReaktiveExecutorDslTest {
                 override val state: Unit = Unit
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
                 }
 
                 override fun onLabel(label: String) {
