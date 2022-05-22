@@ -1,4 +1,5 @@
-import com.arkivanov.gradle.Target
+import com.arkivanov.gradle.setupMultiplatform
+import com.arkivanov.gradle.setupSourceSets
 
 plugins {
     id("kotlin-multiplatform")
@@ -6,21 +7,20 @@ plugins {
 }
 
 setupMultiplatform {
-    targets(Target.Jvm, Target.Js(Target.Js.Mode.IR))
+    jvm()
+    js(IR) { browser() }
 }
 
 kotlin {
-    sourceSets {
-        named("commonMain") {
-            dependencies {
-                implementation(project(":rx"))
-                implementation(project(":mvikotlin-timetravel-proto-internal"))
-                implementation(project(":mvikotlin"))
-                implementation(project(":mvikotlin-extensions-reaktive"))
-                implementation(deps.reaktive.reaktive)
-                implementation(deps.reaktive.reaktiveAnnotations)
-                implementation(deps.russhwolf.multiplatformSettings)
-            }
+    setupSourceSets {
+        common.main.dependencies {
+            implementation(project(":rx"))
+            implementation(project(":mvikotlin-timetravel-proto-internal"))
+            implementation(project(":mvikotlin"))
+            implementation(project(":mvikotlin-extensions-reaktive"))
+            implementation(deps.reaktive.reaktive)
+            implementation(deps.reaktive.reaktiveAnnotations)
+            implementation(deps.russhwolf.multiplatformSettings)
         }
     }
 }

@@ -1,36 +1,45 @@
+import com.arkivanov.gradle.bundle
+import com.arkivanov.gradle.dependsOn
+import com.arkivanov.gradle.setupMultiplatform
+import com.arkivanov.gradle.setupSourceSets
+
 plugins {
     id("kotlin-multiplatform")
     id("com.android.library")
     id("com.arkivanov.gradle.setup")
 }
 
-setupMultiplatform {
-    targets()
-}
+setupMultiplatform()
 
 kotlin {
-    sourceSets {
-        named("commonMain") {
-            dependencies {
-                implementation(project(":mvikotlin"))
-                implementation(project(":rx"))
-                implementation(project(":rx-internal"))
-                implementation(project(":utils-internal"))
-                implementation(deps.kotlin.kotlinTestCommon)
-                implementation(deps.kotlin.kotlinTestAnnotationsCommon)
-            }
+    setupSourceSets {
+        val android by bundle()
+        val jvm by bundle()
+        val js by bundle()
+        val darwin by bundle()
+
+        darwin dependsOn common
+        darwinSet dependsOn darwin
+
+        common.main.dependencies {
+            implementation(project(":mvikotlin"))
+            implementation(project(":rx"))
+            implementation(project(":rx-internal"))
+            implementation(project(":utils-internal"))
+            implementation(deps.kotlin.kotlinTestCommon)
+            implementation(deps.kotlin.kotlinTestAnnotationsCommon)
         }
 
-        named("jsMain") {
-            dependencies {
-                implementation(deps.kotlin.kotlinTestJs)
-            }
+        js.main.dependencies {
+            implementation(deps.kotlin.kotlinTestJs)
         }
 
-        named("javaMain") {
-            dependencies {
-                implementation(deps.kotlin.kotlinTestJunit)
-            }
+        android.main.dependencies {
+            implementation(deps.kotlin.kotlinTestJunit)
+        }
+
+        jvm.main.dependencies {
+            implementation(deps.kotlin.kotlinTestJunit)
         }
     }
 }

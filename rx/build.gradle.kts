@@ -1,11 +1,13 @@
+import com.arkivanov.gradle.setupBinaryCompatibilityValidator
+import com.arkivanov.gradle.setupMultiplatform
+import com.arkivanov.gradle.setupPublication
+
 plugins {
     id("kotlin-multiplatform")
     id("com.android.library")
     id("com.arkivanov.gradle.setup")
 }
 
-setupMultiplatform {
-    targets()
-    publications()
-    binaryCompatibilityValidator()
-}
+setupMultiplatform()
+setupPublication()
+setupBinaryCompatibilityValidator()

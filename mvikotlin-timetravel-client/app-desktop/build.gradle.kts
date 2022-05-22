@@ -1,4 +1,6 @@
-import com.arkivanov.gradle.Target
+import com.arkivanov.gradle.bundle
+import com.arkivanov.gradle.setupMultiplatform
+import com.arkivanov.gradle.setupSourceSets
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
@@ -9,30 +11,29 @@ plugins {
 }
 
 setupMultiplatform {
-    targets(Target.Jvm)
-}
-
-kotlin {
     jvm {
         withJava()
     }
+}
 
-    sourceSets {
-        named("jvmMain") {
-            dependencies {
-                implementation(project(":mvikotlin"))
-                implementation(project(":mvikotlin-main"))
-                implementation(project(":mvikotlin-timetravel-client:client-internal"))
-                implementation(project(":mvikotlin-timetravel-proto-internal"))
-                implementation(deps.reaktive.reaktive)
-                implementation(deps.reaktive.coroutinesInterop)
-                implementation(deps.russhwolf.multiplatformSettings)
-                implementation(compose.desktop.currentOs)
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material)
-                implementation(compose.materialIconsExtended)
-            }
+kotlin {
+    setupSourceSets {
+        val jvm by bundle()
+
+
+        jvm.main.dependencies {
+            implementation(project(":mvikotlin"))
+            implementation(project(":mvikotlin-main"))
+            implementation(project(":mvikotlin-timetravel-client:client-internal"))
+            implementation(project(":mvikotlin-timetravel-proto-internal"))
+            implementation(deps.reaktive.reaktive)
+            implementation(deps.reaktive.coroutinesInterop)
+            implementation(deps.russhwolf.multiplatformSettings)
+            implementation(compose.desktop.currentOs)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.materialIconsExtended)
         }
     }
 }
