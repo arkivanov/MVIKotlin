@@ -1,4 +1,8 @@
-import com.arkivanov.gradle.Target
+import com.arkivanov.gradle.bundle
+import com.arkivanov.gradle.dependsOn
+import com.arkivanov.gradle.iosCompat
+import com.arkivanov.gradle.setupMultiplatform
+import com.arkivanov.gradle.setupSourceSets
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.konan.target.Family
 
@@ -9,12 +13,10 @@ plugins {
 }
 
 setupMultiplatform {
-    targets(
-        Target.Android,
-        Target.Js(mode = Target.Js.Mode.IR),
-        Target.Ios(
-            arm64 = false, // Comment this line to enable arm64 target, check dependencies as well
-        ),
+    android()
+    js(IR) { browser() }
+    iosCompat(
+        arm64 = null, // Comment out to enable arm64 target
     )
 }
 
@@ -37,32 +39,31 @@ kotlin {
             }
         }
 
-    sourceSets {
-        named("commonMain") {
-            dependencies {
-                api(project(":mvikotlin"))
-                implementation(project(":mvikotlin-extensions-reaktive"))
-                api(project(":sample:database"))
-                api(deps.reaktive.reaktive)
-                api(deps.essenty.lifecycle)
-                api(deps.essenty.instanceKeeper)
-            }
+    setupSourceSets {
+        val darwin by bundle()
+
+        darwin dependsOn common
+        darwinSet dependsOn darwin
+
+        common.main.dependencies {
+            api(project(":mvikotlin"))
+            implementation(project(":mvikotlin-extensions-reaktive"))
+            api(project(":sample:database"))
+            api(deps.reaktive.reaktive)
+            api(deps.essenty.lifecycle)
+            api(deps.essenty.instanceKeeper)
         }
 
-        named("commonTest") {
-            dependencies {
-                implementation(project(":utils-internal"))
-                implementation(project(":mvikotlin-main"))
-                implementation(deps.reaktive.reaktiveTesting)
-            }
+        common.test.dependencies {
+            implementation(project(":utils-internal"))
+            implementation(project(":mvikotlin-main"))
+            implementation(deps.reaktive.reaktiveTesting)
         }
 
-        named("darwinMain") {
-            dependencies {
-                api(project(":mvikotlin-main"))
-                api(project(":mvikotlin-logging"))
-                api(project(":mvikotlin-timetravel"))
-            }
+        darwin.main.dependencies {
+            api(project(":mvikotlin-main"))
+            api(project(":mvikotlin-logging"))
+            api(project(":mvikotlin-timetravel"))
         }
     }
 }

@@ -1,4 +1,8 @@
-import com.arkivanov.gradle.Target
+import com.arkivanov.gradle.bundle
+import com.arkivanov.gradle.dependsOn
+import com.arkivanov.gradle.iosCompat
+import com.arkivanov.gradle.setupMultiplatform
+import com.arkivanov.gradle.setupSourceSets
 
 plugins {
     id("kotlin-multiplatform")
@@ -7,22 +11,23 @@ plugins {
 }
 
 setupMultiplatform {
-    targets(
-        Target.Android,
-        Target.Js(mode = Target.Js.Mode.IR),
-        Target.Ios(
-            arm64 = false, // Comment this line to enable arm64 target, check dependencies as well
-        ),
+    android()
+    js(IR) { browser() }
+    iosCompat(
+        arm64 = null, // Comment out to enable arm64 target
     )
 }
 
 kotlin {
-    sourceSets {
-        named("commonMain") {
-            dependencies {
-                implementation(project(":utils-internal"))
-                implementation(project(":mvikotlin"))
-            }
+    setupSourceSets {
+        val darwin by bundle()
+
+        darwin dependsOn common
+        darwinSet dependsOn darwin
+
+        common.main.dependencies {
+            implementation(project(":utils-internal"))
+            implementation(project(":mvikotlin"))
         }
     }
 }

@@ -1,3 +1,5 @@
+import com.arkivanov.gradle.setupAndroidApp
+
 plugins {
     id("com.arkivanov.gradle.setup")
     id("com.android.application")
@@ -5,13 +7,11 @@ plugins {
     id("kotlin-parcelize")
 }
 
-setupAndroidApp {
-    androidApp(
-        applicationId = "com.arkivanov.mvikotlin.sample.reaktive.app",
-        versionCode = 1,
-        versionName = "1.0",
-    )
-}
+setupAndroidApp(
+    applicationId = "com.arkivanov.mvikotlin.sample.reaktive.app",
+    versionCode = 1,
+    versionName = "1.0",
+)
 
 android {
     packagingOptions {
