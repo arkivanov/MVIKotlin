@@ -57,6 +57,8 @@ class TimeTravelToolbar(private val listener: Listener) {
             addSeparator()
             add(exportAction())
             add(importAction())
+            addSeparator()
+            add(settingsAction())
         }
 
     private fun connectAction(): AnAction =
@@ -64,7 +66,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Connect",
             icon = AllIcons.Debugger.AttachToProcess,
             onUpdate = { it.presentation.isEnabled = buttons.isConnectEnabled },
-            onAction = listener::onConnect
+            onAction = listener::onConnect,
         )
 
     private fun disconnectAction(): AnAction =
@@ -72,7 +74,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Disconnect",
             icon = AllIcons.Debugger.Db_invalid_breakpoint,
             onUpdate = { it.presentation.isEnabled = buttons.isDisconnectEnabled },
-            onAction = listener::onDisconnect
+            onAction = listener::onDisconnect,
         )
 
     private fun startRecordingAction(): AnAction =
@@ -80,7 +82,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Start recording",
             icon = AllIcons.Debugger.Db_set_breakpoint,
             onUpdate = { it.presentation.isEnabled = buttons.isStartRecordingEnabled },
-            onAction = listener::onStartRecording
+            onAction = listener::onStartRecording,
         )
 
     private fun stopRecordingAction(): AnAction =
@@ -88,7 +90,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Stop recording",
             icon = AllIcons.Actions.Suspend,
             onUpdate = { it.presentation.isEnabled = buttons.isStopRecordingEnabled },
-            onAction = listener::onStopRecording
+            onAction = listener::onStopRecording,
         )
 
     private fun moveToStartAction(): AnAction =
@@ -96,7 +98,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Move to start",
             icon = AllIcons.Actions.Play_first,
             onUpdate = { it.presentation.isEnabled = buttons.isMoveToStartEnabled },
-            onAction = listener::onMoveToStart
+            onAction = listener::onMoveToStart,
         )
 
     private fun stepBackwardAction(): AnAction =
@@ -112,7 +114,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Step forward",
             icon = AllIcons.Actions.Play_forward,
             onUpdate = { it.presentation.isEnabled = buttons.isStepBackwardEnabled },
-            onAction = listener::onStepForward
+            onAction = listener::onStepForward,
         )
 
     private fun moveToEndAction(): AnAction =
@@ -120,7 +122,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Move to end",
             icon = AllIcons.Actions.Play_last,
             onUpdate = { it.presentation.isEnabled = buttons.isMoveToEndEnabled },
-            onAction = listener::onMoveToEnd
+            onAction = listener::onMoveToEnd,
         )
 
     private fun cancelAction(): AnAction =
@@ -128,7 +130,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Cancel",
             icon = AllIcons.Actions.Cancel,
             onUpdate = { it.presentation.isEnabled = buttons.isCancelEnabled },
-            onAction = listener::onCancel
+            onAction = listener::onCancel,
         )
 
     private fun debugAction(): AnAction =
@@ -136,7 +138,7 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Debug selected event",
             icon = AllIcons.Actions.StartDebugger,
             onUpdate = { it.presentation.isEnabled = buttons.isDebugEventEnabled },
-            onAction = listener::onDebug
+            onAction = listener::onDebug,
         )
 
     private fun exportAction(): AnAction =
@@ -144,19 +146,23 @@ class TimeTravelToolbar(private val listener: Listener) {
             text = "Export events",
             icon = AllIcons.ToolbarDecorator.Export,
             onUpdate = { it.presentation.isEnabled = buttons.isExportEventsEnabled },
-            onAction = listener::onExport
+            onAction = listener::onExport,
         )
 
     private fun importAction(): AnAction =
         anAction(
             text = "Import events",
             icon = AllIcons.ToolbarDecorator.Import,
-            onUpdate = {
-                it.presentation.isEnabled = buttons.isImportEventsEnabled
-            },
-            onAction = listener::onImport
+            onUpdate = { it.presentation.isEnabled = buttons.isImportEventsEnabled },
+            onAction = listener::onImport,
         )
 
+    private fun settingsAction(): AnAction =
+        anAction(
+            text = "Settings",
+            icon = AllIcons.General.Settings,
+            onAction = listener::onSettings,
+        )
 
     interface Listener {
         fun onConnect()
@@ -171,5 +177,6 @@ class TimeTravelToolbar(private val listener: Listener) {
         fun onDebug()
         fun onExport()
         fun onImport()
+        fun onSettings()
     }
 }

@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
 import com.arkivanov.essenty.lifecycle.Lifecycle
-import com.arkivanov.essenty.lifecycle.subscribe
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.AdbController
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.DefaultConnector
@@ -11,8 +10,7 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.settings.SettingsConfi
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.integration.TimeTravelSettingsComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
-import com.badoo.reaktive.disposable.Disposable
-import com.badoo.reaktive.observable.subscribe
+import com.badoo.reaktive.disposable.scope.disposableScope
 import com.intellij.openapi.fileChooser.FileChooser.chooseFile
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory.createSingleFileDescriptor
 import com.intellij.openapi.fileChooser.FileChooserFactory
@@ -36,18 +34,15 @@ class TimeTravelToolWindow(
 
     fun getContent(lifecycle: Lifecycle): JComponent {
         val components = components()
-        val view = TimeTravelView(TimeTravelViewListener(components.client))
+        val timeTravelView = TimeTravelView(TimeTravelViewListener(components.client, components.settings))
+        val settingsView = SettingsView(components.settings)
 
-        var disposable: Disposable? = null
-        lifecycle.subscribe(
-            onCreate = { disposable = components.client.models.subscribe(onNext = view::render) },
-            onDestroy = {
-                disposable?.dispose()
-                disposable = null
-            }
-        )
+        disposableScope {
+            components.client.models.subscribeScoped(onNext = timeTravelView::render)
+            components.settings.models.subscribeScoped(onNext = settingsView::render)
+        }.attachTo(lifecycle)
 
-        return view.content
+        return timeTravelView.content
     }
 
     @OptIn(ExperimentalSettingsImplementation::class)
@@ -147,7 +142,8 @@ class TimeTravelToolWindow(
     }
 
     private class TimeTravelViewListener(
-        private val client: TimeTravelClient
+        private val client: TimeTravelClient,
+        private val settings: TimeTravelSettings,
     ) : TimeTravelView.Listener {
         override fun onConnect() {
             client.onConnectClicked()
@@ -199,6 +195,10 @@ class TimeTravelToolWindow(
 
         override fun onEventSelected(index: Int) {
             client.onEventSelected(index = index)
+        }
+
+        override fun onSettings() {
+            settings.onEditClicked()
         }
     }
 }
