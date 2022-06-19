@@ -43,12 +43,11 @@ compose.desktop {
         mainClass = "com.arkivanov.mvikotlin.timetravel.client.desktop.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "mvikotlin-time-travel-client"
-            version = "1.0.0"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Rpm)
+            packageName = "MVIKotlin Time Travel Client"
+            packageVersion = deps.versions.timeTravelApp.get()
 
             windows {
-                menuGroup = "MVIKotlin"
                 upgradeUuid = "B0B34196-90BE-4398-99BE-8E650EBECC78"
             }
         }

@@ -1,0 +1,54 @@
+name: Package Time Travel App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Package on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Build
+        run: ./gradlew :mvikotlin-timetravel-client:app-desktop:packageDeb :mvikotlin-timetravel-client:app-desktop:packageRpm
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: |
+            mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main/deb
+            mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main/rpm
+  windows:
+    name: Package on Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Build
+        run: ./gradlew :mvikotlin-timetravel-client:app-desktop:packageMsi
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main/msi

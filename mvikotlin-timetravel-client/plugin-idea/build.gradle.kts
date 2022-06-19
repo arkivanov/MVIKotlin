@@ -8,7 +8,7 @@ plugins {
 
 setupIdeaPlugin(
     group = "org.arkivanov.mvikotlin.plugin.idea.timetravel",
-    version = deps.versions.mvikotlin.get(),
+    version = deps.versions.timeTravelPlugin.get(),
     sinceBuild = "211",
     intellijVersion = "2021.1",
 )
