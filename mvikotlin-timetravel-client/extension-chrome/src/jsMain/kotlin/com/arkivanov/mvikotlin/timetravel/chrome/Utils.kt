@@ -8,10 +8,11 @@ import androidx.compose.runtime.remember
 import com.badoo.reaktive.observable.subscribe
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import org.jetbrains.compose.web.attributes.AttrsBuilder
+import org.jetbrains.compose.web.attributes.AttrsScope
 import org.jetbrains.compose.web.dom.AttrBuilderContext
 import org.w3c.dom.Element
 
-internal fun AttrsBuilder<*>.classesOfNotNull(vararg classes: String?) {
+internal fun AttrsScope<*>.classesOfNotNull(vararg classes: String?) {
     classes(*classes.filterNotNull().toTypedArray())
 }
 

@@ -26,6 +26,7 @@ import com.badoo.reaktive.scheduler.overrideSchedulers
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.JvmPreferencesSettings
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.awt.FileDialog
 import java.awt.Frame
 import java.io.File
@@ -33,6 +34,7 @@ import java.io.FilenameFilter
 import java.util.prefs.Preferences
 
 fun main() {
+    @OptIn(ExperimentalCoroutinesApi::class)
     overrideSchedulers(main = Dispatchers.Main::asScheduler)
 
     val components =

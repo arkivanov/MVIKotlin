@@ -116,7 +116,7 @@ private fun ButtonBar(
                 alignItems(AlignItems.Center)
             }
 
-            add(attrs)
+            attrs?.invoke(this)
         }
     ) {
         ConnectionButtons(
@@ -246,7 +246,7 @@ private fun Events(
                 flexFlow(FlexDirection.Row, FlexWrap.Nowrap)
             }
 
-            add(attrs)
+            attrs?.invoke(this)
         }
     ) {
         EventList(
@@ -289,7 +289,7 @@ private fun EventList(
                 margin(0.px)
             }
 
-            add(attrs)
+            attrs?.invoke(this)
         }
     ) {
         events.forEachIndexed { index, item ->
@@ -352,7 +352,7 @@ private fun EventDetails(value: ValueNode?, attrs: AttrBuilderContext<*>? = null
                 fontFamily("monospace")
             }
 
-            add(attrs)
+            attrs?.invoke(this)
         }
     ) {
         Text(value = value?.title ?: "")

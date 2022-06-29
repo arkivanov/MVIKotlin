@@ -1,9 +1,12 @@
 package com.arkivanov.mvikotlin.sample.reaktive.app
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.sample.database.DefaultTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
+import com.arkivanov.mvikotlin.timetravel.TimeTravelServer
+import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
 import com.badoo.reaktive.subject.publish.PublishSubject
 import csstype.AlignItems
 import csstype.Display
@@ -27,9 +30,11 @@ import react.router.useParams
 import react.useMemo
 
 fun main() {
+    TimeTravelServer().start()
+
     createRoot(document.getElementById("app")!!).render(
         Root.create {
-            storeFactory = DefaultStoreFactory()
+            storeFactory = LoggingStoreFactory(delegate = TimeTravelStoreFactory())
             database = DefaultTodoDatabase()
         }
     )
