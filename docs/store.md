@@ -48,7 +48,7 @@ There are a number of factories provided by MVIKotlin:
 
 ### Initializing a Store
 
-By default `Stores` are initialized automatically by the `StoreFactory`. You can opt-out from the automatic initialization by passing `autoInit=false` argument to the `StoreFactory.create(...)` function.
+During its initialization, the `Store` establishes internal connections and calls the `Bootstrapper`. By default `Stores` are initialized automatically by the `StoreFactory`. You can opt-out from the automatic initialization by passing `autoInit=false` argument to the `StoreFactory.create(...)` function.
 
 > ⚠️ When automatic initialization is disabled, you should manually call the `Store.init()` method.
 
@@ -232,6 +232,8 @@ Here we extended the `CoroutineExecutor` class. The sum is calculated on the `De
 
 `Labels` are one-time events produced by the `Store`, or more specifically by the `Executor`. Once published (emitted) they are delivered to all current subscribers and are not cached. The `Executor` has special method for it: `publish(Label)`.
 
+> ⚠️ If a `Label` is published straight from `Executor.executeAction` method, the `Store` may have no subscribers yet. This may happen if the `Store` is still being created, and the initialization is still in progress. Prefer manual `Store` initialization in this case.
+
 ### Creating the Store
 
 We also need to pass a factory of our `Executor` to the `StoreFactory`:
@@ -253,6 +255,8 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 ```
 
 Why factory and not just an instance of the `Executor`? Because of the time travel feature. When debugging time travel events it creates separate instances of `Executors` when necessary and fakes their `States`.
+
+> ⚠️ Please note that `executorFactory` should return a new instance of the `Executor` every time it is called.
 
 ### Adding Bootstrapper
 
