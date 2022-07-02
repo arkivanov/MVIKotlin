@@ -18,7 +18,7 @@ pluginManagement {
     resolutionStrategy {
         eachPlugin {
             if (requested.id.toString() == "com.arkivanov.gradle.setup") {
-                useModule("com.github.arkivanov:gradle-setup-plugin:715d466a74")
+                useModule("com.github.arkivanov:gradle-setup-plugin:339b7eb8e4")
             }
         }
     }
