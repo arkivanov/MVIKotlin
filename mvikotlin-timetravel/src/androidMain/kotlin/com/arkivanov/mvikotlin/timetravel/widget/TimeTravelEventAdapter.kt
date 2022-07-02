@@ -28,7 +28,7 @@ internal class TimeTravelEventAdapter : RecyclerView.Adapter<RecyclerView.ViewHo
                     LAYOUT_SEPARATOR -> SeparatorViewHolder(
                         view
                     )
-                    else -> throw IllegalStateException("Unsupported view type: $viewType")
+                    else -> error("Unsupported view type: $viewType")
                 }
             }
 

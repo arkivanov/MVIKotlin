@@ -9,7 +9,7 @@ private val mainThreadIdRef = AtomicReference<Long?>(null)
 
 fun setMainThreadId(id: Long) {
     if (!mainThreadIdRef.compareAndSet(null, id)) {
-        throw IllegalStateException("Main thread id can be set only once")
+        error("Main thread id is already set")
     }
 }
 
