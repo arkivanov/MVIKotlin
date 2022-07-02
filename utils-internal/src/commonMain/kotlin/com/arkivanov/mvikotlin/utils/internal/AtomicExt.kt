@@ -4,7 +4,7 @@ import kotlin.reflect.KProperty
 
 fun <T : Any> AtomicRef<T?>.initialize(value: T) {
     if (!compareAndSet(null, value)) {
-        throw IllegalStateException("Value is already initialized: $this")
+        error("Value is already initialized: $this")
     }
 }
 

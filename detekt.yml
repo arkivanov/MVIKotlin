@@ -15,10 +15,6 @@ exceptions:
   TooGenericExceptionCaught:
     active: false
 
-formatting:
-  MaximumLineLength:
-    maxLineLength: 140
-
 naming:
   FunctionNaming:
     excludes: ['**/test/**', '**/*Test/**']
