@@ -193,7 +193,7 @@ The time travel client communicates to the server, and provides UI to control th
 
 #### Using the IntelliJ IDEA plugin
 
-The IntelliJ IDEA plugin can be used directly from the IDE. At the moment, it is only able to connect to Android applications.
+The IntelliJ IDEA plugin can be used directly from the IDE. By default it uses `adb` to connect to Android apps. However, you can switch to a TCP connection in the settings, so it could also connect to JVM and Darwin/Apple apps. 
 
 ##### How to install
 
@@ -201,9 +201,11 @@ You can find the plugin in the IntelliJ IDEA [Marketplace](https://plugins.jetbr
 
 ##### How to use
 
-The time travel IntelliJ IDEA plugin connects to an Android application via TCP. It uses ADB to forward the TCP port `6379`.
+The client connects to the `TimeTravelServer` running on an application via TCP. The default port is `6379`.
 
-First be sure to have the `TimeTravelServer` running in the application, as described previously. Then run an Android application and open up the time travel plugin in the IDE, where you can click "Connect" and start recording state changes. The plugin will ask for the `adb` executable path for the first time.
+To connect to an Android application running the `TimeTravelServer`, the easiest way is to simply open the settings and check the "Connect via ADB" checkbox. Then just click on the "Connect" button, the client will prompt you with the `adb` executable path and then the connection should be established. The client uses ADB to forward the TCP port.
+
+To connect to a non-Android application (or to an Android application without using the ADB) - open the settings, uncheck the "Connect via ADB" checkbox and type the host address of the device. For applications running locally (e.g. a JVM or a macOS application, an iOS application running on a simulator, etc.) the host address is usually `localhost`. For a remote device, the host address should be specified explicitly. Please refer to the device's settings to find out its TCP address. In any case, the server's port should be connectable (e.g. permissions are granted, the port is allow-listed, etc.).
 
 ##### Demo video
 
@@ -221,7 +223,7 @@ The desktop client app provides similar functionality to the IntelliJ IDEA plugi
 
 ##### How to install
 
-The time travel client application for desktop is not published yet, so you will need to build and run it from [sources](https://github.com/arkivanov/MVIKotlin/tree/master/mvikotlin-timetravel-client/app-desktop). Please run the following command (the minimum JDK version 11 is required):
+You can download distributions for Linux and Windows from the [Releases](https://github.com/arkivanov/MVIKotlin/releases) page on GitHub. For macOS you will need to build and run it from [sources](https://github.com/arkivanov/MVIKotlin/tree/master/mvikotlin-timetravel-client/app-desktop). Please run the following command (the minimum JDK version 11 is required):
 
 ```
 ./gradlew :mvikotlin-timetravel-client:app-desktop:run
@@ -229,11 +231,7 @@ The time travel client application for desktop is not published yet, so you will
 
 ##### How to use
 
-The client connects to the server via TCP. The default port is `6379`.
-
-To connect to an Android application running the `TimeTravelServer`, the easiest way is to simply open the settings and check the "Connect via ADB" checkbox. Then just click on the "Connect" button, the client will prompt you with the `adb` executable path and then the connection should be established. The client uses ADB to forward the TCP port.
-
-To connect to a non-Android application (or to an Android application without using the ADB) - open the settings, uncheck the "Connect via ADB" checkbox and type the host address of the device. For applications running locally (e.g. a JVM or a macOS application, an iOS application running on a simulator, etc.) the host address is usually `localhost`. For a remote device, the host address should be specified explicitly. Please refer to the device's settings to find out its TCP address. In any case, the server's port should be connectable (e.g. permissions are granted, the port is allow-listed, etc.).
+The usage is the same as for the IntelliJ IDEA plugin.
 
 ##### Building a distributable version
 
