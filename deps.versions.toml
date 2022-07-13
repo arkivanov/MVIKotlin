@@ -1,8 +1,9 @@
 [versions]
 
-mvikotlin = "3.0.0-beta02"
-timeTravelPlugin = "3.0.0-beta02"
+mvikotlin = "3.0.0"
+timeTravelPlugin = "3.0.0"
 timeTravelApp = "3.0.0"
+
 kotlin = "1.7.10"
 kotlinxBinaryCompatibilityValidator = "0.10.0"
 kotlinxCoroutines = "1.6.3"
