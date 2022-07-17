@@ -35,6 +35,7 @@ kotlinWrappers-kotlinWrappersBom = { group = "org.jetbrains.kotlin-wrappers", na
 kotlinx-binaryCompatibilityValidator = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "kotlinxBinaryCompatibilityValidator" }
 
 kotlinx-kotlinxCoroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-kotlinxCoroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinxCoroutines" }
 kotlinx-kotlinxCoroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 
 intellij-gradleIntellijPlug = { group = "org.jetbrains.intellij.plugins", name = "gradle-intellij-plugin", version.ref = "intellijGradlePlugin" }
