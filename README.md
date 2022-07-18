@@ -65,7 +65,7 @@ Everything else is out of scope of the library, there are no definitions for "sc
 
 If you are using declarative UI frameworks (like [Jetpack Compose](https://developer.android.com/jetpack/compose), [Multiplatform Compose by JetBrains](https://github.com/JetBrains/compose-jb), SwiftUI, React, etc.), then consider using [Decompose](https://github.com/arkivanov/Decompose) for architecture. MVIKotlin plays nicely with Decompose - a very good example is [compose-jb/todoapp](https://github.com/JetBrains/compose-jb/tree/master/examples/todoapp).
 
-Also one of the architecture approaches can be found in the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample).
+Also one of the architecture approaches can be found in the [samples](#sample-project).
 
 ## Setup
 
@@ -116,12 +116,25 @@ To speed up the creation of new Stores, you can use the following [IDEA Live Tem
 
 ## Sample project
 
-The sample project is a todo list with details view.
-* Shared module using Reaktive is [here](sample/todo-reaktive)
-* Shared module using coroutines is [here](sample/todo-coroutines)
-* Sample Android application with both Reaktive and coroutines implementations, plus logging and time travel is [here](sample/todo-app-android)
-* Sample iOS application with Reaktive implementation only, plus logging and time travel is [here](sample/todo-app-ios)
-* Sample JavaScript application with both Reaktive and coroutines implementations, plus logging and time travel is [here](sample/todo-app-js)
+The sample project is a todo list with details view. There are two implementations of the same sample, one using Reaktive library and another one using coroutines. Each variant has Android, iOS and Web browser apps. This samples also demonstrates one of the possible architectures for a multiplatform project - each screen is represented by a controller class, platform applications integrate controllers and navigate between them.
+
+### Structure
+
+* Shared database - [sample/database](sample/database)
+* Reaktive sample - [sample/reaktive](sample/reaktive)
+    * Shared module - [sample/reaktive/shared](sample/reaktive/shared)
+    * Android application - [sample/reaktive/app-android](sample/reaktive/app-android)
+    * iOS Xcode project - [sample/reaktive/app-ios](sample/reaktive/app-ios)
+    * Web browser application - [sample/reaktive/app-js](sample/reaktive/app-js)
+* Coroutines sample - [sample/coroutines](sample/coroutines)
+    * Shared module - [sample/coroutines/shared](sample/coroutines/shared)
+    * Android application - [sample/coroutines/app-android](sample/coroutines/app-android)
+    * iOS Xcode project - [sample/coroutines/app-ios](sample/coroutines/app-ios)
+    * Web browser application - [sample/coroutines/app-js](sample/coroutines/app-js)
+
+## Sample TodoApp in JetBrains/compose-jb
+
+There is another sample project available in the `JetBrains/compose-jb` repository - [TodoApp](https://github.com/JetBrains/compose-jb/tree/master/examples/todoapp). It uses MVIKotlin for business logic and [Decompose](https://github.com/arkivanov/Decompose) for navigation.
 
 ## Author
 
