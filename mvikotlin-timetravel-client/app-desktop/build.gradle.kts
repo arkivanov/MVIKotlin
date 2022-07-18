@@ -26,6 +26,7 @@ kotlin {
             implementation(project(":mvikotlin-main"))
             implementation(project(":mvikotlin-timetravel-client:client-internal"))
             implementation(project(":mvikotlin-timetravel-proto-internal"))
+            implementation(deps.kotlinx.kotlinxCoroutinesSwing)
             implementation(deps.reaktive.reaktive)
             implementation(deps.reaktive.coroutinesInterop)
             implementation(deps.russhwolf.multiplatformSettings)
