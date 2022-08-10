@@ -37,12 +37,12 @@ internal class ReadWriteTest : AbstractReadWriteTest<ValueNode>() {
         testWriteRead(
             ValueNode(
                 name = null,
-                type = "type",
+                type = null,
                 value = null,
-                children = List(3) { index ->
+                children = List(3) {
                     ValueNode(
                         name = null,
-                        type = "childType$index",
+                        type = null,
                         value = null
                     )
                 }

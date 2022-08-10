@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.data.value
 
 import java.lang.reflect.Field
+import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.lang.reflect.TypeVariable
 
@@ -90,7 +91,7 @@ actual class ValueParser actual constructor() {
             name = name,
             type = "IntArray",
             value = this,
-            children = { mapIndexed { index, item -> ValueNode(type = "[$index] = $item") } }
+            children = { mapIndexed { index, item -> ValueNode(name = "[$index]", value = item.toString()) } }
         )
 
     private fun LongArray.toTree(name: String? = null): ValueNode =
@@ -98,7 +99,7 @@ actual class ValueParser actual constructor() {
             name = name,
             type = "LongArray",
             value = this,
-            children = { mapIndexed { index, item -> ValueNode(type = "[$index] = $item") } }
+            children = { mapIndexed { index, item -> ValueNode(name = "[$index]", value = item.toString()) } }
         )
 
     private fun ShortArray.toTree(name: String? = null): ValueNode =
@@ -106,7 +107,7 @@ actual class ValueParser actual constructor() {
             name = name,
             type = "ShortArray",
             value = this,
-            children = { mapIndexed { index, item -> ValueNode(type = "[$index] = $item") } }
+            children = { mapIndexed { index, item -> ValueNode(name = "[$index]", value = item.toString()) } }
         )
 
     private fun ByteArray.toTree(name: String? = null): ValueNode =
@@ -114,7 +115,7 @@ actual class ValueParser actual constructor() {
             name = name,
             type = "ByteArray",
             value = this,
-            children = { mapIndexed { index, item -> ValueNode(type = "[$index] = $item") } }
+            children = { mapIndexed { index, item -> ValueNode(name = "[$index]", value = item.toString()) } }
         )
 
     private fun FloatArray.toTree(name: String? = null): ValueNode =
@@ -122,7 +123,7 @@ actual class ValueParser actual constructor() {
             name = name,
             type = "FloatArray",
             value = this,
-            children = { mapIndexed { index, item -> ValueNode(type = "[$index] = $item") } }
+            children = { mapIndexed { index, item -> ValueNode(name = "[$index]", value = item.toString()) } }
         )
 
     private fun DoubleArray.toTree(name: String? = null): ValueNode =
@@ -130,7 +131,7 @@ actual class ValueParser actual constructor() {
             name = name,
             type = "DoubleArray",
             value = this,
-            children = { mapIndexed { index, item -> ValueNode(type = "[$index] = $item") } }
+            children = { mapIndexed { index, item -> ValueNode(name = "[$index]", value = item.toString()) } }
         )
 
     private fun CharArray.toTree(name: String? = null): ValueNode =
@@ -138,7 +139,7 @@ actual class ValueParser actual constructor() {
             name = name,
             type = "CharArray",
             value = this,
-            children = { mapIndexed { index, item -> ValueNode(type = "[$index] = $item") } }
+            children = { mapIndexed { index, item -> ValueNode(name = "[$index]", value = item.toString()) } }
         )
 
     private fun BooleanArray.toTree(name: String? = null): ValueNode =
@@ -146,7 +147,7 @@ actual class ValueParser actual constructor() {
             name = name,
             type = "BooleanArray",
             value = this,
-            children = { mapIndexed { index, item -> ValueNode(type = "[$index] = $item") } }
+            children = { mapIndexed { index, item -> ValueNode(name = "[$index]", value = item.toString()) } }
         )
 
     private fun Iterable<*>.toTree(name: String? = null): ValueNode =
@@ -207,7 +208,7 @@ actual class ValueParser actual constructor() {
         val children = ArrayList<ValueNode>()
 
         accessEachField {
-            children += it.getValue(obj = this, name = it.name)
+            children += it.getValue()
         }
 
         val type = getTypeName(value = this)
@@ -236,59 +237,67 @@ actual class ValueParser actual constructor() {
         )
     }
 
-    private fun Field.getValue(obj: Any, name: String? = null): ValueNode =
+    private fun FieldValue.getValue(): ValueNode =
         when (type) {
-            Int::class.javaPrimitiveType -> ValueNode(name = name, type = "Int", value = getInt(obj).toString())
-            Long::class.javaPrimitiveType -> ValueNode(name = name, type = "Long", value = getLong(obj).toString())
-            Short::class.javaPrimitiveType -> ValueNode(name = name, type = "Short", value = getShort(obj).toString())
-            Byte::class.javaPrimitiveType -> ValueNode(name = name, type = "Byte", value = getByte(obj).toString())
-            Float::class.javaPrimitiveType -> ValueNode(name = name, type = "Float", value = getFloat(obj).toString())
-            Double::class.javaPrimitiveType -> ValueNode(name = name, type = "Double", value = getDouble(obj).toString())
-            Char::class.javaPrimitiveType -> ValueNode(name = name, type = "Char", value = getChar(obj).toString())
-            Boolean::class.javaPrimitiveType -> ValueNode(name = name, type = "Boolean", value = getBoolean(obj).toString())
-            else -> value(value = get(obj), clazz = type, name = name)
+            Int::class.javaPrimitiveType -> ValueNode(name = name, type = "Int", value = value.toString())
+            Long::class.javaPrimitiveType -> ValueNode(name = name, type = "Long", value = value.toString())
+            Short::class.javaPrimitiveType -> ValueNode(name = name, type = "Short", value = value.toString())
+            Byte::class.javaPrimitiveType -> ValueNode(name = name, type = "Byte", value = value.toString())
+            Float::class.javaPrimitiveType -> ValueNode(name = name, type = "Float", value = value.toString())
+            Double::class.javaPrimitiveType -> ValueNode(name = name, type = "Double", value = value.toString())
+            Char::class.javaPrimitiveType -> ValueNode(name = name, type = "Char", value = value.toString())
+            Boolean::class.javaPrimitiveType -> ValueNode(name = name, type = "Boolean", value = value.toString())
+            else -> value(value = value, clazz = type, name = name)
         }
+
+    private class FieldValue(
+        val value: Any?,
+        val name: String,
+        val type: Class<*>,
+    )
 
     private companion object {
         private val BLACK_LIST_FIELDS = hashSetOf("serialVersionUID", "INSTANCE")
 
-        private inline fun Field.access(block: () -> Unit) {
-            @Suppress("DEPRECATION") // Required for Java 8
-            val isFieldAccessible = isAccessible
-            if (isFieldAccessible || trySetAccessibleCompat()) {
-                try {
-                    block()
-                } finally {
-                    if (!isFieldAccessible) {
-                        isAccessible = false
-                    }
-                }
-            }
-        }
-
-        private fun Field.trySetAccessibleCompat(): Boolean =
-            try {
-                isAccessible = true
-                true
-            } catch (e: SecurityException) {
-                false
-            }
-
         private fun Field.isValidForParsing(): Boolean =
             !Modifier.isStatic(modifiers) && !Modifier.isTransient(modifiers)
 
-        private fun Any.accessEachField(block: (Field) -> Unit) {
+        private fun Any.accessEachField(block: (FieldValue) -> Unit) {
             javaClass.allFields.forEach { field ->
                 if (field.isValidForParsing()) {
-                    field.access {
-                        val fieldName = field.name
-                        if (fieldName.isAllowedFieldName()) {
-                            block(field)
-                        }
+                    val fieldName = field.name
+                    if (fieldName.isAllowedFieldName()) {
+                        field.getValue(this)?.also(block)
                     }
                 }
             }
         }
+
+        private fun Field.getValue(obj: Any): FieldValue? =
+            @Suppress("DEPRECATION")
+            if (canAccessCompat(obj) || trySetAccessibleCompat()) {
+                FieldValue(value = get(obj), name = name, type = type)
+            } else {
+                obj.javaClass.findGetterFor(field = this)?.getValue(obj)
+            }
+
+        private fun Method.getValue(obj: Any): FieldValue =
+            FieldValue(value = invoke(obj), name = name, type = returnType)
+
+        private fun Class<*>.findGetterFor(field: Field): Method? =
+            methods.find { it.isGetterFor(field) }
+
+        private fun Method.isGetterFor(field: Field): Boolean =
+            when {
+                (parameterCount > 0) || (returnType != field.type) -> false
+                name == field.name -> true
+                isGetterFor(field = field, namePrefix = "get") -> true
+                (field.type == Boolean::class.javaPrimitiveType) && isGetterFor(field = field, namePrefix = "is") -> true
+                else -> false
+            }
+
+        private fun Method.isGetterFor(field: Field, namePrefix: String): Boolean =
+            name.startsWith(namePrefix) && (name == "$namePrefix${field.name.replaceFirstChar(Char::uppercaseChar)}")
 
         private val Class<*>.allFields: List<Field>
             get() {

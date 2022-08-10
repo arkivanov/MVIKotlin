@@ -2,7 +2,7 @@ package com.arkivanov.mvikotlin.timetravel.proto.internal.data.value
 
 data class ValueNode(
     val name: String? = null,
-    val type: String,
+    val type: String? = null,
     val value: String? = null,
     val children: List<ValueNode> = emptyList()
 ) {
@@ -11,10 +11,15 @@ data class ValueNode(
         buildString {
             if (name != null) {
                 append(name)
+            }
+
+            if ((name != null) && (type != null)) {
                 append(": ")
             }
 
-            append(type)
+            if (type != null) {
+                append(type)
+            }
 
             if (value != null) {
                 append(" = ")

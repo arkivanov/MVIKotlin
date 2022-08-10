@@ -17,7 +17,7 @@ internal fun DataWriter.writeValueNode(valueNode: ValueNode) {
 internal fun DataReader.readValueNode(): ValueNode =
     ValueNode(
         name = readString(),
-        type = readString()!!,
+        type = readString(),
         value = readString(),
         children = readList { readValueNode() }!!
     )
