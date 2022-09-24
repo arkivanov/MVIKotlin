@@ -73,7 +73,7 @@ public abstract interface class com/arkivanov/mvikotlin/extensions/reaktive/Reak
 
 public final class com/arkivanov/mvikotlin/extensions/reaktive/StoreExtKt {
 	public static final fun getLabels (Lcom/arkivanov/mvikotlin/core/store/Store;)Lcom/badoo/reaktive/observable/Observable;
-	public static final fun getStates (Lcom/arkivanov/mvikotlin/core/store/Store;)Lcom/badoo/reaktive/observable/Observable;
+	public static final fun getStates (Lcom/arkivanov/mvikotlin/core/store/Store;)Lcom/badoo/reaktive/subject/behavior/BehaviorObservable;
 }
 
 public final class com/arkivanov/mvikotlin/extensions/reaktive/ViewExtKt {

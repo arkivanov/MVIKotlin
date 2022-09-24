@@ -38,7 +38,7 @@ fun <State : Any> Store<*, State, *>.stateFlow(
 /**
  * Returns a [StateFlow] that emits [Store] states.
  *
- * This is API is experimental because [StateFlow] interface is not stable for inheritance in 3rd party libraries.
+ * This API is experimental because [StateFlow] interface is not stable for inheritance in 3rd party libraries.
  * Please mind binary compatibility when using this API.
  *
  * Please note that the actual collection of the [StateFlow] may not be synchronous depending on [CoroutineContext] being used.
