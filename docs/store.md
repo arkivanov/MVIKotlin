@@ -15,7 +15,38 @@ It has the following features:
 - The `init()` method initializes the `Store` and triggers the `Bootstrapper` if applicable, must be called only on the main thread.
 - The `dispose()` method disposes the `Store` and cancels all its async operations, must be called only on the main thread.
 
-> ⚠️ Usually you don't need to use `states(Observer)` or `labels(Observer)` methods directly. There are extensions available for `Reaktive` and `kotlinx.coroutines` libraries (see [Binding and Lifecycle](binding_and_lifecycle.md) for more information). However you will need these methods if you implement custom extensions.
+### Observing states and labels
+
+Usually you don't need to use `states(Observer)` or `labels(Observer)` methods directly. There are extensions available for `Reaktive` and `kotlinx.coroutines` libraries. However, you will need those methods if you implement custom extensions. See also - [Binding and Lifecycle](binding_and_lifecycle.md).
+
+#### Observing with Reaktive
+
+Add the following dependency to your `build.gradle` file:
+
+```kotlin
+implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-reaktive:<version>")
+```
+
+Now you can observe states and labels using the following extensions:
+
+- `Store.states` - returns `BehaviorObservable` of type `State`.
+- `Store.labels` - returns `Observable` of type `Label`.
+
+#### Observing with kotlinx.coroutines
+
+Add the following dependency to your `build.gradle` file:
+
+```kotlin
+implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:<version>")
+```
+
+Now you can observe states and labels using the following extensions:
+
+- `Store.states` - returns `Flow` of type `State`.
+- `Store.stateFlow` - returns `StateFlow` of type `State`.
+- `Store.labels` - returns `Flow` of type `Label`.
+
+### Store structure
 
 Every `Store` has up to three components: `Bootstrapper`, `Executor` and `Reducer`. Here is the diagram of how they are connected:
 

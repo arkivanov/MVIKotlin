@@ -21,5 +21,9 @@ kotlin {
             implementation(project(":utils-internal"))
             implementation(deps.kotlinx.kotlinxCoroutinesCore)
         }
+
+        common.test.dependencies {
+            implementation(project(":rx-internal"))
+        }
     }
 }

@@ -68,7 +68,10 @@ public final class com/arkivanov/mvikotlin/extensions/coroutines/ExecutorBuilder
 
 public final class com/arkivanov/mvikotlin/extensions/coroutines/StoreExtKt {
 	public static final fun getLabels (Lcom/arkivanov/mvikotlin/core/store/Store;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun getStateFlow (Lcom/arkivanov/mvikotlin/core/store/Store;)Lkotlinx/coroutines/flow/StateFlow;
 	public static final fun getStates (Lcom/arkivanov/mvikotlin/core/store/Store;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun stateFlow (Lcom/arkivanov/mvikotlin/core/store/Store;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/SharingStarted;)Lkotlinx/coroutines/flow/StateFlow;
+	public static synthetic fun stateFlow$default (Lcom/arkivanov/mvikotlin/core/store/Store;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/SharingStarted;ILjava/lang/Object;)Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public abstract class com/arkivanov/mvikotlin/extensions/coroutines/SuspendBootstrapper : com/arkivanov/mvikotlin/core/store/Bootstrapper {
