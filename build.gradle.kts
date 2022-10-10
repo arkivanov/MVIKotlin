@@ -5,6 +5,7 @@ import com.arkivanov.gradle.iosCompat
 import com.arkivanov.gradle.macosCompat
 import com.arkivanov.gradle.setupDefaults
 import com.arkivanov.gradle.setupDetekt
+import com.arkivanov.gradle.tvosCompat
 import com.arkivanov.gradle.watchosCompat
 
 buildscript {
@@ -36,6 +37,7 @@ setupDefaults(
         linuxX64()
         iosCompat()
         watchosCompat()
+        tvosCompat()
         macosCompat()
     },
     androidConfig = AndroidConfig(
