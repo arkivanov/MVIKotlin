@@ -26,6 +26,7 @@ kotlin {
             implementation(project(":mvikotlin"))
             implementation(project(":rx"))
             implementation(project(":rx-internal"))
+            implementation(project(":utils-internal"))
         }
 
         common.test.dependencies {

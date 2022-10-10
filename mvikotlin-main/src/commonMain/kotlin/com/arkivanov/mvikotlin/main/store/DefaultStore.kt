@@ -10,6 +10,7 @@ import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.rx.observer
+import com.arkivanov.mvikotlin.utils.internal.atomic
 
 internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, out State : Any, Label : Any>(
     initialState: State,
@@ -23,9 +24,16 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, 
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
+    private val isInitialized = atomic(false)
 
     override fun init() {
         assertOnMainThread()
+
+        if (isInitialized.value) {
+            return
+        }
+
+        isInitialized.value = true
 
         intentSubject.subscribe(observer(onNext = ::onIntent))
 

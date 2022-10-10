@@ -26,6 +26,13 @@ abstract class StoreGenericTests(
 ) {
 
     @Test
+    fun does_not_throw_WHEN_second_init() {
+        val store = store()
+
+        store.init()
+    }
+
+    @Test
     fun state_val_returns_initial_state_WHEN_created() {
         val store = store(initialState = "initial")
 

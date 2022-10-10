@@ -33,6 +33,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
     private var debuggingExecutor by atomic<Executor<*, *, *, *, *>?>(null)
     private val eventProcessor = EventProcessor()
     private val eventDebugger = EventDebugger()
+    private val isInitialized = atomic(false)
 
     override fun states(observer: Observer<State>): Disposable =
         stateSubject.subscribe(observer)
@@ -69,6 +70,12 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
 
     override fun init() {
         assertOnMainThread()
+
+        if (isInitialized.value) {
+            return
+        }
+
+        isInitialized.value = true
 
         onInit(this)
 
