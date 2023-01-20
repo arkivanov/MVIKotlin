@@ -20,6 +20,8 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.Tim
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.SettingsConfig
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.integration.TimeTravelSettingsComponent
+import com.arkivanov.mvikotlin.timetravel.client.internal.utils.FileDialogMode
+import com.arkivanov.mvikotlin.timetravel.client.internal.utils.fileDialog
 import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
 import com.badoo.reaktive.coroutinesinterop.asScheduler
 import com.badoo.reaktive.scheduler.overrideSchedulers
@@ -27,11 +29,11 @@ import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.JvmPreferencesSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.awt.FileDialog
-import java.awt.Frame
 import java.io.File
 import java.io.FilenameFilter
 import java.util.prefs.Preferences
+import javax.swing.filechooser.FileFilter
+import javax.swing.filechooser.FileNameExtensionFilter
 
 fun main() {
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -117,39 +119,35 @@ private fun components(): Components {
     return Components(settingsComponent, clientComponent)
 }
 
-private fun importEvents(): ByteArray? {
-    val dialog = FileDialog(null as Frame?, "MVIKotlin time travel import", FileDialog.LOAD)
-    dialog.filenameFilter = FilenameFilter { _, name -> name.endsWith(".tte") }
-    dialog.isVisible = true
-
-    return dialog
-        .selectedFile
-        ?.readBytes()
-}
+private fun importEvents(): ByteArray? =
+    fileDialog(
+        title = "MVIKotlin Time Travel Import",
+        mode = FileDialogMode.OPEN,
+        fileFilter = FileNameExtensionFilter("Time travel events (*.tte)", "tte"),
+    )?.readBytes()
 
 private fun exportEvents(data: ByteArray) {
-    val dialog = FileDialog(null as Frame?, "MVIKotlin time travel export", FileDialog.SAVE)
-    dialog.file = "TimeTravelEvents.tte"
-    dialog.isVisible = true
-
-    dialog
-        .selectedFile
-        ?.writeBytes(data)
+    fileDialog(
+        title = "MVIKotlin Time Travel Export",
+        mode = FileDialogMode.SAVE,
+        selectedFileName = "TimeTravelEvents.tte",
+    )?.writeBytes(data)
 }
 
 /**
  * [FilenameFilter] works on Ubuntu but looks like it doesn't work on MacOS
  */
-private fun selectAdbPath(): String? {
-    val dialog = FileDialog(null as Frame?, "Select ADB executable path", FileDialog.LOAD)
-    dialog.filenameFilter = FilenameFilter { _, name -> name == "adb" }
-    dialog.isVisible = true
-
-    return dialog
-        .selectedFile
+private fun selectAdbPath(): String? =
+    fileDialog(
+        title = "Select ADB Executable File",
+        mode = FileDialogMode.OPEN,
+        fileFilter = object : FileFilter() {
+            override fun accept(f: File): Boolean = !f.isFile || f.isValidAdbExecutable()
+            override fun getDescription(): String = "ADB executable"
+        },
+    )
         ?.takeIf(File::isValidAdbExecutable)
         ?.absolutePath
-}
 
 private class Components(
     val settings: TimeTravelSettings,

@@ -7,8 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.badoo.reaktive.observable.subscribe
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
-import java.awt.FileDialog
-import java.io.File
 import javax.swing.SwingUtilities
 
 fun <T> invokeOnAwtSync(block: () -> T): T {
@@ -30,6 +28,3 @@ fun <T> BehaviorObservable<T>.subscribeAsState(): State<T> {
 
     return state
 }
-
-val FileDialog.selectedFile: File?
-    get() = if ((directory != null) && (file != null)) File(directory, file) else null

@@ -94,7 +94,7 @@ class TimeTravelToolWindow(
     }
 
     private fun importEvents(): ByteArray? {
-        val path = chooseFile(createSingleFileDescriptor("tte").withTitle("Select file"), project, null)?.path ?: return null
+        val path = chooseFile(createSingleFileDescriptor("tte").withTitle("Select File"), project, null)?.path ?: return null
 
         return try {
             FileInputStream(path).use(FileInputStream::readBytes)
@@ -131,8 +131,8 @@ class TimeTravelToolWindow(
     private fun selectAdbPath(): String? {
         return chooseFile(
             createSingleFileDescriptor()
-                .withFileFilter { it.name == "adb" }
-                .withTitle("Select ADB executable"),
+                .withFileFilter { isValidAdbExecutable(it.name) }
+                .withTitle("Select ADB Executable"),
             project,
             getUserHome()
                 .takeIf(File::exists)
