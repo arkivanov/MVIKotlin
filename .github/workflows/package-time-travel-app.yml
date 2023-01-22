@@ -13,7 +13,7 @@ jobs:
       - name: Install Java
         uses: actions/setup-java@v1
         with:
-          java-version: 15
+          java-version: 19
       - name: Set up cache
         uses: actions/cache@v2
         with:
