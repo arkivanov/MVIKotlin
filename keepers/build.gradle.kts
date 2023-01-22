@@ -14,6 +14,10 @@ setupMultiplatform()
 setupPublication()
 setupBinaryCompatibilityValidator()
 
+android {
+    namespace = "com.arkivanov.mvikotlin.keepers"
+}
+
 kotlin {
     setupSourceSets {
         val android by bundle()

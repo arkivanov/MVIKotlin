@@ -4,17 +4,17 @@ mvikotlin = "3.1.0"
 timeTravelPlugin = "3.0.0"
 timeTravelApp = "3.0.0"
 
-kotlin = "1.7.10"
-kotlinxBinaryCompatibilityValidator = "0.10.0"
-kotlinxCoroutines = "1.6.3"
+kotlin = "1.8.0"
+kotlinxBinaryCompatibilityValidator = "0.12.1"
+kotlinxCoroutines = "1.6.4"
 intellijGradlePlugin = "1.3.1"
-detektGradlePlugin = "1.21.0-RC2"
-essenty = "0.9.0"
-reaktive = "1.2.1"
+detektGradlePlugin = "1.22.0"
+essenty = "0.10.0"
+reaktive = "1.2.3"
 multiplatformSettings = "0.8.1"
-compose = "1.2.0-alpha01-dev741"
-kotlinWrappers = "0.0.1-pre.325-kotlin-1.6.10"
-androidGradle = "7.2.0"
+compose = "1.3.0-rc05"
+kotlinWrappers = "1.0.0-pre.480"
+androidGradle = "7.3.1"
 androidxLifecycle = "2.2.0"
 androidxCore = "1.1.0"
 androidxAppcompat = "1.1.0"
@@ -65,4 +65,3 @@ androidx-appcompat-appcompat  = { group = "androidx.appcompat", name = "appcompa
 androidx-recyclerview-recyclerview  = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerView" }
 androidx-constraintlayout-constraintlayout  = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintLayout" }
 androidx-drawerlayout-drawerlayout  = { group = "androidx.drawerlayout", name = "drawerlayout", version.ref = "androidxDrawerLayout" }
-#  = { group = "", name = "", version.ref = "" }

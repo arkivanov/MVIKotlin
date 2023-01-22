@@ -30,7 +30,8 @@ import mui.material.Stack
 import mui.material.StackDirection
 import mui.material.Toolbar
 import mui.material.Typography
-import mui.system.ResponsiveStyleValue
+import mui.material.styles.TypographyVariant
+import mui.system.responsive
 import mui.system.sx
 import react.FC
 import react.Props
@@ -106,7 +107,7 @@ val DetailsComponent = FC<DetailsProps> { props ->
                         flexGrow = number(1.0)
                     }
 
-                    variant = "h6"
+                    variant = TypographyVariant.h6
 
                     +"Details"
                 }
@@ -144,7 +145,7 @@ val DetailsComponent = FC<DetailsProps> { props ->
                     justifyContent = JustifyContent.center
                 }
 
-                direction = ResponsiveStyleValue(StackDirection.row)
+                direction = responsive(StackDirection.row)
 
                 Checkbox {
                     checked = model.isDone

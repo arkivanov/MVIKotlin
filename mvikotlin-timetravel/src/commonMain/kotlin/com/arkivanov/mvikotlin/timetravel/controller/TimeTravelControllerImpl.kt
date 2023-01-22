@@ -85,7 +85,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         assertOnMainThread()
 
         if (state.mode === Mode.STOPPED) {
-            move(state.events, state.selectedEventIndex, -1)
+            move(events = state.events, from = state.selectedEventIndex, to = -1)
         }
     }
 
@@ -93,7 +93,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         assertOnMainThread()
 
         if (state.mode === Mode.STOPPED) {
-            step(state.events, state.selectedEventIndex, false)
+            step(events = state.events, from = state.selectedEventIndex, isForward = false)
         }
     }
 
@@ -101,7 +101,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         assertOnMainThread()
 
         if (state.mode === Mode.STOPPED) {
-            step(state.events, state.selectedEventIndex, true)
+            step(events = state.events, from = state.selectedEventIndex, isForward = true)
         }
     }
 
@@ -109,7 +109,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         assertOnMainThread()
 
         if (state.mode === Mode.STOPPED) {
-            move(state.events, state.selectedEventIndex, state.events.lastIndex)
+            move(events = state.events, from = state.selectedEventIndex, to = state.events.lastIndex)
         }
     }
 
@@ -193,20 +193,21 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         for (i in progression) {
             val item = events.getOrNull(i)
             if ((item == null) || (item.type === StoreEventType.STATE)) {
-                move(events, from, i)
+                move(events = events, from = from, to = i)
                 break
             }
         }
     }
 
-    private fun move(events: List<TimeTravelEvent>, from: Int, to: Int, publish: Boolean = true) {
+    private fun move(events: List<TimeTravelEvent>, from: Int, to: Int) {
         if (from == to) {
             return
         }
 
         val set = HashSet<String>()
-        val deque = ArrayDeque<TimeTravelEvent>()
+        val queue = ArrayList<TimeTravelEvent>()
         val isForward = to > from
+
         val progression =
             if (isForward) {
                 to downTo from + 1
@@ -216,27 +217,24 @@ internal class TimeTravelControllerImpl : TimeTravelController {
 
         for (i in progression) {
             val event = events[i]
-            if ((event.type === StoreEventType.STATE) && stores.containsKey(event.storeName) && !set.contains(event.storeName)) {
-                set.add(event.storeName)
-                deque.addLast(event)
+            if ((event.type == StoreEventType.STATE) && (event.storeName in stores) && (event.storeName !in set)) {
+                set += event.storeName
+                queue += event
                 if (set.size == stores.size) {
                     break
                 }
             }
         }
-        while (!deque.isEmpty()) {
-            deque.removeFirst().also { event ->
-                if ((event.type === StoreEventType.STATE) && !isForward) {
-                    process(event, event.state)
-                } else {
-                    process(event)
-                }
+
+        queue.asReversed().forEach { event ->
+            if ((event.type === StoreEventType.STATE) && !isForward) {
+                process(event, event.state)
+            } else {
+                process(event)
             }
         }
 
-        if (publish) {
-            swapState { it.copy(events = events, selectedEventIndex = to) }
-        }
+        swapState { it.copy(events = events, selectedEventIndex = to) }
     }
 
     private fun process(event: TimeTravelEvent, previousValue: Any? = null) {

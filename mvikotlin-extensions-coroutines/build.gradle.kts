@@ -13,6 +13,10 @@ setupMultiplatform()
 setupPublication()
 setupBinaryCompatibilityValidator()
 
+android {
+    namespace = "com.arkivanov.mvikotlin.extensions.coroutines"
+}
+
 kotlin {
     setupSourceSets {
         common.main.dependencies {

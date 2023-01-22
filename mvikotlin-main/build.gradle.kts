@@ -15,6 +15,10 @@ setupMultiplatform()
 setupPublication()
 setupBinaryCompatibilityValidator()
 
+android {
+    namespace = "com.arkivanov.mvikotlin.main"
+}
+
 kotlin {
     setupSourceSets {
         val darwin by bundle()

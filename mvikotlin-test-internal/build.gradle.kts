@@ -11,6 +11,10 @@ plugins {
 
 setupMultiplatform()
 
+android {
+    namespace = "com.arkivanov.mvikotlin.core.test.internal"
+}
+
 kotlin {
     setupSourceSets {
         val android by bundle()

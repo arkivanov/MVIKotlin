@@ -14,6 +14,8 @@ setupAndroidApp(
 )
 
 android {
+    namespace = "com.arkivanov.mvikotlin.sample.coroutines.app"
+
     packagingOptions {
         exclude("META-INF/*")
     }

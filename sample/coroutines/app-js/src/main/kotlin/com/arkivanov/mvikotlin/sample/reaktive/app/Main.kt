@@ -6,13 +6,14 @@ import com.arkivanov.mvikotlin.sample.coroutines.shared.DefaultDispatchers
 import com.arkivanov.mvikotlin.sample.coroutines.shared.TodoDispatchers
 import com.arkivanov.mvikotlin.sample.database.DefaultTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
+import com.arkivanov.mvikotlin.timetravel.TimeTravelServer
 import csstype.AlignItems
 import csstype.Display
 import csstype.JustifyContent
 import csstype.px
 import csstype.vh
 import csstype.vw
-import kotlinx.browser.document
+import js.core.get
 import kotlinx.coroutines.flow.MutableSharedFlow
 import mui.material.Box
 import mui.system.sx
@@ -27,8 +28,11 @@ import react.router.dom.BrowserRouter
 import react.router.useNavigate
 import react.router.useParams
 import react.useMemo
+import web.dom.document
 
 fun main() {
+    TimeTravelServer().start()
+
     createRoot(document.getElementById("app")!!).render(
         Root.create {
             storeFactory = DefaultStoreFactory()

@@ -18,6 +18,10 @@ setupMultiplatform {
     )
 }
 
+android {
+    namespace = "com.arkivanov.mvikotlin.sample.database"
+}
+
 kotlin {
     setupSourceSets {
         val darwin by bundle()

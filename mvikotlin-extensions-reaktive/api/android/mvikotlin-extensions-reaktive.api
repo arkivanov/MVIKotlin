@@ -18,6 +18,8 @@ public final class com/arkivanov/mvikotlin/extensions/reaktive/BuildConfig {
 }
 
 public final class com/arkivanov/mvikotlin/extensions/reaktive/ExecutorBuilder {
+	public final fun getActionHandlers ()Ljava/util/ArrayList;
+	public final fun getIntentHandlers ()Ljava/util/ArrayList;
 }
 
 public abstract class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveBootstrapper : com/arkivanov/mvikotlin/core/store/Bootstrapper, com/badoo/reaktive/disposable/scope/DisposableScope {

@@ -31,6 +31,7 @@ import mui.material.SwitchBaseEdge
 import mui.material.TextField
 import mui.material.Toolbar
 import mui.material.Typography
+import mui.material.styles.TypographyVariant
 import mui.system.PropsWithSx
 import mui.system.sx
 import react.FC
@@ -38,7 +39,6 @@ import react.Props
 import react.ReactNode
 import react.create
 import react.dom.onChange
-import react.key
 import react.useEffectOnce
 import react.useMemo
 import react.useState
@@ -108,7 +108,7 @@ val MainComponent: FC<MainProps> = FC { props ->
                         flexGrow = number(1.0)
                     }
 
-                    variant = "h6"
+                    variant = TypographyVariant.h6
 
                     +"MVIKotlin"
                 }

@@ -13,6 +13,10 @@ plugins {
 setupMultiplatform()
 setupPublication()
 
+
+android {
+    namespace = "com.arkivanov.mvikotlin.rx.internal"
+}
 kotlin {
     setupSourceSets {
         val native by bundle()

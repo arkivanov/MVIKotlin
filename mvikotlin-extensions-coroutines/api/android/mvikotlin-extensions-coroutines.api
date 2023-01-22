@@ -64,6 +64,8 @@ public abstract interface class com/arkivanov/mvikotlin/extensions/coroutines/Co
 }
 
 public final class com/arkivanov/mvikotlin/extensions/coroutines/ExecutorBuilder {
+	public final fun getActionHandlers ()Ljava/util/ArrayList;
+	public final fun getIntentHandlers ()Ljava/util/ArrayList;
 }
 
 public final class com/arkivanov/mvikotlin/extensions/coroutines/StoreExtKt {
