@@ -11,3 +11,7 @@ plugins {
 setupMultiplatform()
 setupPublication()
 setupBinaryCompatibilityValidator()
+
+android {
+    namespace = "com.arkivanov.mvikotlin.rx"
+}

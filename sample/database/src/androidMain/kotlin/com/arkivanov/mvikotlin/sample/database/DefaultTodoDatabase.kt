@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.sample.database.TodoItemContract.COLUMN_ID
 import com.arkivanov.mvikotlin.sample.database.TodoItemContract.TABLE_NAME
 import java.util.UUID
 
+@Suppress("NewApi") // Implicit cast from Cursor to Closeable requires API level 16
 class DefaultTodoDatabase(
     context: Context
 ) : TodoDatabase {

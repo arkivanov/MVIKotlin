@@ -14,6 +14,10 @@ plugins {
 setupMultiplatform()
 setupPublication()
 
+android {
+    namespace = "com.arkivanov.mvikotlin.utils.internal"
+}
+
 kotlin {
     setupSourceSets {
         val js by bundle()

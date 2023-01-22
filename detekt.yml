@@ -1,9 +1,12 @@
 complexity:
-  ComplexMethod:
+  CyclomaticComplexMethod:
     threshold: 15
     ignoreSingleWhenExpression: true
     ignoreSimpleWhenEntries: true
     ignoreNestingFunctions: false
+  CognitiveComplexMethod:
+    active: true
+    threshold: 15
   LongParameterList:
     active: false
   TooManyFunctions:

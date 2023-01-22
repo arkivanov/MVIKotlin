@@ -13,6 +13,10 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/staging/")
 }
 
+android {
+    namespace = "com.arkivanov.mvikotlin.tools.checkpublication"
+}
+
 kotlin {
     setupSourceSets {
         common.main.dependencies {

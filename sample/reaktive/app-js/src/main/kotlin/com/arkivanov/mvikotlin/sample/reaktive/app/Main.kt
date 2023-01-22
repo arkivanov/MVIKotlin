@@ -14,7 +14,7 @@ import csstype.JustifyContent
 import csstype.px
 import csstype.vh
 import csstype.vw
-import kotlinx.browser.document
+import js.core.get
 import mui.material.Box
 import mui.system.sx
 import react.FC
@@ -28,6 +28,7 @@ import react.router.dom.BrowserRouter
 import react.router.useNavigate
 import react.router.useParams
 import react.useMemo
+import web.dom.document
 
 fun main() {
     TimeTravelServer().start()

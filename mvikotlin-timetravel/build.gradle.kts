@@ -15,6 +15,10 @@ setupMultiplatform()
 setupPublication()
 setupBinaryCompatibilityValidator()
 
+android {
+    namespace = "com.arkivanov.mvikotlin.timetravel"
+}
+
 kotlin {
     setupSourceSets {
         val android by bundle()

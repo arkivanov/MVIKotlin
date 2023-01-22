@@ -14,6 +14,10 @@ plugins {
 setupMultiplatform()
 setupPublication()
 
+android {
+    namespace = "com.arkivanov.mvikotlin.timetravel.proto"
+}
+
 kotlin {
     setupSourceSets {
         val jvmNative by bundle()

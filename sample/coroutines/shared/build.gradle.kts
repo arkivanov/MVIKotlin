@@ -20,6 +20,10 @@ setupMultiplatform {
     )
 }
 
+android {
+    namespace = "com.arkivanov.mvikotlin.sample.coroutines.shared"
+}
+
 kotlin {
     targets
         .filterIsInstance<KotlinNativeTarget>()
