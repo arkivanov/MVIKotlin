@@ -85,7 +85,17 @@ During its initialization, the `Store` establishes internal connections and call
 
 ### IDEA Live Templates
 
-To speed up the creation of new Stores, you can use the following [IDEA Live Templates](https://gist.github.com/arkivanov/34bb84e73e56c22a4e7c752421d5f02c).
+To speed up the creation of new Stores, you can use the following [IDEA Live Templates](https://github.com/arkivanov/MVIKotlin/blob/master/docs/assets/live-templates.zip). Download the archive and use the [guide](https://www.jetbrains.com/help/idea/sharing-live-templates.html#import) to import live templates into your IDE. You may need to restart the IDE after import.
+
+#### Usage
+
+Create a new Kotlin file and type one of the following abbreviations:
+
+- `mvisi` - adds a skeleton `Store` interface.
+- `mvisr` - adds a skeleton `Store` factory with Reaktive.
+- `mvisc` - adds a skeleton `Store` factory with coroutines.
+- `mvisfr` - adds skeletons for `Store` interface and factory with Reaktive.
+- `mvisfc` - adds skeletons for `Store` interface and factory with coroutines.
 
 ### Simplest example
 
