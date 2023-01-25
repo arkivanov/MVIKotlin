@@ -87,6 +87,8 @@ During its initialization, the `Store` establishes internal connections and call
 
 To speed up the creation of new Stores, you can use the following [IDEA Live Templates](https://github.com/arkivanov/MVIKotlin/blob/master/docs/assets/live-templates.zip). Download the archive and use the [guide](https://www.jetbrains.com/help/idea/sharing-live-templates.html#import) to import live templates into your IDE. You may need to restart the IDE after import.
 
+> ⚠️ Safari browser may [automatically unzip download archives](https://apple.stackexchange.com/questions/961/how-to-stop-safari-from-unzipping-files-after-download), make sure that you import a zip file and not a folder.
+
 #### Usage
 
 Create a new Kotlin file and type one of the following abbreviations:
