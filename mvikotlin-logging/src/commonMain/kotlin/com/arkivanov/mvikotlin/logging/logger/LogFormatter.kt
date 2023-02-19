@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 /**
  * Represents MVIKotlin log formatter
  */
-interface LogFormatter {
+fun interface LogFormatter {
 
     /**
      * Formats a log string for [Store][com.arkivanov.mvikotlin.core.store.Store] event
