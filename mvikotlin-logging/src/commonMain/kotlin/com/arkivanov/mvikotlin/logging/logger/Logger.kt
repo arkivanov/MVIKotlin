@@ -3,7 +3,7 @@ package com.arkivanov.mvikotlin.logging.logger
 /**
  * Represents MVIKotlin logger
  */
-fun interface Logger {
+interface Logger {
 
     /**
      * Logs the provided string
