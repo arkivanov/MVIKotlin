@@ -7,7 +7,7 @@ import android.os.Looper
 internal actual fun getMainThreadId(): MainThreadId? =
     try {
         MainThreadId(Looper.getMainLooper().thread.id)
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
         logE("Unable to determine Main thread id: ${e.message}")
         null
     }
