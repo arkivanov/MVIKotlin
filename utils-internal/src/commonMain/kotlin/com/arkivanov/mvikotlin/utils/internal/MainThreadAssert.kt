@@ -22,6 +22,10 @@ internal expect fun isMainThread(mainThreadId: MainThreadId): Boolean
 internal expect fun getCurrentThreadDescription(): String
 
 fun isMainThread(): Boolean {
+    if (!isAssertOnMainThreadEnabled) {
+        return true
+    }
+
     val mainThreadId =
         mainThreadIdRef.initAndGet {
             val id: MainThreadId? = getMainThreadId()

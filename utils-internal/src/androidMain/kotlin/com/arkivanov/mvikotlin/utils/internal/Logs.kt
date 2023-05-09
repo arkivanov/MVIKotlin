@@ -35,7 +35,7 @@ private fun isAndroidLoggerAvailable(): Boolean =
     try {
         Log.isLoggable("", Log.DEBUG)
         true
-    } catch (ignored: Exception) {
+    } catch (ignored: Throwable) {
         false
     }
 
