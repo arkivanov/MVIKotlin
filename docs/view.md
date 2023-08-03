@@ -10,7 +10,7 @@ In MVIKotlin there are two basic interfaces related to `View`:
 
 There is also the [MviView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/MviView.kt) interface which is just a combination of both `ViewRenderer` and `ViewEvents` interfaces. Again you normally don't need to implement the `MviView` interface directly. Instead you can extend the [BaseMviView](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/view/BaseMviView.kt) class.
 
-> ⚠️ If you are using Jetpack Compose then most likely you don't need `MviView` or any of its super types. You can observe the `Store` directly in `@Composable` functions. See [Compose TodoApp example](https://github.com/JetBrains/compose-jb/tree/master/examples/todoapp) for more information.
+> ⚠️ If you are using Jetpack Compose then most likely you don't need `MviView` or any of its super types. You can observe the `Store` directly in `@Composable` functions, just expose the state (or the mapped UI model) via `Observable` or `Flow`.
 
 ## Implementing a View
 
