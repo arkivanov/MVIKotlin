@@ -63,7 +63,7 @@ Everything else is out of scope of the library, there are no definitions for "sc
 - You can use/experiment with different architectures, approaches and/or libraries for navigation, UI, modularization, etc;
 - Use whatever reactive framework you like or don't use it at all.
 
-If you are using declarative UI frameworks (like [Jetpack Compose](https://developer.android.com/jetpack/compose), [Multiplatform Compose by JetBrains](https://github.com/JetBrains/compose-jb), SwiftUI, React, etc.), then consider using [Decompose](https://github.com/arkivanov/Decompose) for architecture. MVIKotlin plays nicely with Decompose - a very good example is [compose-jb/todoapp](https://github.com/JetBrains/compose-jb/tree/master/examples/todoapp).
+If you are using declarative UI frameworks (like [Jetpack Compose](https://developer.android.com/jetpack/compose), [Multiplatform Compose by JetBrains](https://github.com/JetBrains/compose-jb), SwiftUI, React, etc.), then consider using [Decompose](https://github.com/arkivanov/Decompose) for architecture. MVIKotlin plays nicely with Decompose.
 
 Also one of the architecture approaches can be found in the [samples](#sample-project).
 
