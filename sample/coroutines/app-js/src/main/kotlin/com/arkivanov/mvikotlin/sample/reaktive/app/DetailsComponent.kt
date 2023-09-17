@@ -10,13 +10,6 @@ import com.arkivanov.mvikotlin.sample.coroutines.shared.details.DetailsView.Even
 import com.arkivanov.mvikotlin.sample.coroutines.shared.details.DetailsView.Model
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import csstype.AlignItems
-import csstype.Display
-import csstype.FlexDirection
-import csstype.JustifyContent
-import csstype.number
-import csstype.pct
-import csstype.px
 import mui.material.AppBar
 import mui.material.AppBarPosition
 import mui.material.Box
@@ -39,6 +32,13 @@ import react.Props
 import react.useEffectOnce
 import react.useMemo
 import react.useState
+import web.cssom.AlignItems
+import web.cssom.Display
+import web.cssom.FlexDirection
+import web.cssom.JustifyContent
+import web.cssom.number
+import web.cssom.pct
+import web.cssom.px
 
 external interface DetailsProps : Props {
     var storeFactory: StoreFactory

@@ -8,18 +8,10 @@ import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.timetravel.TimeTravelServer
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
 import com.badoo.reaktive.subject.publish.PublishSubject
-import csstype.AlignItems
-import csstype.Display
-import csstype.JustifyContent
-import csstype.px
-import csstype.vh
-import csstype.vw
-import js.core.get
 import mui.material.Box
 import mui.system.sx
 import react.FC
 import react.Props
-import react.VFC
 import react.create
 import react.dom.client.createRoot
 import react.router.Route
@@ -28,6 +20,12 @@ import react.router.dom.BrowserRouter
 import react.router.useNavigate
 import react.router.useParams
 import react.useMemo
+import web.cssom.AlignItems
+import web.cssom.Display
+import web.cssom.JustifyContent
+import web.cssom.px
+import web.cssom.vh
+import web.cssom.vw
 import web.dom.document
 
 fun main() {
@@ -67,8 +65,8 @@ val Root: FC<RootProps> = FC { props ->
             BrowserRouter {
                 Routes {
                     Route {
-                        index = true
-                        element = VFC main@{
+                        asDynamic().index = true
+                        asDynamic().element = FC<Props> main@{
                             val navigate = useNavigate()
 
                             MainComponent {
@@ -81,8 +79,8 @@ val Root: FC<RootProps> = FC { props ->
                     }
 
                     Route {
-                        path = "/:itemId"
-                        element = VFC details@{
+                        asDynamic().path = "/:itemId"
+                        asDynamic().element = FC<Props> details@{
                             val params = useParams()
                             val navigate = useNavigate()
 
@@ -90,11 +88,11 @@ val Root: FC<RootProps> = FC { props ->
                                 database = props.database
                                 storeFactory = props.storeFactory
                                 itemId = requireNotNull(params["itemId"])
-                                onFinished = { navigate(delta = -1) }
+                                onFinished = { navigate(delta = -1.0) }
                                 onItemChanged = { id, data -> mainInput.onNext(MainInput.ItemChanged(id = id, data = data)) }
                                 onItemDeleted = { id ->
                                     mainInput.onNext(MainInput.ItemDeleted(id = id))
-                                    navigate(delta = -1)
+                                    navigate(delta = -1.0)
                                 }
                             }
                         }.create()

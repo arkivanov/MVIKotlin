@@ -41,6 +41,7 @@ public final class com/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode : jav
 	public static final field IDLE Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
 	public static final field RECORDING Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
 	public static final field STOPPED Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
 	public static fun values ()[Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
 }

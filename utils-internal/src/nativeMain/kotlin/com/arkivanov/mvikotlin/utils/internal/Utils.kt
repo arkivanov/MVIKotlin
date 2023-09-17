@@ -1,13 +1,15 @@
 package com.arkivanov.mvikotlin.utils.internal
 
+import kotlin.native.concurrent.ObsoleteWorkersApi
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
-import kotlin.native.concurrent.freeze
-import kotlin.system.getTimeMillis
 import kotlin.test.fail
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 
+@OptIn(ObsoleteWorkersApi::class)
 fun <T> runOnBackgroundBlocking(block: () -> T): T {
-    val endMillis = getTimeMillis() + 5000L
+    val endTime = TimeSource.Monotonic.markNow() + 5.seconds
     var result by atomic<T?>(null)
     var isFinished by atomic(false)
 
@@ -17,7 +19,7 @@ fun <T> runOnBackgroundBlocking(block: () -> T): T {
             isFinished = true
         }
 
-    while (!isFinished && (getTimeMillis() < endMillis)) {
+    while (!isFinished && endTime.hasNotPassedNow()) {
         // no-op
     }
 
@@ -31,6 +33,7 @@ fun <T> runOnBackgroundBlocking(block: () -> T): T {
     fail("Timeout running on background")
 }
 
+@OptIn(ObsoleteWorkersApi::class)
 fun runOnBackground(block: () -> Unit): Worker {
     val worker = Worker.start()
     worker.execute(TransferMode.SAFE, { block.freeze() }) {

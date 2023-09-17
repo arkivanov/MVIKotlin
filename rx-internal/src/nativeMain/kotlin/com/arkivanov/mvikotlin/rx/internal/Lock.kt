@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import kotlinx.cinterop.Arena
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.ptr
 import platform.posix.pthread_mutex_destroy
@@ -12,16 +13,18 @@ import platform.posix.pthread_mutexattr_destroy
 import platform.posix.pthread_mutexattr_init
 import platform.posix.pthread_mutexattr_settype
 import platform.posix.pthread_mutexattr_t
+import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.concurrent.freeze
-import kotlin.native.internal.createCleaner
+import kotlin.native.ref.createCleaner
 
+@OptIn(ExperimentalForeignApi::class)
 @Suppress("ACTUAL_WITHOUT_EXPECT", "EmptyDefaultConstructor")
 internal actual class Lock actual constructor() {
 
     private val resources = Resources()
 
     @Suppress("unused") // Must be assigned
-    @ExperimentalStdlibApi
+    @OptIn(ExperimentalNativeApi::class)
     private val cleaner = createCleaner(resources, Resources::destroy)
 
     actual fun lock() {

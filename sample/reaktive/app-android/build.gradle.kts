@@ -16,6 +16,10 @@ setupAndroidApp(
 android {
     namespace = "com.arkivanov.mvikotlin.sample.reaktive.app"
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     packagingOptions {
         exclude("META-INF/*")
     }

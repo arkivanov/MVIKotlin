@@ -8,7 +8,7 @@ plugins {
 
 setupMultiplatform {
     jvm()
-    js(IR) { browser() }
+    js { browser() }
 }
 
 kotlin {

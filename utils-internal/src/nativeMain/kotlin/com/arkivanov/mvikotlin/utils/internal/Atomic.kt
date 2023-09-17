@@ -5,7 +5,7 @@ import kotlin.native.concurrent.isFrozen
 
 actual fun <T> atomic(value: T): AtomicRef<T> =
     object : AtomicRef<T> {
-        private val delegate = kotlin.native.concurrent.FreezableAtomicReference(value)
+        private val delegate = kotlin.concurrent.AtomicReference(value)
 
         override var value: T
             get() = delegate.value
@@ -20,7 +20,7 @@ actual fun <T> atomic(value: T): AtomicRef<T> =
 
 actual fun atomic(value: Boolean): AtomicBoolean =
     object : AtomicBoolean {
-        private val delegate = kotlin.native.concurrent.AtomicInt(value.toInt())
+        private val delegate = kotlin.concurrent.AtomicInt(value.toInt())
 
         override var value: Boolean
             get() = delegate.value != 0
@@ -33,7 +33,7 @@ actual fun atomic(value: Boolean): AtomicBoolean =
 
 actual fun atomic(value: Int): AtomicInt =
     object : AtomicInt {
-        private val delegate = kotlin.native.concurrent.AtomicInt(value)
+        private val delegate = kotlin.concurrent.AtomicInt(value)
 
         override var value: Int
             get() = delegate.value

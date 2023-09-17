@@ -9,7 +9,7 @@ plugins {
 }
 
 setupMultiplatform {
-    js(IR) {
+    js {
         browser()
         binaries.library()
     }
@@ -20,6 +20,7 @@ kotlin {
         val js by bundle()
 
         js.main.dependencies {
+            implementation(project(":mvikotlin"))
             implementation(project(":mvikotlin-main"))
             implementation(project(":mvikotlin-timetravel-proto-internal"))
             implementation(project(":mvikotlin-timetravel-client:client-internal"))

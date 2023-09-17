@@ -31,9 +31,9 @@ plugins {
 
 setupDefaults(
     multiplatformConfigurator = {
-        android()
+        androidTarget()
         jvm()
-        js(BOTH) { browser() }
+        js { browser() }
         linuxX64()
         iosCompat()
         watchosCompat()
