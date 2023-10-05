@@ -130,7 +130,7 @@ The sample project is a todo list with details view. There are two implementatio
 
 ## Sample TodoApp in JetBrains/compose-jb
 
-There is another sample project available in the `JetBrains/compose-jb` repository - [TodoApp](https://github.com/JetBrains/compose-jb/tree/master/examples/todoapp). It uses MVIKotlin for business logic and [Decompose](https://github.com/arkivanov/Decompose) for navigation.
+There is another sample project available in forked repository of `JetBrains/compose-jb` - [TodoApp](https://github.com/IlyaGulya/TodoAppDecomposeMviKotlin). It uses MVIKotlin for business logic and [Decompose](https://github.com/arkivanov/Decompose) for navigation.
 
 ## Author
 
