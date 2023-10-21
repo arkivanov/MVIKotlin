@@ -16,6 +16,12 @@ interface StoreFactory {
      * @param name a name of the [Store] being created, used for logging, time traveling, etc.
      * @param autoInit if `true` then the [Store] will be automatically initialized after creation,
      * otherwise you should call [Store.init] manually, default value is `true`
+     * @param initialState an initial state of the [Store].
+     * @param bootstrapper an optional [Bootstrapper] for the [Store], automatically called after
+     * the initialization.
+     * @param executorFactory a factory that creates an [Executor] for the [Store]. The returned
+     * [Executor] *must not* be a singleton, a *new* instance must be created every time.
+     * @param reducer a [Reducer] for the [Store].
      */
     @JsName("create")
     fun <Intent : Any, Action : Any, Message : Any, State : Any, Label : Any> create(

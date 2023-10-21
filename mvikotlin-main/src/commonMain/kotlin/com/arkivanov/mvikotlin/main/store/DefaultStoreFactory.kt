@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 
 /**
  * An implementation of the [StoreFactory] that creates default implementations of the [Store].
+ * Every returned [Store] creates and uses only one instance of [Executor] for the entire lifetime.
  */
 class DefaultStoreFactory : StoreFactory {
 
