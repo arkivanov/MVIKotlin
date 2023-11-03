@@ -28,7 +28,5 @@ actual fun atomic(value: Int): AtomicInt =
 
         override fun toByte(): Byte = value.toByte()
 
-        override fun toChar(): Char = value.toChar()
-
         override fun toShort(): Short = value.toShort()
     }

@@ -13,7 +13,7 @@ plugins {
 }
 
 setupMultiplatform {
-    android()
+    androidTarget()
     js { browser() }
     iosCompat(
         arm64 = null, // Comment out to enable arm64 target

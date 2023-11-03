@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.core.view.ViewRenderer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -96,6 +97,7 @@ private class BuilderBinder(
         this bindTo { store.accept(it) }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun start() {
         job =
             GlobalScope.launch(mainContext) {

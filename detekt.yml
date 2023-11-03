@@ -31,7 +31,7 @@ performance:
 
 style:
   ForbiddenComment:
-    values: ['FIXME:', 'STOPSHIP:']
+    comments: ['FIXME:', 'STOPSHIP:']
   MagicNumber:
     active: false
   MaxLineLength:
