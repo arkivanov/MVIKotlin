@@ -6,9 +6,6 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 
 internal class TestStore<in Intent : Any, Action : Any, State : Any, in Message : Any, Label : Any>(
     initialState: State,
@@ -17,7 +14,7 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Message 
     private val reducer: Reducer<State, Message>
 ) : Store<Intent, State, Label> {
 
-    override var state: State by atomic(initialState)
+    override var state: State = initialState
         private set
 
     override val isDisposed: Boolean = false

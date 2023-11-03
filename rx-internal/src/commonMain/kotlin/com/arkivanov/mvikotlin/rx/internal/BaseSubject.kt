@@ -7,30 +7,22 @@ internal open class BaseSubject<T> : Subject<T> {
 
     private val serializer = Serializer(::onEvent)
     private var observers: MutableMap<Disposable, Observer<T>>? = LinkedHashMap()
-    private val lock = Lock()
 
     override val isActive: Boolean get() = observers != null
 
     override fun subscribe(observer: Observer<T>): Disposable {
         val disposable = Disposable { serializer.onNext(Event.OnDispose(this)) }
-
-        lock.synchronized {
-            serializer.onNext(Event.OnSubscribe(observer, disposable))
-        }
+        serializer.onNext(Event.OnSubscribe(observer, disposable))
 
         return disposable
     }
 
     override fun onNext(value: T) {
-        lock.synchronized {
-            serializer.onNext(Event.OnNext(value))
-        }
+        serializer.onNext(Event.OnNext(value))
     }
 
     override fun onComplete() {
-        lock.synchronized {
-            serializer.onNext(Event.OnComplete)
-        }
+        serializer.onNext(Event.OnComplete)
     }
 
     private fun onEvent(event: Event<T>) {

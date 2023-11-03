@@ -2,7 +2,7 @@ package com.arkivanov.mvikotlin.sample.reaktive.app
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
-import com.arkivanov.mvikotlin.sample.database.DefaultTodoDatabase
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.timetravel.ExperimentalTimeTravelApi
 import com.arkivanov.mvikotlin.timetravel.TimeTravelServer
@@ -35,7 +35,7 @@ fun main() {
     createRoot(document.getElementById("app")!!).render(
         Root.create {
             storeFactory = LoggingStoreFactory(delegate = TimeTravelStoreFactory())
-            database = DefaultTodoDatabase()
+            database = MemoryTodoDatabase()
         }
     )
 }

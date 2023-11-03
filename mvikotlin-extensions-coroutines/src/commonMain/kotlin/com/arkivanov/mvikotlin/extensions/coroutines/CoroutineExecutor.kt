@@ -71,6 +71,7 @@ open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, M
     /**
      * Dispatches the provided `Message` to the [Reducer].
      * The updated `State` will be available immediately after this method returns.
+     * Must be called on the main thread.
      *
      * @param message a `Message` to be dispatched to the `Reducer`
      */
@@ -80,7 +81,8 @@ open class CoroutineExecutor<in Intent : Any, in Action : Any, in State : Any, M
     }
 
     /**
-     * Sends the provided `Label` to the [Store] for publication
+     * Sends the provided `Label` to the [Store] for publication.
+     * Must be called on the main thread.
      *
      * @param label a `Label` to be published
      */

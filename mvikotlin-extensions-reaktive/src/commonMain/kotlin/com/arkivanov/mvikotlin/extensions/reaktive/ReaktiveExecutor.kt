@@ -67,6 +67,7 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
     /**
      * Dispatches the provided `Message` to the [Reducer].
      * The updated `State` will be available immediately after this method returns.
+     * Must be called on the main thread.
      *
      * @param message a `Message` to be dispatched to the `Reducer`
      */
@@ -76,7 +77,8 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
     }
 
     /**
-     * Sends the provided `Label` to the [Store] for publication
+     * Sends the provided `Label` to the [Store] for publication.
+     * Must be called on the main thread.
      *
      * @param label a `Label` to be published
      */

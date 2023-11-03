@@ -3,8 +3,8 @@ package com.arkivanov.mvikotlin.sample.reaktive.shared.details.store
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import com.arkivanov.mvikotlin.sample.reaktive.shared.TestDatabase
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Intent
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Label
 import com.badoo.reaktive.scheduler.overrideSchedulers
@@ -23,7 +23,7 @@ class DetailsStoreTest {
 
     private lateinit var itemId: String
     private val itemData = TodoItem.Data(text = "text", isDone = false)
-    private val database = TestDatabase()
+    private val database = MemoryTodoDatabase()
 
     private lateinit var store: DetailsStore
 

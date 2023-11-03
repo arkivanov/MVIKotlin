@@ -19,7 +19,7 @@ interface DetailsView : MviView<Model, Event> {
 
     sealed class Event {
         data class TextChanged(val text: String) : Event()
-        object DoneClicked : Event()
-        object DeleteClicked : Event()
+        data object DoneClicked : Event()
+        data object DeleteClicked : Event()
     }
 }

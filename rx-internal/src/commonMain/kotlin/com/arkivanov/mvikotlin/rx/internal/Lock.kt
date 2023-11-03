@@ -1,9 +1,6 @@
 package com.arkivanov.mvikotlin.rx.internal
 
-@Suppress("EmptyDefaultConstructor")
-internal expect class Lock() {
+expect class Lock() {
 
-    fun lock()
-
-    fun unlock()
+    inline fun <T> synchronizedImpl(block: () -> T): T
 }

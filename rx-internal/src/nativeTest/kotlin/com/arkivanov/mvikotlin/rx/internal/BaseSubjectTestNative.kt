@@ -1,11 +1,8 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.observer
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.utils.internal.runOnBackgroundBlocking
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -26,7 +23,7 @@ class BaseSubjectTestNative {
 
     @Test
     fun produces_values_WHEN_subscribed_on_background_thread_and_onNext_called_on_main_thread() {
-        var values by atomic<List<Int?>>(emptyList())
+        val values = ArrayList<Int?>()
         val subject = BaseSubject<Int?>()
 
         runOnBackgroundBlocking {
@@ -42,7 +39,7 @@ class BaseSubjectTestNative {
 
     @Test
     fun completes_WHEN_subscribed_on_background_thread_and_onComplete_called_on_main_thread() {
-        var isCompleted by atomic(false)
+        var isCompleted = false
         val subject = BaseSubject<Int?>()
 
         runOnBackgroundBlocking {

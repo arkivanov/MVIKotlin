@@ -1,6 +1,9 @@
 package com.arkivanov.mvikotlin.utils.internal
 
-var isAssertOnMainThreadEnabled: Boolean by atomic(true)
+import kotlin.concurrent.Volatile
+
+@Volatile
+var isAssertOnMainThreadEnabled: Boolean = true
 
 private val mainThreadIdRef = atomic<MainThreadIdHolder?>(null)
 

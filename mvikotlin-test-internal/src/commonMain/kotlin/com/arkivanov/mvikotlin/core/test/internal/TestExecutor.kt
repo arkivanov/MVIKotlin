@@ -3,10 +3,8 @@ package com.arkivanov.mvikotlin.core.test.internal
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
 import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.initialize
 import com.arkivanov.mvikotlin.utils.internal.requireValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 
 class TestExecutor(
     private val init: () -> Unit = {},
@@ -18,7 +16,7 @@ class TestExecutor(
     val isInitialized: Boolean get() = callbacks.value != null
     val state: String get() = callbacks.requireValue().state
 
-    var isDisposed: Boolean by atomic(false)
+    var isDisposed: Boolean = false
         private set
 
     override fun init(callbacks: Callbacks<String, String, String>) {

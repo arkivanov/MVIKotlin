@@ -1,10 +1,7 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.observer
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.isAssertOnMainThreadEnabled
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -28,13 +25,13 @@ class BaseSubjectTest {
 
     @Test
     fun multicasts_values_to_all_subscribers() {
-        var values1 by atomic(emptyList<Int?>())
-        var values2 by atomic(emptyList<Int?>())
+        val values1 = ArrayList<Int?>()
+        val values2 = ArrayList<Int?>()
 
-        subject.subscribe(observer(onNext = { values1 = values1 + it }))
+        subject.subscribe(observer(onNext = { values1 += it }))
         subject.onNext(0)
         subject.onNext(null)
-        subject.subscribe(observer(onNext = { values2 = values2 + it }))
+        subject.subscribe(observer(onNext = { values2 += it }))
         subject.onNext(1)
         subject.onNext(null)
 
@@ -44,8 +41,8 @@ class BaseSubjectTest {
 
     @Test
     fun completes_all_existing_observers_WHEN_completed() {
-        var isCompleted1 by atomic(false)
-        var isCompleted2 by atomic(false)
+        var isCompleted1 = false
+        var isCompleted2 = false
 
         subject.subscribe(observer = observer(onComplete = {
             isCompleted1 = true
@@ -63,7 +60,7 @@ class BaseSubjectTest {
 
     @Test
     fun completes_new_observer_WHEN_already_completed_and_new_observer_subscribed() {
-        var isCompleted by atomic(false)
+        var isCompleted = false
 
         subject.onComplete()
         subject.subscribe(observer = observer(onComplete = {
@@ -75,7 +72,7 @@ class BaseSubjectTest {
 
     @Test
     fun does_not_produce_values_to_unsubscribed_observers() {
-        var hasValue by atomic(false)
+        var hasValue = false
 
         subject.subscribe(observer { hasValue = true }).dispose()
         subject.onNext(0)
@@ -86,9 +83,9 @@ class BaseSubjectTest {
     @Test
     fun produces_values_to_another_observers_WHEN_one_observer_unsubscribed_and_new_values() {
         val disposable1 = subject.subscribe(observer())
-        var values2 by atomic(emptyList<Int?>())
+        val values2 = ArrayList<Int?>()
 
-        subject.subscribe(observer(onNext = { values2 = values2 + it }))
+        subject.subscribe(observer(onNext = { values2 += it }))
         disposable1.dispose()
         subject.onNext(0)
         subject.onNext(null)
@@ -117,8 +114,8 @@ class BaseSubjectTest {
 
     @Test
     fun does_not_emit_values_recursively() {
-        var isEmitting by atomic(false)
-        var isEmittedRecursively by atomic(false)
+        var isEmitting = false
+        var isEmittedRecursively = false
 
         subject.subscribe(
             observer { value ->
@@ -139,7 +136,7 @@ class BaseSubjectTest {
 
     @Test
     fun emits_all_values_in_order_WHEN_onNext_called_recursively() {
-        var values by atomic(emptyList<Int?>())
+        val values = ArrayList<Int?>()
 
         subject.subscribe(
             observer { value ->
@@ -147,7 +144,7 @@ class BaseSubjectTest {
                     subject.onNext(null)
                     subject.onNext(2)
                 }
-                values = values + value
+                values += value
             }
         )
 
@@ -158,8 +155,8 @@ class BaseSubjectTest {
 
     @Test
     fun does_not_complete_recursively() {
-        var isEmitting by atomic(false)
-        var isCompletedRecursively by atomic(false)
+        var isEmitting = false
+        var isCompletedRecursively = false
 
         subject.subscribe(
             observer(
@@ -179,7 +176,7 @@ class BaseSubjectTest {
 
     @Test
     fun completes_WHEN_onComplete_called_recursively() {
-        var isCompleted by atomic(false)
+        var isCompleted = false
 
         subject.subscribe(
             observer(

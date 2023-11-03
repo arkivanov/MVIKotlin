@@ -3,10 +3,10 @@ package com.arkivanov.mvikotlin.sample.coroutines.shared.main.store
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.arkivanov.mvikotlin.sample.coroutines.shared.TestDatabase
 import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.AddStore.Intent
 import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.AddStore.Label
 import com.arkivanov.mvikotlin.sample.coroutines.shared.test
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 
 class AddStoreTest {
 
-    private val database = TestDatabase()
+    private val database = MemoryTodoDatabase()
 
     private lateinit var store: AddStore
 

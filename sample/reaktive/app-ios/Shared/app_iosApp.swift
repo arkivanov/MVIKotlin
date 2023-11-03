@@ -31,7 +31,7 @@ private class Holder : ObservableObject {
 
     init() {
         storeFactory = LoggingStoreFactory(delegate: TimeTravelStoreFactory())
-        database = DefaultTodoDatabase()
+        database = MemoryTodoDatabase()
         
         timeTravelServer = TimeTravelServer()
         timeTravelServer.start()

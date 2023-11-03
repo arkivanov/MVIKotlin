@@ -2,8 +2,8 @@ package com.arkivanov.mvikotlin.sample.coroutines.shared.main.store
 
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.arkivanov.mvikotlin.sample.coroutines.shared.TestDatabase
 import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.ListStore.Intent
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
@@ -16,7 +16,7 @@ import kotlin.test.assertTrue
 
 class ListStoreTest {
 
-    private val database = TestDatabase()
+    private val database = MemoryTodoDatabase()
 
     private lateinit var store: ListStore
 

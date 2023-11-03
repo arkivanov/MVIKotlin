@@ -6,9 +6,6 @@ import com.arkivanov.mvikotlin.core.test.internal.TestExecutor
 import com.arkivanov.mvikotlin.core.test.internal.reducer
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.rx.observer
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -40,7 +37,7 @@ class TimeTravelStoreGenericTests : StoreGenericTests(
 
     @Test
     fun WHEN_init_THEN_onInit_called() {
-        var isCalled by atomic(false)
+        var isCalled = false
 
         val store =
             TimeTravelStoreImpl(

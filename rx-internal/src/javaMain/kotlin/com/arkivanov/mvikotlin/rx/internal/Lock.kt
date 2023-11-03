@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.rx.internal
 
-import java.util.concurrent.locks.ReentrantLock
+actual class Lock actual constructor() {
 
-@Suppress("ACTUAL_WITHOUT_EXPECT")
-internal actual typealias Lock = ReentrantLock
+    actual inline fun <T> synchronizedImpl(block: () -> T): T =
+        synchronized(this, block)
+}

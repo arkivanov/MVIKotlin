@@ -7,10 +7,6 @@ import com.arkivanov.mvikotlin.core.test.internal.TestExecutor
 import com.arkivanov.mvikotlin.core.test.internal.reducer
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.rx.observer
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.requireValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -33,25 +29,25 @@ class TimeTravelStoreDebugTest {
 
     @Test
     fun new_executor_called_WHEN_debug_intent() {
-        val intent = atomic<String>()
+        var intent: String? = null
         val executors =
             ExecutorQueue { index ->
                 if (index == 0) {
                     TestExecutor()
                 } else {
-                    TestExecutor(executeIntent = { intent.value = it })
+                    TestExecutor(executeIntent = { intent = it })
                 }
             }
         val store = store(executorFactory = executors::next)
 
         store.debug(type = StoreEventType.INTENT, value = "intent", state = "")
 
-        assertEquals("intent", intent.requireValue())
+        assertEquals("intent", intent)
     }
 
     @Test
     fun old_executor_not_called_WHEN_debug_intent() {
-        var isCalled by atomic(false)
+        var isCalled = false
         val executors =
             ExecutorQueue { index ->
                 if (index == 0) {
@@ -69,25 +65,25 @@ class TimeTravelStoreDebugTest {
 
     @Test
     fun new_executor_called_WHEN_debug_action() {
-        val action = atomic<String>()
+        var action: String? = null
         val executors =
             ExecutorQueue { index ->
                 if (index == 0) {
                     TestExecutor()
                 } else {
-                    TestExecutor(executeAction = { action.value = it })
+                    TestExecutor(executeAction = { action = it })
                 }
             }
         val store = store(executorFactory = executors::next)
 
         store.debug(type = StoreEventType.ACTION, value = "action", state = "")
 
-        assertEquals("action", action.requireValue())
+        assertEquals("action", action)
     }
 
     @Test
     fun old_executor_not_called_WHEN_debug_action() {
-        var isCalled by atomic(false)
+        var isCalled = false
         val executors =
             ExecutorQueue { index ->
                 if (index == 0) {
@@ -171,9 +167,9 @@ class TimeTravelStoreDebugTest {
     fun state_not_emitted_WHEN_debug_intent_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
-        var states by atomic(emptyList<String>())
-        store.states(observer(onNext = { states = states + it }))
-        states = emptyList()
+        val states = ArrayList<String>()
+        store.states(observer(onNext = { states += it }))
+        states.clear()
 
         store.debug(type = StoreEventType.INTENT, value = "", state = "")
         executors[1].dispatch("message")
@@ -185,9 +181,9 @@ class TimeTravelStoreDebugTest {
     fun state_not_emitted_WHEN_debug_action_and_message_dispatched_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
-        var states by atomic(emptyList<String>())
-        store.states(observer(onNext = { states = states + it }))
-        states = emptyList()
+        val states = ArrayList<String>()
+        store.states(observer(onNext = { states += it }))
+        states.clear()
 
         store.debug(type = StoreEventType.ACTION, value = "", state = "")
         executors[1].dispatch("message")
@@ -221,8 +217,8 @@ class TimeTravelStoreDebugTest {
     fun label_not_emitted_WHEN_debug_intent_and_label_published_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
-        var labels by atomic(emptyList<String>())
-        store.labels(observer(onNext = { labels = labels + it }))
+        val labels = ArrayList<String>()
+        store.labels(observer(onNext = { labels += it }))
 
         store.debug(type = StoreEventType.INTENT, value = "", state = "")
         executors[1].publish("label")
@@ -234,8 +230,8 @@ class TimeTravelStoreDebugTest {
     fun label_not_emitted_WHEN_debug_action_and_label_published_by_new_executor() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
-        var labels by atomic(emptyList<String>())
-        store.labels(observer(onNext = { labels = labels + it }))
+        val labels = ArrayList<String>()
+        store.labels(observer(onNext = { labels += it }))
 
         store.debug(type = StoreEventType.ACTION, value = "", state = "")
         executors[1].publish("label")
@@ -245,22 +241,22 @@ class TimeTravelStoreDebugTest {
 
     @Test
     fun reducer_called_with_original_state_and_message_WHEN_debug_message() {
-        val state = atomic<String>()
-        val message = atomic<String>()
+        var state: String? = null
+        var message: String? = null
 
         val store =
             store(
                 reducer = reducer {
-                    state.value = this
-                    message.value = it
+                    state = this
+                    message = it
                     this
                 }
             )
 
         store.debug(type = StoreEventType.MESSAGE, value = "message", state = "old_state")
 
-        assertEquals("old_state", state.requireValue())
-        assertEquals("message", message.requireValue())
+        assertEquals("old_state", state)
+        assertEquals("message", message)
     }
 
     @Test
@@ -277,9 +273,9 @@ class TimeTravelStoreDebugTest {
     fun state_not_emitted_WHEN_debug_message() {
         val executors = ExecutorQueue()
         val store = store(executorFactory = executors::next)
-        var states by atomic(emptyList<String>())
-        store.states(observer(onNext = { states = states + it }))
-        states = emptyList()
+        val states = ArrayList<String>()
+        store.states(observer(onNext = { states += it }))
+        states.clear()
 
         store.debug(type = StoreEventType.MESSAGE, value = "", state = "old_state")
 
@@ -308,8 +304,8 @@ class TimeTravelStoreDebugTest {
     @Test
     fun label_emitted_WHEN_debug_label() {
         val store = store()
-        var labels by atomic(emptyList<String>())
-        store.labels(observer(onNext = { labels = labels + it }))
+        val labels = ArrayList<String>()
+        store.labels(observer(onNext = { labels += it }))
 
         store.debug(type = StoreEventType.LABEL, value = "label", state = "")
 
@@ -331,8 +327,8 @@ class TimeTravelStoreDebugTest {
     private class ExecutorQueue(
         private val factory: (index: Int) -> TestExecutor = { TestExecutor() }
     ) {
-        private var index by atomic(0)
-        private var executors by atomic(emptyList<TestExecutor>())
+        private var index = 0
+        private var executors = ArrayList<TestExecutor>()
 
         fun next(): TestExecutor =
             factory(index++)

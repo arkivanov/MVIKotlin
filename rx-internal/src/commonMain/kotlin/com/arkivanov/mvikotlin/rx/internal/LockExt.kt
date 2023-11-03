@@ -1,11 +1,12 @@
 package com.arkivanov.mvikotlin.rx.internal
 
-internal inline fun <T> Lock.synchronized(block: () -> T): T {
-    lock()
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
-    return try {
-        block()
-    } finally {
-        unlock()
-    }
+@OptIn(ExperimentalContracts::class)
+inline fun <T> Lock.synchronized(block: () -> T): T {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+
+    return synchronizedImpl(block)
 }
