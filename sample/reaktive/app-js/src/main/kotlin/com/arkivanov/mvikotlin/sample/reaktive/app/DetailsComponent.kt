@@ -9,13 +9,6 @@ import com.arkivanov.mvikotlin.sample.reaktive.shared.details.DetailsController
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.DetailsView
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.DetailsView.Event
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.DetailsView.Model
-import csstype.AlignItems
-import csstype.Display
-import csstype.FlexDirection
-import csstype.JustifyContent
-import csstype.number
-import csstype.pct
-import csstype.px
 import mui.material.AppBar
 import mui.material.AppBarPosition
 import mui.material.Box
@@ -38,6 +31,13 @@ import react.Props
 import react.useEffectOnce
 import react.useMemo
 import react.useState
+import web.cssom.AlignItems
+import web.cssom.Display
+import web.cssom.FlexDirection
+import web.cssom.JustifyContent
+import web.cssom.number
+import web.cssom.pct
+import web.cssom.px
 
 external interface DetailsProps : Props {
     var storeFactory: StoreFactory

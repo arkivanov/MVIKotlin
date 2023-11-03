@@ -1,6 +1,8 @@
 package com.arkivanov.mvikotlin.timetravel.server
 
 import com.arkivanov.mvikotlin.timetravel.proto.internal.thread.Thread
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.memScoped
@@ -20,8 +22,9 @@ import platform.posix.listen
 import platform.posix.memset
 import platform.posix.sockaddr_in
 import platform.posix.socket
-import kotlin.native.concurrent.AtomicInt
+import kotlin.concurrent.AtomicInt
 
+@OptIn(ExperimentalForeignApi::class)
 @Suppress("EXPERIMENTAL_API_USAGE")
 internal class ConnectionThread(
     private val port: Int,
@@ -31,6 +34,7 @@ internal class ConnectionThread(
 
     private val socketRef = AtomicInt(-1)
 
+    @OptIn(UnsafeNumber::class)
     override fun run() {
         val serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)
         if (serverSocket < 0) {

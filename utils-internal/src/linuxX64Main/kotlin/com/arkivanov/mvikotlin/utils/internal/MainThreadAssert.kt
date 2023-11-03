@@ -1,11 +1,8 @@
-@file:Suppress("EXPERIMENTAL_API_USAGE")
-
 package com.arkivanov.mvikotlin.utils.internal
 
 import platform.posix.pthread_self
-import kotlin.native.concurrent.AtomicReference
+import kotlin.concurrent.AtomicReference
 
-@Suppress("ObjectPropertyName")
 private val mainThreadIdRef = AtomicReference<ULong?>(null)
 
 fun setMainThreadId(id: ULong) {

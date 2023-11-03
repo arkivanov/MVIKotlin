@@ -10,13 +10,6 @@ public abstract interface class com/arkivanov/mvikotlin/extensions/reaktive/Bind
 	public abstract fun bindTo (Lcom/badoo/reaktive/observable/Observable;Lkotlin/jvm/functions/Function1;)V
 }
 
-public final class com/arkivanov/mvikotlin/extensions/reaktive/BuildConfig {
-	public static final field BUILD_TYPE Ljava/lang/String;
-	public static final field DEBUG Z
-	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
-	public fun <init> ()V
-}
-
 public final class com/arkivanov/mvikotlin/extensions/reaktive/ExecutorBuilder {
 	public final fun getActionHandlers ()Ljava/util/ArrayList;
 	public final fun getIntentHandlers ()Ljava/util/ArrayList;

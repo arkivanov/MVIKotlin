@@ -3,6 +3,8 @@ package com.arkivanov.mvikotlin.timetravel.proto.internal.io
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.thread.LooperThread
 import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.allocArray
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.get
@@ -11,6 +13,7 @@ import kotlinx.cinterop.value
 import platform.posix.close
 import platform.posix.write
 
+@OptIn(ExperimentalForeignApi::class)
 class WriterThread(
     private val socket: Int,
     private val onDisconnected: () -> Unit = {},
@@ -28,6 +31,7 @@ class WriterThread(
         }
     }
 
+    @OptIn(UnsafeNumber::class)
     private fun getEncoder(): ProtoEncoder {
         val frameEncoder =
             ProtoFrameEncoder { data, size ->

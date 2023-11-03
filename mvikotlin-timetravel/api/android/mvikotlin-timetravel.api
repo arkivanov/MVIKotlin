@@ -1,10 +1,3 @@
-public final class com/arkivanov/mvikotlin/timetravel/BuildConfig {
-	public static final field BUILD_TYPE Ljava/lang/String;
-	public static final field DEBUG Z
-	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
-	public fun <init> ()V
-}
-
 public abstract interface annotation class com/arkivanov/mvikotlin/timetravel/ExperimentalTimeTravelApi : java/lang/annotation/Annotation {
 }
 
@@ -48,6 +41,7 @@ public final class com/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode : jav
 	public static final field IDLE Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
 	public static final field RECORDING Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
 	public static final field STOPPED Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
 	public static fun values ()[Lcom/arkivanov/mvikotlin/timetravel/TimeTravelState$Mode;
 }

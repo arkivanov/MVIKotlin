@@ -4,12 +4,15 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.thread.Thread
 import kotlinx.cinterop.Arena
 import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.allocArray
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.readBytes
 import platform.posix.close
 import platform.posix.read
 
+@OptIn(ExperimentalForeignApi::class)
 class ReaderThread<T : ProtoObject>(
     private val socket: Int,
     private val onRead: (T) -> Unit,
@@ -17,6 +20,7 @@ class ReaderThread<T : ProtoObject>(
     private val onError: (Throwable) -> Unit = {}
 ) : Thread() {
 
+    @OptIn(UnsafeNumber::class)
     override fun run() {
         val protoDecoder = ProtoDecoder()
 

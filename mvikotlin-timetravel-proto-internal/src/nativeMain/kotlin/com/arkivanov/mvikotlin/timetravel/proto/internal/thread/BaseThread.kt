@@ -1,8 +1,10 @@
 package com.arkivanov.mvikotlin.timetravel.proto.internal.thread
 
-import kotlin.native.concurrent.AtomicInt
+import kotlin.concurrent.AtomicInt
+import kotlin.native.concurrent.ObsoleteWorkersApi
 import kotlin.native.concurrent.Worker
 
+@OptIn(ObsoleteWorkersApi::class)
 open class BaseThread {
 
     protected val worker = Worker.start(errorReporting = true)

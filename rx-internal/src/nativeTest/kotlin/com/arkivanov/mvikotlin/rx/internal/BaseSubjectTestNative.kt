@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.utils.internal.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.utils.internal.isFrozen
 import com.arkivanov.mvikotlin.utils.internal.runOnBackgroundBlocking
 import com.arkivanov.mvikotlin.utils.internal.setValue
+import kotlinx.cinterop.ExperimentalForeignApi
 import platform.posix.pthread_self
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -16,6 +17,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+@OptIn(ExperimentalForeignApi::class)
 class BaseSubjectTestNative {
 
     private val subject = BaseSubject<Int?>().freeze()

@@ -9,12 +9,6 @@ import com.arkivanov.mvikotlin.sample.reaktive.shared.main.MainView.Event
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.MainView.Model
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.MainView.Model.Item
 import com.badoo.reaktive.observable.Observable
-import csstype.AlignItems
-import csstype.Display
-import csstype.FlexDirection
-import csstype.Overflow
-import csstype.number
-import csstype.pct
 import mui.material.AppBar
 import mui.material.AppBarPosition
 import mui.material.Box
@@ -42,6 +36,12 @@ import react.dom.onChange
 import react.useEffectOnce
 import react.useMemo
 import react.useState
+import web.cssom.AlignItems
+import web.cssom.Display
+import web.cssom.FlexDirection
+import web.cssom.Overflow
+import web.cssom.number
+import web.cssom.pct
 
 external interface MainProps : Props {
     var storeFactory: StoreFactory

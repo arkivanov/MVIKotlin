@@ -17,7 +17,6 @@ class TimeTravelToolWindowFactory : ToolWindowFactory {
 
         toolWindow.contentManager.addContent(
             ContentFactory
-                .SERVICE
                 .getInstance()
                 .createContent(
                     TimeTravelToolWindow(project).getContent(TimeTravelToolWindowListener.getLifecycle()),

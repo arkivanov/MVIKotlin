@@ -14,6 +14,7 @@ public final class com/arkivanov/mvikotlin/core/binder/BinderLifecycleMode : jav
 	public static final field CREATE_DESTROY Lcom/arkivanov/mvikotlin/core/binder/BinderLifecycleMode;
 	public static final field RESUME_PAUSE Lcom/arkivanov/mvikotlin/core/binder/BinderLifecycleMode;
 	public static final field START_STOP Lcom/arkivanov/mvikotlin/core/binder/BinderLifecycleMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/arkivanov/mvikotlin/core/binder/BinderLifecycleMode;
 	public static fun values ()[Lcom/arkivanov/mvikotlin/core/binder/BinderLifecycleMode;
 }
@@ -68,6 +69,7 @@ public final class com/arkivanov/mvikotlin/core/store/StoreEventType : java/lang
 	public static final field LABEL Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 	public static final field MESSAGE Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 	public static final field STATE Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 	public static fun values ()[Lcom/arkivanov/mvikotlin/core/store/StoreEventType;
 }

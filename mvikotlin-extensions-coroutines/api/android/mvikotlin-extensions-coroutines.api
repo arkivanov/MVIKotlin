@@ -11,13 +11,6 @@ public abstract interface class com/arkivanov/mvikotlin/extensions/coroutines/Bi
 	public abstract fun bindTo (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;)V
 }
 
-public final class com/arkivanov/mvikotlin/extensions/coroutines/BuildConfig {
-	public static final field BUILD_TYPE Ljava/lang/String;
-	public static final field DEBUG Z
-	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
-	public fun <init> ()V
-}
-
 public abstract class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineBootstrapper : com/arkivanov/mvikotlin/core/store/Bootstrapper {
 	public fun <init> ()V
 	public fun <init> (Lkotlin/coroutines/CoroutineContext;)V
