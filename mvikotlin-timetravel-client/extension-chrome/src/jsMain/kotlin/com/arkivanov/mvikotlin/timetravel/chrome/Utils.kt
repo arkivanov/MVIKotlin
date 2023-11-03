@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.badoo.reaktive.observable.subscribe
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
-import org.jetbrains.compose.web.attributes.AttrsBuilder
 import org.jetbrains.compose.web.attributes.AttrsScope
+import org.jetbrains.compose.web.attributes.AttrsScopeBuilder
 import org.jetbrains.compose.web.dom.AttrBuilderContext
 import org.w3c.dom.Element
 
@@ -28,7 +28,7 @@ internal fun <T> BehaviorObservable<T>.subscribeAsState(): State<T> {
     return state
 }
 
-internal fun <T : Element> AttrsBuilder<T>.add(attrs: AttrBuilderContext<T>?) {
+internal fun <T : Element> AttrsScopeBuilder<T>.add(attrs: AttrBuilderContext<T>?) {
     attrs?.invoke(this)
 }
 

@@ -46,13 +46,13 @@ internal class ConnectionThread(
 
         memScoped {
             val sin = alloc<sockaddr_in>()
-            memset(sin.ptr, 0, sockaddr_in.size.convert())
+            memset(sin.ptr, 0, sizeOf<sockaddr_in>().convert())
             sin.sin_len = sizeOf<sockaddr_in>().convert()
             sin.sin_family = AF_INET.convert()
             sin.sin_port = getSinPort()
             sin.sin_addr.s_addr = INADDR_ANY
 
-            if (bind(serverSocket, sin.ptr.reinterpret(), sockaddr_in.size.convert()) < 0) {
+            if (bind(serverSocket, sin.ptr.reinterpret(), sizeOf<sockaddr_in>().convert()) < 0) {
                 onError(Exception("Error bind socket: $errno"))
                 return
             }

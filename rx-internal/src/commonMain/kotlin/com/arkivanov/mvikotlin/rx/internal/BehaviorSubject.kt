@@ -10,7 +10,7 @@ interface BehaviorSubject<T> : Subject<T> {
     val value: T
 }
 
-@Suppress("FunctionName")
+@Suppress("FunctionNaming") // https://github.com/detekt/detekt/issues/6601
 fun <T> BehaviorSubject(initialValue: T): BehaviorSubject<T> = BehaviorSubjectImpl(initialValue)
 
 private class BehaviorSubjectImpl<T>(initialValue: T) : BaseSubject<T>(), BehaviorSubject<T> {

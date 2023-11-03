@@ -1,13 +1,14 @@
 package com.arkivanov.mvikotlin.sample.reaktive.app
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.arkivanov.mvikotlin.sample.coroutines.shared.DefaultDispatchers
+import com.arkivanov.mvikotlin.sample.coroutines.shared.TodoDispatchers
 import com.arkivanov.mvikotlin.sample.database.DefaultTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
+import com.arkivanov.mvikotlin.timetravel.ExperimentalTimeTravelApi
 import com.arkivanov.mvikotlin.timetravel.TimeTravelServer
-import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
-import com.badoo.reaktive.subject.publish.PublishSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
 import mui.material.Box
 import mui.system.sx
 import react.FC
@@ -28,13 +29,15 @@ import web.cssom.vh
 import web.cssom.vw
 import web.dom.document
 
+@OptIn(ExperimentalTimeTravelApi::class)
 fun main() {
     TimeTravelServer().start()
 
     createRoot(document.getElementById("app")!!).render(
         Root.create {
-            storeFactory = LoggingStoreFactory(delegate = TimeTravelStoreFactory())
+            storeFactory = DefaultStoreFactory()
             database = DefaultTodoDatabase()
+            dispatchers = DefaultDispatchers
         }
     )
 }
@@ -42,10 +45,11 @@ fun main() {
 external interface RootProps : Props {
     var storeFactory: StoreFactory
     var database: TodoDatabase
+    var dispatchers: TodoDispatchers
 }
 
 val Root: FC<RootProps> = FC { props ->
-    val mainInput = useMemo { PublishSubject<MainInput>() }
+    val mainInput = useMemo { MutableSharedFlow<MainInput>(extraBufferCapacity = Int.MAX_VALUE) }
 
     Box {
         sx {
@@ -72,6 +76,7 @@ val Root: FC<RootProps> = FC { props ->
                             MainComponent {
                                 storeFactory = props.storeFactory
                                 database = props.database
+                                dispatchers = props.dispatchers
                                 input = mainInput
                                 onItemSelected = { id -> navigate(to = "/$id") }
                             }
@@ -87,11 +92,12 @@ val Root: FC<RootProps> = FC { props ->
                             DetailsComponent {
                                 database = props.database
                                 storeFactory = props.storeFactory
+                                dispatchers = props.dispatchers
                                 itemId = requireNotNull(params["itemId"])
                                 onFinished = { navigate(delta = -1.0) }
-                                onItemChanged = { id, data -> mainInput.onNext(MainInput.ItemChanged(id = id, data = data)) }
+                                onItemChanged = { id, data -> mainInput.tryEmit(MainInput.ItemChanged(id = id, data = data)) }
                                 onItemDeleted = { id ->
-                                    mainInput.onNext(MainInput.ItemDeleted(id = id))
+                                    mainInput.tryEmit(MainInput.ItemDeleted(id = id))
                                     navigate(delta = -1.0)
                                 }
                             }
