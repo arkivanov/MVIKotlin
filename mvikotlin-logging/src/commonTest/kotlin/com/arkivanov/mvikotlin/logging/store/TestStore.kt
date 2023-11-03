@@ -7,7 +7,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.setValue
 
@@ -23,10 +22,6 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Message 
 
     override val isDisposed: Boolean = false
     private val executor = executorFactory()
-
-    init {
-        freeze()
-    }
 
     override fun init() {
         executor.init(

@@ -8,7 +8,6 @@ import com.arkivanov.mvikotlin.core.test.internal.reducer
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.requireValue
 import com.arkivanov.mvikotlin.utils.internal.setValue
@@ -327,10 +326,7 @@ class TimeTravelStoreDebugTest {
             bootstrapper = null,
             executorFactory = executorFactory,
             reducer = reducer
-        ).apply {
-            freeze()
-            init()
-        }
+        ).apply { init() }
 
     private class ExecutorQueue(
         private val factory: (index: Int) -> TestExecutor = { TestExecutor() }

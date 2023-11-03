@@ -4,7 +4,6 @@ package com.arkivanov.mvikotlin.utils.internal
 
 import java.util.concurrent.atomic.AtomicReference
 
-@Suppress("ObjectPropertyName")
 private val mainThreadIdRef = AtomicReference<Long?>(null)
 
 fun setMainThreadId(id: Long) {

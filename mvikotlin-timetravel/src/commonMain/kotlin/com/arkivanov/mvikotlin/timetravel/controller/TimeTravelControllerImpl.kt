@@ -12,15 +12,10 @@ import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore
-import com.arkivanov.mvikotlin.utils.internal.ensureNeverFrozen
 import com.arkivanov.mvikotlin.utils.internal.logE
 import kotlin.collections.set
 
 internal class TimeTravelControllerImpl : TimeTravelController {
-
-    init {
-        ensureNeverFrozen()
-    }
 
     private var eventId = 1L
     private val stateSubject = BehaviorSubject(TimeTravelState())

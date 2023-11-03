@@ -36,9 +36,7 @@ fun <T> runOnBackgroundBlocking(block: () -> T): T {
 @OptIn(ObsoleteWorkersApi::class)
 fun runOnBackground(block: () -> Unit): Worker {
     val worker = Worker.start()
-    worker.execute(TransferMode.SAFE, { block.freeze() }) {
-        it.invoke()
-    }
+    worker.execute(TransferMode.SAFE, { block }) { it() }
 
     return worker
 }

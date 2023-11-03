@@ -6,9 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.isFrozen
 import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -334,26 +332,6 @@ abstract class StoreGenericTests(
     }
 
     @Test
-    fun states_subscriber_not_frozen_WHEN_store_frozen_and_subscribed() {
-        val store = store()
-
-        val list = ArrayList<String>()
-        store.states(observer { list += it })
-
-        assertFalse(list.isFrozen)
-    }
-
-    @Test
-    fun labels_subscriber_not_frozen_WHEN_store_frozen_and_subscribed() {
-        val store = store()
-
-        val list = ArrayList<String>()
-        store.labels(observer { list += it })
-
-        assertFalse(list.isFrozen)
-    }
-
-    @Test
     fun executor_not_called_WHEN_recursive_intent_on_label() {
         var isProcessingIntent by atomic(false)
         var isCalledRecursively by atomic(false)
@@ -417,7 +395,7 @@ abstract class StoreGenericTests(
         executorFactory: () -> Executor<String, String, String, String, String> = { TestExecutor() },
         reducer: Reducer<String, String> = reducer()
     ): Store<String, String, String> =
-        storeFactory(initialState, bootstrapper, executorFactory, reducer)
-            .freeze()
-            .apply { init() }
+        storeFactory(initialState, bootstrapper, executorFactory, reducer).apply {
+            init()
+        }
 }

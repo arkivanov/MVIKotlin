@@ -17,35 +17,13 @@ class AtomicRefTest {
     }
 
     @Test
-    fun returns_new_value_WHEN_not_frozen_and_value_changed() {
+    fun returns_new_value_WHEN_value_changed() {
         val ref = atomic(Data())
         val newValue = Data()
 
         ref.value = newValue
 
         assertSame(newValue, ref.value)
-    }
-
-    @Test
-    fun returns_new_value_WHEN_frozen_and_value_changed() {
-        val ref = atomic(Data())
-        val newValue = Data()
-
-        ref.freeze()
-        ref.value = newValue
-
-        assertSame(newValue, ref.value)
-
-    }
-
-    @Test
-    fun new_value_not_frozen_WHEN_not_frozen_and_value_changed() {
-        val ref = atomic(Data())
-        val newValue = Data()
-
-        ref.value = newValue
-
-        assertFalse(newValue.isFrozen)
     }
 
     @Test

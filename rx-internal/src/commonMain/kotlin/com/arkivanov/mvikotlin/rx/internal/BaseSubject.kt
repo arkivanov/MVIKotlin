@@ -2,32 +2,20 @@ package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.utils.internal.IsolatedRef
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.freeze
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.isMainThread
-import com.arkivanov.mvikotlin.utils.internal.setValue
 
-internal open class BaseSubject<T>(
-    private val isOnMainThread: () -> Boolean = ::isMainThread
-) : Subject<T> {
+internal open class BaseSubject<T> : Subject<T> {
 
     private val serializer = Serializer(::onEvent)
-    private var observers by atomic<Map<Disposable, IsolatedRef<Observer<T>>>?>(emptyMap())
+    private var observers: MutableMap<Disposable, Observer<T>>? = LinkedHashMap()
     private val lock = Lock()
 
     override val isActive: Boolean get() = observers != null
 
     override fun subscribe(observer: Observer<T>): Disposable {
-        if (!isOnMainThread()) {
-            observer.freeze()
-        }
-
         val disposable = Disposable { serializer.onNext(Event.OnDispose(this)) }
 
         lock.synchronized {
-            serializer.onNext(Event.OnSubscribe(IsolatedRef(observer), disposable))
+            serializer.onNext(Event.OnSubscribe(observer, disposable))
         }
 
         return disposable
@@ -54,14 +42,14 @@ internal open class BaseSubject<T>(
         }.let {}
     }
 
-    private fun onSubscribeEvent(observer: IsolatedRef<Observer<T>>, disposable: Disposable) {
+    private fun onSubscribeEvent(observer: Observer<T>, disposable: Disposable) {
         val currentObservers = observers
         if (currentObservers == null) {
-            observer.value.onComplete()
+            observer.onComplete()
             disposable.dispose()
         } else {
-            observers = currentObservers + (disposable to observer)
-            onAfterSubscribe(observer.value)
+            currentObservers[disposable] = observer
+            onAfterSubscribe(observer)
         }
     }
 
@@ -72,7 +60,7 @@ internal open class BaseSubject<T>(
         onBeforeNext(value)
 
         observers?.values?.forEach {
-            it.value.onNext(value)
+            it.onNext(value)
         }
     }
 
@@ -81,7 +69,7 @@ internal open class BaseSubject<T>(
 
     private fun onCompleteEvent() {
         observers?.forEach { (disposable, observer) ->
-            observer.value.onComplete()
+            observer.onComplete()
             disposable.dispose()
         }
 
@@ -89,17 +77,17 @@ internal open class BaseSubject<T>(
     }
 
     private fun onDisposeEvent(disposable: Disposable) {
-        observers = observers?.minus(disposable)
+        observers?.remove(disposable)
     }
 
     private sealed class Event<out T> {
         class OnSubscribe<T>(
-            val observer: IsolatedRef<Observer<T>>,
+            val observer: Observer<T>,
             val disposable: Disposable
         ) : Event<T>()
 
         class OnNext<out T>(val value: T) : Event<T>()
-        object OnComplete : Event<Nothing>()
+        data object OnComplete : Event<Nothing>()
         class OnDispose(val disposable: Disposable) : Event<Nothing>()
     }
 }

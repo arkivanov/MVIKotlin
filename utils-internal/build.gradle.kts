@@ -21,16 +21,14 @@ android {
 kotlin {
     setupSourceSets {
         val js by bundle()
-        val jvmJs by bundle()
         val native by bundle()
         val darwin by bundle()
         val java by bundle()
 
-        (jvmJs + native) dependsOn common
+        (java + native) dependsOn common
         darwin dependsOn native
-        (js + java) dependsOn jvmJs
         javaSet dependsOn java
-        linuxSet dependsOn native
+        (nativeSet - darwinSet) dependsOn native
         darwinSet dependsOn darwin
     }
 }
