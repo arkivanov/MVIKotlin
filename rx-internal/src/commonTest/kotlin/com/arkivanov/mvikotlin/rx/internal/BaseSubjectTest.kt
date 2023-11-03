@@ -2,10 +2,8 @@ package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.observer
 import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.isAssertOnMainThreadEnabled
-import com.arkivanov.mvikotlin.utils.internal.isFrozen
 import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -16,7 +14,7 @@ import kotlin.test.assertTrue
 
 class BaseSubjectTest {
 
-    private val subject = BaseSubject<Int?>().freeze()
+    private val subject = BaseSubject<Int?>()
 
     @BeforeTest
     fun before() {
@@ -115,15 +113,6 @@ class BaseSubjectTest {
         val disposable = subject.subscribe(observer())
 
         assertTrue(disposable.isDisposed)
-    }
-
-    @Test
-    fun subscriber_not_frozen() {
-        val observer = observer<Int?>()
-
-        subject.subscribe(observer)
-
-        assertFalse(observer.isFrozen)
     }
 
     @Test

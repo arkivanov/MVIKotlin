@@ -4,17 +4,12 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
-import com.arkivanov.mvikotlin.utils.internal.ensureNeverFrozen
 import kotlin.js.JsName
 
 /**
  * Abstract implementation of the [MviView] that provides ability to dispatch `View Events`
  */
 open class BaseMviView<in Model : Any, Event : Any> : MviView<Model, Event> {
-
-    init {
-        ensureNeverFrozen()
-    }
 
     protected open val renderer: ViewRenderer<Model>? = null
     private val subject = PublishSubject<Event>()

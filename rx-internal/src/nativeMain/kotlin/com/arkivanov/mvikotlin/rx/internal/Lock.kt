@@ -14,7 +14,6 @@ import platform.posix.pthread_mutexattr_init
 import platform.posix.pthread_mutexattr_settype
 import platform.posix.pthread_mutexattr_t
 import kotlin.experimental.ExperimentalNativeApi
-import kotlin.native.concurrent.freeze
 import kotlin.native.ref.createCleaner
 
 @OptIn(ExperimentalForeignApi::class)
@@ -44,7 +43,6 @@ internal actual class Lock actual constructor() {
             pthread_mutexattr_init(attr.ptr)
             pthread_mutexattr_settype(attr.ptr, PTHREAD_MUTEX_RECURSIVE)
             pthread_mutex_init(mutex.ptr, attr.ptr)
-            freeze()
         }
 
         fun destroy() {

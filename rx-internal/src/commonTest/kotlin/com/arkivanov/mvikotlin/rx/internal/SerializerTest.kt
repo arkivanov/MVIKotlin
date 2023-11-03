@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.Test
@@ -13,7 +12,7 @@ class SerializerTest {
     @Test
     fun WHEN_onNext_called_synchronously_THEN_emits_all_values() {
         var values by atomic(emptyList<Int>())
-        val serializer = Serializer<Int> { values = values + it }.freeze()
+        val serializer = Serializer<Int> { values = values + it }
 
         serializer.onNext(0)
         serializer.onNext(1)
@@ -28,13 +27,13 @@ class SerializerTest {
         var serializer by atomic<Serializer<Int>>()
 
         serializer =
-            Serializer<Int> {
+            Serializer {
                 when (it) {
                     0 -> serializer?.onNext(1)
                     1 -> serializer?.onNext(2)
                 }
                 values = values + it
-            }.freeze()
+            }
 
         serializer?.onNext(0)
 

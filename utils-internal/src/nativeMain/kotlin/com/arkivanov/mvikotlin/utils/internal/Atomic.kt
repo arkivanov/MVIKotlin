@@ -1,21 +1,12 @@
 package com.arkivanov.mvikotlin.utils.internal
 
-import kotlin.native.concurrent.freeze
-import kotlin.native.concurrent.isFrozen
-
 actual fun <T> atomic(value: T): AtomicRef<T> =
     object : AtomicRef<T> {
         private val delegate = kotlin.concurrent.AtomicReference(value)
+        override var value: T by delegate::value
 
-        override var value: T
-            get() = delegate.value
-            set(value) {
-                delegate.value = value.freezeIfNeeded()
-            }
-
-        override fun compareAndSet(expected: T, new: T): Boolean = delegate.compareAndSet(expected, new.freezeIfNeeded())
-
-        private fun T.freezeIfNeeded(): T = if (delegate.isFrozen) freeze() else this
+        override fun compareAndSet(expected: T, new: T): Boolean =
+            delegate.compareAndSet(expected, new)
     }
 
 actual fun atomic(value: Boolean): AtomicBoolean =
@@ -34,11 +25,6 @@ actual fun atomic(value: Boolean): AtomicBoolean =
 actual fun atomic(value: Int): AtomicInt =
     object : AtomicInt {
         private val delegate = kotlin.concurrent.AtomicInt(value)
-
-        override var value: Int
-            get() = delegate.value
-            set(value) {
-                delegate.value = value
-            }
+        override var value: Int by delegate::value
     }
 

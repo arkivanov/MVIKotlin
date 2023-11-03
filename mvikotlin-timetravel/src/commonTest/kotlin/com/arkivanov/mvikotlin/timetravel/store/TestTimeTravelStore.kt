@@ -6,7 +6,6 @@ import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.freeze
 import com.arkivanov.mvikotlin.utils.internal.getValue
 import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.assertEquals
@@ -22,10 +21,6 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
 
     override var isDisposed: Boolean by atomic(false)
         private set
-
-    init {
-        freeze()
-    }
 
     override fun events(observer: Observer<Event>): Disposable = _events.subscribe(observer)
 
