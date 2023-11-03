@@ -1,14 +1,13 @@
 package com.arkivanov.mvikotlin.timetravel.client.desktop.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
@@ -47,65 +46,57 @@ private fun SettingsDialog(
     editing: Model.Editing,
     events: SettingsEvents
 ) {
-    PopupDialog(title = "Settings", onDismissRequest = events.onCancel) {
-        Column(modifier = Modifier.padding(16.dp).width(IntrinsicSize.Min)) {
-            TextField(
-                value = editing.host,
-                onValueChange = events.onHostChanged,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = "Host") }
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextField(
-                value = editing.port,
-                onValueChange = events.onPortChanged,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = "Port") }
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            CheckboxSetting(
-                text = "Connect via ADB",
-                isChecked = editing.connectViaAdb,
-                onChanged = events.onConnectViaAdbChanged
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            CheckboxSetting(
-                text = "Wrap event details",
-                isChecked = editing.wrapEventDetails,
-                onChanged = events.onWrapEventDetailsChanged
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            editing.isDarkMode?.also { isDarkMode ->
-                CheckboxSetting(
-                    text = "Dark mode",
-                    isChecked = isDarkMode,
-                    onChanged = events.onDarkModeChanged
+    AlertDialog(
+        onDismissRequest = events.onCancel,
+        confirmButton = {
+            Button(onClick = events.onSave) {
+                Text(text = "Save")
+            }
+        },
+        dismissButton = {
+            Button(onClick = events.onCancel) {
+                Text(text = "Cancel")
+            }
+        },
+        title = { Text(text = "Settings") },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                TextField(
+                    value = editing.host,
+                    onValueChange = events.onHostChanged,
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Host") }
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+                TextField(
+                    value = editing.port,
+                    onValueChange = events.onPortChanged,
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Port") }
+                )
 
-            Row(modifier = Modifier.align(Alignment.End)) {
-                Button(onClick = events.onCancel) {
-                    Text(text = "Cancel")
+                CheckboxSetting(
+                    text = "Connect via ADB",
+                    isChecked = editing.connectViaAdb,
+                    onChanged = events.onConnectViaAdbChanged
+                )
+
+                CheckboxSetting(
+                    text = "Wrap event details",
+                    isChecked = editing.wrapEventDetails,
+                    onChanged = events.onWrapEventDetailsChanged
+                )
+
+                editing.isDarkMode?.also { isDarkMode ->
+                    CheckboxSetting(
+                        text = "Dark mode",
+                        isChecked = isDarkMode,
+                        onChanged = events.onDarkModeChanged
+                    )
                 }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Button(onClick = events.onSave) {
-                    Text(text = "Save")
-                }
             }
-        }
-    }
+        },
+    )
 }
 
 @Composable
