@@ -2,8 +2,8 @@ package com.arkivanov.mvikotlin.sample.reaktive.shared.main.store
 
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import com.arkivanov.mvikotlin.sample.reaktive.shared.TestDatabase
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.ListStore.Intent
 import com.badoo.reaktive.scheduler.overrideSchedulers
 import com.badoo.reaktive.test.scheduler.TestScheduler
@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
 
 class ListStoreTest {
 
-    private val database = TestDatabase()
+    private val database = MemoryTodoDatabase()
 
     private lateinit var store: ListStore
 

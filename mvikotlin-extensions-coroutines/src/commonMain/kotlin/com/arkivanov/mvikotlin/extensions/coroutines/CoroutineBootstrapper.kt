@@ -1,5 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
+import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.utils.internal.atomic
@@ -32,10 +33,11 @@ abstract class CoroutineBootstrapper<Action : Any>(
     }
 
     /**
-     * Dispatches the `Action` to the [Store]
+     * Dispatches the `Action` to the [Store]. Must be called on the main thread.
      *
      * @param action an `Action` to be dispatched
      */
+    @MainThread
     protected fun dispatch(action: Action) {
         actionConsumer.requireValue().invoke(action)
     }

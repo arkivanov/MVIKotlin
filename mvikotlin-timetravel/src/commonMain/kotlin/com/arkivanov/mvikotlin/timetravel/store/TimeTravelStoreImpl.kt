@@ -11,9 +11,7 @@ import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.rx.internal.Disposable
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
+import kotlin.concurrent.Volatile
 
 internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message : Any, out State : Any, Label : Any>(
     initialState: State,
@@ -24,16 +22,16 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
 ) : TimeTravelStore<Intent, State, Label> {
 
     private val executor = executorFactory()
-    private var internalState by atomic(initialState)
+    private var internalState = initialState
     private val stateSubject = BehaviorSubject(initialState)
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
-    private val eventSubjects = StoreEventType.values().associateWith { PublishSubject<Event>() }
-    private var debuggingExecutor by atomic<Executor<*, *, *, *, *>?>(null)
+    private val eventSubjects = StoreEventType.entries.associateWith { PublishSubject<Event>() }
+    private var debuggingExecutor: Executor<*, *, *, *, *>? = null
     private val eventProcessor = EventProcessor()
     private val eventDebugger = EventDebugger()
-    private val isInitialized = atomic(false)
+    private var isInitialized = false
 
     override fun states(observer: Observer<State>): Disposable =
         stateSubject.subscribe(observer)
@@ -71,11 +69,11 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
     override fun init() {
         assertOnMainThread()
 
-        if (isInitialized.value) {
+        if (isInitialized) {
             return
         }
 
-        isInitialized.value = true
+        isInitialized = true
 
         onInit(this)
 
@@ -188,26 +186,9 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
         }
 
         private fun debugExecutor(initialState: State, execute: Executor<Intent, Action, State, Message, Label>.() -> Unit) {
-            var localState by atomic(initialState)
-
             val executor =
                 executorFactory().apply {
-                    init(
-                        object : Executor.Callbacks<State, Message, Label> {
-                            override val state: State get() = localState
-
-                            override fun onMessage(message: Message) {
-                                assertOnMainThread()
-
-                                localState = reducer.run { localState.reduce(message) }
-                            }
-
-                            override fun onLabel(label: Label) {
-                                assertOnMainThread()
-                            }
-                        }
-                    )
-
+                    init(DebugExecutorCallbacks(initialState, reducer))
                     execute()
                 }
 
@@ -223,6 +204,25 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
 
         private fun debugLabel(label: Label) {
             labelSubject.onNext(label)
+        }
+    }
+
+
+    private class DebugExecutorCallbacks<State, in Message, in Label>(
+        initialState: State,
+        private val reducer: Reducer<State, Message>,
+    ) : Executor.Callbacks<State, Message, Label> {
+        @Volatile
+        override var state: State = initialState
+            private set
+
+        override fun onMessage(message: Message) {
+            assertOnMainThread()
+            state = reducer.run { state.reduce(message) }
+        }
+
+        override fun onLabel(label: Label) {
+            assertOnMainThread()
         }
     }
 }

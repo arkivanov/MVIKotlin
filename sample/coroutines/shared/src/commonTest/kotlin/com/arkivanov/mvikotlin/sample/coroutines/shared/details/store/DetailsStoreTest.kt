@@ -3,10 +3,10 @@ package com.arkivanov.mvikotlin.sample.coroutines.shared.details.store
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.arkivanov.mvikotlin.sample.coroutines.shared.TestDatabase
 import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsStore.Intent
 import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsStore.Label
 import com.arkivanov.mvikotlin.sample.coroutines.shared.test
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
@@ -20,7 +20,7 @@ class DetailsStoreTest {
 
     private lateinit var itemId: String
     private val itemData = TodoItem.Data(text = "text", isDone = false)
-    private val database = TestDatabase()
+    private val database = MemoryTodoDatabase()
 
     private lateinit var store: DetailsStore
 

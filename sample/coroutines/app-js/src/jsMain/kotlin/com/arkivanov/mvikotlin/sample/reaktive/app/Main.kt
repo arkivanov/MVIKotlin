@@ -4,7 +4,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.sample.coroutines.shared.DefaultDispatchers
 import com.arkivanov.mvikotlin.sample.coroutines.shared.TodoDispatchers
-import com.arkivanov.mvikotlin.sample.database.DefaultTodoDatabase
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.timetravel.ExperimentalTimeTravelApi
 import com.arkivanov.mvikotlin.timetravel.TimeTravelServer
@@ -36,7 +36,7 @@ fun main() {
     createRoot(document.getElementById("app")!!).render(
         Root.create {
             storeFactory = DefaultStoreFactory()
-            database = DefaultTodoDatabase()
+            database = MemoryTodoDatabase()
             dispatchers = DefaultDispatchers
         }
     )

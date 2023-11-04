@@ -1,13 +1,12 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
+import kotlin.concurrent.Volatile
 
 fun Disposable(onDispose: Disposable.() -> Unit = {}): Disposable =
     object : Disposable {
-        override var isDisposed: Boolean by atomic(false)
+        @Volatile
+        override var isDisposed: Boolean = false
 
         override fun dispose() {
             isDisposed = true

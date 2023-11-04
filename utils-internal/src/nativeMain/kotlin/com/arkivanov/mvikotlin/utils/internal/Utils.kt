@@ -1,5 +1,6 @@
 package com.arkivanov.mvikotlin.utils.internal
 
+import kotlin.concurrent.Volatile
 import kotlin.native.concurrent.ObsoleteWorkersApi
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
@@ -10,27 +11,34 @@ import kotlin.time.TimeSource
 @OptIn(ObsoleteWorkersApi::class)
 fun <T> runOnBackgroundBlocking(block: () -> T): T {
     val endTime = TimeSource.Monotonic.markNow() + 5.seconds
-    var result by atomic<T?>(null)
-    var isFinished by atomic(false)
+    val holder = Holder<T>()
 
     val worker =
         runOnBackground {
-            result = block()
-            isFinished = true
+            holder.result = block()
+            holder.isFinished = true
         }
 
-    while (!isFinished && endTime.hasNotPassedNow()) {
+    while (!holder.isFinished && endTime.hasNotPassedNow()) {
         // no-op
     }
 
     worker.requestTermination(processScheduledJobs = false)
 
-    if (isFinished) {
+    if (holder.isFinished) {
         @Suppress("UNCHECKED_CAST")
-        return result as T
+        return holder.result as T
     }
 
     fail("Timeout running on background")
+}
+
+private class Holder<T> {
+    @Volatile
+    var result: T? = null
+
+    @Volatile
+    var isFinished: Boolean = false
 }
 
 @OptIn(ObsoleteWorkersApi::class)

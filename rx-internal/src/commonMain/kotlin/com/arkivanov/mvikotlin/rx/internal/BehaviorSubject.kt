@@ -1,9 +1,7 @@
 package com.arkivanov.mvikotlin.rx.internal
 
 import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
+import kotlin.concurrent.Volatile
 
 interface BehaviorSubject<T> : Subject<T> {
 
@@ -15,7 +13,8 @@ fun <T> BehaviorSubject(initialValue: T): BehaviorSubject<T> = BehaviorSubjectIm
 
 private class BehaviorSubjectImpl<T>(initialValue: T) : BaseSubject<T>(), BehaviorSubject<T> {
 
-    override var value: T by atomic(initialValue)
+    @Volatile
+    override var value: T = initialValue
         private set
 
     override fun onAfterSubscribe(observer: Observer<T>) {

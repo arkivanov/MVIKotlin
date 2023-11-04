@@ -28,6 +28,6 @@ interface MainView : MviView<Model, Event> {
         data class ItemDoneClicked(val id: String) : Event()
         data class ItemDeleteClicked(val id: String) : Event()
         data class TextChanged(val text: String) : Event()
-        object AddClicked : Event()
+        data object AddClicked : Event()
     }
 }

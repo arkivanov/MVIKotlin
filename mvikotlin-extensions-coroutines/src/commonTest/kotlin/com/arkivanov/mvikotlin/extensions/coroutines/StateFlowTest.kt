@@ -4,9 +4,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.Disposable
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,10 +22,10 @@ class StateFlowTest {
         val store = TestStore()
         val flow = store.stateFlow
         val scope = CoroutineScope(Dispatchers.Unconfined)
-        var items: List<Int> by atomic(emptyList())
+        val items = ArrayList<Int>()
 
         scope.launch {
-            flow.collect { items = items + it }
+            flow.collect { items += it }
         }
 
         store.stateObserver?.onNext(1)
@@ -57,7 +54,7 @@ class StateFlowTest {
         override val state: Int = 0
         override val isDisposed: Boolean = false
 
-        var stateObserver: Observer<Int>? by atomic(null)
+        var stateObserver: Observer<Int>? = null
             private set
 
         override fun states(observer: Observer<Int>): Disposable {

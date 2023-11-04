@@ -41,25 +41,52 @@ struct MainContent: View {
     }
     
     var body: some View {
-        List {
-            ForEach(model.items, id: \.self) { item in
-                HStack {
-                    Image(systemName: item.isDone ? "checkmark.square" : "square")
-                        .onTapGesture { view.dispatch(event: .ItemDoneClicked(id: item.id)) }
-                    
-                    Text(item.text)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Image(systemName: "trash")
-                        .onTapGesture { view.dispatch(event: .ItemDeleteClicked(id: item.id)) }
+        VStack {
+            List {
+                ForEach(model.items, id: \.self) { item in
+                    HStack {
+                        Image(systemName: item.isDone ? "checkmark.square" : "square")
+                            .onTapGesture { view.dispatch(event: .ItemDoneClicked(id: item.id)) }
+                        
+                        Text(item.text)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Image(systemName: "trash")
+                            .onTapGesture { view.dispatch(event: .ItemDeleteClicked(id: item.id)) }
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture { view.dispatch(event: .ItemClicked(id: item.id)) }
                 }
-                .contentShape(Rectangle())
-                .onTapGesture { view.dispatch(event: .ItemClicked(id: item.id)) }
-            }
+            }.listStyle(.plain)
+            
+            InputView(
+                textBinding: Binding(
+                    get: { model.text },
+                    set: { view.dispatch(event: .TextChanged(text: $0)) }
+                ),
+                onAddClicked: { view.dispatch(event: .AddClicked()) }
+            )
         }
         .onFirstAppear { holder.controller.onViewCreated(view: view, viewLifecycle: holder.lifecycle) }
         .onAppear { LifecycleRegistryExtKt.resume(holder.lifecycle) }
         .onDisappear { LifecycleRegistryExtKt.stop(holder.lifecycle) }
+    }
+}
+
+private struct InputView: View {
+    var textBinding: Binding<String>
+    var onAddClicked: () -> Void
+        
+    var body: some View {
+        HStack {
+            TextField("Todo text", text: self.textBinding)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .edgesIgnoringSafeArea(Edge.Set.bottom)
+
+            Button(action: self.onAddClicked) {
+                Image(systemName: "plus")
+            }.frame(minWidth: 36, minHeight: 36)
+        }.padding(8)
     }
 }
 

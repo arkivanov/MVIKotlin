@@ -13,15 +13,3 @@ private class AtomicRefImpl<T>(
             false
         }
 }
-
-actual fun atomic(value: Boolean): AtomicBoolean = AtomicBooleanImpl(value)
-
-private class AtomicBooleanImpl(
-    override var value: Boolean
-) : AtomicBoolean
-
-actual fun atomic(value: Int): AtomicInt = AtomicIntImpl(value)
-
-private class AtomicIntImpl(
-    override var value: Int
-) : AtomicInt

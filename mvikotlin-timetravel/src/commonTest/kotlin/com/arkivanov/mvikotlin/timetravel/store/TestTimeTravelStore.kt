@@ -5,9 +5,6 @@ import com.arkivanov.mvikotlin.rx.Disposable
 import com.arkivanov.mvikotlin.rx.Observer
 import com.arkivanov.mvikotlin.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -16,10 +13,10 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     val eventProcessor = TestEventProcessor()
     val eventDebugger = TestEventDebugger()
     private val _events = PublishSubject<Event>()
-    private var isStateRestored by atomic(false)
-    override var state: String by atomic("state")
+    private var isStateRestored = false
+    override var state: String = "state"
 
-    override var isDisposed: Boolean by atomic(false)
+    override var isDisposed: Boolean = false
         private set
 
     override fun events(observer: Observer<Event>): Disposable = _events.subscribe(observer)
@@ -62,7 +59,7 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
     }
 
     class TestEventProcessor {
-        private var events by atomic(emptyList<Pair<StoreEventType, Any>>())
+        private val events = ArrayList<Pair<StoreEventType, Any>>()
 
         fun process(type: StoreEventType, value: Any) {
             this.events += type to value
@@ -82,12 +79,12 @@ internal class TestTimeTravelStore : TimeTravelStore<String, String, String> {
         }
 
         fun reset() {
-            events = emptyList()
+            events.clear()
         }
     }
 
     class TestEventDebugger {
-        private var events by atomic(emptyList<Event>())
+        private val events = ArrayList<Event>()
 
         fun debug(type: StoreEventType, value: Any, state: Any) {
             this.events += Event(type, value, state)

@@ -7,8 +7,8 @@ import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import com.arkivanov.mvikotlin.sample.reaktive.shared.TestDatabase
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.MainView.Event
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.MainView.Model
 import com.badoo.reaktive.scheduler.overrideSchedulers
@@ -25,7 +25,7 @@ import kotlin.test.assertFalse
 class MainControllerTest {
 
     private val storeFactory: StoreFactory = DefaultStoreFactory()
-    private val database = TestDatabase()
+    private val database = MemoryTodoDatabase()
     private val instanceKeeper: InstanceKeeper = InstanceKeeperDispatcher()
 
     private val view = TestMainView()

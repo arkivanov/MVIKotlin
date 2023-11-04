@@ -17,8 +17,7 @@ import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.ref.createCleaner
 
 @OptIn(ExperimentalForeignApi::class)
-@Suppress("ACTUAL_WITHOUT_EXPECT", "EmptyDefaultConstructor")
-internal actual class Lock actual constructor() {
+actual class Lock actual constructor() {
 
     private val resources = Resources()
 
@@ -26,11 +25,20 @@ internal actual class Lock actual constructor() {
     @OptIn(ExperimentalNativeApi::class)
     private val cleaner = createCleaner(resources, Resources::destroy)
 
-    actual fun lock() {
+    actual inline fun <T> synchronizedImpl(block: () -> T): T {
+        lock()
+        try {
+            return block()
+        } finally {
+            unlock()
+        }
+    }
+
+    fun lock() {
         pthread_mutex_lock(resources.mutex.ptr)
     }
 
-    actual fun unlock() {
+    fun unlock() {
         pthread_mutex_unlock(resources.mutex.ptr)
     }
 

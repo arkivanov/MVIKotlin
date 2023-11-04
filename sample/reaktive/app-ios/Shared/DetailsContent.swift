@@ -68,6 +68,7 @@ struct DetailsContent: View {
                 }
             )
         }
+        .padding(8)
         .onFirstAppear { holder.controller.onViewCreated(view: view, viewLifecycle: holder.lifecycle) }
         .onAppear { LifecycleRegistryExtKt.resume(holder.lifecycle) }
         .onDisappear { LifecycleRegistryExtKt.stop(holder.lifecycle) }

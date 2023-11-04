@@ -34,5 +34,9 @@ kotlin {
             implementation(project(":rx"))
             implementation(project(":utils-internal"))
         }
+
+        common.test.dependencies {
+            implementation(deps.reaktive.reaktive)
+        }
     }
 }

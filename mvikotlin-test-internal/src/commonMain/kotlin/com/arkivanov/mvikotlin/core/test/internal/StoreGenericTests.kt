@@ -5,9 +5,6 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.rx.observer
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getValue
-import com.arkivanov.mvikotlin.utils.internal.setValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -50,9 +47,9 @@ abstract class StoreGenericTests(
 
     @Test
     fun calls_bootstrapper_after_initialization_WHEN_created() {
-        var events by atomic(emptyList<String>())
+        val events = ArrayList<String>()
 
-        store(bootstrapper = TestBootstrapper(init = { events = events + "init" }, invoke = { events = events + "invoke" }))
+        store(bootstrapper = TestBootstrapper(init = { events += "init" }, invoke = { events += "invoke" }))
 
         assertEquals(listOf("init", "invoke"), events)
     }
@@ -77,11 +74,11 @@ abstract class StoreGenericTests(
 
     @Test
     fun initializes_executor_before_bootstrapper_call_WHEN_with_bootstrapper_and_created() {
-        var events by atomic(emptyList<String>())
+        val events = ArrayList<String>()
 
         store(
-            bootstrapper = TestBootstrapper(init = { events = events + "bootstrapper" }),
-            executorFactory = { TestExecutor(init = { events = events + "executor" }) }
+            bootstrapper = TestBootstrapper(init = { events += "bootstrapper" }),
+            executorFactory = { TestExecutor(init = { events += "executor" }) }
         )
 
         assertEquals(listOf("executor", "bootstrapper"), events)
@@ -89,12 +86,12 @@ abstract class StoreGenericTests(
 
     @Test
     fun delivers_actions_from_bootstrapper_to_executor_after_bootstrap() {
-        var actions by atomic(emptyList<String>())
+        val actions = ArrayList<String>()
         val bootstrapper = TestBootstrapper()
 
         store(
             bootstrapper = bootstrapper,
-            executorFactory = { TestExecutor(executeAction = { actions = actions + it }) }
+            executorFactory = { TestExecutor(executeAction = { actions += it }) }
         )
 
         bootstrapper.dispatch("action1")
@@ -105,14 +102,14 @@ abstract class StoreGenericTests(
 
     @Test
     fun delivers_actions_from_bootstrapper_to_executor_during_bootstrap() {
-        var actions by atomic(emptyList<String>())
+        val actions = ArrayList<String>()
 
         store(
             bootstrapper = TestBootstrapper {
                 dispatch("action1")
                 dispatch("action2")
             },
-            executorFactory = { TestExecutor(executeAction = { actions = actions + it }) }
+            executorFactory = { TestExecutor(executeAction = { actions += it }) }
         )
 
         assertEquals(listOf("action1", "action2"), actions)
@@ -120,13 +117,13 @@ abstract class StoreGenericTests(
 
     @Test
     fun does_not_deliver_actions_from_bootstrapper_to_executor_WHEN_disposed_and_bootstrapper_produced_actions() {
-        var actions by atomic(emptyList<String>())
+        val actions = ArrayList<String>()
         val bootstrapper = TestBootstrapper()
 
         val store =
             store(
                 bootstrapper = bootstrapper,
-                executorFactory = { TestExecutor(executeAction = { actions = actions + it }) }
+                executorFactory = { TestExecutor(executeAction = { actions += it }) }
             )
 
         store.dispose()
@@ -138,11 +135,11 @@ abstract class StoreGenericTests(
 
     @Test
     fun produces_labels_from_executor() {
-        var labels by atomic(emptyList<String>())
+        val labels = ArrayList<String>()
         val executor = TestExecutor()
 
         val store = store(executorFactory = { executor })
-        store.labels(observer(onNext = { labels = labels + it }))
+        store.labels(observer(onNext = { labels += it }))
 
         executor.publish("label1")
         executor.publish("label2")
@@ -152,11 +149,11 @@ abstract class StoreGenericTests(
 
     @Test
     fun does_not_produce_labels_from_executor_to_unsubscribed_observer() {
-        var labels by atomic(emptyList<String>())
+        val labels = ArrayList<String>()
         val executor = TestExecutor()
 
         val store = store(executorFactory = { executor })
-        store.labels(observer(onNext = { labels = labels + it })).dispose()
+        store.labels(observer(onNext = { labels += it })).dispose()
 
         executor.publish("label1")
         executor.publish("label2")
@@ -166,8 +163,8 @@ abstract class StoreGenericTests(
 
     @Test
     fun delivers_intents_to_executor() {
-        var intents by atomic(emptyList<String>())
-        val store = store(executorFactory = { TestExecutor(executeIntent = { intents = intents + it }) })
+        val intents = ArrayList<String>()
+        val store = store(executorFactory = { TestExecutor(executeIntent = { intents += it }) })
 
         store.accept("intent1")
         store.accept("intent2")
@@ -177,8 +174,8 @@ abstract class StoreGenericTests(
 
     @Test
     fun does_not_deliver_intents_to_executor_WHEN_disposed_and_new_intents() {
-        var intents by atomic(emptyList<String>())
-        val store = store(executorFactory = { TestExecutor(executeIntent = { intents = intents + it }) })
+        val intents = ArrayList<String>()
+        val store = store(executorFactory = { TestExecutor(executeIntent = { intents += it }) })
 
         store.dispose()
         store.accept("intent1")
@@ -207,12 +204,12 @@ abstract class StoreGenericTests(
 
     @Test
     fun delivers_messages_from_executor_to_reducer() {
-        var messages by atomic(emptyList<String>())
+        val messages = ArrayList<String>()
         val executor = TestExecutor()
         store(
             executorFactory = { executor },
             reducer = reducer {
-                messages = messages + it
+                messages += it
                 this
             }
         )
@@ -272,8 +269,8 @@ abstract class StoreGenericTests(
 
     @Test
     fun states_observers_completed_WHEN_store_disposed() {
-        var isCompleted1 by atomic(false)
-        var isCompleted2 by atomic(false)
+        var isCompleted1 = false
+        var isCompleted2 = false
         val store = store()
         store.states(observer(onComplete = { isCompleted1 = true }))
         store.states(observer(onComplete = { isCompleted2 = true }))
@@ -286,8 +283,8 @@ abstract class StoreGenericTests(
 
     @Test
     fun labels_observers_completed_WHEN_store_disposed() {
-        var isCompleted1 by atomic(false)
-        var isCompleted2 by atomic(false)
+        var isCompleted1 = false
+        var isCompleted2 = false
         val store = store()
         store.labels(observer(onComplete = { isCompleted1 = true }))
         store.labels(observer(onComplete = { isCompleted2 = true }))
@@ -333,8 +330,8 @@ abstract class StoreGenericTests(
 
     @Test
     fun executor_not_called_WHEN_recursive_intent_on_label() {
-        var isProcessingIntent by atomic(false)
-        var isCalledRecursively by atomic(false)
+        var isProcessingIntent = false
+        var isCalledRecursively = false
 
         val store =
             store(
@@ -362,8 +359,8 @@ abstract class StoreGenericTests(
 
     @Test
     fun executor_called_WHEN_recursive_intent_on_label_and_first_intent_processed() {
-        var isProcessingIntent by atomic(false)
-        var isCalledAfter by atomic(false)
+        var isProcessingIntent = false
+        var isCalledAfter = false
 
         val store =
             store(

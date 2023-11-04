@@ -5,9 +5,9 @@ import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.arkivanov.mvikotlin.sample.coroutines.shared.TestDatabase
 import com.arkivanov.mvikotlin.sample.coroutines.shared.TodoDispatchers
 import com.arkivanov.mvikotlin.sample.coroutines.shared.details.DetailsView.Event
+import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +20,7 @@ import kotlin.test.assertNull
 class DetailsControllerTest {
 
     private val storeFactory: StoreFactory = DefaultStoreFactory()
-    private val database = TestDatabase()
+    private val database = MemoryTodoDatabase()
 
     private val itemData = TodoItem.Data(text = "text", isDone = true)
     private var itemId: String = database.create(itemData).id
