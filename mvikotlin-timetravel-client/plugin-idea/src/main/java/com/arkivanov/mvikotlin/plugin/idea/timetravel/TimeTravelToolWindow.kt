@@ -18,8 +18,7 @@ import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
-import com.russhwolf.settings.ExperimentalSettingsImplementation
-import com.russhwolf.settings.JvmPreferencesSettings
+import com.russhwolf.settings.PreferencesSettings
 import org.apache.commons.lang.SystemUtils.getUserHome
 import java.io.File
 import java.io.FileInputStream
@@ -45,10 +44,9 @@ class TimeTravelToolWindow(
         return timeTravelView.content
     }
 
-    @OptIn(ExperimentalSettingsImplementation::class)
     private fun components(): Components {
         val lifecycle = TimeTravelToolWindowListener.getLifecycle()
-        val settingsFactory = JvmPreferencesSettings.Factory(Preferences.userNodeForPackage(PreferencesKey::class.java))
+        val settingsFactory = PreferencesSettings.Factory(Preferences.userNodeForPackage(PreferencesKey::class.java))
 
         val settingsComponent =
             TimeTravelSettingsComponent(
