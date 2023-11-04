@@ -25,17 +25,18 @@ class TimeTravelServer(
 
     constructor() : this(controller = timeTravelController)
 
-    private var holder: Holder? = Holder()
+    private var connectionThread: ConnectionThread? = null
+    private val clients = HashMap<Int, Client>()
 
     @MainThread
     fun start() {
         assertOnMainThread()
 
-        val holder = this.holder ?: return
+        if (connectionThread != null) {
+            return
+        }
 
-        val connectionThread = connectionThread()
-        holder.connectionThread = connectionThread
-        connectionThread.start()
+        connectionThread = connectionThread().apply { start() }
     }
 
     @MainThread
@@ -50,15 +51,18 @@ class TimeTravelServer(
     fun stop() {
         assertOnMainThread()
 
-        val holder = this.holder ?: return
+        if (connectionThread == null) {
+            return
+        }
 
-        this.holder = null
-        holder.connectionThread?.interrupt()
-        closeClients(holder.clients.values)
+        connectionThread?.interrupt()
+        connectionThread = null
+        clients.values.forEach { it.close() }
+        clients.clear()
     }
 
     private fun onClientConnected(socket: Int) {
-        runOnMainThreadIfNotDisposed { holder ->
+        runOnMainThreadIfNotDisposed {
             val reader =
                 ReaderThread<TimeTravelCommand>(
                     socket = socket,
@@ -70,33 +74,28 @@ class TimeTravelServer(
             val stateDiff = StateDiff()
             val disposable = controller.states(observer { writer.submit(stateDiff(it)) })
 
-            holder.clients += socket to Client(socket, reader, writer, disposable)
+            clients += socket to Client(socket, reader, writer, disposable)
 
             reader.start()
         }
     }
 
     private fun onClientDisconnected(socket: Int) {
-        runOnMainThreadIfNotDisposed { holder ->
-            holder.clients.remove(socket)?.also {
-                closeClients(listOf(it))
-            }
+        runOnMainThreadIfNotDisposed {
+            clients.remove(socket)?.close()
         }
     }
 
     @MainThread
-    private fun closeClients(clients: Iterable<Client>) {
-        clients.forEach {
-            it.reader.interrupt()
-            it.writer.interrupt()
-            it.disposable.dispose()
-        }
-
-        clients.forEach { close(it.socket) }
+    private fun Client.close() {
+        reader.interrupt()
+        writer.interrupt()
+        disposable.dispose()
+        close(socket)
     }
 
     private fun onCommandReceived(command: TimeTravelCommand, socket: Int) {
-        runOnMainThreadIfNotDisposed { holder ->
+        runOnMainThreadIfNotDisposed {
             when (command) {
                 is TimeTravelCommand.StartRecording -> controller.startRecording()
                 is TimeTravelCommand.StopRecording -> controller.stopRecording()
@@ -106,7 +105,7 @@ class TimeTravelServer(
                 is TimeTravelCommand.MoveToEnd -> controller.moveToEnd()
                 is TimeTravelCommand.Cancel -> controller.cancel()
                 is TimeTravelCommand.DebugEvent -> controller.debugEvent(eventId = command.eventId)
-                is TimeTravelCommand.AnalyzeEvent -> analyzeEvent(eventId = command.eventId, holder = holder, socket = socket)
+                is TimeTravelCommand.AnalyzeEvent -> analyzeEvent(eventId = command.eventId, socket = socket)
                 is TimeTravelCommand.ExportEvents -> Unit // Not supported
                 is TimeTravelCommand.ImportEvents -> Unit // Not supported
             }
@@ -114,32 +113,29 @@ class TimeTravelServer(
     }
 
     private fun onError(error: Throwable) {
-        runOnMainThreadIfNotDisposed { _ ->
+        runOnMainThreadIfNotDisposed {
             onError.invoke(error)
         }
     }
 
-    private fun runOnMainThreadIfNotDisposed(block: (Holder) -> Unit) {
-        val callback: () -> Unit = { holder?.also(block) }
-
-        dispatch_async(dispatch_get_main_queue(), callback)
+    private fun runOnMainThreadIfNotDisposed(block: () -> Unit) {
+        dispatch_async(dispatch_get_main_queue()) {
+            if (connectionThread != null) {
+                block()
+            }
+        }
     }
 
     @MainThread
-    private fun analyzeEvent(eventId: Long, holder: Holder, socket: Int) {
+    private fun analyzeEvent(eventId: Long, socket: Int) {
         val event = controller.state.events.firstOrNull { it.id == eventId } ?: return
         val parsedValue = ValueParser().parseValue(event.value)
-        holder.sendData(clientSocket = socket, protoObject = TimeTravelEventValue(eventId = eventId, value = parsedValue))
+        sendData(clientSocket = socket, protoObject = TimeTravelEventValue(eventId = eventId, value = parsedValue))
     }
 
     @MainThread
-    private fun Holder.sendData(clientSocket: Int, protoObject: ProtoObject) {
+    private fun sendData(clientSocket: Int, protoObject: ProtoObject) {
         clients[clientSocket]?.writer?.submit(protoObject)
-    }
-
-    private class Holder {
-        var connectionThread: ConnectionThread? = null
-        val clients: MutableMap<Int, Client> = HashMap()
     }
 
     private class Client(
