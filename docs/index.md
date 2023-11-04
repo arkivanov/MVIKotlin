@@ -52,10 +52,4 @@ The data flows between core components only on Main thread.
 
 MVI loves reactivity, it's all about data streams and transformations. MVIKotlin is a reactive framework. But the main functionality of the framework does not depend on any such library. A tiny abstraction over Rx is used instead. Extensions for [Reaktive](https://github.com/badoo/Reaktive) and for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) libraries are provided as separate modules.
 
-### Kotlin/Native
-
-MVIKotlin is Kotlin/Native friendly and supports its tricky memory model (please read about Kotlin/Native [concurrency](https://kotlinlang.org/docs/reference/native/concurrency.html) and [immutability](https://kotlinlang.org/docs/reference/native/immutability.html) if you are unsure).
-
-`Stores` are freezable, however you should be careful not to freeze any dependency that is not intended to be frozen. When you subscribe to a `Store` the subscriber will not be frozen, unless you switch threads somewhere down the stream.
-
 Overview | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
