@@ -25,8 +25,7 @@ import com.arkivanov.mvikotlin.timetravel.client.internal.utils.fileDialog
 import com.arkivanov.mvikotlin.timetravel.client.internal.utils.isValidAdbExecutable
 import com.badoo.reaktive.coroutinesinterop.asScheduler
 import com.badoo.reaktive.scheduler.overrideSchedulers
-import com.russhwolf.settings.ExperimentalSettingsImplementation
-import com.russhwolf.settings.JvmPreferencesSettings
+import com.russhwolf.settings.PreferencesSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.File
@@ -69,10 +68,9 @@ fun main() {
     }
 }
 
-@OptIn(ExperimentalSettingsImplementation::class)
 private fun components(): Components {
     val lifecycle = LifecycleRegistry()
-    val settingsFactory = JvmPreferencesSettings.Factory(Preferences.userNodeForPackage(PreferencesKey::class.java))
+    val settingsFactory = PreferencesSettings.Factory(Preferences.userNodeForPackage(PreferencesKey::class.java))
 
     val settingsComponent =
         TimeTravelSettingsComponent(
