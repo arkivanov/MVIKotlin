@@ -49,7 +49,7 @@ internal class ListStoreFactory(
                 .subscribeOn(ioScheduler)
                 .map(Msg::Loaded)
                 .observeOn(mainScheduler)
-                .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
+                .subscribeScoped(onSuccess = ::dispatch)
         }
 
         override fun executeIntent(intent: Intent, getState: () -> State) {

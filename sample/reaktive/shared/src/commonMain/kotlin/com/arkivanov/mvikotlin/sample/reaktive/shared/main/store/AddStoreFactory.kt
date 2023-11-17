@@ -54,7 +54,7 @@ internal class AddStoreFactory(
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .map(Label::Added)
-                .subscribeScoped(isThreadLocal = true, onSuccess = ::publish)
+                .subscribeScoped(onSuccess = ::publish)
         }
     }
 

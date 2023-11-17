@@ -97,15 +97,14 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
 
     final override fun <T> T.scope(onDispose: (T) -> Unit): T = scope.run { this@scope.scope(onDispose) }
 
+
     final override fun Completable.subscribeScoped(
-        isThreadLocal: Boolean,
         onSubscribe: ((Disposable) -> Unit)?,
         onError: ((Throwable) -> Unit)?,
         onComplete: (() -> Unit)?
     ): Disposable =
         scope.run {
             this@subscribeScoped.subscribeScoped(
-                isThreadLocal = isThreadLocal,
                 onSubscribe = onSubscribe,
                 onError = onError,
                 onComplete = onComplete
@@ -113,7 +112,6 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
         }
 
     final override fun <T> Maybe<T>.subscribeScoped(
-        isThreadLocal: Boolean,
         onSubscribe: ((Disposable) -> Unit)?,
         onError: ((Throwable) -> Unit)?,
         onComplete: (() -> Unit)?,
@@ -121,7 +119,6 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
     ): Disposable =
         scope.run {
             this@subscribeScoped.subscribeScoped(
-                isThreadLocal = isThreadLocal,
                 onSubscribe = onSubscribe,
                 onError = onError,
                 onComplete = onComplete,
@@ -130,7 +127,6 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
         }
 
     final override fun <T> Observable<T>.subscribeScoped(
-        isThreadLocal: Boolean,
         onSubscribe: ((Disposable) -> Unit)?,
         onError: ((Throwable) -> Unit)?,
         onComplete: (() -> Unit)?,
@@ -138,7 +134,6 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
     ): Disposable =
         scope.run {
             this@subscribeScoped.subscribeScoped(
-                isThreadLocal = isThreadLocal,
                 onSubscribe = onSubscribe,
                 onError = onError,
                 onComplete = onComplete,
@@ -147,14 +142,12 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
         }
 
     final override fun <T> Single<T>.subscribeScoped(
-        isThreadLocal: Boolean,
         onSubscribe: ((Disposable) -> Unit)?,
         onError: ((Throwable) -> Unit)?,
         onSuccess: ((T) -> Unit)?
     ): Disposable =
         scope.run {
             this@subscribeScoped.subscribeScoped(
-                isThreadLocal = isThreadLocal,
                 onSubscribe = onSubscribe,
                 onError = onError,
                 onSuccess = onSuccess

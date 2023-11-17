@@ -40,7 +40,7 @@ internal class DetailsStoreFactory(
                         .subscribeOn(ioScheduler)
                         .map { it?.data?.let(Msg::Loaded) ?: Msg.Finished }
                         .observeOn(mainScheduler)
-                        .subscribeScoped(isThreadLocal = true, onSuccess = ::dispatch)
+                        .subscribeScoped(onSuccess = ::dispatch)
                 }
 
                 onIntent<Intent.SetText> {
@@ -59,7 +59,7 @@ internal class DetailsStoreFactory(
                     completableFromFunction { database.delete(itemId) }
                         .subscribeOn(ioScheduler)
                         .observeOn(mainScheduler)
-                        .subscribeScoped(isThreadLocal = true) { dispatch(Msg.Finished) }
+                        .subscribeScoped { dispatch(Msg.Finished) }
                 }
             },
             reducer = { msg ->
