@@ -2,6 +2,7 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
 import com.badoo.reaktive.scheduler.Scheduler
 import javax.swing.SwingUtilities
+import kotlin.time.Duration
 
 /*
  * A very rough implementation for now
@@ -25,14 +26,10 @@ internal class SwingMainScheduler : Scheduler {
             isDisposed = true
         }
 
-        override fun submit(delayMillis: Long, task: () -> Unit) {
-            require(delayMillis == 0L) { "Delay is not supported" }
+        override fun submit(delay: Duration, period: Duration, task: () -> Unit) {
+            require(delay == Duration.ZERO) { "Delay is not supported" }
 
             SwingUtilities.invokeLater(Runnable(task))
-        }
-
-        override fun submitRepeating(startDelayMillis: Long, periodMillis: Long, task: () -> Unit) {
-            throw NotImplementedError("Repeat is not supported")
         }
     }
 }
