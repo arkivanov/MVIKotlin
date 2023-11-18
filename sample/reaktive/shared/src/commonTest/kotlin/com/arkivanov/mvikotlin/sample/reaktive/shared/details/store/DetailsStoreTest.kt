@@ -71,7 +71,7 @@ class DetailsStoreTest {
     @Test
     fun publishes_Label_Changed_WHEN_Intent_SetText() {
         createStore()
-        val labels = store.labels.test(autoFreeze = false)
+        val labels = store.labels.test()
 
         store.accept(Intent.SetText(text = "new_text"))
 
@@ -119,7 +119,7 @@ class DetailsStoreTest {
     @Test
     fun publishes_Label_Changed_WHEN_Intent_ToggleDone() {
         createStore()
-        val labels = store.labels.test(autoFreeze = false)
+        val labels = store.labels.test()
 
         store.accept(Intent.ToggleDone)
 
@@ -138,7 +138,7 @@ class DetailsStoreTest {
     @Test
     fun publishes_Label_Deleted_WHEN_Intent_Delete() {
         createStore()
-        val labels = store.labels.test(autoFreeze = false)
+        val labels = store.labels.test()
 
         store.accept(Intent.Delete)
 

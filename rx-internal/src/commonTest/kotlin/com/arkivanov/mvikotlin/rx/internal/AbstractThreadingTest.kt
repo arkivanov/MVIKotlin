@@ -35,7 +35,7 @@ abstract class AbstractThreadingTest {
             }.subscribeOn(scheduler)
         }
             .merge()
-            .timeout(timeoutMillis = 10.seconds.inWholeMilliseconds, scheduler = mainScheduler)
+            .timeout(timeout = 10.seconds, scheduler = mainScheduler)
             .blockingAwait()
     }
 
