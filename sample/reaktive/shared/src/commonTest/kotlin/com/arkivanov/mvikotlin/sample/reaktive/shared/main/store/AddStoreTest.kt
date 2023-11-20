@@ -62,7 +62,7 @@ class AddStoreTest {
     fun publishes_Label_Added_after_creating_in_database_WHEN_Intent_Add() {
         createStore()
         store.accept(Intent.SetText(text = "text"))
-        val labels = store.labels.test(autoFreeze = false)
+        val labels = store.labels.test()
 
         store.accept(Intent.Add)
 
