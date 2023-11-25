@@ -1,10 +1,10 @@
 package com.arkivanov.mvikotlin.timetravel.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
 
 internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label : Any> : Store<Intent, State, Label> {
 

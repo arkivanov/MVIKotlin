@@ -1,8 +1,9 @@
 package com.arkivanov.mvikotlin.sample.database
 
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.getAndUpdate
+import com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi
+import com.arkivanov.mvikotlin.core.utils.internal.atomic
 
+@OptIn(InternalMviKotlinApi::class) // Don't do this in your project!
 class MemoryTodoDatabase : TodoDatabase {
 
     private var idCounter = atomic(1L)

@@ -1,8 +1,8 @@
 package com.arkivanov.mvikotlin.core.store
 
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.requireValue
+import com.arkivanov.mvikotlin.core.utils.internal.atomic
+import com.arkivanov.mvikotlin.core.utils.internal.initialize
+import com.arkivanov.mvikotlin.core.utils.internal.requireValue
 
 /**
  * A convenience extension function that creates an implementation of [Store]

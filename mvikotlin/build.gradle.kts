@@ -25,24 +25,38 @@ kotlin {
         val js by bundle()
         val jsNative by bundle()
         val java by bundle()
+        val native by bundle()
+        val darwin by bundle()
 
         jsNative dependsOn common
+        native dependsOn jsNative
+        darwin dependsOn native
         java dependsOn common
         js dependsOn jsNative
+
         javaSet dependsOn java
-        nativeSet dependsOn jsNative
+        (nativeSet - darwinSet) dependsOn native
+        darwinSet dependsOn darwin
+        javaSet dependsOn java
 
         common.main.dependencies {
-            implementation(project(":utils-internal"))
-            implementation(project(":rx"))
-            implementation(project(":rx-internal"))
             api(deps.essenty.lifecycle)
             api(deps.essenty.instanceKeeper)
+        }
+
+        common.test.dependencies {
+            implementation(deps.reaktive.reaktive)
         }
 
         android.main.dependencies {
             implementation(deps.androidx.lifecycle.lifecycleCommonJava8)
             implementation(deps.androidx.lifecycle.lifecycleRuntime)
+        }
+
+        all {
+            languageSettings {
+                optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")
+            }
         }
     }
 }

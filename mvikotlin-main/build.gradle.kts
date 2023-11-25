@@ -28,13 +28,16 @@ kotlin {
 
         common.main.dependencies {
             implementation(project(":mvikotlin"))
-            implementation(project(":rx"))
-            implementation(project(":rx-internal"))
-            implementation(project(":utils-internal"))
         }
 
         common.test.dependencies {
             implementation(project(":mvikotlin-test-internal"))
+        }
+
+        all {
+            languageSettings {
+                optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")
+            }
         }
     }
 }

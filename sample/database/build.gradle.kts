@@ -23,7 +23,6 @@ android {
 kotlin {
     setupSourceSets {
         common.main.dependencies {
-            implementation(project(":utils-internal"))
             implementation(project(":mvikotlin"))
         }
     }

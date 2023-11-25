@@ -1,8 +1,9 @@
 package com.arkivanov.mvikotlin.timetravel.server
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.observer
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.observer
+import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
 import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
@@ -12,7 +13,6 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventval
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueParser
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
-import com.arkivanov.mvikotlin.utils.internal.assertOnMainThread
 import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
 import platform.posix.close
@@ -142,6 +142,6 @@ class TimeTravelServer(
         val socket: Int,
         val reader: ReaderThread<*>,
         val writer: WriterThread,
-        val disposable: Disposable
+        val disposable: Disposable,
     )
 }

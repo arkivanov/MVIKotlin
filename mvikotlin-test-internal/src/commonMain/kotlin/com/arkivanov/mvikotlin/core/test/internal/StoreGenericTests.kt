@@ -1,10 +1,10 @@
 package com.arkivanov.mvikotlin.core.test.internal
 
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.rx.observer
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

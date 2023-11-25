@@ -1,9 +1,9 @@
 package com.arkivanov.mvikotlin.timetravel.store
 
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.store.StoreEventType
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.PublishSubject
+import com.arkivanov.mvikotlin.core.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

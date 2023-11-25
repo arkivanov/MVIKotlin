@@ -4,8 +4,11 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.utils.internal.assertOnMainThread
-import com.arkivanov.mvikotlin.utils.internal.runOnBackgroundBlocking
+import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
+import com.badoo.reaktive.scheduler.computationScheduler
+import com.badoo.reaktive.single.blockingGet
+import com.badoo.reaktive.single.singleFromFunction
+import com.badoo.reaktive.single.subscribeOn
 import kotlin.test.Test
 
 @Suppress("FunctionName", "UnnecessaryAbstractClass")
@@ -33,4 +36,9 @@ abstract class StoreThreadingTests(
         reducer: Reducer<String, String> = reducer()
     ): Store<String, String, String> =
         storeFactory(initialState, bootstrapper, executorFactory, reducer)
+
+    private fun <T> runOnBackgroundBlocking(block: () -> T): T =
+        singleFromFunction(block)
+            .subscribeOn(computationScheduler)
+            .blockingGet()
 }

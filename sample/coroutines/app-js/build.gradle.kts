@@ -19,7 +19,6 @@ kotlin {
         val js by bundle()
 
         js.main.dependencies {
-            implementation(project(":rx"))
             implementation(project(":mvikotlin-main"))
             implementation(project(":mvikotlin-logging"))
             implementation(project(":mvikotlin-timetravel"))

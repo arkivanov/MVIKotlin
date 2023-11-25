@@ -1,9 +1,9 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal.utils
 
 import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.observer
 import com.badoo.reaktive.base.invoke
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.badoo.reaktive.subject.behavior.BehaviorSubject

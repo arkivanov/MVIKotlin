@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.timetravel.server
 
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.observer
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExportSerializer
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
@@ -165,6 +165,6 @@ internal class TimeTravelServerImpl(
         val socket: Socket,
         val reader: ReaderThread<*>,
         val writer: WriterThread,
-        val disposable: Disposable
+        val disposable: Disposable,
     )
 }

@@ -1,9 +1,7 @@
 package com.arkivanov.mvikotlin.timetravel.store
 
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.test.internal.StoreThreadingTests
-import com.arkivanov.mvikotlin.rx.observer
-import kotlin.test.Test
-import kotlin.test.fail
 
 class TimeTravelStoreThreadingTests : StoreThreadingTests(
     storeFactory = { initialState, bootstrapper, executorFactory, reducer ->

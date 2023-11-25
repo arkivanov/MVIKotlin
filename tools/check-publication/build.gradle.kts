@@ -21,7 +21,6 @@ kotlin {
     setupSourceSets {
         common.main.dependencies {
             val version = deps.versions.mvikotlin.get()
-            implementation("com.arkivanov.mvikotlin:rx:$version")
             implementation("com.arkivanov.mvikotlin:mvikotlin:$version")
             implementation("com.arkivanov.mvikotlin:mvikotlin-main:$version")
             implementation("com.arkivanov.mvikotlin:mvikotlin-logging:$version")

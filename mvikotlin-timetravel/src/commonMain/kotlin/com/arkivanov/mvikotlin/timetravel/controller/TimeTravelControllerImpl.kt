@@ -3,16 +3,16 @@ package com.arkivanov.mvikotlin.timetravel.controller
 import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
-import com.arkivanov.mvikotlin.rx.observer
+import com.arkivanov.mvikotlin.core.rx.internal.BehaviorSubject
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore
-import com.arkivanov.mvikotlin.utils.internal.logE
+import com.arkivanov.mvikotlin.core.utils.internal.logE
 import kotlin.collections.set
 
 internal class TimeTravelControllerImpl : TimeTravelController {

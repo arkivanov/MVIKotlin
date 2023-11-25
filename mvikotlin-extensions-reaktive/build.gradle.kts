@@ -21,15 +21,18 @@ kotlin {
     setupSourceSets {
         common.main.dependencies {
             implementation(project(":mvikotlin"))
-            implementation(project(":rx"))
-            implementation(project(":rx-internal"))
-            implementation(project(":utils-internal"))
             implementation(deps.reaktive.reaktive)
             implementation(deps.reaktive.reaktiveAnnotations)
         }
 
         common.test.dependencies {
             implementation(deps.reaktive.reaktiveTesting)
+        }
+
+        all {
+            languageSettings {
+                optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")
+            }
         }
     }
 }

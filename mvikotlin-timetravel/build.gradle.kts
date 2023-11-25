@@ -32,9 +32,6 @@ kotlin {
 
         common.main.dependencies {
             implementation(project(":mvikotlin"))
-            implementation(project(":rx"))
-            implementation(project(":rx-internal"))
-            implementation(project(":utils-internal"))
             implementation(project(":mvikotlin-timetravel-proto-internal"))
         }
 
@@ -47,6 +44,12 @@ kotlin {
             implementation(deps.androidx.appcompat.appcompat)
             implementation(deps.androidx.recyclerview.recyclerview)
             implementation(deps.androidx.constraintlayout.constraintlayout)
+        }
+
+        all {
+            languageSettings {
+                optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")
+            }
         }
     }
 }

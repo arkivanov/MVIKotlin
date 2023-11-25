@@ -21,12 +21,16 @@ kotlin {
     setupSourceSets {
         common.main.dependencies {
             implementation(project(":mvikotlin"))
-            implementation(project(":utils-internal"))
         }
 
         common.test.dependencies {
             implementation(project(":mvikotlin-test-internal"))
-            implementation(project(":rx"))
+        }
+
+        all {
+            languageSettings {
+                optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")
+            }
         }
     }
 }

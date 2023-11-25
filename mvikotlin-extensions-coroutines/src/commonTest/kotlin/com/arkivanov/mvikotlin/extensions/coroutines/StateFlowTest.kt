@@ -1,9 +1,8 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.Disposable
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

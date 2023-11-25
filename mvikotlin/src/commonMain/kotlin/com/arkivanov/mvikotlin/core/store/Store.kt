@@ -1,8 +1,8 @@
 package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
 import kotlin.js.JsName
 
 /**

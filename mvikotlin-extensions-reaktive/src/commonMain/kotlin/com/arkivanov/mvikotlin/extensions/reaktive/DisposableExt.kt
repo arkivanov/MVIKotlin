@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
-import com.arkivanov.mvikotlin.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.badoo.reaktive.disposable.Disposable as ReaktiveDisposable
 
 internal fun Disposable.toReaktiveDisposable(): ReaktiveDisposable =
