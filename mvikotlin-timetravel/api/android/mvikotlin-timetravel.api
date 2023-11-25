@@ -115,12 +115,3 @@ public final class com/arkivanov/mvikotlin/timetravel/store/TimeTravelStoreFacto
 	public fun create (Ljava/lang/String;ZLjava/lang/Object;Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;Lkotlin/jvm/functions/Function0;Lcom/arkivanov/mvikotlin/core/store/Reducer;)Lcom/arkivanov/mvikotlin/core/store/Store;
 }
 
-public final class com/arkivanov/mvikotlin/timetravel/widget/TimeTravelView : android/widget/FrameLayout {
-	public fun <init> (Landroid/content/Context;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
-	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun setOnExportEventsListener (Lkotlin/jvm/functions/Function0;)V
-	public final fun setOnImportEventsListener (Lkotlin/jvm/functions/Function0;)V
-}
-
