@@ -29,7 +29,6 @@ if (!startParameter.projectProperties.containsKey("check_publication")) {
     include(":utils-internal")
     include(":rx")
     include(":rx-internal")
-    include(":keepers")
     include(":mvikotlin")
     include(":mvikotlin-test-internal")
     include(":mvikotlin-main")
