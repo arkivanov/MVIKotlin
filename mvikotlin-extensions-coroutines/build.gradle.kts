@@ -24,6 +24,10 @@ kotlin {
             implementation(deps.kotlinx.kotlinxCoroutinesCore)
         }
 
+        common.test.dependencies {
+            implementation(project(":mvikotlin-test-internal"))
+        }
+
         all {
             languageSettings {
                 optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")

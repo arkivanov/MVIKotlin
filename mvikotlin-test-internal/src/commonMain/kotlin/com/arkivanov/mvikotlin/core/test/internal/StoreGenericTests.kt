@@ -386,6 +386,48 @@ abstract class StoreGenericTests(
         assertTrue(isCalledAfter)
     }
 
+    @Test
+    fun forwards_actions_from_executor_back_to_executor() {
+        val actions = ArrayList<String>()
+        val executor = TestExecutor(executeAction = { actions += it })
+        store(executorFactory = { executor })
+
+        executor.forward("action1")
+        executor.forward("action2")
+
+        assertEquals(listOf("action1", "action2"), actions)
+    }
+
+    @Test
+    fun executor_not_called_WHEN_recursive_action() {
+        var isProcessingAction = false
+        var isCalledRecursively = false
+
+        val bootstrapper = TestBootstrapper()
+
+        store(
+            bootstrapper = bootstrapper,
+            executorFactory = {
+                TestExecutor(
+                    executeAction = {
+                        if (it == "action1") {
+                            isProcessingAction = true
+                            forward("action2")
+                            isProcessingAction = false
+                        } else {
+                            isCalledRecursively = isProcessingAction
+                        }
+                    }
+                )
+            },
+            reducer = reducer { it }
+        )
+
+        bootstrapper.dispatch("action1")
+
+        assertFalse(isCalledRecursively)
+    }
+
     private fun store(
         initialState: String = "initial_state",
         bootstrapper: Bootstrapper<String>? = null,

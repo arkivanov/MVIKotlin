@@ -12,14 +12,14 @@ class TestExecutor(
     private val executeAction: TestExecutor.(String) -> Unit = {}
 ) : Executor<String, String, String, String, String> {
 
-    private val callbacks = atomic<Callbacks<String, String, String>>()
+    private val callbacks = atomic<Callbacks<String, String, String, String>>()
     val isInitialized: Boolean get() = callbacks.value != null
     val state: String get() = callbacks.requireValue().state
 
     var isDisposed: Boolean = false
         private set
 
-    override fun init(callbacks: Callbacks<String, String, String>) {
+    override fun init(callbacks: Callbacks<String, String, String, String>) {
         this.callbacks.initialize(callbacks)
         init()
     }
@@ -38,6 +38,10 @@ class TestExecutor(
 
     fun dispatch(message: String) {
         callbacks.requireValue().onMessage(message)
+    }
+
+    fun forward(action: String) {
+        callbacks.requireValue().onAction(action)
     }
 
     fun publish(label: String) {

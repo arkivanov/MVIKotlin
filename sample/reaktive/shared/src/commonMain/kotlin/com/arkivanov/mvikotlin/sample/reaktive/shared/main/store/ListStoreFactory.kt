@@ -29,10 +29,16 @@ internal class ListStoreFactory(
         object : ListStore, Store<Intent, State, Nothing> by storeFactory.create(
             name = "ListStore",
             initialState = State(),
-            bootstrapper = SimpleBootstrapper(Unit),
+            bootstrapper = SimpleBootstrapper(Action.Init),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl,
         ) {}
+
+    // Serializable only for exporting events in Time Travel, no need otherwise.
+    private sealed interface Action : JvmSerializable {
+        data object Init : Action
+        data class SaveItem(val id: String) : Action
+    }
 
     // Serializable only for exporting events in Time Travel, no need otherwise.
     private sealed interface Msg : JvmSerializable {
@@ -43,8 +49,15 @@ internal class ListStoreFactory(
         data class Changed(val id: String, val data: TodoItem.Data) : Msg
     }
 
-    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Unit, State, Msg, Nothing>() {
-        override fun executeAction(action: Unit, getState: () -> State) {
+    private inner class ExecutorImpl : ReaktiveExecutor<Intent, Action, State, Msg, Nothing>() {
+        override fun executeAction(action: Action, getState: () -> State) {
+            when (action) {
+                is Action.Init -> init()
+                is Action.SaveItem -> saveItem(id = action.id, state = getState())
+            }
+        }
+
+        private fun init() {
             singleFromFunction(database::getAll)
                 .subscribeOn(ioScheduler)
                 .map(Msg::Loaded)
@@ -52,14 +65,24 @@ internal class ListStoreFactory(
                 .subscribeScoped(onSuccess = ::dispatch)
         }
 
+        private fun saveItem(id: String, state: State) {
+            val item = state.items.find { it.id == id } ?: return
+
+            completableFromFunction {
+                database.save(id, item.data)
+            }
+                .subscribeOn(ioScheduler)
+                .subscribeScoped()
+        }
+
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
-                is Intent.ToggleDone -> toggleDone(intent.id, getState)
+                is Intent.ToggleDone -> toggleDone(intent.id)
                 is Intent.AddToState -> dispatch(Msg.Added(intent.item))
                 is Intent.DeleteFromState -> dispatch(Msg.Deleted(intent.id))
                 is Intent.UpdateInState -> dispatch(Msg.Changed(intent.id, intent.data))
-            }.let {}
+            }
         }
 
         private fun delete(id: String) {
@@ -70,16 +93,9 @@ internal class ListStoreFactory(
                 .subscribeScoped()
         }
 
-        private fun toggleDone(id: String, state: () -> State) {
+        private fun toggleDone(id: String) {
             dispatch(Msg.DoneToggled(id))
-
-            val item = state().items.find { it.id == id } ?: return
-
-            completableFromFunction {
-                database.save(id, item.data)
-            }
-                .subscribeOn(ioScheduler)
-                .subscribeScoped()
+            forward(Action.SaveItem(id = id))
         }
     }
 
