@@ -5,11 +5,10 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
-import com.arkivanov.mvikotlin.rx.internal.Disposable
-import com.arkivanov.mvikotlin.rx.internal.PublishSubject
+import com.arkivanov.mvikotlin.core.rx.internal.BehaviorSubject
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
+import com.arkivanov.mvikotlin.core.rx.internal.PublishSubject
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 import kotlin.concurrent.Volatile
 

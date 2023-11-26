@@ -1,11 +1,11 @@
 package com.arkivanov.mvikotlin.timetravel.store
 
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.test.internal.StoreGenericTests
 import com.arkivanov.mvikotlin.core.test.internal.TestBootstrapper
 import com.arkivanov.mvikotlin.core.test.internal.TestExecutor
 import com.arkivanov.mvikotlin.core.test.internal.reducer
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
-import com.arkivanov.mvikotlin.rx.observer
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

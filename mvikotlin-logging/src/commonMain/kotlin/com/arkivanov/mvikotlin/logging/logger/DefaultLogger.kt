@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.logging.logger
 
-import com.arkivanov.mvikotlin.utils.internal.logV
+import com.arkivanov.mvikotlin.core.utils.internal.logV
 
 /**
  * A default implementation of the [Logger]

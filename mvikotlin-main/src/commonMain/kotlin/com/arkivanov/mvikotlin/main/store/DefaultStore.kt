@@ -5,11 +5,11 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.BehaviorSubject
-import com.arkivanov.mvikotlin.rx.internal.PublishSubject
-import com.arkivanov.mvikotlin.rx.observer
+import com.arkivanov.mvikotlin.core.rx.internal.BehaviorSubject
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
+import com.arkivanov.mvikotlin.core.rx.internal.PublishSubject
+import com.arkivanov.mvikotlin.core.rx.observer
 
 internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, out State : Any, Label : Any>(
     initialState: State,

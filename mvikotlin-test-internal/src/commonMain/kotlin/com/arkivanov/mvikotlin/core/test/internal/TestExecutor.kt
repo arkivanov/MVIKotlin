@@ -2,9 +2,9 @@ package com.arkivanov.mvikotlin.core.test.internal
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.requireValue
+import com.arkivanov.mvikotlin.core.utils.internal.atomic
+import com.arkivanov.mvikotlin.core.utils.internal.initialize
+import com.arkivanov.mvikotlin.core.utils.internal.requireValue
 
 class TestExecutor(
     private val init: () -> Unit = {},

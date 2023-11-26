@@ -2,9 +2,9 @@ package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.requireValue
+import com.arkivanov.mvikotlin.core.utils.internal.atomic
+import com.arkivanov.mvikotlin.core.utils.internal.initialize
+import com.arkivanov.mvikotlin.core.utils.internal.requireValue
 import com.badoo.reaktive.disposable.scope.DisposableScope
 
 /**

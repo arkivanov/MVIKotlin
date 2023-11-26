@@ -55,7 +55,7 @@ public abstract interface class com/arkivanov/mvikotlin/timetravel/controller/Ti
 	public abstract fun moveToEnd ()V
 	public abstract fun moveToStart ()V
 	public abstract fun startRecording ()V
-	public abstract fun states (Lcom/arkivanov/mvikotlin/rx/Observer;)Lcom/arkivanov/mvikotlin/rx/Disposable;
+	public abstract fun states (Lcom/arkivanov/mvikotlin/core/rx/Observer;)Lcom/arkivanov/mvikotlin/core/rx/Disposable;
 	public abstract fun stepBackward ()V
 	public abstract fun stepForward ()V
 	public abstract fun stopRecording ()V

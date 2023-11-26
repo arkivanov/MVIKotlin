@@ -27,11 +27,9 @@ kotlin {
 
         common.main.dependencies {
             implementation(project(":mvikotlin"))
-            implementation(project(":rx"))
-            implementation(project(":rx-internal"))
-            implementation(project(":utils-internal"))
             implementation(deps.kotlin.kotlinTestCommon)
             implementation(deps.kotlin.kotlinTestAnnotationsCommon)
+            implementation(deps.reaktive.reaktive)
         }
 
         js.main.dependencies {
@@ -44,6 +42,12 @@ kotlin {
 
         jvm.main.dependencies {
             implementation(deps.kotlin.kotlinTestJunit)
+        }
+
+        all {
+            languageSettings {
+                optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")
+            }
         }
     }
 }

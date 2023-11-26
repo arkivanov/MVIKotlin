@@ -1,9 +1,9 @@
 package com.arkivanov.mvikotlin.core.view
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.rx.Disposable
-import com.arkivanov.mvikotlin.rx.Observer
-import com.arkivanov.mvikotlin.rx.internal.PublishSubject
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
+import com.arkivanov.mvikotlin.core.rx.internal.PublishSubject
 import kotlin.js.JsName
 
 /**

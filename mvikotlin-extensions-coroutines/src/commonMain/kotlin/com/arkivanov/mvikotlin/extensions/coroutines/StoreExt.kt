@@ -1,7 +1,7 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.rx.observer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -47,7 +47,7 @@ fun <State : Any> Store<*, State, *>.stateFlow(
 val <State : Any> Store<*, State, *>.stateFlow: StateFlow<State>
     get() = StoreStateFlow(store = this)
 
-private class StoreStateFlow<State : Any>(
+private class StoreStateFlow<out State : Any>(
     private val store: Store<*, State, *>,
 ) : StateFlow<State> {
 

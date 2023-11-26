@@ -58,7 +58,6 @@ kotlin {
         }
 
         common.test.dependencies {
-            implementation(project(":utils-internal"))
             implementation(project(":mvikotlin-main"))
         }
 

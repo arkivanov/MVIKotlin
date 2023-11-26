@@ -23,6 +23,47 @@ public final class com/arkivanov/mvikotlin/core/instancekeeper/InstanceKeeperExt
 	public static final fun getStore (Lcom/arkivanov/essenty/instancekeeper/InstanceKeeper;Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)Lcom/arkivanov/mvikotlin/core/store/Store;
 }
 
+public abstract interface class com/arkivanov/mvikotlin/core/rx/Disposable {
+	public abstract fun dispose ()V
+	public abstract fun isDisposed ()Z
+}
+
+public final class com/arkivanov/mvikotlin/core/rx/DisposableKt {
+	public static final fun Disposable (Lkotlin/jvm/functions/Function1;)Lcom/arkivanov/mvikotlin/core/rx/Disposable;
+	public static synthetic fun Disposable$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/core/rx/Disposable;
+}
+
+public abstract interface class com/arkivanov/mvikotlin/core/rx/Observer {
+	public abstract fun onComplete ()V
+	public abstract fun onNext (Ljava/lang/Object;)V
+}
+
+public final class com/arkivanov/mvikotlin/core/rx/ObserverKt {
+	public static final fun observer (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/arkivanov/mvikotlin/core/rx/Observer;
+	public static synthetic fun observer$default (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/core/rx/Observer;
+}
+
+public final class com/arkivanov/mvikotlin/core/rx/internal/BehaviorSubject$DefaultImpls {
+	public static fun onComplete (Lcom/arkivanov/mvikotlin/core/rx/internal/BehaviorSubject;)V
+	public static fun onNext (Lcom/arkivanov/mvikotlin/core/rx/internal/BehaviorSubject;Ljava/lang/Object;)V
+}
+
+public final class com/arkivanov/mvikotlin/core/rx/internal/BehaviorSubjectKt {
+}
+
+public final class com/arkivanov/mvikotlin/core/rx/internal/PublishSubject$DefaultImpls {
+	public static fun onComplete (Lcom/arkivanov/mvikotlin/core/rx/internal/PublishSubject;)V
+	public static fun onNext (Lcom/arkivanov/mvikotlin/core/rx/internal/PublishSubject;Ljava/lang/Object;)V
+}
+
+public final class com/arkivanov/mvikotlin/core/rx/internal/PublishSubjectKt {
+}
+
+public final class com/arkivanov/mvikotlin/core/rx/internal/Subject$DefaultImpls {
+	public static fun onComplete (Lcom/arkivanov/mvikotlin/core/rx/internal/Subject;)V
+	public static fun onNext (Lcom/arkivanov/mvikotlin/core/rx/internal/Subject;Ljava/lang/Object;)V
+}
+
 public abstract interface class com/arkivanov/mvikotlin/core/store/Bootstrapper {
 	public abstract fun dispose ()V
 	public abstract fun init (Lkotlin/jvm/functions/Function1;)V
@@ -59,8 +100,8 @@ public abstract interface class com/arkivanov/mvikotlin/core/store/Store {
 	public abstract fun getState ()Ljava/lang/Object;
 	public abstract fun init ()V
 	public abstract fun isDisposed ()Z
-	public abstract fun labels (Lcom/arkivanov/mvikotlin/rx/Observer;)Lcom/arkivanov/mvikotlin/rx/Disposable;
-	public abstract fun states (Lcom/arkivanov/mvikotlin/rx/Observer;)Lcom/arkivanov/mvikotlin/rx/Disposable;
+	public abstract fun labels (Lcom/arkivanov/mvikotlin/core/rx/Observer;)Lcom/arkivanov/mvikotlin/core/rx/Disposable;
+	public abstract fun states (Lcom/arkivanov/mvikotlin/core/rx/Observer;)Lcom/arkivanov/mvikotlin/core/rx/Disposable;
 }
 
 public final class com/arkivanov/mvikotlin/core/store/StoreEventType : java/lang/Enum {
@@ -110,10 +151,25 @@ public final class com/arkivanov/mvikotlin/core/utils/MainThreadAssertKt {
 	public static final fun setAssertOnMainThreadEnabled (Z)V
 }
 
+public final class com/arkivanov/mvikotlin/core/utils/internal/AtomicExtKt {
+}
+
+public final class com/arkivanov/mvikotlin/core/utils/internal/AtomicJvm {
+}
+
+public final class com/arkivanov/mvikotlin/core/utils/internal/AtomicKt {
+}
+
+public abstract interface annotation class com/arkivanov/mvikotlin/core/utils/internal/InternalMviKotlinApi : java/lang/annotation/Annotation {
+}
+
+public final class com/arkivanov/mvikotlin/core/utils/internal/Logs {
+}
+
 public class com/arkivanov/mvikotlin/core/view/BaseMviView : com/arkivanov/mvikotlin/core/view/MviView {
 	public fun <init> ()V
 	public final fun dispatch (Ljava/lang/Object;)V
-	public fun events (Lcom/arkivanov/mvikotlin/rx/Observer;)Lcom/arkivanov/mvikotlin/rx/Disposable;
+	public fun events (Lcom/arkivanov/mvikotlin/core/rx/Observer;)Lcom/arkivanov/mvikotlin/core/rx/Disposable;
 	protected fun getRenderer ()Lcom/arkivanov/mvikotlin/core/view/ViewRenderer;
 	public fun render (Ljava/lang/Object;)V
 }
@@ -122,7 +178,7 @@ public abstract interface class com/arkivanov/mvikotlin/core/view/MviView : com/
 }
 
 public abstract interface class com/arkivanov/mvikotlin/core/view/ViewEvents {
-	public abstract fun events (Lcom/arkivanov/mvikotlin/rx/Observer;)Lcom/arkivanov/mvikotlin/rx/Disposable;
+	public abstract fun events (Lcom/arkivanov/mvikotlin/core/rx/Observer;)Lcom/arkivanov/mvikotlin/core/rx/Disposable;
 }
 
 public abstract interface class com/arkivanov/mvikotlin/core/view/ViewRenderer {

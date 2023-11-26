@@ -1,9 +1,9 @@
 package com.arkivanov.mvikotlin.core.test.internal
 
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.requireValue
+import com.arkivanov.mvikotlin.core.utils.internal.atomic
+import com.arkivanov.mvikotlin.core.utils.internal.initialize
+import com.arkivanov.mvikotlin.core.utils.internal.requireValue
 
 class TestBootstrapper(
     private val init: () -> Unit = {},

@@ -14,7 +14,6 @@ setupMultiplatform {
 kotlin {
     setupSourceSets {
         common.main.dependencies {
-            implementation(project(":rx"))
             implementation(project(":mvikotlin-timetravel-proto-internal"))
             implementation(project(":mvikotlin"))
             implementation(project(":mvikotlin-extensions-reaktive"))

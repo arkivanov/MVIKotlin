@@ -6,9 +6,9 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.utils.internal.atomic
-import com.arkivanov.mvikotlin.utils.internal.initialize
-import com.arkivanov.mvikotlin.utils.internal.requireValue
+import com.arkivanov.mvikotlin.core.utils.internal.atomic
+import com.arkivanov.mvikotlin.core.utils.internal.initialize
+import com.arkivanov.mvikotlin.core.utils.internal.requireValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel

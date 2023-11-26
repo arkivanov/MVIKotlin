@@ -1,4 +1,5 @@
 import com.arkivanov.gradle.AndroidConfig
+import com.arkivanov.gradle.BinaryCompatibilityValidatorConfig
 import com.arkivanov.gradle.PublicationConfig
 import com.arkivanov.gradle.ensureUnreachableTasksDisabled
 import com.arkivanov.gradle.iosCompat
@@ -44,6 +45,9 @@ setupDefaults(
         minSdkVersion = 15,
         compileSdkVersion = 31,
         targetSdkVersion = 31,
+    ),
+    binaryCompatibilityValidatorConfig = BinaryCompatibilityValidatorConfig(
+        nonPublicMarkers = listOf("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi"),
     ),
     publicationConfig = PublicationConfig(
         group = "com.arkivanov.mvikotlin",
