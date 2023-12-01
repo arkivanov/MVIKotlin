@@ -105,7 +105,7 @@ class CoroutineExecutorDslTest {
 
         val executor =
             coroutineExecutorFactory<Some, Nothing, String, Nothing, Nothing> {
-                onIntent<Some.A> { readState = state }
+                onIntent<Some.A> { readState = state() }
             }.invoke()
 
         executor.init(
@@ -125,7 +125,7 @@ class CoroutineExecutorDslTest {
 
         val executor =
             coroutineExecutorFactory<Nothing, Some, String, Nothing, Nothing> {
-                onAction<Some.A> { readState = state }
+                onAction<Some.A> { readState = state() }
             }.invoke()
 
         executor.init(

@@ -36,15 +36,15 @@ internal class AddStoreFactory(
     }
 
     private inner class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.SetText -> dispatch(Msg.TextChanged(intent.text))
-                is Intent.Add -> addItem(getState())
+                is Intent.Add -> addItem()
             }.let {}
         }
 
-        private fun addItem(state: State) {
-            val text = state.text.takeUnless(String::isBlank) ?: return
+        private fun addItem() {
+            val text = state().text.takeUnless(String::isBlank) ?: return
 
             dispatch(Msg.TextChanged(""))
 

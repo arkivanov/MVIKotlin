@@ -2,6 +2,7 @@ package com.arkivanov.mvikotlin.logging.store
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.StoreEventType
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.logging.logger.LoggerWrapper
 import com.arkivanov.mvikotlin.logging.logger.log
 
@@ -21,6 +22,7 @@ internal class LoggingExecutor<in Intent : Any, Action : Any, State : Any, Messa
                     callbacks.onMessage(message)
                 }
 
+                @OptIn(ExperimentalMviKotlinApi::class)
                 override fun onAction(action: Action) {
                     callbacks.onAction(action)
                 }

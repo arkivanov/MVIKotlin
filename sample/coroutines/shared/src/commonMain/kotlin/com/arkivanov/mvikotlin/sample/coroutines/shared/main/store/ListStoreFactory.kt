@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.ListStore.Intent
@@ -47,10 +48,10 @@ internal class ListStoreFactory(
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Nothing>(mainContext) {
-        override fun executeAction(action: Action, getState: () -> State) {
+        override fun executeAction(action: Action) {
             when (action) {
                 is Action.Init -> init()
-                is Action.SaveItem -> saveItem(id = action.id, state = getState())
+                is Action.SaveItem -> saveItem(id = action.id)
             }
         }
 
@@ -61,15 +62,15 @@ internal class ListStoreFactory(
             }
         }
 
-        private fun saveItem(id: String, state: State) {
-            val item = state.items.find { it.id == id } ?: return
+        private fun saveItem(id: String) {
+            val item = state().items.find { it.id == id } ?: return
 
             scope.launch(ioContext) {
                 database.save(id, item.data)
             }
         }
 
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
                 is Intent.ToggleDone -> toggleDone(intent.id)
@@ -87,6 +88,7 @@ internal class ListStoreFactory(
             }
         }
 
+        @OptIn(ExperimentalMviKotlinApi::class)
         private fun toggleDone(id: String) {
             dispatch(Msg.DoneToggled(id))
             forward(Action.SaveItem(id = id))

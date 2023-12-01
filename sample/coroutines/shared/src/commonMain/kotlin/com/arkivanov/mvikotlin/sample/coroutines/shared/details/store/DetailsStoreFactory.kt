@@ -77,7 +77,7 @@ internal class DetailsStoreFactory(
     }
 
     private fun CoroutineExecutorScope<State, *, *, Label>.save() {
-        val data = state.data ?: return
+        val data = state().data ?: return
         publish(Label.Changed(itemId, data))
 
         launch(ioContext) {

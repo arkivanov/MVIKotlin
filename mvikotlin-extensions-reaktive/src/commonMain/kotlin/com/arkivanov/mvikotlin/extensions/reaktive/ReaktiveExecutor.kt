@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
@@ -21,48 +20,31 @@ import com.badoo.reaktive.single.Single
  *
  * Implements [DisposableScope] which disposes when the [Executor] is disposed.
  */
-open class ReaktiveExecutor<in Intent : Any, Action : Any, in State : Any, Message : Any, Label : Any> :
+open class ReaktiveExecutor<in Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> :
     Executor<Intent, Action, State, Message, Label>,
     DisposableScope {
 
     private val callbacks = atomic<Executor.Callbacks<State, Message, Action, Label>>()
-    private val getState: () -> State = { callbacks.requireValue().state }
     private val scope = DisposableScope()
 
     final override fun init(callbacks: Executor.Callbacks<State, Message, Action, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
-    final override fun executeIntent(intent: Intent) {
-        executeIntent(intent, getState)
-    }
-
     /**
-     * Called by the [Store] for every received [Intent].
+     * Returns the *current* [State] of the [Store][com.arkivanov.mvikotlin.core.store.Store].
      *
-     * Called on the main thread.
-     *
-     * @param intent an [Intent] received by the [Store].
-     *  @param getState a [State] supplier that returns the *current* [State] of the [Store].
+     * The [State] may change between subsequent invocations if accessed on a non-main thread.
      */
-    @MainThread
-    protected open fun executeIntent(intent: Intent, getState: () -> State) {
+    protected fun state(): State =
+        callbacks.requireValue().state
+
+    override fun executeIntent(intent: Intent) {
+        // no-op
     }
 
-    final override fun executeAction(action: Action) {
-        executeAction(action, getState)
-    }
-
-    /**
-     * Called by the [Store] for every [Action] produced by the [Bootstrapper].
-     *
-     * Called on the main thread.
-     *
-     * @param action an [Action] received by the [Store] from the [Bootstrapper] or from the [Executor] itself.
-     * @param getState a [State] supplier that returns the *current* [State] of the [Store].
-     */
-    @MainThread
-    protected open fun executeAction(action: Action, getState: () -> State) {
+    override fun executeAction(action: Action) {
+        // no-op
     }
 
     override fun dispose() {

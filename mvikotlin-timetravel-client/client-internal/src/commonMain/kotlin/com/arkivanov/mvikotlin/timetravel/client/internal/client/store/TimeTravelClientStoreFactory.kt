@@ -41,21 +41,21 @@ internal class TimeTravelClientStoreFactory(
     }
 
     private inner class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State): Unit =
+        override fun executeIntent(intent: Intent): Unit =
             when (intent) {
-                is Intent.Connect -> connectIfNeeded(getState())
-                is Intent.Disconnect -> disconnectIfNeeded(getState())
-                is Intent.StartRecording -> sendIfNeeded(getState()) { TimeTravelCommand.StartRecording }
-                is Intent.StopRecording -> sendIfNeeded(getState()) { TimeTravelCommand.StopRecording }
-                is Intent.MoveToStart -> sendIfNeeded(getState()) { TimeTravelCommand.MoveToStart }
-                is Intent.StepBackward -> sendIfNeeded(getState()) { TimeTravelCommand.StepBackward }
-                is Intent.StepForward -> sendIfNeeded(getState()) { TimeTravelCommand.StepForward }
-                is Intent.MoveToEnd -> sendIfNeeded(getState()) { TimeTravelCommand.MoveToEnd }
-                is Intent.Cancel -> sendIfNeeded(getState()) { TimeTravelCommand.Cancel }
-                is Intent.DebugEvent -> debugEventIfNeeded(getState())
-                is Intent.SelectEvent -> selectEvent(intent.index, getState())
-                is Intent.ExportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ExportEvents }
-                is Intent.ImportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ImportEvents(intent.data) }
+                is Intent.Connect -> connectIfNeeded(state())
+                is Intent.Disconnect -> disconnectIfNeeded(state())
+                is Intent.StartRecording -> sendIfNeeded(state()) { TimeTravelCommand.StartRecording }
+                is Intent.StopRecording -> sendIfNeeded(state()) { TimeTravelCommand.StopRecording }
+                is Intent.MoveToStart -> sendIfNeeded(state()) { TimeTravelCommand.MoveToStart }
+                is Intent.StepBackward -> sendIfNeeded(state()) { TimeTravelCommand.StepBackward }
+                is Intent.StepForward -> sendIfNeeded(state()) { TimeTravelCommand.StepForward }
+                is Intent.MoveToEnd -> sendIfNeeded(state()) { TimeTravelCommand.MoveToEnd }
+                is Intent.Cancel -> sendIfNeeded(state()) { TimeTravelCommand.Cancel }
+                is Intent.DebugEvent -> debugEventIfNeeded(state())
+                is Intent.SelectEvent -> selectEvent(intent.index, state())
+                is Intent.ExportEvents -> sendIfNeeded(state()) { TimeTravelCommand.ExportEvents }
+                is Intent.ImportEvents -> sendIfNeeded(state()) { TimeTravelCommand.ImportEvents(intent.data) }
                 is Intent.DismissError -> dispatch(Msg.ErrorChanged(text = null))
             }
 

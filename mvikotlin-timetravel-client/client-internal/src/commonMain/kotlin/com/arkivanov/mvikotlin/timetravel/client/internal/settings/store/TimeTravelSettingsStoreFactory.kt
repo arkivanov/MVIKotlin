@@ -31,10 +31,10 @@ internal class TimeTravelSettingsStoreFactory(
     }
 
     private inner class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Msg, Nothing>() {
-        override fun executeIntent(intent: Intent, getState: () -> State): Unit =
+        override fun executeIntent(intent: Intent): Unit =
             when (intent) {
                 is Intent.StartEdit -> dispatch(Msg.EditRequested)
-                is Intent.SaveEdit -> saveEdit(state = getState())
+                is Intent.SaveEdit -> saveEdit()
                 is Intent.CancelEdit -> dispatch(Msg.EditCancelled)
                 is Intent.SetHost -> dispatch(Msg.HostChanged(host = intent.host))
                 is Intent.SetPort -> dispatch(Msg.PortChanged(port = intent.port))
@@ -43,7 +43,8 @@ internal class TimeTravelSettingsStoreFactory(
                 is Intent.SetDarkMode -> dispatch(Msg.DarkModeChanged(isDarkMode = intent.isDarkMode))
             }
 
-        private fun saveEdit(state: State) {
+        private fun saveEdit() {
+            val state = state()
             val newSettings = state.editing?.toSettings(state.settings) ?: return
             settings.settings = newSettings
             dispatch(Msg.EditFinished(newSettings = newSettings))
