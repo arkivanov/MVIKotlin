@@ -25,9 +25,9 @@ fun <Intent : Any, State : Any> StoreFactory.create(
     )
 
 private class BypassExecutor<Intent : Any, in State : Any> : Executor<Intent, Nothing, State, Intent, Nothing> {
-    private val callbacks = atomic<Executor.Callbacks<State, Intent, Nothing>>()
+    private val callbacks = atomic<Executor.Callbacks<State, Intent, Nothing, Nothing>>()
 
-    override fun init(callbacks: Executor.Callbacks<State, Intent, Nothing>) {
+    override fun init(callbacks: Executor.Callbacks<State, Intent, Nothing, Nothing>) {
         this.callbacks.initialize(callbacks)
     }
 

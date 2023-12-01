@@ -40,6 +40,7 @@ public class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutor : c
 	protected fun executeAction (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
 	public final fun executeIntent (Ljava/lang/Object;)V
 	protected fun executeIntent (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
+	protected final fun forward (Ljava/lang/Object;)V
 	protected final fun getScope ()Lkotlinx/coroutines/CoroutineScope;
 	public final fun init (Lcom/arkivanov/mvikotlin/core/store/Executor$Callbacks;)V
 	protected final fun publish (Ljava/lang/Object;)V
@@ -52,6 +53,7 @@ public final class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecut
 
 public abstract interface class com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutorScope : kotlinx/coroutines/CoroutineScope {
 	public abstract fun dispatch (Ljava/lang/Object;)V
+	public abstract fun forward (Ljava/lang/Object;)V
 	public abstract fun getState ()Ljava/lang/Object;
 	public abstract fun publish (Ljava/lang/Object;)V
 }

@@ -1,6 +1,7 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.store.Executor
+import com.arkivanov.mvikotlin.core.test.internal.DefaultExecutorCallbacks
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.badoo.reaktive.test.base.hasSubscribers
 import com.badoo.reaktive.test.observable.TestObservable
@@ -107,10 +108,14 @@ class ReaktiveExecutorDslTest {
             }.invoke()
 
         executor.init(
-            object : Executor.Callbacks<String, Nothing, Nothing> {
+            object : Executor.Callbacks<String, Nothing, Nothing, Nothing> {
                 override val state: String = "state"
 
                 override fun onMessage(message: Nothing) {
+                    // no-op
+                }
+
+                override fun onAction(action: Nothing) {
                     // no-op
                 }
 
@@ -135,16 +140,8 @@ class ReaktiveExecutorDslTest {
             }.invoke()
 
         executor.init(
-            object : Executor.Callbacks<String, Nothing, Nothing> {
+            object : DefaultExecutorCallbacks<String, Any, Any, Any> {
                 override val state: String = "state"
-
-                override fun onMessage(message: Nothing) {
-                    // no-op
-                }
-
-                override fun onLabel(label: Nothing) {
-                    // no-op
-                }
             }
         )
 
@@ -195,15 +192,11 @@ class ReaktiveExecutorDslTest {
         var dispatchedMessage: String? = null
 
         executor.init(
-            object : Executor.Callbacks<Unit, String, Nothing> {
+            object : DefaultExecutorCallbacks<Unit, String, Any, Any> {
                 override val state: Unit = Unit
 
                 override fun onMessage(message: String) {
                     dispatchedMessage = message
-                }
-
-                override fun onLabel(label: Nothing) {
-                    // no-op
                 }
             }
         )
@@ -223,15 +216,11 @@ class ReaktiveExecutorDslTest {
         var dispatchedMessage: String? = null
 
         executor.init(
-            object : Executor.Callbacks<Unit, String, Nothing> {
+            object : DefaultExecutorCallbacks<Unit, String, Any, Any> {
                 override val state: Unit = Unit
 
                 override fun onMessage(message: String) {
                     dispatchedMessage = message
-                }
-
-                override fun onLabel(label: Nothing) {
-                    // no-op
                 }
             }
         )
@@ -239,6 +228,54 @@ class ReaktiveExecutorDslTest {
         executor.executeIntent(Some.A)
 
         assertEquals("message", dispatchedMessage)
+    }
+
+    @Test
+    fun WHEN_forward_from_onAction_THEN_action_forwarded() {
+        val executor =
+            reaktiveExecutorFactory<Nothing, Some, Unit, String, Nothing> {
+                onAction<Some.A> { forward(Some.B) }
+            }.invoke()
+
+        var forwardedAction: Some? = null
+
+        executor.init(
+            object : DefaultExecutorCallbacks<Unit, Any, Some, Any> {
+                override val state: Unit = Unit
+
+                override fun onAction(action: Some) {
+                    forwardedAction = action
+                }
+            }
+        )
+
+        executor.executeAction(Some.A)
+
+        assertEquals(Some.B, forwardedAction)
+    }
+
+    @Test
+    fun WHEN_forward_from_onIntent_THEN_action_forward() {
+        val executor =
+            reaktiveExecutorFactory<Some, String, Unit, String, Nothing> {
+                onIntent<Some.A> { forward("action") }
+            }.invoke()
+
+        var forwardedAction: String? = null
+
+        executor.init(
+            object : DefaultExecutorCallbacks<Unit, Any, String, Any> {
+                override val state: Unit = Unit
+
+                override fun onAction(action: String) {
+                    forwardedAction = action
+                }
+            }
+        )
+
+        executor.executeIntent(Some.A)
+
+        assertEquals("action", forwardedAction)
     }
 
     @Test
@@ -251,12 +288,8 @@ class ReaktiveExecutorDslTest {
         var dispatchedLabel: String? = null
 
         executor.init(
-            object : Executor.Callbacks<Unit, Nothing, String> {
+            object : DefaultExecutorCallbacks<Unit, Any, Any, String> {
                 override val state: Unit = Unit
-
-                override fun onMessage(message: Nothing) {
-                    // no-op
-                }
 
                 override fun onLabel(label: String) {
                     dispatchedLabel = label
@@ -280,12 +313,8 @@ class ReaktiveExecutorDslTest {
         var dispatchedLabel: String? = null
 
         executor.init(
-            object : Executor.Callbacks<Unit, Nothing, String> {
+            object : DefaultExecutorCallbacks<Unit, Any, Any, String> {
                 override val state: Unit = Unit
-
-                override fun onMessage(message: Nothing) {
-                    // no-op
-                }
 
                 override fun onLabel(label: String) {
                     dispatchedLabel = label
@@ -299,7 +328,7 @@ class ReaktiveExecutorDslTest {
     }
 
     private sealed interface Some {
-        object A : Some
-        object B : Some
+        data object A : Some
+        data object B : Some
     }
 }

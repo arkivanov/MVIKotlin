@@ -75,12 +75,12 @@ internal class DetailsStoreFactory(
     // Serializable only for exporting events in Time Travel, no need otherwise.
     private sealed class Msg : JvmSerializable {
         data class Loaded(val data: TodoItem.Data) : Msg()
-        object Finished : Msg()
+        data object Finished : Msg()
         data class TextChanged(val text: String) : Msg()
-        object DoneToggled : Msg()
+        data object DoneToggled : Msg()
     }
 
-    private fun ReaktiveExecutorScope<State, Msg, Label>.save() {
+    private fun ReaktiveExecutorScope<State, *, *, Label>.save() {
         val data = state.data ?: return
         publish(Label.Changed(itemId, data))
 

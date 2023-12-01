@@ -26,6 +26,7 @@ kotlin {
         }
 
         common.test.dependencies {
+            implementation(project(":mvikotlin-test-internal"))
             implementation(deps.reaktive.reaktiveTesting)
         }
 

@@ -45,6 +45,7 @@ public class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutor : com/
 	protected fun executeAction (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
 	public final fun executeIntent (Ljava/lang/Object;)V
 	protected fun executeIntent (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)V
+	protected final fun forward (Ljava/lang/Object;)V
 	public final fun init (Lcom/arkivanov/mvikotlin/core/store/Executor$Callbacks;)V
 	public final fun isDisposed ()Z
 	protected final fun publish (Ljava/lang/Object;)V
@@ -62,6 +63,7 @@ public final class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutorD
 
 public abstract interface class com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutorScope : com/badoo/reaktive/disposable/scope/DisposableScope {
 	public abstract fun dispatch (Ljava/lang/Object;)V
+	public abstract fun forward (Ljava/lang/Object;)V
 	public abstract fun getState ()Ljava/lang/Object;
 	public abstract fun publish (Ljava/lang/Object;)V
 }

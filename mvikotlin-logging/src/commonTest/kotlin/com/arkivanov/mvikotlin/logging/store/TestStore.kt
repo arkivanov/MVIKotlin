@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.core.test.internal.DefaultExecutorCallbacks
 
 internal class TestStore<in Intent : Any, Action : Any, State : Any, in Message : Any, Label : Any>(
     initialState: State,
@@ -22,15 +23,11 @@ internal class TestStore<in Intent : Any, Action : Any, State : Any, in Message 
 
     override fun init() {
         executor.init(
-            object : Executor.Callbacks<State, Message, Label> {
+            object : DefaultExecutorCallbacks<State, Message, Action, Label> {
                 override val state: State get() = this@TestStore.state
 
                 override fun onMessage(message: Message) {
                     this@TestStore.state = reducer.run { state.reduce(message) }
-                }
-
-                override fun onLabel(label: Label) {
-                    // no-op
                 }
             }
         )

@@ -1,15 +1,15 @@
 package com.arkivanov.mvikotlin.main.store
 
+import com.arkivanov.mvikotlin.core.rx.Disposable
+import com.arkivanov.mvikotlin.core.rx.Observer
+import com.arkivanov.mvikotlin.core.rx.internal.BehaviorSubject
+import com.arkivanov.mvikotlin.core.rx.internal.PublishSubject
+import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
-import com.arkivanov.mvikotlin.core.rx.internal.BehaviorSubject
-import com.arkivanov.mvikotlin.core.rx.Disposable
-import com.arkivanov.mvikotlin.core.rx.Observer
-import com.arkivanov.mvikotlin.core.rx.internal.PublishSubject
-import com.arkivanov.mvikotlin.core.rx.observer
 
 internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, out State : Any, Label : Any>(
     initialState: State,
@@ -19,6 +19,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, 
 ) : Store<Intent, State, Label> {
 
     private val intentSubject = PublishSubject<Intent>()
+    private val actionSubject = PublishSubject<Action>()
     private val stateSubject = BehaviorSubject(initialState)
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
@@ -35,9 +36,10 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, 
         isInitialized = true
 
         intentSubject.subscribe(observer(onNext = ::onIntent))
+        actionSubject.subscribe(observer(onNext = ::onAction))
 
         executor.init(
-            object : Executor.Callbacks<State, Message, Label> {
+            object : Executor.Callbacks<State, Message, Action, Label> {
                 override val state: State get() = stateSubject.value
 
                 override fun onMessage(message: Message) {
@@ -50,9 +52,13 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, 
                     }
                 }
 
+                override fun onAction(action: Action) {
+                    assertOnMainThread()
+                    actionSubject.onNext(action)
+                }
+
                 override fun onLabel(label: Label) {
                     assertOnMainThread()
-
                     labelSubject.onNext(label)
                 }
             }
@@ -60,10 +66,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, 
 
         bootstrapper?.init { action ->
             assertOnMainThread()
-
-            doIfNotDisposed {
-                executor.executeAction(action)
-            }
+            actionSubject.onNext(action)
         }
 
         bootstrapper?.invoke()
@@ -88,6 +91,12 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, 
     private fun onIntent(intent: Intent) {
         doIfNotDisposed {
             executor.executeIntent(intent)
+        }
+    }
+
+    private fun onAction(action: Action) {
+        doIfNotDisposed {
+            executor.executeAction(action)
         }
     }
 

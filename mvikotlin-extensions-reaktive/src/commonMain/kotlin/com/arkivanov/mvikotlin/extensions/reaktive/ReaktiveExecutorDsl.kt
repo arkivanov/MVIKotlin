@@ -38,16 +38,18 @@ private fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any
 class ExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> internal constructor() {
 
     @PublishedApi
-    internal val intentHandlers = ArrayList<ReaktiveExecutorScope<State, Message, Label>.(Intent) -> Boolean>()
+    internal val intentHandlers = ArrayList<ReaktiveExecutorScope<State, Message, Action, Label>.(Intent) -> Boolean>()
 
     @PublishedApi
-    internal val actionHandlers = ArrayList<ReaktiveExecutorScope<State, Message, Label>.(Action) -> Boolean>()
+    internal val actionHandlers = ArrayList<ReaktiveExecutorScope<State, Message, Action, Label>.(Action) -> Boolean>()
 
     /**
      * Registers the provided [Intent] ``[handler] for the given [Intent] type [T].
      * The type is checked using *`is`* operator, so it is possible to use base or `sealed` interfaces or classes.
      */
-    inline fun <reified T : Intent> onIntent(noinline handler: ReaktiveExecutorScope<State, Message, Label>.(intent: T) -> Unit) {
+    inline fun <reified T : Intent> onIntent(
+        noinline handler: ReaktiveExecutorScope<State, Message, Action, Label>.(intent: T) -> Unit,
+    ) {
         intentHandlers +=
             { intent ->
                 if (intent is T) {
@@ -63,7 +65,9 @@ class ExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, La
      * Registers the provided [Action] ``[handler] for the given [Action] type [T].
      * The type is checked using *`is`* operator, so it is possible to use base or `sealed` interfaces or classes.
      */
-    inline fun <reified T : Action> onAction(noinline handler: ReaktiveExecutorScope<State, Message, Label>.(action: T) -> Unit) {
+    inline fun <reified T : Action> onAction(
+        noinline handler: ReaktiveExecutorScope<State, Message, Action, Label>.(action: T) -> Unit,
+    ) {
         actionHandlers +=
             { action ->
                 if (action is T) {
@@ -77,16 +81,16 @@ class ExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, La
 }
 
 @ExperimentalMviKotlinApi
-private class ExecutorImpl<in Intent : Any, in Action : Any, State : Any, Message : Any, Label : Any>(
-    private val intentHandlers: List<ReaktiveExecutorScope<State, Message, Label>.(Intent) -> Boolean>,
-    private val actionHandlers: List<ReaktiveExecutorScope<State, Message, Label>.(Action) -> Boolean>,
+private class ExecutorImpl<in Intent : Any, Action : Any, State : Any, Message : Any, Label : Any>(
+    private val intentHandlers: List<ReaktiveExecutorScope<State, Message, Action, Label>.(Intent) -> Boolean>,
+    private val actionHandlers: List<ReaktiveExecutorScope<State, Message, Action, Label>.(Action) -> Boolean>,
     private val scope: DisposableScope = DisposableScope(),
-) : Executor<Intent, Action, State, Message, Label>, ReaktiveExecutorScope<State, Message, Label>, DisposableScope by scope {
+) : Executor<Intent, Action, State, Message, Label>, ReaktiveExecutorScope<State, Message, Action, Label>, DisposableScope by scope {
 
-    private val callbacks = atomic<Executor.Callbacks<State, Message, Label>>()
+    private val callbacks = atomic<Executor.Callbacks<State, Message, Action, Label>>()
     override val state: State get() = callbacks.requireValue().state
 
-    override fun init(callbacks: Executor.Callbacks<State, Message, Label>) {
+    override fun init(callbacks: Executor.Callbacks<State, Message, Action, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
@@ -112,6 +116,10 @@ private class ExecutorImpl<in Intent : Any, in Action : Any, State : Any, Messag
 
     override fun dispatch(message: Message) {
         callbacks.requireValue().onMessage(message)
+    }
+
+    override fun forward(action: Action) {
+        callbacks.requireValue().onAction(action)
     }
 
     override fun publish(label: Label) {

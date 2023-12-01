@@ -79,6 +79,7 @@ public abstract interface class com/arkivanov/mvikotlin/core/store/Executor {
 
 public abstract interface class com/arkivanov/mvikotlin/core/store/Executor$Callbacks {
 	public abstract fun getState ()Ljava/lang/Object;
+	public abstract fun onAction (Ljava/lang/Object;)V
 	public abstract fun onLabel (Ljava/lang/Object;)V
 	public abstract fun onMessage (Ljava/lang/Object;)V
 }

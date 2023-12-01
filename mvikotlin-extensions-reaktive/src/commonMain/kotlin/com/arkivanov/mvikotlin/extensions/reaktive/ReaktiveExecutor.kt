@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.internal.atomic
 import com.arkivanov.mvikotlin.core.utils.internal.initialize
 import com.arkivanov.mvikotlin.core.utils.internal.requireValue
@@ -20,15 +21,15 @@ import com.badoo.reaktive.single.Single
  *
  * Implements [DisposableScope] which disposes when the [Executor] is disposed.
  */
-open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Message : Any, Label : Any> :
+open class ReaktiveExecutor<in Intent : Any, Action : Any, in State : Any, Message : Any, Label : Any> :
     Executor<Intent, Action, State, Message, Label>,
     DisposableScope {
 
-    private val callbacks = atomic<Executor.Callbacks<State, Message, Label>>()
+    private val callbacks = atomic<Executor.Callbacks<State, Message, Action, Label>>()
     private val getState: () -> State = { callbacks.requireValue().state }
     private val scope = DisposableScope()
 
-    final override fun init(callbacks: Executor.Callbacks<State, Message, Label>) {
+    final override fun init(callbacks: Executor.Callbacks<State, Message, Action, Label>) {
         this.callbacks.initialize(callbacks)
     }
 
@@ -37,10 +38,12 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
     }
 
     /**
-     * The companion of the [Executor.executeIntent] method
+     * Called by the [Store] for every received [Intent].
      *
-     * @param intent an `Intent` received by the [Store]
-     * @param getState a `State` supplier that returns the *current* `State` of the [Store]
+     * Called on the main thread.
+     *
+     * @param intent an [Intent] received by the [Store].
+     *  @param getState a [State] supplier that returns the *current* [State] of the [Store].
      */
     @MainThread
     protected open fun executeIntent(intent: Intent, getState: () -> State) {
@@ -51,10 +54,12 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
     }
 
     /**
-     * The companion of the [Executor.executeAction] method
+     * Called by the [Store] for every [Action] produced by the [Bootstrapper].
      *
-     * @param action an `Action` produced by the [Bootstrapper]
-     * @param getState a `State` supplier that returns the *current* `State` of the [Store]
+     * Called on the main thread.
+     *
+     * @param action an [Action] received by the [Store] from the [Bootstrapper] or from the [Executor] itself.
+     * @param getState a [State] supplier that returns the *current* [State] of the [Store].
      */
     @MainThread
     protected open fun executeAction(action: Action, getState: () -> State) {
@@ -65,11 +70,12 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
     }
 
     /**
-     * Dispatches the provided `Message` to the [Reducer].
-     * The updated `State` will be available immediately after this method returns.
+     * Dispatches the provided [Message] to the [Reducer].
+     * The updated [State] will be available immediately after this method returns.
+     *
      * Must be called on the main thread.
      *
-     * @param message a `Message` to be dispatched to the `Reducer`
+     * @param message a [Message] to be dispatched to the [Reducer].
      */
     @MainThread
     protected fun dispatch(message: Message) {
@@ -77,10 +83,26 @@ open class ReaktiveExecutor<in Intent : Any, in Action : Any, in State : Any, Me
     }
 
     /**
-     * Sends the provided `Label` to the [Store] for publication.
+     * Sends the provided [action] to the [Store] and then forwards the [action] back to the [Executor].
+     * This is the recommended way of executing actions from the [Executor], as it allows
+     * any wrapping Stores to also handle those actions (e.g. logging or time-traveling).
+     *
      * Must be called on the main thread.
      *
-     * @param label a `Label` to be published
+     * @param action an [Action] to be forwarded back to the [Executor] via [Store].
+     */
+    @ExperimentalMviKotlinApi
+    @MainThread
+    protected fun forward(action: Action) {
+        callbacks.requireValue().onAction(action)
+    }
+
+    /**
+     * Sends the provided [Label] to the [Store] for publication.
+     *
+     * Must be called on the main thread.
+     *
+     * @param label a [Label] to be published.
      */
     @MainThread
     protected fun publish(label: Label) {
