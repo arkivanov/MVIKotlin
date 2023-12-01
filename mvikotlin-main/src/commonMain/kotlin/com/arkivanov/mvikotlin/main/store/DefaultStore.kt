@@ -9,6 +9,7 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 
 internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, out State : Any, Label : Any>(
@@ -52,6 +53,7 @@ internal class DefaultStore<in Intent : Any, in Action : Any, in Message : Any, 
                     }
                 }
 
+                @OptIn(ExperimentalMviKotlinApi::class)
                 override fun onAction(action: Action) {
                     assertOnMainThread()
                     actionSubject.onNext(action)

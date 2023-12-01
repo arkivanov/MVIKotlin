@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
@@ -50,10 +51,10 @@ internal class ListStoreFactory(
     }
 
     private inner class ExecutorImpl : ReaktiveExecutor<Intent, Action, State, Msg, Nothing>() {
-        override fun executeAction(action: Action, getState: () -> State) {
+        override fun executeAction(action: Action) {
             when (action) {
                 is Action.Init -> init()
-                is Action.SaveItem -> saveItem(id = action.id, state = getState())
+                is Action.SaveItem -> saveItem(id = action.id)
             }
         }
 
@@ -65,8 +66,8 @@ internal class ListStoreFactory(
                 .subscribeScoped(onSuccess = ::dispatch)
         }
 
-        private fun saveItem(id: String, state: State) {
-            val item = state.items.find { it.id == id } ?: return
+        private fun saveItem(id: String) {
+            val item = state().items.find { it.id == id } ?: return
 
             completableFromFunction {
                 database.save(id, item.data)
@@ -75,7 +76,7 @@ internal class ListStoreFactory(
                 .subscribeScoped()
         }
 
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.Delete -> delete(intent.id)
                 is Intent.ToggleDone -> toggleDone(intent.id)
@@ -93,6 +94,7 @@ internal class ListStoreFactory(
                 .subscribeScoped()
         }
 
+        @OptIn(ExperimentalMviKotlinApi::class)
         private fun toggleDone(id: String) {
             dispatch(Msg.DoneToggled(id))
             forward(Action.SaveItem(id = id))

@@ -88,11 +88,13 @@ private class ExecutorImpl<in Intent : Any, Action : Any, State : Any, Message :
 ) : Executor<Intent, Action, State, Message, Label>, ReaktiveExecutorScope<State, Message, Action, Label>, DisposableScope by scope {
 
     private val callbacks = atomic<Executor.Callbacks<State, Message, Action, Label>>()
-    override val state: State get() = callbacks.requireValue().state
 
     override fun init(callbacks: Executor.Callbacks<State, Message, Action, Label>) {
         this.callbacks.initialize(callbacks)
     }
+
+    override fun state(): State =
+        callbacks.requireValue().state
 
     override fun executeAction(action: Action) {
         for (handler in actionHandlers) {

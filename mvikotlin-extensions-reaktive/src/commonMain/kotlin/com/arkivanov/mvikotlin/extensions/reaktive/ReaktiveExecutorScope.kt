@@ -17,9 +17,9 @@ import com.badoo.reaktive.disposable.scope.DisposableScope
 interface ReaktiveExecutorScope<out State : Any, in Message : Any, in Action : Any, in Label : Any> : DisposableScope {
 
     /**
-     * Returns the current [State] of the [Store][com.arkivanov.mvikotlin.core.store.Store].
+     * Returns the *current* [State] of the [Store][com.arkivanov.mvikotlin.core.store.Store].
      */
-    val state: State
+    fun state(): State
 
     /**
      * Dispatches the provided [Message] to the [Reducer][com.arkivanov.mvikotlin.core.store.Reducer].

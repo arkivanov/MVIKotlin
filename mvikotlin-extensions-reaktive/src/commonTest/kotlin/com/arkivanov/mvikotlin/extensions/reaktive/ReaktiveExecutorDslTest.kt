@@ -104,7 +104,7 @@ class ReaktiveExecutorDslTest {
 
         val executor =
             reaktiveExecutorFactory<Some, Nothing, String, Nothing, Nothing> {
-                onIntent<Some.A> { readState = state }
+                onIntent<Some.A> { readState = state() }
             }.invoke()
 
         executor.init(
@@ -136,7 +136,7 @@ class ReaktiveExecutorDslTest {
 
         val executor =
             reaktiveExecutorFactory<Nothing, Some, String, Nothing, Nothing> {
-                onAction<Some.A> { readState = state }
+                onAction<Some.A> { readState = state() }
             }.invoke()
 
         executor.init(

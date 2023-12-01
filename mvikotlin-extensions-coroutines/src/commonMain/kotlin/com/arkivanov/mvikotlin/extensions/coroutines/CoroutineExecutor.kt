@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
 import com.arkivanov.mvikotlin.core.store.Reducer
@@ -20,12 +19,11 @@ import kotlin.coroutines.CoroutineContext
  *
  * @param mainContext a [CoroutineContext] to be used by the exposed [CoroutineScope]
  */
-open class CoroutineExecutor<in Intent : Any, Action : Any, in State : Any, Message : Any, Label : Any>(
+open class CoroutineExecutor<in Intent : Any, Action : Any, State : Any, Message : Any, Label : Any>(
     mainContext: CoroutineContext = Dispatchers.Main
 ) : Executor<Intent, Action, State, Message, Label> {
 
     private val callbacks = atomic<Callbacks<State, Message, Action, Label>>()
-    private val getState: () -> State = { callbacks.requireValue().state }
 
     /**
      * A [CoroutineScope] that can be used by the [CoroutineExecutor] descendants to launch coroutines.
@@ -37,36 +35,20 @@ open class CoroutineExecutor<in Intent : Any, Action : Any, in State : Any, Mess
         this.callbacks.initialize(callbacks)
     }
 
-    final override fun executeIntent(intent: Intent) {
-        executeIntent(intent, getState)
-    }
-
     /**
-     * Called by the [Store] for every received [Intent].
+     * Returns the *current* [State] of the [Store][com.arkivanov.mvikotlin.core.store.Store].
      *
-     * Called on the main thread.
-     *
-     * @param intent an [Intent] received by the [Store].
-     * @param getState a [State] supplier that returns the *current* [State] of the [Store].
+     * The [State] may change between subsequent invocations if accessed on a non-main thread.
      */
-    @MainThread
-    protected open fun executeIntent(intent: Intent, @MainThread getState: () -> State) {
+    protected fun state(): State =
+        callbacks.requireValue().state
+
+    override fun executeIntent(intent: Intent) {
+        // no-op
     }
 
-    final override fun executeAction(action: Action) {
-        executeAction(action, getState)
-    }
-
-    /**
-     * Called by the [Store] for every [Action] produced by the [Bootstrapper].
-     *
-     * Called on the main thread.
-     *
-     * @param action an [Action] received by the [Store] from the [Bootstrapper] or from the [Executor] itself.
-     * @param getState a [State] supplier that returns the *current* [State] of the [Store].
-     */
-    @MainThread
-    protected open fun executeAction(action: Action, @MainThread getState: () -> State) {
+    override fun executeAction(action: Action) {
+        // no-op
     }
 
     override fun dispose() {

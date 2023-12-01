@@ -2,6 +2,7 @@ package com.arkivanov.mvikotlin.core.test.internal
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Executor.Callbacks
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.internal.atomic
 import com.arkivanov.mvikotlin.core.utils.internal.initialize
 import com.arkivanov.mvikotlin.core.utils.internal.requireValue
@@ -40,6 +41,7 @@ class TestExecutor(
         callbacks.requireValue().onMessage(message)
     }
 
+    @OptIn(ExperimentalMviKotlinApi::class)
     fun forward(action: String) {
         callbacks.requireValue().onAction(action)
     }

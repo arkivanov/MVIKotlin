@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.StoreEventType
+import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 import kotlin.concurrent.Volatile
@@ -85,6 +86,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
                     onEvent(StoreEventType.MESSAGE, message, state)
                 }
 
+                @OptIn(ExperimentalMviKotlinApi::class)
                 override fun onAction(action: Action) {
                     onEvent(StoreEventType.ACTION, action, state)
                 }
@@ -225,6 +227,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
             state = reducer.run { state.reduce(message) }
         }
 
+        @OptIn(ExperimentalMviKotlinApi::class)
         override fun onAction(action: Action) {
             assertOnMainThread()
         }

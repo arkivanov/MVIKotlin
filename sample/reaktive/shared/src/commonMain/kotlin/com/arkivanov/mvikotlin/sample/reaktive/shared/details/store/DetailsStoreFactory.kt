@@ -81,7 +81,7 @@ internal class DetailsStoreFactory(
     }
 
     private fun ReaktiveExecutorScope<State, *, *, Label>.save() {
-        val data = state.data ?: return
+        val data = state().data ?: return
         publish(Label.Changed(itemId, data))
 
         completableFromFunction { database.save(itemId, data) }
