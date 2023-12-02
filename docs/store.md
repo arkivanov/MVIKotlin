@@ -58,9 +58,15 @@ This component bootstraps (kick-starts) the `Store`. If passed to the `StoreFact
 
 > ⚠️ Please note that `Bootstrappers` are stateful and so can not be `object`s (singletons).
 
-### Executor
+### Executor (version 4.x)
 
-This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from the `Bootstrapper`. The `Executor` has two outputs: `Messages` and `Labels`. `Messages` are passed to the `Reducer`, `Labels` are emitted straight to the outside world. The `Executor` has constant access to the current `State` of the `Store`, a new `State` is visible for the `Executor` right after the `Message` is dispatched. The `Executor` is executed always on the main thread, `Messages` and `Labels` must be also dispatched only on the main thread. However you are free to switch threads while processing `Action` or `Intents`.
+This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from inside the `Store`. The `Executor` has three outputs: `Messages`, `Action` and `Labels`. `Messages` are passed to the `Reducer`, `Actions` are forwarded back to the `Executor` itself, `Labels` are emitted straight to the outside world. The `Executor` has constant access to the current `State` of the `Store`, a new `State` is visible for the `Executor` right after the `Message` is dispatched. The `Executor` is executed always on the main thread, `Messages` and `Labels` must be also dispatched only on the main thread. However, you are free to switch threads while processing `Action` or `Intents`.
+
+> ⚠️ Please note that `Executors` are stateful and so can not be `object`s (singletons).
+
+### Executor (version 3.x)
+
+This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from the `Bootstrapper`. The `Executor` has two outputs: `Messages` and `Labels`. `Messages` are passed to the `Reducer`, `Labels` are emitted straight to the outside world. The `Executor` has constant access to the current `State` of the `Store`, a new `State` is visible for the `Executor` right after the `Message` is dispatched. The `Executor` is executed always on the main thread, `Messages` and `Labels` must be also dispatched only on the main thread. However, you are free to switch threads while processing `Action` or `Intents`.
 
 > ⚠️ Please note that `Executors` are stateful and so can not be `object`s (singletons).
 
@@ -211,6 +217,35 @@ Let's try both.
 
 #### ReaktiveExecutor
 
+##### Version v4.0
+
+```kotlin
+internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Msg, Nothing>() {
+        override fun executeIntent(intent: Intent) =
+            when (intent) {
+                is Intent.Increment -> dispatch(Msg.Value(state().value + 1))
+                is Intent.Decrement -> dispatch(Msg.Value(state().value - 1))
+                is Intent.Sum -> sum(intent.n)
+            }
+
+        private fun sum(n: Int) {
+            singleFromFunction { (1L..n.toLong()).sum() }
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .subscribeScoped { dispatch(Msg.Value(it)) }
+        }
+    }
+
+    // ...
+}
+```
+
+##### Version v3.0
+
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
@@ -242,6 +277,35 @@ So we extended the `ReaktiveExecutor` class and implemented the `executeIntent` 
 
 #### CoroutineExecutor
 
+##### Version v4.0
+
+```kotlin
+internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Msg, Nothing>() {
+        override fun executeIntent(intent: Intent) =
+            when (intent) {
+                is Intent.Increment -> dispatch(Msg.Value(state().value + 1))
+                is Intent.Decrement -> dispatch(Msg.Value(state().value - 1))
+                is Intent.Sum -> sum(intent.n)
+            }
+
+        private fun sum(n: Int) {
+            scope.launch {
+                val sum = withContext(Dispatchers.Default) { (1L..n.toLong()).sum() }
+                dispatch(Msg.Value(sum))
+            }
+        }
+    }
+
+    // ...
+}
+```
+
+##### Version v3.0
+
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
@@ -270,6 +334,10 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 Here we extended the `CoroutineExecutor` class. The sum is calculated on the `Default` dispatcher and the `Message` is dispatched on the `Main` thread.
 
 > ⚠️ `CoroutineExecutor` provides the `CoroutineScope` property named `scope`, which can be used to run asynchronous tasks. The scope uses `Dispatchers.Main` dispatcher by default, which can be overriden by passing different `CoroutineContext` to the `CoroutineExecutor` constructor. The scope is automatically cancelled when the `Store` is disposed.
+
+#### Forwarding Actions (v4.0)
+
+Starting with MVIKotlin version 4.0, it is also possible to send `Actions` from the `Executor` using `forward(Action)` method. The `Action` automatically redirected back to the `Executor#executeAction` method. This allows reusing `Actions` easier, and also proper processing by wrapping `Stores` (like logging or time-traveling).
 
 #### Publishing Labels
 
