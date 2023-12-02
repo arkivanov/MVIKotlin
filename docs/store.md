@@ -335,7 +335,7 @@ Here we extended the `CoroutineExecutor` class. The sum is calculated on the `De
 
 > ⚠️ `CoroutineExecutor` provides the `CoroutineScope` property named `scope`, which can be used to run asynchronous tasks. The scope uses `Dispatchers.Main` dispatcher by default, which can be overriden by passing different `CoroutineContext` to the `CoroutineExecutor` constructor. The scope is automatically cancelled when the `Store` is disposed.
 
-#### Forwarding Actions (v4.0)
+#### Forwarding Actions (experimental, since v4.0)
 
 Starting with MVIKotlin version 4.0, it is also possible to send `Actions` from the `Executor` using `forward(Action)` method. The `Action` automatically redirected back to the `Executor#executeAction` method. This allows reusing `Actions` easier, and also proper processing by wrapping `Stores` (like logging or time-traveling).
 
