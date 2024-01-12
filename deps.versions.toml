@@ -6,11 +6,11 @@ timeTravelApp = "3.0.1"
 
 kotlin = "1.9.21"
 kotlinxBinaryCompatibilityValidator = "0.13.2"
-kotlinxCoroutines = "1.7.3"
+kotlinxCoroutines = "1.8.0-RC2"
 intellijGradlePlugin = "1.15.0"
 detektGradlePlugin = "1.23.3"
-essenty = "1.3.0"
-reaktive = "2.0.0"
+essenty = "2.0.0-alpha02"
+reaktive = "2.1.0-beta01"
 multiplatformSettings = "1.1.0"
 compose = "1.5.11"
 kotlinWrappers = "1.0.0-pre.608"
@@ -27,6 +27,7 @@ androidxDrawerLayout = "1.0.0"
 kotlin-kotlinGradlePlug = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-kotlinTestCommon = { group = "org.jetbrains.kotlin", name = "kotlin-test-common", version.ref = "kotlin" }
 kotlin-kotlinTestJs = { group = "org.jetbrains.kotlin", name = "kotlin-test-js", version.ref = "kotlin" }
+kotlin-kotlinTestWasmJs = { group = "org.jetbrains.kotlin", name = "kotlin-test-wasm-js", version.ref = "kotlin" }
 kotlin-kotlinTestJunit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
 kotlin-kotlinTestAnnotationsCommon = { group = "org.jetbrains.kotlin", name = "kotlin-test-annotations-common", version.ref = "kotlin" }
 

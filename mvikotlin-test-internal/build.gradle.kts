@@ -20,6 +20,7 @@ kotlin {
         val android by bundle()
         val jvm by bundle()
         val js by bundle()
+        val wasmJs by bundle()
         val darwin by bundle()
 
         darwin dependsOn common
@@ -34,6 +35,10 @@ kotlin {
 
         js.main.dependencies {
             implementation(deps.kotlin.kotlinTestJs)
+        }
+
+        wasmJs.main.dependencies {
+            implementation(deps.kotlin.kotlinTestWasmJs)
         }
 
         android.main.dependencies {

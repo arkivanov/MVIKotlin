@@ -20,12 +20,13 @@ android {
 
 kotlin {
     setupSourceSets {
-        val jvmNative by bundle()
+        val nonJs by bundle()
         val java by bundle()
         val native by bundle()
+        val wasmJs by bundle()
 
-        jvmNative dependsOn common
-        (java + native) dependsOn jvmNative
+        nonJs dependsOn common
+        (java + native + wasmJs) dependsOn nonJs
         javaSet dependsOn java
         nativeSet dependsOn native
     }
