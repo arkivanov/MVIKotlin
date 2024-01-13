@@ -6,7 +6,6 @@ import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventvalue.TimeTravelEventValue
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueParser
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ProtoDecoder
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ProtoEncoder
 import com.arkivanov.mvikotlin.timetravel.server.StateDiff
@@ -92,8 +91,7 @@ class TimeTravelServer(
 
     private fun analyzeEvent(eventId: Long, clientId: String) {
         val event = controller.state.events.firstOrNull { it.id == eventId } ?: return
-        val parsedValue = ValueParser().parseValue(event.value)
-        clients[clientId]?.protoEncoder?.encode(TimeTravelEventValue(eventId = eventId, value = parsedValue))
+        clients[clientId]?.protoEncoder?.encode(TimeTravelEventValue(eventId = eventId, value = event.parseValue()))
     }
 
     private class Client(

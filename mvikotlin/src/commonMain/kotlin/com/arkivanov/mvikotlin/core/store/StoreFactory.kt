@@ -28,6 +28,7 @@ interface StoreFactory {
         name: String? = null,
         autoInit: Boolean = true,
         initialState: State,
+        serializers: StoreSerializers<Intent, Action, Message, State, Label>? = null,
         bootstrapper: Bootstrapper<Action>? = null,
         executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
         @Suppress("UNCHECKED_CAST")

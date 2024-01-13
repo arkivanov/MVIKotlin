@@ -29,5 +29,9 @@ kotlin {
         (java + native + wasmJs) dependsOn nonJs
         javaSet dependsOn java
         nativeSet dependsOn native
+
+        common.main.dependencies {
+            implementation(deps.kotlinx.kotlinxSerializationJson)
+        }
     }
 }

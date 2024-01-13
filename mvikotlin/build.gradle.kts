@@ -46,6 +46,7 @@ kotlin {
         common.main.dependencies {
             api(deps.essenty.lifecycle)
             api(deps.essenty.instanceKeeper)
+            implementation(deps.kotlinx.kotlinxSerializationCore)
         }
 
         common.test.dependencies {

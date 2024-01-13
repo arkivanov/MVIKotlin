@@ -24,7 +24,7 @@ internal class StateDiff {
         return update
     }
 
-    private fun diffEvents(new: List<TimeTravelEvent>, previous: List<TimeTravelEvent>?): TimeTravelEventsUpdate =
+    private fun diffEvents(new: List<TimeTravelEvent<*, *>>, previous: List<TimeTravelEvent<*, *>>?): TimeTravelEventsUpdate =
         when {
             previous == null -> TimeTravelEventsUpdate.All(new.toProto())
             new.size > previous.size -> TimeTravelEventsUpdate.New(new.subList(previous.size, new.size).toProto())

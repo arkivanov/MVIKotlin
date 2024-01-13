@@ -5,10 +5,11 @@ import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
+import kotlinx.serialization.SerializationStrategy
 
-internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label : Any> : Store<Intent, State, Label> {
+internal interface TimeTravelStore<in Intent : Any, State : Any, out Label : Any> : Store<Intent, State, Label> {
 
-    fun events(observer: Observer<Event>): Disposable
+    fun events(observer: Observer<Event<*, State>>): Disposable
 
     @MainThread
     fun restoreState()
@@ -19,9 +20,11 @@ internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label :
     @MainThread
     fun debug(type: StoreEventType, value: Any, state: Any)
 
-    data class Event(
+    data class Event<T : Any, State : Any>(
         val type: StoreEventType,
-        val value: Any,
-        val state: Any
+        val value: T,
+        val valueSerializer: SerializationStrategy<T>,
+        val state: State,
+        val stateSerializer: SerializationStrategy<State>,
     )
 }

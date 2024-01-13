@@ -23,6 +23,7 @@ buildscript {
         classpath(deps.compose.composeGradlePlug)
         classpath(deps.kotlinx.binaryCompatibilityValidator)
         classpath(deps.detekt.gradleDetektPlug)
+        classpath(deps.kotlin.serializationGradlePlug)
     }
 }
 

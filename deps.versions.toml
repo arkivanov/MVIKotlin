@@ -7,6 +7,7 @@ timeTravelApp = "3.0.1"
 kotlin = "1.9.21"
 kotlinxBinaryCompatibilityValidator = "0.13.2"
 kotlinxCoroutines = "1.8.0-RC2"
+kotlinxSerialization = "1.6.2"
 intellijGradlePlugin = "1.15.0"
 detektGradlePlugin = "1.23.3"
 essenty = "2.0.0-alpha02"
@@ -38,6 +39,10 @@ kotlinx-binaryCompatibilityValidator = { group = "org.jetbrains.kotlinx", name =
 kotlinx-kotlinxCoroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-kotlinxCoroutinesSwing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinxCoroutines" }
 kotlinx-kotlinxCoroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+
+kotlin-serializationGradlePlug = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
+kotlinx-kotlinxSerializationCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
+kotlinx-kotlinxSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 intellij-gradleIntellijPlug = { group = "org.jetbrains.intellij.plugins", name = "gradle-intellij-plugin", version.ref = "intellijGradlePlugin" }
 

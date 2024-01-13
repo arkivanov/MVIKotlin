@@ -8,13 +8,16 @@ import com.arkivanov.mvikotlin.core.store.Bootstrapper
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.StoreEventType
+import com.arkivanov.mvikotlin.core.store.StoreSerializers
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
+import kotlinx.serialization.KSerializer
 import kotlin.concurrent.Volatile
 
-internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message : Any, out State : Any, Label : Any>(
+internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message : Any, State : Any, Label : Any>(
     initialState: State,
+    private val serializers: StoreSerializers<Intent, Action, Message, State, Label>,
     private val bootstrapper: Bootstrapper<Action>?,
     private val executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
     private val reducer: Reducer<State, Message>,
@@ -27,7 +30,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
-    private val eventSubjects = StoreEventType.entries.associateWith { PublishSubject<Event>() }
+    private val eventSubjects = StoreEventType.entries.associateWith { PublishSubject<Event<*, State>>() }
     private var debuggingExecutor: Executor<*, *, *, *, *>? = null
     private val eventProcessor = EventProcessor()
     private val eventDebugger = EventDebugger()
@@ -39,7 +42,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
     override fun labels(observer: Observer<Label>): Disposable =
         labelSubject.subscribe(observer)
 
-    override fun events(observer: Observer<Event>): Disposable {
+    override fun events(observer: Observer<Event<*, State>>): Disposable {
         val disposables = eventSubjects.values.map { it.subscribe(observer) }
 
         return Disposable { disposables.forEach(Disposable::dispose) }
@@ -49,7 +52,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
         assertOnMainThread()
 
         doIfNotDisposed {
-            onEvent(StoreEventType.INTENT, intent, state)
+            onEvent(StoreEventType.INTENT, intent, serializers.intentSerializer, state)
         }
     }
 
@@ -83,22 +86,22 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
                 override val state: State get() = internalState
 
                 override fun onMessage(message: Message) {
-                    onEvent(StoreEventType.MESSAGE, message, state)
+                    onEvent(StoreEventType.MESSAGE, message, serializers.messageSerializer, state)
                 }
 
                 @OptIn(ExperimentalMviKotlinApi::class)
                 override fun onAction(action: Action) {
-                    onEvent(StoreEventType.ACTION, action, state)
+                    onEvent(StoreEventType.ACTION, action, serializers.actionSerializer, state)
                 }
 
                 override fun onLabel(label: Label) {
-                    onEvent(StoreEventType.LABEL, label, state)
+                    onEvent(StoreEventType.LABEL, label, serializers.labelSerializer, state)
                 }
             }
         )
 
         bootstrapper?.init {
-            onEvent(StoreEventType.ACTION, it, state)
+            onEvent(StoreEventType.ACTION, it, serializers.actionSerializer, state)
         }
 
         bootstrapper?.invoke()
@@ -120,11 +123,19 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
         eventDebugger.debug(type, value, state)
     }
 
-    private fun onEvent(type: StoreEventType, value: Any, state: State) {
+    private fun <T : Any> onEvent(type: StoreEventType, value: T, serializer: KSerializer<T>, state: State) {
         assertOnMainThread()
 
         doIfNotDisposed {
-            eventSubjects.getValue(type).onNext(Event(type = type, value = value, state = state))
+            eventSubjects.getValue(type).onNext(
+                Event(
+                    type = type,
+                    value = value,
+                    valueSerializer = serializer,
+                    state = state,
+                    stateSerializer = serializers.stateSerializer,
+                )
+            )
         }
     }
 
@@ -159,7 +170,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
             val newState = reducer.run { previousState.reduce(message) }
             internalState = newState
 
-            onEvent(StoreEventType.STATE, newState, previousState)
+            onEvent(StoreEventType.STATE, newState, serializers.stateSerializer, previousState)
         }
     }
 

@@ -33,6 +33,7 @@ kotlin {
         common.main.dependencies {
             implementation(project(":mvikotlin"))
             implementation(project(":mvikotlin-timetravel-proto-internal"))
+            implementation(deps.kotlinx.kotlinxSerializationJson)
         }
 
         common.test.dependencies {

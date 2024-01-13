@@ -1,18 +1,18 @@
 package com.arkivanov.mvikotlin.timetravel.controller
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.store.StoreEventType
-import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
-import com.arkivanov.mvikotlin.core.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
+import com.arkivanov.mvikotlin.core.rx.internal.BehaviorSubject
 import com.arkivanov.mvikotlin.core.rx.observer
+import com.arkivanov.mvikotlin.core.store.StoreEventType
+import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
+import com.arkivanov.mvikotlin.core.utils.internal.logE
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState.Mode
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore
-import com.arkivanov.mvikotlin.core.utils.internal.logE
 import kotlin.collections.set
 
 internal class TimeTravelControllerImpl : TimeTravelController {
@@ -20,7 +20,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
     private var eventId = 1L
     private val stateSubject = BehaviorSubject(TimeTravelState())
     override val state: TimeTravelState get() = stateSubject.value
-    private val postponedEvents = ArrayList<TimeTravelEvent>()
+    private val postponedEvents = ArrayList<TimeTravelEvent<*, *>>()
     private val stores = HashMap<String, TimeTravelStore<*, *, *>>()
 
     override fun states(observer: Observer<TimeTravelState>): Disposable = stateSubject.subscribe(observer)
@@ -41,18 +41,34 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         bypassStore(store)
     }
 
-    private fun addStore(store: TimeTravelStore<*, *, *>, name: String) {
+    private fun <State : Any> addStore(store: TimeTravelStore<*, State, *>, name: String) {
         stores[name] = store
 
         store.events(
             observer(
                 onComplete = { stores -= name },
-                onNext = { onEvent(TimeTravelEvent(id = eventId++, storeName = name, type = it.type, value = it.value, state = it.state)) }
+                onNext = {
+                    onEvent(it.toTimeTravelEvent(id = eventId++, storeName = name))
+                }
             )
         )
     }
 
-    private fun bypassStore(store: TimeTravelStore<*, *, *>) {
+    private fun <T : Any, State : Any> TimeTravelStore.Event<T, State>.toTimeTravelEvent(
+        id: Long,
+        storeName: String,
+    ): TimeTravelEvent<T, State> =
+        TimeTravelEvent(
+            id = id,
+            storeName = storeName,
+            type = type,
+            value = value,
+            valueSerializer = valueSerializer,
+            state = state,
+            stateSerializer = stateSerializer,
+        )
+
+    private fun <State : Any> bypassStore(store: TimeTravelStore<*, State, *>) {
         store.events(
             observer { event ->
                 store.process(type = event.type, value = event.value)
@@ -137,7 +153,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         assertOnMainThread()
         require(state.mode === Mode.STOPPED)
 
-        val usedStoreNames = state.events.mapTo(HashSet(), TimeTravelEvent::storeName)
+        val usedStoreNames = state.events.mapTo(HashSet(), TimeTravelEvent<*, *>::storeName)
 
         return TimeTravelExport(
             recordedEvents = state.events,
@@ -159,7 +175,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         }
     }
 
-    private fun onEvent(event: TimeTravelEvent) {
+    private fun onEvent(event: TimeTravelEvent<*, *>) {
         when (state.mode) {
             Mode.RECORDING -> {
                 swapState { it.copy(events = it.events + event, selectedEventIndex = it.events.size) }
@@ -177,7 +193,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         }.let {}
     }
 
-    private fun step(events: List<TimeTravelEvent>, from: Int, isForward: Boolean) {
+    private fun step(events: List<TimeTravelEvent<*, *>>, from: Int, isForward: Boolean) {
         val progression =
             if (isForward) {
                 (from + 1)..events.lastIndex
@@ -194,13 +210,13 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         }
     }
 
-    private fun move(events: List<TimeTravelEvent>, from: Int, to: Int) {
+    private fun move(events: List<TimeTravelEvent<*, *>>, from: Int, to: Int) {
         if (from == to) {
             return
         }
 
         val set = HashSet<String>()
-        val queue = ArrayList<TimeTravelEvent>()
+        val queue = ArrayList<TimeTravelEvent<*, *>>()
         val isForward = to > from
 
         val progression =
@@ -232,7 +248,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
         swapState { it.copy(events = events, selectedEventIndex = to) }
     }
 
-    private fun process(event: TimeTravelEvent, previousValue: Any? = null) {
+    private fun process(event: TimeTravelEvent<*, *>, previousValue: Any? = null) {
         stores[event.storeName]?.process(type = event.type, value = previousValue ?: event.value)
     }
 

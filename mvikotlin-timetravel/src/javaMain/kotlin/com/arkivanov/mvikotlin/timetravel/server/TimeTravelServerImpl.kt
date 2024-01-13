@@ -4,11 +4,11 @@ import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExportSerializer
+import com.arkivanov.mvikotlin.timetravel.parseValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventvalue.TimeTravelEventValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventvalue.TimeTravelEventValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.TimeTravelExport
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueParser
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.closeSafe
@@ -113,8 +113,7 @@ internal class TimeTravelServerImpl(
 
     private fun analyzeEvent(eventId: Long, sender: Socket) {
         val event = controller.state.events.firstOrNull { it.id == eventId } ?: return
-        val parsedValue = ValueParser().parseValue(event.value)
-        sendData(sender, TimeTravelEventValue(eventId = eventId, value = parsedValue))
+        sendData(sender, TimeTravelEventValue(eventId = eventId, value = event.parseValue()))
     }
 
     private fun exportEvents(sender: Socket) {

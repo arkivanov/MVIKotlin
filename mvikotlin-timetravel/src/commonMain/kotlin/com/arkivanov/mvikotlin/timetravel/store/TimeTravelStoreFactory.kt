@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.store.StoreSerializers
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelControllerHolder
 
 /**
@@ -16,12 +17,14 @@ class TimeTravelStoreFactory : StoreFactory {
         name: String?,
         autoInit: Boolean,
         initialState: State,
+        serializers: StoreSerializers<Intent, Action, Message, State, Label>?,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
         reducer: Reducer<State, Message>
     ): Store<Intent, State, Label> =
         TimeTravelStoreImpl(
             initialState = initialState,
+            serializers = requireNotNull(serializers),
             bootstrapper = bootstrapper,
             executorFactory = executorFactory,
             reducer = reducer,
