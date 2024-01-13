@@ -91,7 +91,7 @@ class TimeTravelServer(
 
     private fun analyzeEvent(eventId: Long, clientId: String) {
         val event = controller.state.events.firstOrNull { it.id == eventId } ?: return
-        clients[clientId]?.protoEncoder?.encode(TimeTravelEventValue(eventId = eventId, value = event.parseValue()))
+        clients[clientId]?.protoEncoder?.encode(TimeTravelEventValue(eventId = eventId, value = event.value.parse()))
     }
 
     private class Client(

@@ -3,23 +3,20 @@ package com.arkivanov.mvikotlin.timetravel.server
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueParser
+import com.arkivanov.mvikotlin.timetravel.parseType
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.storeeventtype.StoreEventType as StoreEventTypeProto
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent as TimeTravelEventProto
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate as TimeTravelStateUpdateProto
 
-internal fun List<TimeTravelEvent>.toProto(): List<TimeTravelEventProto> {
-    val valueParser = ValueParser()
+internal fun List<TimeTravelEvent>.toProto(): List<TimeTravelEventProto> =
+    map { it.toProto() }
 
-    return map { it.toProto(valueParser) }
-}
-
-private fun TimeTravelEvent.toProto(valueParser: ValueParser): TimeTravelEventProto =
+private fun TimeTravelEvent.toProto(): TimeTravelEventProto =
     TimeTravelEventProto(
         id = id,
         storeName = storeName,
         type = type.toProto(),
-        valueType = valueParser.parseType(obj = value)
+        valueType = value.value.parseType(),
     )
 
 private fun StoreEventType.toProto(): StoreEventTypeProto =

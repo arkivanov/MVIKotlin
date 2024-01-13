@@ -11,6 +11,7 @@ import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.store.StoreSerializers
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
+import com.arkivanov.mvikotlin.timetravel.SerializableValue
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStore.Event
 import kotlinx.serialization.KSerializer
 import kotlin.concurrent.Volatile
@@ -130,8 +131,8 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
             eventSubjects.getValue(type).onNext(
                 Event(
                     type = type,
-                    value = value,
-                    state = state,
+                    value = SerializableValue(value = value, serializer = serializer),
+                    state = SerializableValue(value = state, serializer = serializers.stateSerializer),
                 )
             )
         }

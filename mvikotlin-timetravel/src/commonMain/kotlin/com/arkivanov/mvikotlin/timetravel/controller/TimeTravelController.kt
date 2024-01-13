@@ -105,6 +105,4 @@ interface TimeTravelController {
      */
     @MainThread
     fun import(export: TimeTravelExport)
-
-    fun getSerializersForStore(name: String): StoreSerializers<*, *, *, *, *>?
 }

@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
+import com.arkivanov.mvikotlin.timetravel.SerializableValue
 
 internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label : Any> : Store<Intent, State, Label> {
 
@@ -21,7 +22,7 @@ internal interface TimeTravelStore<in Intent : Any, out State : Any, out Label :
 
     data class Event(
         val type: StoreEventType,
-        val value: Any,
-        val state: Any,
+        val value: SerializableValue<*>,
+        val state: SerializableValue<*>,
     )
 }

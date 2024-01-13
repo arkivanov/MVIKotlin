@@ -17,6 +17,6 @@ data class TimeTravelEvent(
     val id: Long,
     val storeName: String,
     val type: StoreEventType,
-    val value: Any,
-    val state: Any,
+    val value: SerializableValue<*>,
+    val state: SerializableValue<*>,
 ) : JvmSerializable

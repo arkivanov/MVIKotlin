@@ -24,10 +24,13 @@ kotlin {
         val android by bundle()
         val darwin by bundle()
         val java by bundle()
+        val nonJava by bundle()
 
-        darwin dependsOn common
         java dependsOn common
         javaSet dependsOn java
+        nonJava dependsOn common
+        (allSet - javaSet) dependsOn nonJava
+        darwin dependsOn nonJava
         darwinSet dependsOn darwin
 
         common.main.dependencies {

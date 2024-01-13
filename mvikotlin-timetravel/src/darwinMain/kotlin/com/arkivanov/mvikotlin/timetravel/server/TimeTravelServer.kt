@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.rx.observer
 import com.arkivanov.mvikotlin.core.utils.assertOnMainThread
 import com.arkivanov.mvikotlin.timetravel.controller.TimeTravelController
 import com.arkivanov.mvikotlin.timetravel.controller.timeTravelController
-import com.arkivanov.mvikotlin.timetravel.parseValue
+import com.arkivanov.mvikotlin.timetravel.parse
 import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
@@ -129,7 +129,7 @@ class TimeTravelServer(
     @MainThread
     private fun analyzeEvent(eventId: Long, socket: Int) {
         val event = controller.state.events.firstOrNull { it.id == eventId } ?: return
-        sendData(clientSocket = socket, protoObject = TimeTravelEventValue(eventId = eventId, value = event.parseValue()))
+        sendData(clientSocket = socket, protoObject = TimeTravelEventValue(eventId = eventId, value = event.value.parse()))
     }
 
     @MainThread
