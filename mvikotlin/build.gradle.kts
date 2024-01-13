@@ -23,16 +23,20 @@ kotlin {
     setupSourceSets {
         val android by bundle()
         val js by bundle()
-        val jsNative by bundle()
+        val wasmJs by bundle()
+        val web by bundle()
+        val webNative by bundle()
         val java by bundle()
         val native by bundle()
         val darwin by bundle()
 
-        jsNative dependsOn common
-        native dependsOn jsNative
+        webNative dependsOn common
+        native dependsOn webNative
         darwin dependsOn native
         java dependsOn common
-        js dependsOn jsNative
+        web dependsOn webNative
+        js dependsOn web
+        wasmJs dependsOn web
 
         javaSet dependsOn java
         (nativeSet - darwinSet) dependsOn native

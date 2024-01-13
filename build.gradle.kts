@@ -35,6 +35,7 @@ setupDefaults(
         androidTarget()
         jvm()
         js { browser() }
+        wasmJs { browser() }
         linuxX64()
         iosCompat()
         watchosCompat()
@@ -43,8 +44,8 @@ setupDefaults(
     },
     androidConfig = AndroidConfig(
         minSdkVersion = 15,
-        compileSdkVersion = 31,
-        targetSdkVersion = 31,
+        compileSdkVersion = 34,
+        targetSdkVersion = 34,
     ),
     binaryCompatibilityValidatorConfig = BinaryCompatibilityValidatorConfig(
         nonPublicMarkers = listOf("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi"),
