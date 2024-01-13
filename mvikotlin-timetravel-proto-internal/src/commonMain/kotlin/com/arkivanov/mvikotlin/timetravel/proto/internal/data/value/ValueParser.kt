@@ -16,8 +16,8 @@ private val json =
         prettyPrint = true
     }
 
-fun <T : Any> parseValue(obj: T, serializer: SerializationStrategy<T>): ValueNode =
+fun parseValue(obj: Any, serializer: SerializationStrategy<*>): ValueNode =
     ValueNode(
         type = ValueParser().parseType(obj),
-        value = json.encodeToString(serializer, obj),
+        value = json.encodeToString(serializer as SerializationStrategy<Any>, obj),
     )

@@ -3,9 +3,6 @@ package com.arkivanov.mvikotlin.timetravel
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueNode
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.parseValue
-import kotlinx.serialization.SerializationStrategy
 
 /**
  * Describes a recorded time travel event
@@ -16,15 +13,10 @@ import kotlinx.serialization.SerializationStrategy
  * @param value value of the event
  * @param state `State` of the [Store] at the moment of the event
  */
-data class TimeTravelEvent<T : Any, State : Any>(
+data class TimeTravelEvent(
     val id: Long,
     val storeName: String,
     val type: StoreEventType,
-    val value: T,
-    val valueSerializer: SerializationStrategy<T>,
-    val state: State,
-    val stateSerializer: SerializationStrategy<State>,
+    val value: Any,
+    val state: Any,
 ) : JvmSerializable
-
-internal fun <T : Any> TimeTravelEvent<T, *>.parseValue(): ValueNode =
-    parseValue(obj = value, serializer = valueSerializer)

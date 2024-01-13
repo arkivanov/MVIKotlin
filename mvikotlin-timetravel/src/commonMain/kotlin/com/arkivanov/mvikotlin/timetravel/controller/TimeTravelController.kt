@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreEventType
+import com.arkivanov.mvikotlin.core.store.StoreSerializers
 import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.TimeTravelState
 import com.arkivanov.mvikotlin.timetravel.export.TimeTravelExport
@@ -104,4 +105,6 @@ interface TimeTravelController {
      */
     @MainThread
     fun import(export: TimeTravelExport)
+
+    fun getSerializersForStore(name: String): StoreSerializers<*, *, *, *, *>?
 }

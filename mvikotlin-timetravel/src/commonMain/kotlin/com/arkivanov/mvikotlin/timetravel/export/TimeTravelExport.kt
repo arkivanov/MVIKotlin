@@ -10,6 +10,6 @@ import com.arkivanov.mvikotlin.timetravel.TimeTravelEvent
  * @param unusedStoreStates `States` of all [Store]s that don't have any recorded events
  */
 data class TimeTravelExport(
-    val recordedEvents: List<TimeTravelEvent<*, *>>,
+    val recordedEvents: List<TimeTravelEvent>,
     val unusedStoreStates: Map<String, Any>
 ) : JvmSerializable

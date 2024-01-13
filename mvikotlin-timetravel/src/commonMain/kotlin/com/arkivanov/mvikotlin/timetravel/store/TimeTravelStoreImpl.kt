@@ -30,7 +30,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
     override val state: State get() = stateSubject.value
     override val isDisposed: Boolean get() = !stateSubject.isActive
     private val labelSubject = PublishSubject<Label>()
-    private val eventSubjects = StoreEventType.entries.associateWith { PublishSubject<Event<*, State>>() }
+    private val eventSubjects = StoreEventType.entries.associateWith { PublishSubject<Event>() }
     private var debuggingExecutor: Executor<*, *, *, *, *>? = null
     private val eventProcessor = EventProcessor()
     private val eventDebugger = EventDebugger()
@@ -42,7 +42,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
     override fun labels(observer: Observer<Label>): Disposable =
         labelSubject.subscribe(observer)
 
-    override fun events(observer: Observer<Event<*, State>>): Disposable {
+    override fun events(observer: Observer<Event>): Disposable {
         val disposables = eventSubjects.values.map { it.subscribe(observer) }
 
         return Disposable { disposables.forEach(Disposable::dispose) }
@@ -131,9 +131,7 @@ internal class TimeTravelStoreImpl<in Intent : Any, in Action : Any, in Message 
                 Event(
                     type = type,
                     value = value,
-                    valueSerializer = serializer,
                     state = state,
-                    stateSerializer = serializers.stateSerializer,
                 )
             )
         }
