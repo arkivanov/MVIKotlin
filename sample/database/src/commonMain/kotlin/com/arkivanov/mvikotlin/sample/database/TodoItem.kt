@@ -1,14 +1,16 @@
 package com.arkivanov.mvikotlin.sample.database
 
-import com.arkivanov.mvikotlin.core.utils.JvmSerializable
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TodoItem(
     val id: String,
     val data: Data
-) : JvmSerializable {
+) {
 
+    @Serializable
     data class Data(
         val text: String,
         val isDone: Boolean = false
-    ) : JvmSerializable
+    )
 }

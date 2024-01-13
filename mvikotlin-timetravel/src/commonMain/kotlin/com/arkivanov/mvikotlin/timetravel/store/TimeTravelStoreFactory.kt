@@ -24,7 +24,7 @@ class TimeTravelStoreFactory : StoreFactory {
     ): Store<Intent, State, Label> =
         TimeTravelStoreImpl(
             initialState = initialState,
-            serializers = requireNotNull(serializers),
+            serializers = serializers,
             bootstrapper = bootstrapper,
             executorFactory = executorFactory,
             reducer = reducer,

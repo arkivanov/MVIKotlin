@@ -15,5 +15,5 @@ internal expect fun Any.parseType(): String
 internal fun <T : Any> SerializableValue<T>.parse(): ValueNode =
     ValueNode(
         type = value.parseType(),
-        value = json.encodeToString(serializer, value),
+        value = if (serializer != null) json.encodeToString(serializer, value) else value.toString(),
     )

@@ -139,7 +139,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
 
         if (state.mode === Mode.STOPPED) {
             val event = state.events.firstOrNull { it.id == eventId } ?: return
-            stores[event.storeName]?.debug(type = event.type, value = event.value, state = event.state)
+            stores[event.storeName]?.debug(type = event.type, value = event.value.value, state = event.state.value)
         }
     }
 
@@ -243,7 +243,7 @@ internal class TimeTravelControllerImpl : TimeTravelController {
     }
 
     private fun process(event: TimeTravelEvent, previousValue: Any? = null) {
-        stores[event.storeName]?.process(type = event.type, value = previousValue ?: event.value)
+        stores[event.storeName]?.process(type = event.type, value = previousValue ?: event.value.value)
     }
 
     private inline fun swapState(reducer: (TimeTravelState) -> TimeTravelState) {

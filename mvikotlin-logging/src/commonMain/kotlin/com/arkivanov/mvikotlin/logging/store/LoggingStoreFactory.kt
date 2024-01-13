@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.store.StoreSerializers
 import com.arkivanov.mvikotlin.logging.logger.DefaultLogFormatter
 import com.arkivanov.mvikotlin.logging.logger.DefaultLogger
 import com.arkivanov.mvikotlin.logging.logger.LogFormatter
@@ -32,6 +33,7 @@ class LoggingStoreFactory(
         name: String?,
         autoInit: Boolean,
         initialState: State,
+        serializers: StoreSerializers<Intent, Action, Message, State, Label>?,
         bootstrapper: Bootstrapper<Action>?,
         executorFactory: () -> Executor<Intent, Action, State, Message, Label>,
         reducer: Reducer<State, Message>
@@ -53,6 +55,7 @@ class LoggingStoreFactory(
                 name = name,
                 autoInit = false,
                 initialState = initialState,
+                serializers = serializers,
                 bootstrapper = bootstrapper,
                 executorFactory = {
                     LoggingExecutor(

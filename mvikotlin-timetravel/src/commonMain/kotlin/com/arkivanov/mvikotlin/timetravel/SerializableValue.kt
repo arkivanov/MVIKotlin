@@ -4,5 +4,5 @@ import kotlinx.serialization.SerializationStrategy
 
 class SerializableValue<T : Any>(
     val value: T,
-    val serializer: SerializationStrategy<T>,
+    val serializer: SerializationStrategy<T>?,
 )

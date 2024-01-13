@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.store.StoreSerializers
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
@@ -30,6 +31,9 @@ internal class ListStoreFactory(
         object : ListStore, Store<Intent, State, Nothing> by storeFactory.create(
             name = "ListStore",
             initialState = State(),
+            serializers = StoreSerializers(
+                stateSerializer = State.serializer(),
+            ),
             bootstrapper = SimpleBootstrapper(Action.Init),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl,

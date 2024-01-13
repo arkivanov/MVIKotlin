@@ -6,6 +6,7 @@ plugins {
     id("kotlin-multiplatform")
     id("com.android.library")
     id("com.arkivanov.gradle.setup")
+    id("kotlinx-serialization")
 }
 
 setupMultiplatform {
@@ -24,6 +25,7 @@ kotlin {
     setupSourceSets {
         common.main.dependencies {
             implementation(project(":mvikotlin"))
+            implementation(deps.kotlinx.kotlinxSerializationCore)
         }
     }
 }

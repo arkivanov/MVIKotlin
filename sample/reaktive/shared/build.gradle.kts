@@ -10,6 +10,7 @@ plugins {
     id("kotlin-multiplatform")
     id("com.android.library")
     id("com.arkivanov.gradle.setup")
+    id("kotlinx-serialization")
 }
 
 setupMultiplatform {
@@ -56,6 +57,7 @@ kotlin {
             api(deps.reaktive.reaktive)
             api(deps.essenty.lifecycle)
             api(deps.essenty.instanceKeeper)
+            implementation(deps.kotlinx.kotlinxSerializationCore)
         }
 
         common.test.dependencies {

@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.ListStore.Intent
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.ListStore.State
+import kotlinx.serialization.Serializable
 
 internal interface ListStore : Store<Intent, State, Nothing> {
 
@@ -17,6 +18,7 @@ internal interface ListStore : Store<Intent, State, Nothing> {
         data class UpdateInState(val id: String, val data: TodoItem.Data) : Intent()
     }
 
+    @Serializable
     data class State(
         val items: List<TodoItem> = emptyList(),
     ) : JvmSerializable // Serializable only for exporting events in Time Travel, no need otherwise.
