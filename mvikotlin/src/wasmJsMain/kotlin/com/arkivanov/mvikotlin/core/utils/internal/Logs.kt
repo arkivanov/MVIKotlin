@@ -2,10 +2,20 @@ package com.arkivanov.mvikotlin.core.utils.internal
 
 @InternalMviKotlinApi
 actual fun logV(text: String) {
-    println(text.withLogTag())
+    consoleLog(text.withLogTag())
+}
+
+@Suppress("UNUSED_PARAMETER")
+private fun consoleLog(text: String) {
+    js("console.log(text)")
 }
 
 @InternalMviKotlinApi
 actual fun logE(text: String) {
-    println(text.withLogTag())
+    consoleError(text.withLogTag())
+}
+
+@Suppress("UNUSED_PARAMETER")
+private fun consoleError(text: String) {
+    js("console.error(text)")
 }
