@@ -90,7 +90,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 
 ## Features
 
-* Multiplatform: Android, JVM, JavaScript, iosX64, iosArm64, macosX64, linuxX64
+* Multiplatform: Android, JVM, iOS, watchOS, tvOS, macOS, linuxX64, JavaScript, Wasm (since `4.0.0-alpha02`)
 * Does not depend on any reactive library or coroutines
 * Extensions for [Reaktive](https://github.com/badoo/Reaktive) library
 * Extensions for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
