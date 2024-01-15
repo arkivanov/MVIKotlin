@@ -12,6 +12,7 @@ setupMultiplatform {
     js {
         browser()
         binaries.library()
+        generateTypeScriptDefinitions()
     }
 }
 

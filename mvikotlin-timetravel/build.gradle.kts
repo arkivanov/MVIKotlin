@@ -1,5 +1,6 @@
 import com.arkivanov.gradle.bundle
 import com.arkivanov.gradle.dependsOn
+import com.arkivanov.gradle.plus
 import com.arkivanov.gradle.setupBinaryCompatibilityValidator
 import com.arkivanov.gradle.setupMultiplatform
 import com.arkivanov.gradle.setupPublication
@@ -24,11 +25,16 @@ kotlin {
         val android by bundle()
         val darwin by bundle()
         val java by bundle()
+        val web by bundle()
+        val js by bundle()
+        val wasmJs by bundle()
 
         darwin dependsOn common
         java dependsOn common
         javaSet dependsOn java
         darwinSet dependsOn darwin
+        web dependsOn common
+        (js + wasmJs) dependsOn web
 
         common.main.dependencies {
             implementation(project(":mvikotlin"))

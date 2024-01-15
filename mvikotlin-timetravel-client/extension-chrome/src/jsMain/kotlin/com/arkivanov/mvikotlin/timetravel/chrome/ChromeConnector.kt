@@ -2,6 +2,8 @@ package com.arkivanov.mvikotlin.timetravel.chrome
 
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.Connector
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.Connector.Event
+import com.arkivanov.mvikotlin.timetravel.proto.internal.convertToByteArray
+import com.arkivanov.mvikotlin.timetravel.proto.internal.convertToString
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventvalue.TimeTravelEventValue
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
@@ -72,7 +74,7 @@ class ChromeConnector : Connector {
             val protoDecoder = ProtoDecoder()
 
             port.onMessage.addListener { message, _ ->
-                val proto = protoDecoder.decode(message.unsafeCast<ByteArray>())
+                val proto = protoDecoder.decode(message.unsafeCast<String>().convertToByteArray())
                 emitter.onNext(
                     when (proto) {
                         is TimeTravelStateUpdate -> Event.StateUpdate(proto)
@@ -89,7 +91,7 @@ class ChromeConnector : Connector {
 
             if (scriptPort == null) {
                 scriptPort = port
-                val protoEncoder = ProtoEncoder { data, size -> port.postMessage(data.copyOf(size)) }
+                val protoEncoder = ProtoEncoder { data, size -> port.postMessage(data.copyOf(size).convertToString()) }
                 emitter.onNext(Event.Connected(protoEncoder::encode))
             }
         }

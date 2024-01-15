@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.timetravel.ExperimentalTimeTravelApi
 import com.arkivanov.mvikotlin.timetravel.TimeTravelServer
 import com.arkivanov.mvikotlin.timetravel.store.TimeTravelStoreFactory
 import com.badoo.reaktive.subject.publish.PublishSubject
+import kotlinx.browser.window
 import mui.material.Box
 import mui.system.sx
 import react.FC
@@ -38,6 +39,8 @@ fun main() {
             database = MemoryTodoDatabase()
         }
     )
+
+    window.postMessage( 123, "*")
 }
 
 external interface RootProps : Props {

@@ -12,11 +12,17 @@ setupMultiplatform {
         browser()
         binaries.executable()
     }
+
+    wasmJs {
+        browser()
+        binaries.executable()
+    }
 }
 
 kotlin {
     setupSourceSets {
         val js by bundle()
+        val wasmJs by bundle()
 
         js.main.dependencies {
             implementation(project(":mvikotlin-main"))
@@ -32,6 +38,13 @@ kotlin {
             implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions")
             implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion")
             implementation("org.jetbrains.kotlin-wrappers:kotlin-mui")
+        }
+
+        wasmJs.main.dependencies {
+            implementation(project(":mvikotlin"))
+            implementation(project(":mvikotlin-main"))
+            implementation(project(":mvikotlin-logging"))
+            implementation(project(":mvikotlin-timetravel"))
         }
     }
 }

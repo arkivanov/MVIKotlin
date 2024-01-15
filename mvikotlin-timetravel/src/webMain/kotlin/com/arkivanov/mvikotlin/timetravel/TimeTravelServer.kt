@@ -10,33 +10,31 @@ import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueParser
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ProtoDecoder
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ProtoEncoder
 import com.arkivanov.mvikotlin.timetravel.server.StateDiff
-import kotlinx.browser.window
-import org.w3c.dom.MessageEvent
-import org.w3c.dom.events.Event
 
 @ExperimentalTimeTravelApi
 class TimeTravelServer(
     private val controller: TimeTravelController = timeTravelController,
 ) {
-
-    private val eventListener: (Event) -> Unit = { onEvent(it.unsafeCast<MessageEvent>()) }
+    private val messenger = ContentMessenger()
+    private var cancellation: Cancellation? = null
     private val protoDecoder = ProtoDecoder()
     private val clients = HashMap<String, Client>()
 
     fun start() {
-        window.addEventListener(type = "message", callback = eventListener)
+        cancellation = messenger.subscribe(::onEvent)
     }
 
     fun stop() {
-        window.removeEventListener(type = "message", callback = eventListener)
+        cancellation?.cancel()
+        cancellation = null
         clients.values.forEach { it.disposable.dispose() }
         clients.clear()
     }
 
-    private fun onEvent(event: MessageEvent) {
-        val message = event.data?.unsafeCast<ContentMessage>()
+    private fun onEvent(msg: String) {
+        val message = ContentMessage.decode(msg) ?: return
 
-        if ((event.source != window) || (message?.receiverId != "server")) {
+        if (message.receiverId != "server") {
             return
         }
 
@@ -52,15 +50,24 @@ class TimeTravelServer(
 
         val protoEncoder =
             ProtoEncoder { data, size ->
-                window.postMessage(
-                    message = jsObject<ContentMessage> {
-                        senderId = "server"
-                        receiverId = clientId
-                        type = "proto"
-                        payload = data.copyOf(size)
-                    },
-                    targetOrigin = "*",
+                messenger.send(
+                    ContentMessage(
+                        senderId = "server",
+                        receiverId = clientId,
+                        type = "proto",
+                        payload = data.copyOf(size),
+                    ).encode()
                 )
+
+//                window.postMessage(
+//                    message = ContentMessage(
+//                        senderId = "server",
+//                        receiverId = clientId,
+//                        type = "proto",
+//                        payload = data.copyOf(size),
+//                    ).encode().toJsString(),
+//                    targetOrigin = "*",
+//                )
             }
 
         val stateDiff = StateDiff()
@@ -70,7 +77,7 @@ class TimeTravelServer(
     }
 
     private fun onProto(message: ContentMessage) {
-        val protoObject = protoDecoder.decode(message.payload.unsafeCast<ByteArray>()) as TimeTravelCommand
+        val protoObject = protoDecoder.decode(message.requirePayload()) as TimeTravelCommand
         onCommandReceived(protoObject, clientId = message.senderId)
     }
 

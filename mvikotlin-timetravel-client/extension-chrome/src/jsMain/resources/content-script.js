@@ -1,20 +1,29 @@
 function contentScript() {
-  const port = chrome.runtime.connect("johehgbnhfknbbdndfcablclpopcoaee", { name: "web-client" })
+  const prefix = "MVIKotlinTimeTravel"
+  const port = chrome.runtime.connect("pbgejnlmihnnnckigjbcphlfafkipljo", { name: "web-client" })
   const clientId = Date.now().toString();
 
   window.addEventListener("message", (event) => {
-    if ((event.source != window) || !event.data.receiverId || (event.data.receiverId != clientId)) {
+    if ((event.source !== window) || !event.data.startsWith(prefix)) {
       return;
     }
 
-    port.postMessage(event.data.payload)
+    let parts = event.data.split(":")
+    let receiverId = parts[2]
+
+    if (receiverId !== clientId) {
+      return
+    }
+
+    let payload = parts[4]
+    port.postMessage(payload)
   });
 
-  port.onMessage.addListener((message, _) => {
-    window.postMessage({ senderId: clientId, receiverId: "server", type: "proto", payload: message }, "*");
+  port.onMessage.addListener((payload, _) => {
+    window.postMessage(`${prefix}:${clientId}:server:proto:${payload}`, "*")
   });
 
-  window.postMessage({ senderId: clientId, receiverId: "server", type: "connect" }, "*");
+  window.postMessage(`${prefix}:${clientId}:server:connect`, "*")
 
   return 0
 }
