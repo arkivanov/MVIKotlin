@@ -1,9 +1,6 @@
 @file:JvmName("Logs")
 package com.arkivanov.mvikotlin.core.utils.internal
 
-import com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi
-import com.arkivanov.mvikotlin.core.utils.internal.withLogTag
-
 @InternalMviKotlinApi
 actual fun logV(text: String) {
     println(text.withLogTag())
