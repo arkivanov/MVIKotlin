@@ -94,13 +94,10 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 * Does not depend on any reactive library or coroutines
 * Extensions for [Reaktive](https://github.com/badoo/Reaktive) library
 * Extensions for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
-* Multithreading friendly (freezable in Kotlin Native if needed)
 * Lifecycle-aware connections (bindins) between inputs and outputs
 * Logging functionality with customizable logger and formatter
 * Time travel feature:
     * Multiplatform for all supported targets
-    * Plug-and-play UI for Android
-    * Plug-and-play UI for iOS (copy-paste from the sample app)
     * Export/import events for Android
     * IntelliJ IDEA and Android Studio [plugin](https://plugins.jetbrains.com/plugin/14241-mvikotlin-time-travel) for Android apps
     * Desktop [client application](mvikotlin-timetravel-client/app-desktop) for Android, Java and native Apple (iOS, watchOS, tvOS, macOS) apps
