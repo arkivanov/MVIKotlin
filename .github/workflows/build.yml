@@ -32,7 +32,7 @@ jobs:
         run: ./gradlew build -Dsplit_targets
   macos-build:
     name: Build on macOS
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - name: Checkout
         uses: actions/checkout@v3
