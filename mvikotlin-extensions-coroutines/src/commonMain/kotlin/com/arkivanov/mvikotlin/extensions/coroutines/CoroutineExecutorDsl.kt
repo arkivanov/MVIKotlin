@@ -1,10 +1,10 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
+import com.arkivanov.mvikotlin.core.store.DslExecutorImpl
+import com.arkivanov.mvikotlin.core.store.ExecutionHandler
 import com.arkivanov.mvikotlin.core.store.Executor
+import com.arkivanov.mvikotlin.core.store.ExecutorBuilder
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
-import com.arkivanov.mvikotlin.core.utils.internal.atomic
-import com.arkivanov.mvikotlin.core.utils.internal.initialize
-import com.arkivanov.mvikotlin.core.utils.internal.requireValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -19,7 +19,7 @@ import kotlin.coroutines.CoroutineContext
 @ExperimentalMviKotlinApi
 fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> coroutineExecutorFactory(
     mainContext: CoroutineContext = Dispatchers.Main,
-    block: ExecutorBuilder<Intent, Action, State, Message, Label>.() -> Unit,
+    block: CoroutineExecutorBuilder<Intent, Action, State, Message, Label>.() -> Unit,
 ): () -> Executor<Intent, Action, State, Message, Label> =
     {
         executor(
@@ -31,110 +31,62 @@ fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> corout
 @ExperimentalMviKotlinApi
 private fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> executor(
     mainContext: CoroutineContext,
-    block: ExecutorBuilder<Intent, Action, State, Message, Label>.() -> Unit,
+    block: CoroutineExecutorBuilder<Intent, Action, State, Message, Label>.() -> Unit,
 ): Executor<Intent, Action, State, Message, Label> {
-    val builder = ExecutorBuilder<Intent, Action, State, Message, Label>()
+    val builder = CoroutineExecutorBuilder<Intent, Action, State, Message, Label>()
     block(builder)
 
-    return ExecutorImpl(
+    return CoroutineDslExecutorImpl(
         scope = CoroutineScope(mainContext),
-        intentHandlers = builder.intentHandlers,
-        actionHandlers = builder.actionHandlers,
+        builder = builder,
     )
 }
 
 @ExperimentalMviKotlinApi
 @CoroutineExecutorDslMaker
-class ExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> internal constructor() {
-
-    @PublishedApi
-    internal val intentHandlers = ArrayList<CoroutineExecutorScope<State, Message, Action, Label>.(Intent) -> Boolean>()
-
-    @PublishedApi
-    internal val actionHandlers = ArrayList<CoroutineExecutorScope<State, Message, Action, Label>.(Action) -> Boolean>()
+class CoroutineExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> internal constructor() :
+    ExecutorBuilder<CoroutineExecutorScope<State, Message, Action, Label>, Intent, Action, State, Message, Label>() {
 
     /**
      * Registers the provided [Intent] ``[handler] for the given [Intent] type [T].
      * The type is checked using *`is`* operator, so it is possible to use base or `sealed` interfaces or classes.
      */
+    @Suppress("UNCHECKED_CAST")
     inline fun <reified T : Intent> onIntent(
         noinline handler: CoroutineExecutorScope<State, Message, Action, Label>.(intent: T) -> Unit,
     ) {
-        intentHandlers +=
-            { intent ->
-                if (intent is T) {
-                    handler(intent)
-                    true
-                } else {
-                    false
-                }
-            }
+        onIntent(
+            executionHandler = coroutineExecutionHandler(handler) as ExecutionHandler<Intent, CoroutineExecutorScope<State, Message, Action, Label>>
+        )
     }
 
     /**
      * Registers the provided [Action] ``[handler] for the given [Action] type [T].
      * The type is checked using *`is`* operator, so it is possible to use base or `sealed` interfaces or classes.
      */
+    @Suppress("UNCHECKED_CAST")
     inline fun <reified T : Action> onAction(
         noinline handler: CoroutineExecutorScope<State, Message, Action, Label>.(action: T) -> Unit,
     ) {
-        actionHandlers +=
-            { action ->
-                if (action is T) {
-                    handler(action)
-                    true
-                } else {
-                    false
-                }
-            }
+        onAction(
+            executionHandler = coroutineExecutionHandler(handler) as ExecutionHandler<Action, CoroutineExecutorScope<State, Message, Action, Label>>
+        )
     }
 }
 
 @ExperimentalMviKotlinApi
-private class ExecutorImpl<in Intent : Any, Action : Any, State : Any, Message : Any, Label : Any>(
+private class CoroutineDslExecutorImpl<in Intent : Any, Action : Any, State : Any, Message : Any, Label : Any>(
     private val scope: CoroutineScope,
-    private val intentHandlers: List<CoroutineExecutorScope<State, Message, Action, Label>.(Intent) -> Boolean>,
-    private val actionHandlers: List<CoroutineExecutorScope<State, Message, Action, Label>.(Action) -> Boolean>,
-) : Executor<Intent, Action, State, Message, Label>, CoroutineExecutorScope<State, Message, Action, Label>, CoroutineScope by scope {
+    builder: ExecutorBuilder<CoroutineExecutorScope<State, Message, Action, Label>, Intent, Action, State, Message, Label>
+) : DslExecutorImpl<CoroutineExecutorScope<State, Message, Action, Label>, Intent, Action, State, Message, Label>(builder),
+    CoroutineExecutorScope<State, Message, Action, Label>, CoroutineScope by scope {
 
-    private val callbacks = atomic<Executor.Callbacks<State, Message, Action, Label>>()
-
-    override fun init(callbacks: Executor.Callbacks<State, Message, Action, Label>) {
-        this.callbacks.initialize(callbacks)
-    }
-
-    override fun state(): State =
-        callbacks.requireValue().state
-
-    override fun executeAction(action: Action) {
-        for (handler in actionHandlers) {
-            if (handler(this, action)) {
-                break
-            }
-        }
-    }
-
-    override fun executeIntent(intent: Intent) {
-        for (handler in intentHandlers) {
-            if (handler(this, intent)) {
-                break
-            }
-        }
+    override fun getScope(): CoroutineExecutorScope<State, Message, Action, Label> {
+        return this
     }
 
     override fun dispose() {
         scope.cancel()
     }
 
-    override fun dispatch(message: Message) {
-        callbacks.requireValue().onMessage(message)
-    }
-
-    override fun forward(action: Action) {
-        callbacks.requireValue().onAction(action)
-    }
-
-    override fun publish(label: Label) {
-        callbacks.requireValue().onLabel(label)
-    }
 }
