@@ -61,6 +61,18 @@ class CoroutineExecutorBuilder<Intent : Any, Action : Any, State : Any, Message 
     }
 
     /**
+     * Same as [onIntent], but skip intents if previous still is in process
+     */
+    @Suppress("UNCHECKED_CAST")
+    inline fun <reified T : Intent> onIntentSkipping(
+        noinline handler: CoroutineExecutorScope<State, Message, Action, Label>.(intent: T) -> Unit,
+    ) {
+        onIntent(
+            executionHandler = coroutineSkippingExecutionHandler(handler) as ExecutionHandler<Intent, CoroutineExecutorScope<State, Message, Action, Label>>
+        )
+    }
+
+    /**
      * Registers the provided [Action] ``[handler] for the given [Action] type [T].
      * The type is checked using *`is`* operator, so it is possible to use base or `sealed` interfaces or classes.
      */
@@ -70,6 +82,18 @@ class CoroutineExecutorBuilder<Intent : Any, Action : Any, State : Any, Message 
     ) {
         onAction(
             executionHandler = coroutineExecutionHandler(handler) as ExecutionHandler<Action, CoroutineExecutorScope<State, Message, Action, Label>>
+        )
+    }
+
+    /**
+     * Same as [onAction], but skip intents if previous still is in process
+     */
+    @Suppress("UNCHECKED_CAST")
+    inline fun <reified T : Action> onActionSkipping(
+        noinline handler: CoroutineExecutorScope<State, Message, Action, Label>.(action: T) -> Unit,
+    ) {
+        onAction(
+            executionHandler = coroutineSkippingExecutionHandler(handler) as ExecutionHandler<Action, CoroutineExecutorScope<State, Message, Action, Label>>
         )
     }
 }

@@ -5,6 +5,8 @@ import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -169,6 +171,121 @@ class CoroutineExecutorDslTest {
         executor.dispose()
 
         assertTrue(job?.isCancelled ?: false)
+    }
+
+    @Test
+    fun GIVEN_launch_in_onIntentSkipping_WHEN_give_same_intent_THEN_skip_same_intent() {
+        var counter = 0
+
+        val executor =
+            coroutineExecutorFactory<Some, Nothing, Nothing, Nothing, Nothing>(Dispatchers.Unconfined) {
+                onIntentSkipping<Some.A> {
+                    counter++;
+                    launch { suspendCoroutine {} }
+                }
+            }.invoke()
+
+        executor.executeIntent(Some.A)
+        executor.executeIntent(Some.A)
+
+        assertEquals(1, counter)
+    }
+
+    @Test
+    fun GIVEN_onIntentSkipping_WHEN_give_same_intent_THEN_not_skip_same_intent() {
+        var counter = 0
+
+        val executor =
+            coroutineExecutorFactory<Some, Nothing, Nothing, Nothing, Nothing>(Dispatchers.Unconfined) {
+                onIntentSkipping<Some.A> {
+                    counter++;
+                }
+            }.invoke()
+
+        executor.executeIntent(Some.A)
+        executor.executeIntent(Some.A)
+
+        assertEquals(2, counter)
+    }
+
+
+    @Test
+    fun GIVEN_launch_in_onIntentSkipping_WHEN_give_same_intent_AND_finish_intent_execution_AND_give_same_intent_THEN_process_two_intents() {
+        var counter = 0
+        var cont: Continuation<Unit>? = null
+
+        val executor =
+            coroutineExecutorFactory<Some, Nothing, Nothing, Nothing, Nothing>(Dispatchers.Unconfined) {
+                onIntentSkipping<Some.A> {
+                    counter++;
+                    launch { suspendCoroutine { cont = it } }
+                }
+            }.invoke()
+
+        executor.executeIntent(Some.A)
+        executor.executeIntent(Some.A)
+        cont?.resume(Unit)
+        assertEquals(1, counter)
+        executor.executeIntent(Some.A)
+
+        assertEquals(2, counter)
+    }
+
+    @Test
+    fun GIVEN_launch_in_onActionSkipping_WHEN_give_same_action_THEN_skip_same_actions() {
+        var counter = 0
+
+        val executor =
+            coroutineExecutorFactory<Nothing, Some, Nothing, Nothing, Nothing>(Dispatchers.Unconfined) {
+                onActionSkipping<Some.A> {
+                    counter++;
+                    launch { suspendCoroutine {} }
+                }
+            }.invoke()
+
+        executor.executeAction(Some.A)
+        executor.executeAction(Some.A)
+
+        assertEquals(1, counter)
+    }
+
+    @Test
+    fun GIVEN_onActionSkipping_WHEN_give_same_action_THEN_not_skip_same_action() {
+        var counter = 0
+
+        val executor =
+            coroutineExecutorFactory<Nothing, Some, Nothing, Nothing, Nothing>(Dispatchers.Unconfined) {
+                onActionSkipping<Some.A> {
+                    counter++;
+                }
+            }.invoke()
+
+        executor.executeAction(Some.A)
+        executor.executeAction(Some.A)
+
+        assertEquals(2, counter)
+    }
+
+
+    @Test
+    fun GIVEN_launch_in_onActionSkipping_WHEN_give_same_action_AND_finish_action_execution_AND_give_same_action_THEN_process_two_actions() {
+        var counter = 0
+        var cont: Continuation<Unit>? = null
+
+        val executor =
+            coroutineExecutorFactory<Nothing, Some, Nothing, Nothing, Nothing>(Dispatchers.Unconfined) {
+                onActionSkipping<Some.A> {
+                    counter++;
+                    launch { suspendCoroutine { cont = it } }
+                }
+            }.invoke()
+
+        executor.executeAction(Some.A)
+        executor.executeAction(Some.A)
+        cont?.resume(Unit)
+        executor.executeAction(Some.A)
+
+        assertEquals(2, counter)
     }
 
     @Test
