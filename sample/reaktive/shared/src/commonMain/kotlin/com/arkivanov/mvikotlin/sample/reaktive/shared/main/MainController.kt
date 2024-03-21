@@ -12,9 +12,9 @@ import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.MainView.Event
-import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.AddStoreFactory
-import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.ListStore
-import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.ListStoreFactory
+import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.add.addStore
+import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.list.ListStore
+import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.list.listStore
 import com.badoo.reaktive.observable.combineLatest
 import com.badoo.reaktive.observable.mapNotNull
 
@@ -26,21 +26,8 @@ class MainController(
     private val onItemSelected: (id: String) -> Unit,
 ) {
 
-    private val listStore =
-        instanceKeeper.getStore {
-            ListStoreFactory(
-                storeFactory = storeFactory,
-                database = database,
-            ).create()
-        }
-
-    private val addStore =
-        instanceKeeper.getStore {
-            AddStoreFactory(
-                storeFactory = storeFactory,
-                database = database,
-            ).create()
-        }
+    private val listStore = instanceKeeper.getStore { storeFactory.listStore(database = database) }
+    private val addStore = instanceKeeper.getStore { storeFactory.addStore(database = database) }
 
     init {
         bind(lifecycle, BinderLifecycleMode.CREATE_DESTROY) {

@@ -1,21 +1,18 @@
-package com.arkivanov.mvikotlin.sample.reaktive.shared.main.store
+package com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.add
 
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
-import com.arkivanov.mvikotlin.extensions.reaktive.labels
+import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.add.AddStore.Intent
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.add.AddStore.Label
+import com.arkivanov.mvikotlin.sample.coroutines.shared.test
 import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.AddStore.Intent
-import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.AddStore.Label
-import com.badoo.reaktive.scheduler.overrideSchedulers
-import com.badoo.reaktive.test.observable.assertValue
-import com.badoo.reaktive.test.observable.test
-import com.badoo.reaktive.test.scheduler.TestScheduler
-import com.badoo.reaktive.utils.reaktiveUncaughtErrorHandler
-import com.badoo.reaktive.utils.resetReaktiveUncaughtErrorHandler
+import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 class AddStoreTest {
@@ -26,15 +23,11 @@ class AddStoreTest {
 
     @BeforeTest
     fun before() {
-        overrideSchedulers(main = { TestScheduler() }, io = { TestScheduler() })
-        reaktiveUncaughtErrorHandler = { throw it }
         isAssertOnMainThreadEnabled = false
     }
 
     @AfterTest
     fun after() {
-        overrideSchedulers()
-        resetReaktiveUncaughtErrorHandler()
         isAssertOnMainThreadEnabled = true
     }
 
@@ -67,10 +60,15 @@ class AddStoreTest {
         store.accept(Intent.Add)
 
         val createdItem = database.getAll().first()
-        labels.assertValue(Label.Added(createdItem))
+        assertContentEquals(listOf(Label.Added(createdItem)), labels)
     }
 
     private fun createStore() {
-        store = AddStoreFactory(DefaultStoreFactory(), database).create()
+        store =
+            DefaultStoreFactory().addStore(
+                database = database,
+                mainContext = Dispatchers.Unconfined,
+                ioContext = Dispatchers.Unconfined,
+            )
     }
 }

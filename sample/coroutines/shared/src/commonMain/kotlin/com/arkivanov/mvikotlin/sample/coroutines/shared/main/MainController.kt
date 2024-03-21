@@ -11,9 +11,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import com.arkivanov.mvikotlin.sample.coroutines.shared.TodoDispatchers
 import com.arkivanov.mvikotlin.sample.coroutines.shared.main.MainView.Event
-import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.AddStoreFactory
-import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.ListStore
-import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.ListStoreFactory
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.add.addStore
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list.ListStore
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list.listStore
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import kotlinx.coroutines.flow.combine
@@ -30,22 +30,20 @@ class MainController(
 
     private val listStore =
         instanceKeeper.getStore {
-            ListStoreFactory(
-                storeFactory = storeFactory,
+            storeFactory.listStore(
                 database = database,
                 mainContext = dispatchers.main,
                 ioContext = dispatchers.io,
-            ).create()
+            )
         }
 
     private val addStore =
         instanceKeeper.getStore {
-            AddStoreFactory(
-                storeFactory = storeFactory,
+            storeFactory.addStore(
                 database = database,
                 mainContext = dispatchers.main,
                 ioContext = dispatchers.io,
-            ).create()
+            )
         }
 
     init {
