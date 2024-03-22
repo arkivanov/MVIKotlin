@@ -12,8 +12,8 @@ internal interface DetailsStore : Store<Intent, State, Label> {
     // Serializable only for exporting events in Time Travel, no need otherwise.
     sealed class Intent : JvmSerializable {
         data class SetText(val text: String) : Intent()
-        object ToggleDone : Intent()
-        object Delete : Intent()
+        data object ToggleDone : Intent()
+        data object Delete : Intent()
     }
 
     data class State(

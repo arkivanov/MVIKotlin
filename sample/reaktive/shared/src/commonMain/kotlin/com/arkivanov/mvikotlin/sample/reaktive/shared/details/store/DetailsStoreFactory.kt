@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMviKotlinApi::class)
+
 package com.arkivanov.mvikotlin.sample.reaktive.shared.details.store
 
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
@@ -22,70 +24,67 @@ import com.badoo.reaktive.single.observeOn
 import com.badoo.reaktive.single.singleFromFunction
 import com.badoo.reaktive.single.subscribeOn
 
-@OptIn(ExperimentalMviKotlinApi::class)
-internal class DetailsStoreFactory(
-    private val storeFactory: StoreFactory,
-    private val database: TodoDatabase,
-    private val itemId: String
-) {
+internal fun StoreFactory.detailsStore(
+    database: TodoDatabase,
+    itemId: String,
+): DetailsStore =
+    object : DetailsStore, Store<Intent, State, Label> by create<Intent, Unit, Msg, State, Label>(
+        name = "TodoDetailsStore",
+        initialState = State(),
+        bootstrapper = SimpleBootstrapper(Unit),
+        executorFactory = reaktiveExecutorFactory {
+            fun ExecutorScope.save() {
+                val data = state().data ?: return
+                publish(Label.Changed(itemId, data))
 
-    fun create(): DetailsStore =
-        object : DetailsStore, Store<Intent, State, Label> by storeFactory.create<Intent, Unit, Msg, State, Label>(
-            name = "TodoDetailsStore",
-            initialState = State(),
-            bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = reaktiveExecutorFactory {
-                onAction<Unit> {
-                    singleFromFunction { database.get(itemId) }
-                        .subscribeOn(ioScheduler)
-                        .map { it?.data?.let(Msg::Loaded) ?: Msg.Finished }
-                        .observeOn(mainScheduler)
-                        .subscribeScoped(onSuccess = ::dispatch)
-                }
-
-                onIntent<Intent.SetText> {
-                    dispatch(Msg.TextChanged(it.text))
-                    save()
-                }
-
-                onIntent<Intent.ToggleDone> {
-                    dispatch(Msg.DoneToggled)
-                    save()
-                }
-
-                onIntent<Intent.Delete> {
-                    publish(Label.Deleted(itemId))
-
-                    completableFromFunction { database.delete(itemId) }
-                        .subscribeOn(ioScheduler)
-                        .observeOn(mainScheduler)
-                        .subscribeScoped { dispatch(Msg.Finished) }
-                }
-            },
-            reducer = { msg ->
-                when (msg) {
-                    is Msg.Loaded -> copy(data = msg.data)
-                    is Msg.Finished -> copy(isFinished = true)
-                    is Msg.TextChanged -> copy(data = data?.copy(text = msg.text))
-                    is Msg.DoneToggled -> copy(data = data?.copy(isDone = !data.isDone))
-                }
+                completableFromFunction { database.save(itemId, data) }
+                    .subscribeOn(ioScheduler)
+                    .subscribeScoped()
             }
-        ) {}
 
-    // Serializable only for exporting events in Time Travel, no need otherwise.
-    private sealed class Msg : JvmSerializable {
-        data class Loaded(val data: TodoItem.Data) : Msg()
-        data object Finished : Msg()
-        data class TextChanged(val text: String) : Msg()
-        data object DoneToggled : Msg()
-    }
+            onAction<Unit> {
+                singleFromFunction { database.get(itemId) }
+                    .subscribeOn(ioScheduler)
+                    .map { it?.data?.let(Msg::Loaded) ?: Msg.Finished }
+                    .observeOn(mainScheduler)
+                    .subscribeScoped(onSuccess = ::dispatch)
+            }
 
-    private fun ReaktiveExecutorScope<State, *, *, Label>.save() {
-        val data = state().data ?: return
-        publish(Label.Changed(itemId, data))
+            onIntent<Intent.SetText> {
+                dispatch(Msg.TextChanged(it.text))
+                save()
+            }
 
-        completableFromFunction { database.save(itemId, data) }
-            .subscribeOn(ioScheduler)
-            .subscribeScoped()
-    }
+            onIntent<Intent.ToggleDone> {
+                dispatch(Msg.DoneToggled)
+                save()
+            }
+
+            onIntent<Intent.Delete> {
+                publish(Label.Deleted(itemId))
+
+                completableFromFunction { database.delete(itemId) }
+                    .subscribeOn(ioScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeScoped { dispatch(Msg.Finished) }
+            }
+        },
+        reducer = { msg ->
+            when (msg) {
+                is Msg.Loaded -> copy(data = msg.data)
+                is Msg.Finished -> copy(isFinished = true)
+                is Msg.TextChanged -> copy(data = data?.copy(text = msg.text))
+                is Msg.DoneToggled -> copy(data = data?.copy(isDone = !data.isDone))
+            }
+        },
+    ) {}
+
+// Serializable only for exporting events in Time Travel, no need otherwise.
+private sealed class Msg : JvmSerializable {
+    data class Loaded(val data: TodoItem.Data) : Msg()
+    data object Finished : Msg()
+    data class TextChanged(val text: String) : Msg()
+    data object DoneToggled : Msg()
 }
+
+private typealias ExecutorScope = ReaktiveExecutorScope<State, Msg, Unit, Label>

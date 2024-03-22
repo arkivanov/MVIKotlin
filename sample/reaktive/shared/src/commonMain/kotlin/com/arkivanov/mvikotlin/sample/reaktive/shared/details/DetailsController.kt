@@ -11,7 +11,7 @@ import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Label
-import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStoreFactory
+import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.detailsStore
 import com.badoo.reaktive.observable.map
 import com.badoo.reaktive.observable.mapNotNull
 
@@ -25,11 +25,10 @@ class DetailsController(
 ) {
 
     private val detailsStore =
-        DetailsStoreFactory(
-            storeFactory = storeFactory,
+        storeFactory.detailsStore(
             database = database,
             itemId = itemId,
-        ).create()
+        )
 
     init {
         lifecycle.doOnDestroy(detailsStore::dispose)

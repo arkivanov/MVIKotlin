@@ -1,10 +1,10 @@
-package com.arkivanov.mvikotlin.sample.coroutines.shared.main.store
+package com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.ListStore.Intent
-import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.ListStore.State
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list.ListStore.Intent
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list.ListStore.State
 
 internal interface ListStore : Store<Intent, State, Nothing> {
 

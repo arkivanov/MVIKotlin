@@ -10,7 +10,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import com.arkivanov.mvikotlin.sample.coroutines.shared.TodoDispatchers
 import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsStore.Label
-import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsStoreFactory
+import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.detailsStore
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import kotlinx.coroutines.flow.map
@@ -27,13 +27,12 @@ class DetailsController(
 ) {
 
     private val detailsStore =
-        DetailsStoreFactory(
-            storeFactory = storeFactory,
+        storeFactory.detailsStore(
             database = database,
             mainContext = dispatchers.main,
             ioContext = dispatchers.io,
             itemId = itemId,
-        ).create()
+        )
 
     init {
         lifecycle.doOnDestroy(detailsStore::dispose)

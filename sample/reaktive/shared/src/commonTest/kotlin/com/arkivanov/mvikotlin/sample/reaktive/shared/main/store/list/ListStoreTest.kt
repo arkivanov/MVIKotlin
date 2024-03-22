@@ -1,10 +1,10 @@
-package com.arkivanov.mvikotlin.sample.reaktive.shared.main.store
+package com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.list
 
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.ListStore.Intent
+import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.list.ListStore.Intent
 import com.badoo.reaktive.scheduler.overrideSchedulers
 import com.badoo.reaktive.test.scheduler.TestScheduler
 import com.badoo.reaktive.utils.reaktiveUncaughtErrorHandler
@@ -130,6 +130,6 @@ class ListStoreTest {
     }
 
     private fun createStore() {
-        store = ListStoreFactory(DefaultStoreFactory(), database).create()
+        store = DefaultStoreFactory().listStore(database)
     }
 }

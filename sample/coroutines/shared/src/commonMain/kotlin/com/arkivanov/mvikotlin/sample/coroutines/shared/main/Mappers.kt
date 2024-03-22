@@ -3,8 +3,8 @@ package com.arkivanov.mvikotlin.sample.coroutines.shared.main
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import com.arkivanov.mvikotlin.sample.coroutines.shared.main.MainView.Event
 import com.arkivanov.mvikotlin.sample.coroutines.shared.main.MainView.Model
-import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.AddStore
-import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.ListStore
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.add.AddStore
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list.ListStore
 
 internal val statesToModel: (ListStore.State, AddStore.State) -> Model =
     { listState, addState ->

@@ -1,8 +1,8 @@
-package com.arkivanov.mvikotlin.sample.coroutines.shared.main.store
+package com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list
 
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.ListStore.Intent
+import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list.ListStore.Intent
 import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import kotlinx.coroutines.Dispatchers
@@ -124,11 +124,10 @@ class ListStoreTest {
 
     private fun createStore() {
         store =
-            ListStoreFactory(
-                storeFactory = DefaultStoreFactory(),
+            DefaultStoreFactory().listStore(
                 database = database,
                 mainContext = Dispatchers.Unconfined,
                 ioContext = Dispatchers.Unconfined,
-            ).create()
+            )
     }
 }

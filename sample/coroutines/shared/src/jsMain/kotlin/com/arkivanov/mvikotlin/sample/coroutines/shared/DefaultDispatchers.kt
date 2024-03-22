@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 
 object DefaultDispatchers : TodoDispatchers {
 
-    override val main: CoroutineDispatcher get() = Dispatchers.Main
+    override val main: CoroutineDispatcher get() = Dispatchers.Main.immediate
     override val io: CoroutineDispatcher get() = Dispatchers.Main
     override val unconfined: CoroutineDispatcher get() = Dispatchers.Unconfined
 }

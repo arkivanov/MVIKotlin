@@ -25,23 +25,25 @@ android {
 }
 
 kotlin {
-    targets
-        .filterIsInstance<KotlinNativeTarget>()
-        .filter { it.konanTarget.family == Family.IOS }
-        .forEach { target ->
-            target.binaries.framework {
-                baseName = "Todo"
+    if ("XCODE_VERSION_MAJOR" in System.getenv().keys) {
+        targets
+            .filterIsInstance<KotlinNativeTarget>()
+            .filter { it.konanTarget.family == Family.IOS }
+            .forEach { target ->
+                target.binaries.framework {
+                    baseName = "Todo"
 
-                export(project(":sample:database"))
-                export(deps.reaktive.reaktive)
-                export(deps.essenty.lifecycle)
-                export(deps.essenty.instanceKeeper)
-                export(project(":mvikotlin"))
-                export(project(":mvikotlin-main"))
-                export(project(":mvikotlin-logging"))
-                export(project(":mvikotlin-timetravel"))
+                    export(project(":sample:database"))
+                    export(deps.reaktive.reaktive)
+                    export(deps.essenty.lifecycle)
+                    export(deps.essenty.instanceKeeper)
+                    export(project(":mvikotlin"))
+                    export(project(":mvikotlin-main"))
+                    export(project(":mvikotlin-logging"))
+                    export(project(":mvikotlin-timetravel"))
+                }
             }
-        }
+    }
 
     setupSourceSets {
         val darwin by bundle()

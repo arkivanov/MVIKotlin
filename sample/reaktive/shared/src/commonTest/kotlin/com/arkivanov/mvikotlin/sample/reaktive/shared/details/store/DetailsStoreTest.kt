@@ -147,10 +147,9 @@ class DetailsStoreTest {
 
     private fun createStore() {
         store =
-            DetailsStoreFactory(
-                storeFactory = DefaultStoreFactory(),
+            DefaultStoreFactory().detailsStore(
                 database = database,
                 itemId = itemId,
-            ).create()
+            )
     }
 }
