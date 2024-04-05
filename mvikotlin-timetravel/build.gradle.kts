@@ -39,13 +39,6 @@ kotlin {
             implementation(project(":mvikotlin-test-internal"))
         }
 
-        android.main.dependencies {
-            implementation(deps.androidx.core.coreKtx)
-            implementation(deps.androidx.appcompat.appcompat)
-            implementation(deps.androidx.recyclerview.recyclerview)
-            implementation(deps.androidx.constraintlayout.constraintlayout)
-        }
-
         all {
             languageSettings {
                 optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")

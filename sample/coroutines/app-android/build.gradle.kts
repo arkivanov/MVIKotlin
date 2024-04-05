@@ -34,7 +34,5 @@ dependencies {
     implementation(deps.androidx.appcompat.appcompat)
     implementation(deps.androidx.recyclerview.recyclerview)
     implementation(deps.androidx.constraintlayout.constraintlayout)
-    implementation(deps.androidx.drawerlayout.drawerlayout)
     implementation(deps.androidx.core.coreKtx)
-    implementation(deps.androidx.lifecycle.lifecycleCommonJava8)
 }

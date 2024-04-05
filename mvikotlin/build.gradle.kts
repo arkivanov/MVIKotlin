@@ -52,11 +52,6 @@ kotlin {
             implementation(deps.reaktive.reaktive)
         }
 
-        android.main.dependencies {
-            implementation(deps.androidx.lifecycle.lifecycleCommonJava8)
-            implementation(deps.androidx.lifecycle.lifecycleRuntime)
-        }
-
         all {
             languageSettings {
                 optIn("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi")
