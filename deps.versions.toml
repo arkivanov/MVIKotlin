@@ -1,6 +1,6 @@
 [versions]
 
-mvikotlin = "4.0.0-alpha02"
+mvikotlin = "4.0.0-beta01"
 timeTravelPlugin = "3.0.1"
 timeTravelApp = "3.0.1"
 
