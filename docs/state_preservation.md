@@ -6,7 +6,7 @@ Sometimes it might be necessary to preserve a state (e.g. a state of a `Store`) 
 
 ## Retaining objects
 
-Another use case is to retain an object instance over its scope recreation. This is also commonly used in Android when configuration changes occur. If you are working on a pure Android project (not multiplatform) then AndroidX [ViewModelStore](https://developer.android.com/reference/android/arch/lifecycle/ViewModelStore) and [ViewModelProvider](https://developer.android.com/reference/android/arch/lifecycle/ViewModelProvider) can be used directly. For multiplatform projects you can use `InstanceKeeper` from [Essenty](https://github.com/arkivanov/Essenty) library (from the same author). Please familiarise yourself with Essenty library, especially with the `InstanceKeeper`.
+Another use case is to retain an object instance over its scope recreation. This is also commonly used in Android when configuration changes occur. If you are working on a pure Android project (not multiplatform) then AndroidX [ViewModelStore](https://developer.android.com/reference/androidx/lifecycle/ViewModelStore) and [ViewModelProvider](https://developer.android.com/reference/androidx/lifecycle/ViewModelProvider) can be used directly. For multiplatform projects you can use `InstanceKeeper` from [Essenty](https://github.com/arkivanov/Essenty) library (from the same author). Please familiarise yourself with Essenty library, especially with the `InstanceKeeper`.
 
 ### Examples
 
