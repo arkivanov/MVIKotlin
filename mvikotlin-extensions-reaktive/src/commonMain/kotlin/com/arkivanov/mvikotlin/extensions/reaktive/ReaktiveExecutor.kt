@@ -4,7 +4,6 @@ import com.arkivanov.mvikotlin.core.annotations.MainThread
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.internal.atomic
 import com.arkivanov.mvikotlin.core.utils.internal.initialize
 import com.arkivanov.mvikotlin.core.utils.internal.requireValue
@@ -73,7 +72,6 @@ open class ReaktiveExecutor<in Intent : Any, Action : Any, State : Any, Message 
      *
      * @param action an [Action] to be forwarded back to the [Executor] via [Store].
      */
-    @ExperimentalMviKotlinApi
     @MainThread
     protected fun forward(action: Action) {
         callbacks.requireValue().onAction(action)

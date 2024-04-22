@@ -3,7 +3,6 @@ package com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.arkivanov.mvikotlin.sample.coroutines.shared.main.store.list.ListStore.Intent
@@ -94,7 +93,6 @@ private class ExecutorImpl(
         }
     }
 
-    @OptIn(ExperimentalMviKotlinApi::class)
     private fun toggleDone(id: String) {
         dispatch(Msg.DoneToggled(id))
         forward(Action.SaveItem(id = id))
