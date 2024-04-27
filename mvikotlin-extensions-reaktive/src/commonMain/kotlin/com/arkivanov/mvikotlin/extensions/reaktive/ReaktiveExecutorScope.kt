@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.badoo.reaktive.disposable.scope.DisposableScope
 
 /**
@@ -12,7 +11,6 @@ import com.badoo.reaktive.disposable.scope.DisposableScope
  *
  * @see reaktiveExecutorFactory
  */
-@ExperimentalMviKotlinApi
 @ReaktiveExecutorDslMaker
 interface ReaktiveExecutorScope<out State : Any, in Message : Any, in Action : Any, in Label : Any> : DisposableScope {
 

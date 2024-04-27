@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.store.Executor
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.internal.atomic
 import com.arkivanov.mvikotlin.core.utils.internal.initialize
 import com.arkivanov.mvikotlin.core.utils.internal.requireValue
@@ -12,7 +11,6 @@ import com.badoo.reaktive.disposable.scope.DisposableScope
  *
  * @param block configures the [Executor], called for every new instance.
  */
-@ExperimentalMviKotlinApi
 fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> reaktiveExecutorFactory(
     block: ExecutorBuilder<Intent, Action, State, Message, Label>.() -> Unit,
 ): () -> Executor<Intent, Action, State, Message, Label> =
@@ -20,7 +18,6 @@ fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> reakti
         executor(block)
     }
 
-@ExperimentalMviKotlinApi
 private fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> executor(
     block: ExecutorBuilder<Intent, Action, State, Message, Label>.() -> Unit,
 ): Executor<Intent, Action, State, Message, Label> {
@@ -33,7 +30,6 @@ private fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any
     )
 }
 
-@ExperimentalMviKotlinApi
 @ReaktiveExecutorDslMaker
 class ExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> internal constructor() {
 
@@ -80,7 +76,6 @@ class ExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, La
     }
 }
 
-@ExperimentalMviKotlinApi
 private class ExecutorImpl<in Intent : Any, Action : Any, State : Any, Message : Any, Label : Any>(
     private val intentHandlers: List<ReaktiveExecutorScope<State, Message, Action, Label>.(Intent) -> Boolean>,
     private val actionHandlers: List<ReaktiveExecutorScope<State, Message, Action, Label>.(Action) -> Boolean>,

@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.store.Bootstrapper
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.internal.atomic
 import com.arkivanov.mvikotlin.core.utils.internal.initialize
 import com.arkivanov.mvikotlin.core.utils.internal.requireValue
@@ -16,7 +15,6 @@ import kotlin.coroutines.CoroutineContext
  * @param mainContext main [CoroutineContext] to be used by default when launching coroutines, default value is [Dispatchers.Main].
  * @param handler invoked when the [Bootstrapper] is invoked by the [Store][com.arkivanov.mvikotlin.core.store.Store].
  */
-@ExperimentalMviKotlinApi
 fun <Action : Any> coroutineBootstrapper(
     mainContext: CoroutineContext = Dispatchers.Main,
     handler: CoroutineBootstrapperScope<Action>.() -> Unit,
@@ -27,7 +25,6 @@ fun <Action : Any> coroutineBootstrapper(
         }
     }
 
-@ExperimentalMviKotlinApi
 private abstract class AbstractBootstrapper<Action : Any>(
     private val scope: CoroutineScope,
 ) : Bootstrapper<Action>, CoroutineBootstrapperScope<Action>, CoroutineScope by scope {

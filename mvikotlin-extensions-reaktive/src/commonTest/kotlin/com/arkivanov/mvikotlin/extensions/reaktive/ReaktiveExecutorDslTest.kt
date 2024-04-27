@@ -2,7 +2,6 @@ package com.arkivanov.mvikotlin.extensions.reaktive
 
 import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.test.internal.DefaultExecutorCallbacks
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.badoo.reaktive.test.base.hasSubscribers
 import com.badoo.reaktive.test.observable.TestObservable
 import kotlin.test.Test
@@ -11,7 +10,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 
 @Suppress("TestFunctionName")
-@OptIn(ExperimentalMviKotlinApi::class)
 class ReaktiveExecutorDslTest {
 
     @Test

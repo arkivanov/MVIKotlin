@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.store.Executor
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.internal.atomic
 import com.arkivanov.mvikotlin.core.utils.internal.initialize
 import com.arkivanov.mvikotlin.core.utils.internal.requireValue
@@ -16,7 +15,6 @@ import kotlin.coroutines.CoroutineContext
  * @param mainContext main [CoroutineContext] to be used by default when launching coroutines, default value is [Dispatchers.Main].
  * @param block configures the [Executor], called for every new instance.
  */
-@ExperimentalMviKotlinApi
 fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> coroutineExecutorFactory(
     mainContext: CoroutineContext = Dispatchers.Main,
     block: ExecutorBuilder<Intent, Action, State, Message, Label>.() -> Unit,
@@ -28,7 +26,6 @@ fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> corout
         )
     }
 
-@ExperimentalMviKotlinApi
 private fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> executor(
     mainContext: CoroutineContext,
     block: ExecutorBuilder<Intent, Action, State, Message, Label>.() -> Unit,
@@ -43,7 +40,6 @@ private fun <Intent : Any, Action : Any, State : Any, Message : Any, Label : Any
     )
 }
 
-@ExperimentalMviKotlinApi
 @CoroutineExecutorDslMaker
 class ExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, Label : Any> internal constructor() {
 
@@ -90,7 +86,6 @@ class ExecutorBuilder<Intent : Any, Action : Any, State : Any, Message : Any, La
     }
 }
 
-@ExperimentalMviKotlinApi
 private class ExecutorImpl<in Intent : Any, Action : Any, State : Any, Message : Any, Label : Any>(
     private val scope: CoroutineScope,
     private val intentHandlers: List<CoroutineExecutorScope<State, Message, Action, Label>.(Intent) -> Boolean>,

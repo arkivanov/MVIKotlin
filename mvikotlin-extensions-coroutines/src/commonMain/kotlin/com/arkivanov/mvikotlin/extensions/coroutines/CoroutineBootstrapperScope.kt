@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -12,7 +11,6 @@ import kotlinx.coroutines.CoroutineScope
  *
  * @see coroutineBootstrapper
  */
-@ExperimentalMviKotlinApi
 interface CoroutineBootstrapperScope<in Action : Any> : CoroutineScope {
 
     /**
