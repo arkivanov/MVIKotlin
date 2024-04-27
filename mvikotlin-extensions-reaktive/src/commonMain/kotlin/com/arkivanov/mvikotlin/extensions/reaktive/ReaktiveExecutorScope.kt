@@ -43,7 +43,6 @@ interface ReaktiveExecutorScope<out State : Any, in Message : Any, in Action : A
      * @param action an [Action] to be forwarded back to the [Executor][com.arkivanov.mvikotlin.core.store.Executor]
      * via [Store][com.arkivanov.mvikotlin.core.store.Store].
      */
-    @ExperimentalMviKotlinApi
     @MainThread
     fun forward(action: Action)
 

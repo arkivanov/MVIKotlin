@@ -3,7 +3,6 @@ package com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.list
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
@@ -92,7 +91,6 @@ private class ExecutorImpl(
             .subscribeScoped()
     }
 
-    @OptIn(ExperimentalMviKotlinApi::class)
     private fun toggleDone(id: String) {
         dispatch(Msg.DoneToggled(id))
         forward(Action.SaveItem(id = id))

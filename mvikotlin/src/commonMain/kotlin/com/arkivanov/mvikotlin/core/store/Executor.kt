@@ -1,7 +1,6 @@
 package com.arkivanov.mvikotlin.core.store
 
 import com.arkivanov.mvikotlin.core.annotations.MainThread
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import kotlin.js.JsName
 
 /**
@@ -85,7 +84,6 @@ interface Executor<in Intent : Any, Action : Any, in State : Any, out Message : 
          *
          * @param action an [Action] to be forwarded back to the [Executor] via [Store].
          */
-        @ExperimentalMviKotlinApi
         @JsName("onAction")
         @MainThread
         fun onAction(action: Action)
