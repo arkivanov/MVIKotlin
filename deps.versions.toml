@@ -1,6 +1,6 @@
 [versions]
 
-mvikotlin = "4.0.0-beta01"
+mvikotlin = "4.0.0"
 timeTravelPlugin = "3.0.1"
 timeTravelApp = "3.0.1"
 
@@ -9,7 +9,7 @@ kotlinxBinaryCompatibilityValidator = "0.13.2"
 kotlinxCoroutines = "1.8.0"
 intellijGradlePlugin = "1.15.0"
 detektGradlePlugin = "1.23.3"
-essenty = "2.0.0-beta01"
+essenty = "2.0.0"
 reaktive = "2.1.0"
 multiplatformSettings = "1.1.0"
 compose = "1.6.1"
