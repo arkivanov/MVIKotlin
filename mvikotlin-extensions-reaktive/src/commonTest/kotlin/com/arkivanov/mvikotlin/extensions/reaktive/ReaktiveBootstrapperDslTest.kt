@@ -1,6 +1,5 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.badoo.reaktive.test.base.hasSubscribers
 import com.badoo.reaktive.test.observable.TestObservable
 import kotlin.test.Test
@@ -8,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-@OptIn(ExperimentalMviKotlinApi::class)
 @Suppress("TestFunctionName")
 class ReaktiveBootstrapperDslTest {
 

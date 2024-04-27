@@ -1,11 +1,8 @@
-@file:OptIn(ExperimentalMviKotlinApi::class)
-
 package com.arkivanov.mvikotlin.sample.reaktive.shared.details.store
 
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.arkivanov.mvikotlin.core.utils.JvmSerializable
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutorScope
 import com.arkivanov.mvikotlin.extensions.reaktive.reaktiveExecutorFactory

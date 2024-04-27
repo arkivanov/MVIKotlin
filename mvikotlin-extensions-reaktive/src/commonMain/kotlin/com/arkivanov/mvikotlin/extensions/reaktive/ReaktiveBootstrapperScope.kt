@@ -1,6 +1,5 @@
 package com.arkivanov.mvikotlin.extensions.reaktive
 
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import com.badoo.reaktive.disposable.scope.DisposableScope
 
 /**
@@ -11,7 +10,6 @@ import com.badoo.reaktive.disposable.scope.DisposableScope
  *
  * @see reaktiveBootstrapper
  */
-@ExperimentalMviKotlinApi
 interface ReaktiveBootstrapperScope<in Action : Any> : DisposableScope {
 
     /**

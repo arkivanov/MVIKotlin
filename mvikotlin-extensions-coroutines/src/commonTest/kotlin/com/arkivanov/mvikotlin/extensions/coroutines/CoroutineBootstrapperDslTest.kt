@@ -1,6 +1,5 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -9,7 +8,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@OptIn(ExperimentalMviKotlinApi::class)
 @Suppress("TestFunctionName")
 class CoroutineBootstrapperDslTest {
 
