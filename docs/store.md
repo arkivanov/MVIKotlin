@@ -107,7 +107,7 @@ Create a new Kotlin file and type one of the following abbreviations:
 
 ### Simplest example
 
-> The following examples use the default full-featured API. For a simplified experimented DSL, please refer to the corresponding section - [The experimental DSL](#dsl).
+> The following examples use the default full-featured API. For a simplified DSL, please refer to the corresponding section - [Store DSL API](#dsl).
 
 Let's start from a very basic example. We will create a simple counter `Store` that will increment and decrement its value.
 
@@ -335,7 +335,7 @@ Here we extended the `CoroutineExecutor` class. The sum is calculated on the `De
 
 > ⚠️ `CoroutineExecutor` provides the `CoroutineScope` property named `scope`, which can be used to run asynchronous tasks. The scope uses `Dispatchers.Main` dispatcher by default, which can be overriden by passing different `CoroutineContext` to the `CoroutineExecutor` constructor. The scope is automatically cancelled when the `Store` is disposed.
 
-#### Forwarding Actions (experimental, since v4.0)
+#### Forwarding Actions
 
 Starting with MVIKotlin version 4.0, it is also possible to send `Actions` from the `Executor` using `forward(Action)` method. The `Action` automatically redirected back to the `Executor#executeAction` method. This allows reusing `Actions` easier, and also proper processing by wrapping `Stores` (like logging or time-traveling).
 
@@ -542,9 +542,9 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 > ⚠️ `CoroutineBootstrapper` also provides the `CoroutineScope` property named `scope`, same as `CoroutineExecutor`. So we can use it run asynchronous tasks.
 
 <a name="dsl" ></a>
-### The experimental DSL
+### Store DSL API
 
-The approach demonstrated above is default, but may be considered verbose. MVIKotlin provides additional experimental DSL API.
+The approach demonstrated above is default, but may be considered verbose. MVIKotlin provides additional Store DSL API.
 
 #### Reaktive way
 
