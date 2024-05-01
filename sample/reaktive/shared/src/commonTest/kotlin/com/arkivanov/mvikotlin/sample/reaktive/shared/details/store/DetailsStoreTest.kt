@@ -1,12 +1,11 @@
 package com.arkivanov.mvikotlin.sample.reaktive.shared.details.store
 
+import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Intent
-import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Label
 import com.badoo.reaktive.scheduler.overrideSchedulers
 import com.badoo.reaktive.test.observable.assertValue
 import com.badoo.reaktive.test.observable.test
@@ -25,7 +24,7 @@ class DetailsStoreTest {
     private val itemData = TodoItem.Data(text = "text", isDone = false)
     private val database = MemoryTodoDatabase()
 
-    private lateinit var store: DetailsStore
+    private lateinit var store: Store<Intent, State, Label>
 
     @BeforeTest
     fun before() {

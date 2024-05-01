@@ -10,7 +10,7 @@ import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.extensions.reaktive.states
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
-import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Label
+import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.Label
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.detailsStore
 import com.badoo.reaktive.observable.map
 import com.badoo.reaktive.observable.mapNotNull
