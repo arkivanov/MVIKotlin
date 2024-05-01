@@ -2,8 +2,8 @@ package com.arkivanov.mvikotlin.sample.reaktive.shared.details
 
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.DetailsView.Event
 import com.arkivanov.mvikotlin.sample.reaktive.shared.details.DetailsView.Model
-import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.Intent
-import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.DetailsStore.State
+import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.Intent
+import com.arkivanov.mvikotlin.sample.reaktive.shared.details.store.State
 
 internal val stateToModel: (State) -> Model =
     { state ->

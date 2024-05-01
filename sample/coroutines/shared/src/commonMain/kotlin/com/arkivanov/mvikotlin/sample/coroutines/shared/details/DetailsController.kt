@@ -9,7 +9,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.events
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.states
 import com.arkivanov.mvikotlin.sample.coroutines.shared.TodoDispatchers
-import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsStore.Label
+import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.Label
 import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.detailsStore
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem

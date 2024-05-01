@@ -14,6 +14,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * This builder function showcases the way of creating a [Store] *without*
+ * using the DSL API and *with* the dedicated interface [AddStore].
+ * This option may work better for bigger and more complex stores.
+ * The [Intent], [State] and [Label] classes are defined inside the store interface.
+ */
 internal fun StoreFactory.listStore(
     database: TodoDatabase,
     mainContext: CoroutineContext,

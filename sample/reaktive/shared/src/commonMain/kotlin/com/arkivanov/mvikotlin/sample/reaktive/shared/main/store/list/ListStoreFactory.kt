@@ -8,6 +8,8 @@ import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
 import com.arkivanov.mvikotlin.sample.database.update
+import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.add.AddStore
+import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.add.AddStore.Label
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.list.ListStore.Intent
 import com.arkivanov.mvikotlin.sample.reaktive.shared.main.store.list.ListStore.State
 import com.badoo.reaktive.completable.completableFromFunction
@@ -19,6 +21,12 @@ import com.badoo.reaktive.single.observeOn
 import com.badoo.reaktive.single.singleFromFunction
 import com.badoo.reaktive.single.subscribeOn
 
+/**
+ * This builder function showcases the way of creating a [Store] *without*
+ * using the DSL API and *with* the dedicated interface [AddStore].
+ * This option may work better for bigger and more complex stores.
+ * The [Intent], [State] and [Label] classes are defined inside the store interface.
+ */
 internal fun StoreFactory.listStore(
     database: TodoDatabase,
 ): ListStore =

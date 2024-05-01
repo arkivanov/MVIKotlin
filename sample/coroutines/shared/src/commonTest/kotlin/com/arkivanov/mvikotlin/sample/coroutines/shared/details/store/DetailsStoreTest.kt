@@ -1,10 +1,9 @@
 package com.arkivanov.mvikotlin.sample.coroutines.shared.details.store
 
+import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.isAssertOnMainThreadEnabled
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsStore.Intent
-import com.arkivanov.mvikotlin.sample.coroutines.shared.details.store.DetailsStore.Label
 import com.arkivanov.mvikotlin.sample.coroutines.shared.test
 import com.arkivanov.mvikotlin.sample.database.MemoryTodoDatabase
 import com.arkivanov.mvikotlin.sample.database.TodoItem
@@ -22,7 +21,7 @@ class DetailsStoreTest {
     private val itemData = TodoItem.Data(text = "text", isDone = false)
     private val database = MemoryTodoDatabase()
 
-    private lateinit var store: DetailsStore
+    private lateinit var store: Store<Intent, State, Label>
 
     @BeforeTest
     fun before() {
