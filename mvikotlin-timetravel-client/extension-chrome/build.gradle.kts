@@ -5,6 +5,7 @@ import com.arkivanov.gradle.setupSourceSets
 plugins {
     id("kotlin-multiplatform") // Compose plugin works only with multiplatform https://github.com/JetBrains/compose-jb/issues/658
     id("org.jetbrains.compose")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.arkivanov.gradle.setup")
 }
 

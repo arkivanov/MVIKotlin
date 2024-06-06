@@ -36,8 +36,6 @@ class ReaderThread<T : ProtoObject>(
         try {
             val buffer = arena.allocArray<ByteVar>(length = BUFFER_SIZE)
             while (!isInterrupted) {
-                // https://youtrack.jetbrains.com/issue/KT-41509
-                @Suppress("UNRESOLVED_REFERENCE_WRONG_RECEIVER")
                 val len: Int = read(socket, buffer, BUFFER_SIZE.convert()).convert()
                 if (len <= 0) {
                     break
