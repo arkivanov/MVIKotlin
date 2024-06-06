@@ -1,13 +1,13 @@
 import com.arkivanov.gradle.bundle
 import com.arkivanov.gradle.setupMultiplatform
 import com.arkivanov.gradle.setupSourceSets
-import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     id("kotlin-multiplatform")
     id("com.arkivanov.gradle.setup")
     id("org.jetbrains.compose")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 setupMultiplatform {
