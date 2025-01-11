@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -52,6 +53,7 @@ fun <State : Any> Store<*, State, *>.stateFlow(
 val <State : Any> Store<*, State, *>.stateFlow: StateFlow<State>
     get() = StoreStateFlow(store = this)
 
+@OptIn(ExperimentalForInheritanceCoroutinesApi::class)
 private class StoreStateFlow<out State : Any>(
     private val store: Store<*, State, *>,
 ) : StateFlow<State> {

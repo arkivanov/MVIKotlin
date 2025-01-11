@@ -27,6 +27,7 @@ class DetailsFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        @Suppress("DEPRECATION")
         val args =
             requireArguments()
                 .apply { classLoader = Arguments::class.java.classLoader }
