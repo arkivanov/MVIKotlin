@@ -4,17 +4,17 @@ mvikotlin = "4.2.0"
 timeTravelPlugin = "3.0.1"
 timeTravelApp = "3.0.1"
 
-kotlin = "2.0.10"
+kotlin = "2.1.0"
 kotlinxBinaryCompatibilityValidator = "0.16.3"
-kotlinxCoroutines = "1.8.1"
-intellijGradlePlugin = "1.15.0"
+kotlinxCoroutines = "1.9.0"
+intellijGradlePlugin = "1.17.4"
 detektGradlePlugin = "1.23.6"
-essenty = "2.1.0"
-reaktive = "2.2.0"
+essenty = "2.4.0"
+reaktive = "2.3.0"
 multiplatformSettings = "1.1.0"
 compose = "1.6.10"
 kotlinWrappers = "1.0.0-pre.608"
-androidGradle = "8.2.0"
+androidGradle = "8.7.3"
 androidxLifecycle = "2.2.0"
 androidxCore = "1.1.0"
 androidxAppcompat = "1.1.0"
@@ -54,9 +54,9 @@ russhwolf-multiplatformSettings = { group = "com.russhwolf", name = "multiplatfo
 compose-composeGradlePlug = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "compose" }
 kotlin-composeCompilerGradlePlug = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
-android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref ="androidGradle" }
+android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradle" }
 
-androidx-core-coreKtx  = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
-androidx-appcompat-appcompat  = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
-androidx-recyclerview-recyclerview  = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerView" }
-androidx-constraintlayout-constraintlayout  = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintLayout" }
+androidx-core-coreKtx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-appcompat-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
+androidx-recyclerview-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerView" }
+androidx-constraintlayout-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintLayout" }

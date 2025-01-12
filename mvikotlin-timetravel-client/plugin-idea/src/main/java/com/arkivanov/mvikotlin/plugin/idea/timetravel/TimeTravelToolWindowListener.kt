@@ -14,6 +14,7 @@ class TimeTravelToolWindowListener(
 
     private val toolWindowManager = ToolWindowManager.getInstance(project)
 
+    @Deprecated(message = "")
     override fun stateChanged() {
         if (TimeTravelToolWindowFactory.TOOL_WINDOW_ID in toolWindowManager.toolWindowIds) {
             ensureLifecycleRegistry().resume()
