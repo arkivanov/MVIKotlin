@@ -1,26 +1,26 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
-import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.destroy
 import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
+import com.arkivanov.mvikotlin.core.store.Store
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertNull
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Suppress("TestFunctionName")
-class StateFlowTest {
+class StateFlowWithLifecycleTest {
 
     @Test
     fun WHEN_state_emitted_THEN_state_collected() {
         val store = TestStore()
         val scope = CoroutineScope(Dispatchers.Unconfined)
-        val flow = store.stateFlow
+        val flow = store.stateFlow(LifecycleRegistry())
         val items = ArrayList<Int>()
 
         scope.launch {
@@ -35,16 +35,17 @@ class StateFlowTest {
     }
 
     @Test
-    fun WHEN_collection_cancelled_THEN_unsubscribed_from_store() {
+    fun WHEN_lifecycle_destroyed_THEN_unsubscribed_from_store() {
         val store = TestStore()
+        val lifecycle = LifecycleRegistry(Lifecycle.State.CREATED)
         val scope = CoroutineScope(Dispatchers.Unconfined)
-        val flow = store.stateFlow
+        val flow = store.stateFlow(lifecycle)
 
         scope.launch {
             flow.collect {}
         }
 
-        scope.cancel()
+        lifecycle.destroy()
 
         assertNull(store.stateObserver)
     }
