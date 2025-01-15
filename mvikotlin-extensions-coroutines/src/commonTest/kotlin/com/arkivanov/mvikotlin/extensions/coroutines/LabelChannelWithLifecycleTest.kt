@@ -1,28 +1,28 @@
 package com.arkivanov.mvikotlin.extensions.coroutines
 
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.destroy
 import com.arkivanov.mvikotlin.core.rx.Disposable
 import com.arkivanov.mvikotlin.core.rx.Observer
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@OptIn(ExperimentalMviKotlinApi::class)
 @Suppress("TestFunctionName")
-class LabelChannelTest {
+class LabelChannelWithLifecycleTest {
 
     @Test
     fun WHEN_label_emitted_THEN_label_collected() {
         val store = TestStore()
         val scope = CoroutineScope(Dispatchers.Unconfined)
-        val channel = store.labelsChannel(scope)
+        val channel = store.labelsChannel(LifecycleRegistry())
         val labels = ArrayList<Int>()
 
         store.labelObserver?.onNext(1)
@@ -40,10 +40,11 @@ class LabelChannelTest {
     }
 
     @Test
-    fun WHEN_scope_cancelled_THEN_unsubscribed_from_store() {
+    fun WHEN_lifecycle_destroyed_THEN_unsubscribed_from_store() {
         val store = TestStore()
         val scope = CoroutineScope(Dispatchers.Unconfined)
-        val channel = store.labelsChannel(scope)
+        val lifecycle = LifecycleRegistry(Lifecycle.State.CREATED)
+        val channel = store.labelsChannel(lifecycle)
 
         scope.launch {
             while (true) {
@@ -51,17 +52,18 @@ class LabelChannelTest {
             }
         }
 
-        scope.cancel()
+        lifecycle.destroy()
 
         assertNull(store.labelObserver)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     @Test
-    fun WHEN_scope_cancelled_THEN_channel_cancelled() {
+    fun WHEN_lifecycle_destroyed_THEN_channel_cancelled() {
         val store = TestStore()
         val scope = CoroutineScope(Dispatchers.Unconfined)
-        val channel = store.labelsChannel(scope)
+        val lifecycle = LifecycleRegistry(Lifecycle.State.CREATED)
+        val channel = store.labelsChannel(lifecycle)
 
         scope.launch {
             while (true) {
@@ -69,7 +71,7 @@ class LabelChannelTest {
             }
         }
 
-        scope.cancel()
+        lifecycle.destroy()
 
         assertTrue(channel.isClosedForReceive)
     }
