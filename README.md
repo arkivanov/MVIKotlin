@@ -125,9 +125,13 @@ The sample project is a todo list with details view. There are two implementatio
     * iOS Xcode project - [sample/coroutines/app-ios](sample/coroutines/app-ios)
     * Web browser application - [sample/coroutines/app-js](sample/coroutines/app-js)
 
-## Sample TodoApp in JetBrains/compose-jb
+## Sample TodoApp
 
 There is another sample project available in forked repository of `JetBrains/compose-jb` - [TodoApp](https://github.com/IlyaGulya/TodoAppDecomposeMviKotlin). It uses MVIKotlin for business logic and [Decompose](https://github.com/arkivanov/Decompose) for navigation.
+
+## "Used by" list
+
+Checkout a voluntary list of projects/companies using MVIKotlin: https://github.com/arkivanov/MVIKotlin/discussions/90. Feel free to add your project!
 
 ## Author
 
