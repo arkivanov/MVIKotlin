@@ -6,26 +6,6 @@
 
 Should you have any questions or ideas - there is [Discussions](https://github.com/arkivanov/MVIKotlin/discussions) section. Also welcome to the Kotlin Slack channel - [#mvikotlin](https://kotlinlang.slack.com/archives/C01403U1ZGW)!
 
-## ⚡⚡⚡ Where are all the stars, issues, discussions, pull requests, etc?
-
-Having spent 5 years working on a variety of projects for Badoo/Bumble, I’m now off to another adventure. As part of that transition I was asked to transfer this repository to [Badoo GitHub account](https://github.com/badoo).
-
-Now I **continue my work** on this project **as a copy**.
-
-There should be no breaking changes related to this transfer. Most of the external links should not be broken. The repository link is also the same: [arkivanov/MVIKotlin](https://github.com/arkivanov/MVIKotlin). Please file an issue in this repository, if you think something is broken or does not work properly.
-
-Here is what is mostly affected by the transfer:
-
-- All the stars were transferred
-- All the issues and discussions were transferred as well. I will do all my best to fill the gap here.
-- All pull requests with all the comment history are also gone.
-
-I will continue doing all my best for this project and for the community! Business as usual!
-
-Additional resources:
-
-- [A thread on Hacker News](https://news.ycombinator.com/item?id=29447854)
-
 ## Overview
 
 ### What is MVI
