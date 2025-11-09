@@ -1,6 +1,9 @@
-[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+---
+hide:
+  - navigation
+---
 
-## Store
+# Store
 
 `Store` is the place for business logic. In MVIKotlin it is represented by the `Store` interface which is located in the `mvikotlin` module. You can check its definition [here](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Store.kt).
 
@@ -15,11 +18,11 @@ It has the following features:
 - The `init()` method initializes the `Store` and triggers the `Bootstrapper` if applicable, must be called only on the main thread.
 - The `dispose()` method disposes the `Store` and cancels all its async operations, must be called only on the main thread.
 
-### Observing states and labels
+## Observing states and labels
 
 Usually you don't need to use `states(Observer)` or `labels(Observer)` methods directly. There are extensions available for `Reaktive` and `kotlinx.coroutines` libraries. However, you will need those methods if you implement custom extensions. See also - [Binding and Lifecycle](binding_and_lifecycle.md).
 
-#### Observing with Reaktive
+### Observing with Reaktive
 
 Add the following dependency to your `build.gradle` file:
 
@@ -32,7 +35,7 @@ Now you can observe states and labels using the following extensions:
 - `Store.states` - returns `BehaviorObservable` of type `State`.
 - `Store.labels` - returns `Observable` of type `Label`.
 
-#### Observing with kotlinx.coroutines
+### Observing with kotlinx.coroutines
 
 Add the following dependency to your `build.gradle` file:
 
@@ -46,31 +49,31 @@ Now you can observe states and labels using the following extensions:
 - `Store.stateFlow` - returns `StateFlow` of type `State`.
 - `Store.labels` - returns `Flow` of type `Label`.
 
-### Store structure
+## Store structure
 
 Every `Store` has up to three components: `Bootstrapper`, `Executor` and `Reducer`. Here is the diagram of how they are connected:
 
 ![Store](media/store.jpg)
 
-### Bootstrapper
+## Bootstrapper
 
 This component bootstraps (kick-starts) the `Store`. If passed to the `StoreFactory` it will be called at some point during `Store` initialization. The `Bootstrapper` produces `Actions` that are processed by the `Executor`. The `Bootstrapper` is executed always on the main thread, `Actions` must be also dispatched only on the main thread. However you are free to switch threads while the `Bootstrapper` is being executed.
 
 > ⚠️ Please note that `Bootstrappers` are stateful and so can not be `object`s (singletons).
 
-### Executor (version 4.x)
+## Executor (version 4.x)
 
 This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from inside the `Store`. The `Executor` has three outputs: `Messages`, `Action` and `Labels`. `Messages` are passed to the `Reducer`, `Actions` are forwarded back to the `Executor` itself, `Labels` are emitted straight to the outside world. The `Executor` has constant access to the current `State` of the `Store`, a new `State` is visible for the `Executor` right after the `Message` is dispatched. The `Executor` is executed always on the main thread, `Messages` and `Labels` must be also dispatched only on the main thread. However, you are free to switch threads while processing `Action` or `Intents`.
 
 > ⚠️ Please note that `Executors` are stateful and so can not be `object`s (singletons).
 
-### Executor (version 3.x)
+## Executor (version 3.x)
 
 This is the place for business logic, all asynchronous operations also happen here. `Executor` accepts and processes `Intents` from the outside world and `Actions` from the `Bootstrapper`. The `Executor` has two outputs: `Messages` and `Labels`. `Messages` are passed to the `Reducer`, `Labels` are emitted straight to the outside world. The `Executor` has constant access to the current `State` of the `Store`, a new `State` is visible for the `Executor` right after the `Message` is dispatched. The `Executor` is executed always on the main thread, `Messages` and `Labels` must be also dispatched only on the main thread. However, you are free to switch threads while processing `Action` or `Intents`.
 
 > ⚠️ Please note that `Executors` are stateful and so can not be `object`s (singletons).
 
-### Reducer
+## Reducer
 
 This component is basically a function that accepts a `Message` from the `Executor` and the current `State` of the `Store` and returns a new `State`. The `Reducer` is called for every `Message` produced by the `Executor` and the new `State` is applied and emitted as soon as the `Reducer` call returns. The `Reducer` is always called on the main thread.
 
@@ -89,13 +92,13 @@ During its initialization, the `Store` establishes internal connections and call
 
 > ⚠️ When automatic initialization is disabled, you should manually call the `Store.init()` method.
 
-### IDEA Live Templates
+## IDEA Live Templates
 
 To speed up the creation of new Stores, you can use the following [IDEA Live Templates](https://github.com/arkivanov/MVIKotlin/blob/master/docs/assets/live-templates.zip). Download the archive and use the [guide](https://www.jetbrains.com/help/idea/sharing-live-templates.html#import) to import live templates into your IDE. You may need to restart the IDE after import.
 
 > ⚠️ Safari browser may [automatically unzip download archives](https://apple.stackexchange.com/questions/961/how-to-stop-safari-from-unzipping-files-after-download), make sure that you import a zip file and not a folder.
 
-#### Usage
+### Usage
 
 Create a new Kotlin file and type one of the following abbreviations:
 
@@ -105,7 +108,7 @@ Create a new Kotlin file and type one of the following abbreviations:
 - `mvisfr` - adds skeletons for `Store` interface and factory with Reaktive.
 - `mvisfc` - adds skeletons for `Store` interface and factory with coroutines.
 
-### Simplest example
+## Simplest example
 
 > The following examples use the default full-featured API. For a simplified DSL, please refer to the corresponding section - [Store DSL API](#dsl).
 
@@ -215,9 +218,9 @@ There are two base `Executors` provided by `MVIKotlin`:
 
 Let's try both.
 
-#### ReaktiveExecutor
+### ReaktiveExecutor
 
-##### Version v4.0
+#### Version v4.0
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
@@ -244,7 +247,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-##### Version v3.0
+#### Version v3.0
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
@@ -275,9 +278,9 @@ So we extended the `ReaktiveExecutor` class and implemented the `executeIntent` 
 
 > ⚠️ `ReaktiveExecutor` implements Reaktive's [DisposableScope](https://github.com/badoo/Reaktive#subscription-management-with-disposablescope) which provides a bunch of additional extension functions. We used one of those functions - `subscribeScoped`. This ensures that the subscription is disposed when the `Store` (and so the `Executor`) is disposed.
 
-#### CoroutineExecutor
+### CoroutineExecutor
 
-##### Version v4.0
+#### Version v4.0
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
@@ -304,7 +307,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-##### Version v3.0
+#### Version v3.0
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
@@ -335,11 +338,11 @@ Here we extended the `CoroutineExecutor` class. The sum is calculated on the `De
 
 > ⚠️ `CoroutineExecutor` provides the `CoroutineScope` property named `scope`, which can be used to run asynchronous tasks. The scope uses `Dispatchers.Main` dispatcher by default, which can be overriden by passing different `CoroutineContext` to the `CoroutineExecutor` constructor. The scope is automatically cancelled when the `Store` is disposed.
 
-#### Forwarding Actions
+### Forwarding Actions
 
 Starting with MVIKotlin version 4.0, it is also possible to send `Actions` from the `Executor` using `forward(Action)` method. The `Action` automatically redirected back to the `Executor#executeAction` method. This allows reusing `Actions` easier, and also proper processing by wrapping `Stores` (like logging or time-traveling).
 
-#### Publishing Labels
+### Publishing Labels
 
 `Labels` are one-time events produced by the `Store`, or more specifically by the `Executor`. Once published (emitted) they are delivered to all current subscribers and are not cached. The `Executor` has special method for it: `publish(Label)`.
 
@@ -542,11 +545,12 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 > ⚠️ `CoroutineBootstrapper` also provides the `CoroutineScope` property named `scope`, same as `CoroutineExecutor`. So we can use it run asynchronous tasks.
 
 <a name="dsl" ></a>
-### Store DSL API
+
+## Store DSL API
 
 The approach demonstrated above is default, but may be considered verbose. MVIKotlin provides additional Store DSL API.
 
-#### Reaktive way
+### Reaktive way
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
@@ -600,7 +604,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-#### Coroutines way
+### Coroutines way
 
 ```kotlin
 internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
@@ -652,7 +656,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 }
 ```
 
-### Alternative way of creating a Store
+## Alternative way of creating a Store
 
 If the amount of boilerplate code is still significant, there is an alternative way of creating a `Store`. Just get rid of the dedicated `Store` interface and put its content in top level.
 
@@ -692,5 +696,3 @@ private sealed interface Msg {
     // ...
 }
 ```
-
-[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)

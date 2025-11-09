@@ -1,10 +1,13 @@
-[Overview](index.md) | [Store](store.md) | [View](view.md) | Binding and Lifecycle | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+---
+hide:
+  - navigation
+---
 
-## Binding
+# Binding
 
 Connecting inputs and outputs sounds like a simple task, and indeed it is. But it can be even easier if you use [Binder](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/binder/Binder.kt). It provides just two methods: `start()` and `stop()`. When you call `start()` it connects (subscribes) outputs with inputs. And when you call `stop()` it disconnects (unsubscribes).
 
-### Creating a Binder
+## Creating a Binder
 
 Let's bind our `CalculatorStore` with `CalculatorView` which we created earlier.
 
@@ -76,7 +79,7 @@ Please note that you must dispose `Stores` at the end of life cycle. In this exa
 
 MVIKotlin uses [Essenty](https://github.com/arkivanov/Essenty) library (from the same author), which provides `Lifecycle` -  a multiplatform abstraction for lifecycle states and events. The Essenty's `lifecycle` module is used as `api` dependency, so you don't need to explicitly add it to your project. Please familiarise yourself with Essenty library, especially with the `Lifecycle`.
 
-<img src="media/lifecycle.jpg" width="512">
+![Lifecycle diagram](media/lifecycle.jpg)
 
 ## Binder + Lifecycle
 
@@ -107,5 +110,3 @@ We passed the `viewLifecycle` together with the `CalculatorView` itself and used
 Same as before we dispose the `CalculatorStore` at the end of `CalculatorController` life cycle.
 
 Please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample) for more examples.
-
-[Overview](index.md) | [Store](store.md) | [View](view.md) | Binding and Lifecycle | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)

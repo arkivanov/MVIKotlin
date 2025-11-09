@@ -1,6 +1,9 @@
-[Overview](index.md) | [Store](store.md) | View | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
+---
+hide:
+  - navigation
+---
 
-## View
+# View
 
 It is not necessary to follow any particular guide when implementing `Views`, however you may find useful what is provided by MVIKotlin.
 
@@ -92,7 +95,7 @@ struct CalculatorView: View {
 
 For a more complex UI please refer to the [samples](https://github.com/arkivanov/MVIKotlin/tree/master/sample).
 
-### Efficient view updates
+## Efficient view updates
 
 Sometimes it may be inefficient to update the entire `View` each time a new `Model` is received. For example, if a `View` contains a text and a list, it may be useful not to update the list if only the text is changed. MVIKotlin provides the [diff](https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/utils/Diff.kt) tool for this.
 
@@ -124,5 +127,3 @@ class UserInfoViewImpl : BaseMviView<Model, Nothing>(), UserInfoView {
 ```
 
 Every `diff` statement accepts a `getter` that extracts a value from the `Model`, a `setter` that sets the value to the view and an optional `comparator` of values.
-
-[Overview](index.md) | [Store](store.md) | View | [Binding and Lifecycle](binding_and_lifecycle.md) | [State preservation](state_preservation.md) | [Logging](logging.md) | [Time travel](time_travel.md)
