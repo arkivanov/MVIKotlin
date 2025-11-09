@@ -696,3 +696,33 @@ private sealed interface Msg {
     // ...
 }
 ```
+
+## Using Multiple Stores on a Single Screen
+
+Complex screen logic often benefits from being divided into meaningful parts handled by independent Stores. This modularity improves maintainability and clarity.
+For example, consider the following diagram:
+
+![MultipleStores](media/multipleStores.png)
+
+One way to organize the interaction between these Stores is as follows:
+
+```kotlin
+internal class StoreA(private val storeFactory: StoreFactory) {
+
+    fun create(
+        stateB: Flow<StateB>, 
+        partStateC: Flow<PartStateC>, // <- If you don't need full StateC, you can create PartStateC to abstract only required data
+        partStateD: Flow<PartStateD>
+    ): StoreA =
+        object : StoreA, Store<Intent, State, Nothing> by storeFactory.create(
+            name = "StoreA",
+            initialState = State(),
+            bootstrapper = createBootstrapper(stateB, partStateC, partStateD), // <- Bootstrapper (or Executor) starts collecting required data
+            executorFactory = ::ExecutorImpl,
+            reducer = ReducerImpl
+        ) {
+        }
+
+    // ...
+}
+```
