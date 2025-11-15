@@ -9,7 +9,7 @@ hide:
 
 MVI stands for Model-View-Intent. It is an architectural pattern that utilizes unidirectional data flow. The data circulates between `Model` and `View` only in one direction - from `Model` to `View` and from `View` to `Model`.
 
-<img src="media/mvi.jpg" width="256">
+<img src="media/mvi.jpg" width="256" alt="MVI pattern diagram">
 
 ## What is MVIKotlin
 
@@ -42,7 +42,7 @@ There are two core components in MVIKotlin:
 
 Please take a look at the following diagram:
 
-<img src="media/mvikotlin.jpg" width="384">
+<img src="media/mvikotlin.jpg" width="384" alt="MVIKotlin architecture diagram">
 
 The `Store` produces a stream of `States` which is transformed to a stream of `View Models` by a `Mapper` function (f). The `View` renders `View Models` and produces a stream of `View Events` which is transformed to a stream of `Intents` by another `Mapper` function (f). This makes the `Store` and the `View` independent from each other. You can also combine multiple `States` (multiple `Stores`) into a single `View Model` (single `View`), or multiple `View Events` (multiple `Views`) into a single `Intent` (single `Store`). But if you have only one `Store` and only one `View` and you need simplicity then your `View` can directly render `States` and produce `Intents`.
 
