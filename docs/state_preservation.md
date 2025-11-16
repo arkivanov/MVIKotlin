@@ -1,6 +1,9 @@
-[Overview](index.md) | [Store](store.md) | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | State preservation | [Logging](logging.md) | [Time travel](time_travel.md)
+---
+hide:
+  - navigation
+---
 
-## State preservation
+# State preservation
 
 Sometimes it might be necessary to preserve a state (e.g. a state of a `Store`) in order to restore it later. A very common use case is Android Activity recreation due to configuration changes, or process death. If you are working on a pure Android project (not multiplatform) then AndroidX [SavedStateRegistry](https://developer.android.com/reference/androidx/savedstate/SavedStateRegistry) can be used directly. For multiplatform projects you can use the `StateKeeper` from [Essenty](https://github.com/arkivanov/Essenty) library (from the same author). Please familiarise yourself with Essenty library, especially with the `StateKeeper`.
 
@@ -101,6 +104,7 @@ class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
 ```
 
 #### Creating InstanceKeeper in Android
+
 ```kotlin
 import com.arkivanov.essenty.instancekeeper.instanceKeeper
 
@@ -114,5 +118,3 @@ class MainActivity : AppCompatActivity() { // Same for AndroidX Fragment
     }
 }
 ```
-
-[Overview](index.md) | Store | [View](view.md) | [Binding and Lifecycle](binding_and_lifecycle.md) | State preservation | [Logging](logging.md) | [Time travel](time_travel.md)

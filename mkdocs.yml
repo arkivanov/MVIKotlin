@@ -1,0 +1,46 @@
+site_name: MVIKotlin
+site_url: https://mydomain.org/mvikotlin
+site_author: Arkadii Ivanov
+site_favicon: media/logo/portrait/svg/mvikotlin_coloured.svg
+
+# Repository
+repo_name: arkivanov/MVIKotlin
+repo_url: https://github.com/arkivanov/MVIKotlin
+
+# Copyright
+copyright: Copyright &copy; 2020 - 2025 Arkadii Ivanov
+
+# Page tree
+nav:
+  - Home: index.md
+  - Store: store.md
+  - View: view.md
+  - Binding and Lifecycle: binding_and_lifecycle.md
+  - State preservation: state_preservation.md
+  - Logging: logging.md
+  - Time travel: time_travel.md
+
+# Configuration
+theme:
+  name: material
+
+  features:
+    - navigation.tabs
+
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  favicon: media/logo/portrait/png/mvikotlin_coloured.png
+  logo: media/logo/landscape/png/mvikotlin_coloured.png
