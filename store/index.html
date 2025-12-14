@@ -1,0 +1,2042 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Arkadii Ivanov">
+      
+      
+        <link rel="canonical" href="https://mydomain.org/mvikotlin/store/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../view/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../media/logo/portrait/png/mvikotlin_coloured.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Store - MVIKotlin</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#store" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="MVIKotlin" class="md-header__button md-logo" aria-label="MVIKotlin" data-md-component="logo">
+      
+  <img src="../media/logo/landscape/png/mvikotlin_coloured.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MVIKotlin
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Store
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/arkivanov/MVIKotlin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    arkivanov/MVIKotlin
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Store
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../view/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  View
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../binding_and_lifecycle/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Binding and Lifecycle
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../state_preservation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  State preservation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../logging/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Logging
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../time_travel/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Time travel
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="MVIKotlin" class="md-nav__button md-logo" aria-label="MVIKotlin" data-md-component="logo">
+      
+  <img src="../media/logo/landscape/png/mvikotlin_coloured.png" alt="logo">
+
+    </a>
+    MVIKotlin
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/arkivanov/MVIKotlin" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    arkivanov/MVIKotlin
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#observing-states-and-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observing states and labels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Observing states and labels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#observing-with-reaktive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observing with Reaktive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observing-with-kotlinxcoroutines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observing with kotlinx.coroutines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootstrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrapper
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executor-version-4x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executor (version 4.x)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executor-version-3x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executor (version 3.x)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reducer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reducer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Store
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating a Store">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initializing-a-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initializing a Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idea-live-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDEA Live Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IDEA Live Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simplest-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simplest example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Simplest example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-executor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Executor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reaktiveexecutor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReaktiveExecutor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ReaktiveExecutor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#version-v40" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version v4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-v30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version v3.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coroutineexecutor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CoroutineExecutor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CoroutineExecutor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#version-v40_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version v4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-v30_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version v3.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forwarding-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forwarding Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publishing-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publishing Labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-the-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating the Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-bootstrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Bootstrapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store-dsl-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store DSL API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Store DSL API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reaktive-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reaktive way
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coroutines-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coroutines way
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternative-way-of-creating-a-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative way of creating a Store
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binding_and_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binding and Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state_preservation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State preservation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../time_travel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Time travel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#observing-states-and-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observing states and labels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Observing states and labels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#observing-with-reaktive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observing with Reaktive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observing-with-kotlinxcoroutines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observing with kotlinx.coroutines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootstrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrapper
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executor-version-4x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executor (version 4.x)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executor-version-3x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executor (version 3.x)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reducer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reducer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Store
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating a Store">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#initializing-a-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initializing a Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idea-live-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDEA Live Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IDEA Live Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simplest-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simplest example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Simplest example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-executor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Executor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reaktiveexecutor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ReaktiveExecutor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ReaktiveExecutor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#version-v40" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version v4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-v30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version v3.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coroutineexecutor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CoroutineExecutor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CoroutineExecutor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#version-v40_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version v4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-v30_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version v3.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forwarding-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forwarding Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publishing-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publishing Labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-the-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating the Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-bootstrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Bootstrapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store-dsl-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store DSL API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Store DSL API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reaktive-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reaktive way
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coroutines-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coroutines way
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternative-way-of-creating-a-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative way of creating a Store
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+
+
+
+  
+  
+
+
+<h1 id="store">Store</h1>
+<p><code>Store</code> is the place for business logic. In MVIKotlin it is represented by the <code>Store</code> interface which is located in the <code>mvikotlin</code> module. You can check its definition <a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Store.kt">here</a>.</p>
+<p>It has the following features:</p>
+<ul>
+<li>There are three generic parameters: input <code>Intent</code> and output <code>State</code> and <code>Label</code>.</li>
+<li>The property named <code>state</code> returns the current <code>State</code> of the <code>Store</code>.</li>
+<li>Can be instantiated (created) on any thread.</li>
+<li>Its <code>states(Observer&lt;State&gt;)</code> method is used to subscribe for <code>State</code> updates. When subscribed it emits the current <code>State</code> of the <code>Store</code>. Can be called (subscribed) on any thread, <code>States</code> are emitted always on the main thread.</li>
+<li>The <code>labels(Observer&lt;Label&gt;)</code> method is used to subscribe for <code>Labels</code>. Can be called (subscribed) on any thread, <code>Labels</code> are emitted always on the main thread.</li>
+<li>The <code>accept(Intent)</code>  method supplies the <code>Store</code> with the <code>Intents</code>, must be called only on the main thread.</li>
+<li>The <code>init()</code> method initializes the <code>Store</code> and triggers the <code>Bootstrapper</code> if applicable, must be called only on the main thread.</li>
+<li>The <code>dispose()</code> method disposes the <code>Store</code> and cancels all its async operations, must be called only on the main thread.</li>
+</ul>
+<h2 id="observing-states-and-labels">Observing states and labels</h2>
+<p>Usually you don't need to use <code>states(Observer)</code> or <code>labels(Observer)</code> methods directly. There are extensions available for <code>Reaktive</code> and <code>kotlinx.coroutines</code> libraries. However, you will need those methods if you implement custom extensions. See also - <a href="../binding_and_lifecycle/">Binding and Lifecycle</a>.</p>
+<h3 id="observing-with-reaktive">Observing with Reaktive</h3>
+<p>Add the following dependency to your <code>build.gradle</code> file:</p>
+<pre><code class="language-kotlin">implementation(&quot;com.arkivanov.mvikotlin:mvikotlin-extensions-reaktive:&lt;version&gt;&quot;)
+</code></pre>
+<p>Now you can observe states and labels using the following extensions:</p>
+<ul>
+<li><code>Store.states</code> - returns <code>BehaviorObservable</code> of type <code>State</code>.</li>
+<li><code>Store.labels</code> - returns <code>Observable</code> of type <code>Label</code>.</li>
+</ul>
+<h3 id="observing-with-kotlinxcoroutines">Observing with kotlinx.coroutines</h3>
+<p>Add the following dependency to your <code>build.gradle</code> file:</p>
+<pre><code class="language-kotlin">implementation(&quot;com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:&lt;version&gt;&quot;)
+</code></pre>
+<p>Now you can observe states and labels using the following extensions:</p>
+<ul>
+<li><code>Store.states</code> - returns <code>Flow</code> of type <code>State</code>.</li>
+<li><code>Store.stateFlow</code> - returns <code>StateFlow</code> of type <code>State</code>.</li>
+<li><code>Store.labels</code> - returns <code>Flow</code> of type <code>Label</code>.</li>
+</ul>
+<h2 id="store-structure">Store structure</h2>
+<p>Every <code>Store</code> has up to three components: <code>Bootstrapper</code>, <code>Executor</code> and <code>Reducer</code>. Here is the diagram of how they are connected:</p>
+<p><img alt="Store" src="../media/store.jpg" /></p>
+<h2 id="bootstrapper">Bootstrapper</h2>
+<p>This component bootstraps (kick-starts) the <code>Store</code>. If passed to the <code>StoreFactory</code> it will be called at some point during <code>Store</code> initialization. The <code>Bootstrapper</code> produces <code>Actions</code> that are processed by the <code>Executor</code>. The <code>Bootstrapper</code> is executed always on the main thread, <code>Actions</code> must be also dispatched only on the main thread. However you are free to switch threads while the <code>Bootstrapper</code> is being executed.</p>
+<blockquote>
+<p>⚠️ Please note that <code>Bootstrappers</code> are stateful and so can not be <code>object</code>s (singletons).</p>
+</blockquote>
+<h2 id="executor-version-4x">Executor (version 4.x)</h2>
+<p>This is the place for business logic, all asynchronous operations also happen here. <code>Executor</code> accepts and processes <code>Intents</code> from the outside world and <code>Actions</code> from inside the <code>Store</code>. The <code>Executor</code> has three outputs: <code>Messages</code>, <code>Action</code> and <code>Labels</code>. <code>Messages</code> are passed to the <code>Reducer</code>, <code>Actions</code> are forwarded back to the <code>Executor</code> itself, <code>Labels</code> are emitted straight to the outside world. The <code>Executor</code> has constant access to the current <code>State</code> of the <code>Store</code>, a new <code>State</code> is visible for the <code>Executor</code> right after the <code>Message</code> is dispatched. The <code>Executor</code> is executed always on the main thread, <code>Messages</code> and <code>Labels</code> must be also dispatched only on the main thread. However, you are free to switch threads while processing <code>Action</code> or <code>Intents</code>.</p>
+<blockquote>
+<p>⚠️ Please note that <code>Executors</code> are stateful and so can not be <code>object</code>s (singletons).</p>
+</blockquote>
+<h2 id="executor-version-3x">Executor (version 3.x)</h2>
+<p>This is the place for business logic, all asynchronous operations also happen here. <code>Executor</code> accepts and processes <code>Intents</code> from the outside world and <code>Actions</code> from the <code>Bootstrapper</code>. The <code>Executor</code> has two outputs: <code>Messages</code> and <code>Labels</code>. <code>Messages</code> are passed to the <code>Reducer</code>, <code>Labels</code> are emitted straight to the outside world. The <code>Executor</code> has constant access to the current <code>State</code> of the <code>Store</code>, a new <code>State</code> is visible for the <code>Executor</code> right after the <code>Message</code> is dispatched. The <code>Executor</code> is executed always on the main thread, <code>Messages</code> and <code>Labels</code> must be also dispatched only on the main thread. However, you are free to switch threads while processing <code>Action</code> or <code>Intents</code>.</p>
+<blockquote>
+<p>⚠️ Please note that <code>Executors</code> are stateful and so can not be <code>object</code>s (singletons).</p>
+</blockquote>
+<h2 id="reducer">Reducer</h2>
+<p>This component is basically a function that accepts a <code>Message</code> from the <code>Executor</code> and the current <code>State</code> of the <code>Store</code> and returns a new <code>State</code>. The <code>Reducer</code> is called for every <code>Message</code> produced by the <code>Executor</code> and the new <code>State</code> is applied and emitted as soon as the <code>Reducer</code> call returns. The <code>Reducer</code> is always called on the main thread.</p>
+<h2 id="creating-a-store">Creating a Store</h2>
+<p>Normally you don't need to implement the <code>Store</code> interface directly. Instead you should use <a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/StoreFactory.kt">StoreFactory</a> which will create a <code>Store</code> for you. All you need to do is to provide up to three components (<code>Bootstrapper</code>, <code>Executor</code> and <code>Reducer</code>) and an initial <code>State</code>. <code>StoreFactory</code> is used to abstract from a <code>Store</code> implementation. We can use different factories depending on circumstances and combine them as needed.</p>
+<p>There are a number of factories provided by MVIKotlin:
+- <a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-main/src/commonMain/kotlin/com/arkivanov/mvikotlin/main/store/DefaultStoreFactory.kt">DefaultStoreFactory</a> creates a default implementation of <code>Store</code> and is provided by the <code>mvikotlin-main</code> module.
+- <a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-logging/src/commonMain/kotlin/com/arkivanov/mvikotlin/logging/store/LoggingStoreFactory.kt">LoggingStoreFactory</a> wraps another <code>StoreFactory</code> and adds logging, it's provided by the <code>mvikotlin-logging</code> module.
+- <a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-timetravel/src/commonMain/kotlin/com/arkivanov/mvikotlin/timetravel/store/TimeTravelStoreFactory.kt">TimeTravelStoreFactory</a> is provided by the <code>mvikotlin-timetravel</code> module, it creates a <code>Store</code> with time travel functionality.</p>
+<h3 id="initializing-a-store">Initializing a Store</h3>
+<p>During its initialization, the <code>Store</code> establishes internal connections and calls the <code>Bootstrapper</code>. By default <code>Stores</code> are initialized automatically by the <code>StoreFactory</code>. You can opt-out from the automatic initialization by passing <code>autoInit=false</code> argument to the <code>StoreFactory.create(...)</code> function.</p>
+<blockquote>
+<p>⚠️ When automatic initialization is disabled, you should manually call the <code>Store.init()</code> method.</p>
+</blockquote>
+<h2 id="idea-live-templates">IDEA Live Templates</h2>
+<p>To speed up the creation of new Stores, you can use the following <a href="https://github.com/arkivanov/MVIKotlin/blob/master/docs/assets/live-templates.zip">IDEA Live Templates</a>. Download the archive and use the <a href="https://www.jetbrains.com/help/idea/sharing-live-templates.html#import">guide</a> to import live templates into your IDE. You may need to restart the IDE after import.</p>
+<blockquote>
+<p>⚠️ Safari browser may <a href="https://apple.stackexchange.com/questions/961/how-to-stop-safari-from-unzipping-files-after-download">automatically unzip download archives</a>, make sure that you import a zip file and not a folder.</p>
+</blockquote>
+<h3 id="usage">Usage</h3>
+<p>Create a new Kotlin file and type one of the following abbreviations:</p>
+<ul>
+<li><code>mvisi</code> - adds a skeleton <code>Store</code> interface.</li>
+<li><code>mvisr</code> - adds a skeleton <code>Store</code> factory with Reaktive.</li>
+<li><code>mvisc</code> - adds a skeleton <code>Store</code> factory with coroutines.</li>
+<li><code>mvisfr</code> - adds skeletons for <code>Store</code> interface and factory with Reaktive.</li>
+<li><code>mvisfc</code> - adds skeletons for <code>Store</code> interface and factory with coroutines.</li>
+</ul>
+<h2 id="simplest-example">Simplest example</h2>
+<blockquote>
+<p>The following examples use the default full-featured API. For a simplified DSL, please refer to the corresponding section - <a href="#dsl">Store DSL API</a>.</p>
+</blockquote>
+<p>Let's start from a very basic example. We will create a simple counter <code>Store</code> that will increment and decrement its value.</p>
+<p>The first thing we should do is to define an interface. This is how it will look:</p>
+<pre><code class="language-kotlin">internal interface CalculatorStore : Store&lt;Intent, State, Nothing&gt; {
+
+    sealed interface Intent {
+        object Increment : Intent
+        object Decrement : Intent
+    }
+
+    data class State(
+        val value: Long = 0L
+    )
+}
+</code></pre>
+<p>The <code>CalculatorStore</code> interface itself can be marked as <code>internal</code>, so it will be an implementation detail of a module. Also <code>CalculatorStore</code> has two <code>Intents</code> (<code>Increment</code> and <code>Decrement</code>) and the <code>State</code> with just a <code>Long</code> value. This is the public API of our <code>Store</code>.</p>
+<p>Now it's time for implementation:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store&lt;Intent, State, Nothing&gt; by storeFactory.create(
+            name = &quot;CounterStore&quot;,
+            initialState = State(),
+            reducer = ReducerImpl
+        ) {
+        }
+
+    private object ReducerImpl : Reducer&lt;State, Intent&gt; {
+        override fun State.reduce(msg: Intent): State =
+            when (msg) {
+                is Intent.Increment -&gt; copy(value = value + 1L)
+                is Intent.Decrement -&gt; copy(value = value - 1L)
+            }
+    }
+}
+</code></pre>
+<p>The only component we need is the <code>Reducer</code>. It accepts <code>Intents</code> and modifies the <code>State</code> by incrementing or decrementing its value. The factory function <code>create()</code> uses the <code>StoreFactory</code> which is passed as a dependency.</p>
+<h3 id="adding-executor">Adding Executor</h3>
+<p>Currently our <code>CalculatorStore</code> can only increment and decrement its value. But what if we need to calculate something? Let's say we want to calculate a sum of numbers from 1 to N. We will need an additional <code>Intent</code>:</p>
+<pre><code class="language-kotlin">internal interface CalculatorStore : Store&lt;Intent, State, Nothing&gt; {
+
+    sealed interface Intent {
+        object Increment : Intent
+        object Decrement : Intent
+        data class Sum(val n: Int): Intent // &lt;-- Add this line
+    }
+
+    data class State(
+        val value: Long = 0L
+    )
+}
+</code></pre>
+<p>The idea is that <code>CalculatorStore</code> will accept <code>Intent.Sum(N)</code>, calculate the sum of numbers from 1 to N and update the <code>State</code> with the result. But the calculation may take some time, so it should be performed on a background thread. For this we need the <code>Executor</code>.</p>
+<p>So that our <code>Executor</code> could communicate with the <code>Reducer</code> we will need <code>Messages</code>:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    private sealed interface Msg {
+        class Value(val value: Long) : Msg
+    }
+}
+</code></pre>
+<p>We will need a new <code>Reducer</code> because now it will accept <code>Messages</code> instead of <code>Intents</code>:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    private sealed interface Msg {
+        class Value(val value: Long) : Msg
+    }
+
+    private object ReducerImpl : Reducer&lt;State, Msg&gt; {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.Value -&gt; copy(value = msg.value)
+            }
+    }
+}
+</code></pre>
+<p>There is only one possible <code>Msg.Value(Long)</code> which just replaces whatever value in <code>State</code>.</p>
+<p>Now it's time for the <code>Executor</code>. If you are interested you can find the interface <a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/Executor.kt">here</a>. Luckily we don't need to implement this entire interface. Instead we can extend a base implementation.</p>
+<p>There are two base <code>Executors</code> provided by <code>MVIKotlin</code>:</p>
+<ul>
+<li><a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-reaktive/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/reaktive/ReaktiveExecutor.kt">ReaktiveExecutor</a> - this implementation is based on the <a href="https://github.com/badoo/Reaktive">Reaktive</a> library and is provided by <code>mvikotlin-extensions-reaktive</code> module</li>
+<li><a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin-extensions-coroutines/src/commonMain/kotlin/com/arkivanov/mvikotlin/extensions/coroutines/CoroutineExecutor.kt">CoroutineExecutor</a> - this implementation is based on the <a href="https://github.com/Kotlin/kotlinx.coroutines">Coroutines</a> library and is provided by <code>mvikotlin-extensions-coroutines</code> module</li>
+</ul>
+<p>Let's try both.</p>
+<h3 id="reaktiveexecutor">ReaktiveExecutor</h3>
+<h4 id="version-v40">Version v4.0</h4>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private class ExecutorImpl : ReaktiveExecutor&lt;Intent, Nothing, State, Msg, Nothing&gt;() {
+        override fun executeIntent(intent: Intent) =
+            when (intent) {
+                is Intent.Increment -&gt; dispatch(Msg.Value(state().value + 1))
+                is Intent.Decrement -&gt; dispatch(Msg.Value(state().value - 1))
+                is Intent.Sum -&gt; sum(intent.n)
+            }
+
+        private fun sum(n: Int) {
+            singleFromFunction { (1L..n.toLong()).sum() }
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .subscribeScoped { dispatch(Msg.Value(it)) }
+        }
+    }
+
+    // ...
+}
+</code></pre>
+<h4 id="version-v30">Version v3.0</h4>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private class ExecutorImpl : ReaktiveExecutor&lt;Intent, Nothing, State, Msg, Nothing&gt;() {
+        override fun executeIntent(intent: Intent, getState: () -&gt; State) =
+            when (intent) {
+                is Intent.Increment -&gt; dispatch(Msg.Value(getState().value + 1))
+                is Intent.Decrement -&gt; dispatch(Msg.Value(getState().value - 1))
+                is Intent.Sum -&gt; sum(intent.n)
+            }
+
+        private fun sum(n: Int) {
+            singleFromFunction { (1L..n.toLong()).sum() }
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .subscribeScoped { dispatch(Msg.Value(it)) }
+        }
+    }
+
+    // ...
+}
+</code></pre>
+<p>So we extended the <code>ReaktiveExecutor</code> class and implemented the <code>executeIntent</code> method. This method gives us an <code>Intent</code> and a supplier of the current <code>State</code>. For <code>Intent.Increment</code> and <code>Intent.Decrement</code> we simply send the <code>Message</code> with a new value using the <code>dispatch</code> method. But for <code>Intent.Sum</code> we use <code>Reaktive</code> for multithreading. We calculate the sum on the <code>computationScheduler</code> and then switch to the <code>mainScheduler</code> and <code>dispatch</code> the <code>Message</code>.</p>
+<blockquote>
+<p>⚠️ <code>ReaktiveExecutor</code> implements Reaktive's <a href="https://github.com/badoo/Reaktive#subscription-management-with-disposablescope">DisposableScope</a> which provides a bunch of additional extension functions. We used one of those functions - <code>subscribeScoped</code>. This ensures that the subscription is disposed when the <code>Store</code> (and so the <code>Executor</code>) is disposed.</p>
+</blockquote>
+<h3 id="coroutineexecutor">CoroutineExecutor</h3>
+<h4 id="version-v40_1">Version v4.0</h4>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private class ExecutorImpl : CoroutineExecutor&lt;Intent, Nothing, State, Msg, Nothing&gt;() {
+        override fun executeIntent(intent: Intent) =
+            when (intent) {
+                is Intent.Increment -&gt; dispatch(Msg.Value(state().value + 1))
+                is Intent.Decrement -&gt; dispatch(Msg.Value(state().value - 1))
+                is Intent.Sum -&gt; sum(intent.n)
+            }
+
+        private fun sum(n: Int) {
+            scope.launch {
+                val sum = withContext(Dispatchers.Default) { (1L..n.toLong()).sum() }
+                dispatch(Msg.Value(sum))
+            }
+        }
+    }
+
+    // ...
+}
+</code></pre>
+<h4 id="version-v30_1">Version v3.0</h4>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private class ExecutorImpl : CoroutineExecutor&lt;Intent, Nothing, State, Msg, Nothing&gt;() {
+        override fun executeIntent(intent: Intent, getState: () -&gt; State) =
+            when (intent) {
+                is Intent.Increment -&gt; dispatch(Msg.Value(getState().value + 1))
+                is Intent.Decrement -&gt; dispatch(Msg.Value(getState().value - 1))
+                is Intent.Sum -&gt; sum(intent.n)
+            }
+
+        private fun sum(n: Int) {
+            scope.launch {
+                val sum = withContext(Dispatchers.Default) { (1L..n.toLong()).sum() }
+                dispatch(Msg.Value(sum))
+            }
+        }
+    }
+
+    // ...
+}
+</code></pre>
+<p>Here we extended the <code>CoroutineExecutor</code> class. The sum is calculated on the <code>Default</code> dispatcher and the <code>Message</code> is dispatched on the <code>Main</code> thread.</p>
+<blockquote>
+<p>⚠️ <code>CoroutineExecutor</code> provides the <code>CoroutineScope</code> property named <code>scope</code>, which can be used to run asynchronous tasks. The scope uses <code>Dispatchers.Main</code> dispatcher by default, which can be overriden by passing different <code>CoroutineContext</code> to the <code>CoroutineExecutor</code> constructor. The scope is automatically cancelled when the <code>Store</code> is disposed.</p>
+</blockquote>
+<h3 id="forwarding-actions">Forwarding Actions</h3>
+<p>Starting with MVIKotlin version 4.0, it is also possible to send <code>Actions</code> from the <code>Executor</code> using <code>forward(Action)</code> method. The <code>Action</code> automatically redirected back to the <code>Executor#executeAction</code> method. This allows reusing <code>Actions</code> easier, and also proper processing by wrapping <code>Stores</code> (like logging or time-traveling).</p>
+<h3 id="publishing-labels">Publishing Labels</h3>
+<p><code>Labels</code> are one-time events produced by the <code>Store</code>, or more specifically by the <code>Executor</code>. Once published (emitted) they are delivered to all current subscribers and are not cached. The <code>Executor</code> has special method for it: <code>publish(Label)</code>.</p>
+<blockquote>
+<p>⚠️ If a <code>Label</code> is published straight from <code>Executor.executeAction</code> method, the <code>Store</code> may have no subscribers yet. This may happen if the <code>Store</code> is still being created, and the initialization is still in progress. Prefer manual <code>Store</code> initialization in this case.</p>
+</blockquote>
+<h3 id="creating-the-store">Creating the Store</h3>
+<p>We also need to pass a factory of our <code>Executor</code> to the <code>StoreFactory</code>:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store&lt;Intent, State, Nothing&gt; by storeFactory.create(
+            name = &quot;CounterStore&quot;,
+            initialState = State(),
+            executorFactory = ::ExecutorImpl, // &lt;-- Pass Executor factory
+            reducer = ReducerImpl
+        ) {
+        }
+
+    // ...
+}
+</code></pre>
+<p>Why factory and not just an instance of the <code>Executor</code>? Because of the time travel feature. When debugging time travel events it creates separate instances of <code>Executors</code> when necessary and fakes their <code>States</code>.</p>
+<blockquote>
+<p>⚠️ Please note that <code>executorFactory</code> should return a new instance of the <code>Executor</code> every time it is called.</p>
+</blockquote>
+<h3 id="adding-bootstrapper">Adding Bootstrapper</h3>
+<p>When we create a new instance of a <code>Store</code> it will stay in an initial <code>State</code> and do nothing until you supply an <code>Intent</code>. But sometimes we need to bootstrap (or kick start) a <code>Store</code> so it will start doing something once created. E.g. it can start listening for events from a server or load something from a database. This is why we need the <code>Bootstrapper</code>. As mentioned in the beginning the <code>Bootstrapper</code> produces <code>Actions</code> that are processed by the <code>Executor</code> the same way as <code>Intents</code>.</p>
+<p>Our <code>CalculatorStore</code> is able to calculate sums of numbers from 1 to N. Currently it does this when <code>Intent.Sum(N)</code> is received. Let's use the <code>Bootstrapper</code> to calculate <code>sum(100)</code> when the <code>CalculatorStore</code> is created. Our <code>Executor</code> already has everything to for sum calculation, so we can just send a triggering <code>Action</code> to the <code>Executor</code>, same as <code>Intent.Sum(N)</code>.</p>
+<p>Let's first add an <code>Action</code>:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private sealed interface Action {
+        class Sum(val n: Int): Action
+    }
+
+    // ...
+}
+</code></pre>
+<p>Now it's time to handle the <code>Action</code> in the <code>ReaktiveExecutor</code>:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private class ExecutorImpl : ReaktiveExecutor&lt;Intent, Action, State, Msg, Nothing&gt;() {
+        override fun executeAction(action: Action, getState: () -&gt; State) =
+            when (action) {
+                is Action.Sum -&gt; sum(action.n)
+            }
+
+        // ...
+    }
+
+    // ...
+}
+</code></pre>
+<p>And same for the <code>CoroutineExecutor</code>:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    // ...
+
+    private class ExecutorImpl : CoroutineExecutor&lt;Intent, Action, State, Msg, Nothing&gt;() {
+        override fun executeAction(action: Action, getState: () -&gt; State) =
+            when (action) {
+                is Action.Sum -&gt; sum(action.n)
+            }
+
+        // ...
+    }
+
+    // ...
+}
+</code></pre>
+<p>The only thing is missing is we need to somehow trigger the <code>Action</code>. We need to pass a <code>Bootstrapper</code> to the <code>StoreFactory</code>. For such a simple case we can use <a href="https://github.com/arkivanov/MVIKotlin/blob/master/mvikotlin/src/commonMain/kotlin/com/arkivanov/mvikotlin/core/store/SimpleBootstrapper.kt">'SimpleBootstrapper`</a>:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store&lt;Intent, State, Nothing&gt; by storeFactory.create(
+            name = &quot;CounterStore&quot;,
+            initialState = State(),
+            bootstrapper = SimpleBootstrapper(Action.Sum(100)), // &lt;-- Add this line
+            executorFactory = ::ExecutorImpl,
+            reducer = ReducerImpl
+        ) {
+        }
+
+    // ...
+}
+</code></pre>
+<p>The <code>SimpleBootstrapper</code> just dispatches the provided <code>Actions</code>. But sometimes we need more, e.g. do some background work.</p>
+<p>Using <code>ReaktiveBootstrapper</code> from the <code>mvikotlin-extensions-reaktive</code> module:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store&lt;Intent, State, Nothing&gt; by storeFactory.create(
+            name = &quot;CounterStore&quot;,
+            initialState = State(),
+            bootstrapper = BootstrapperImpl(), // &lt;-- Pass BootstrapperImpl to the StoreFactory
+            executorFactory = ::ExecutorImpl,
+            reducer = ReducerImpl
+        ) {
+        }
+
+    private sealed interface Action {
+        class SetValue(val value: Long): Action // &lt;-- Use another Action
+    }
+
+    // ...
+
+    private class BootstrapperImpl : ReaktiveBootstrapper&lt;Action&gt;() {
+        override fun invoke() {
+            singleFromFunction { (1L..1000000.toLong()).sum() }
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .subscribeScoped { dispatch(Action.SetValue(it)) }
+        }
+    }
+
+    private class ExecutorImpl : ReaktiveExecutor&lt;Intent, Action, State, Msg, Nothing&gt;() {
+        override fun executeAction(action: Action, getState: () -&gt; State) =
+            when (action) {
+                is Action.SetValue -&gt; dispatch(Msg.Value(action.value)) // &lt;-- Handle the Action
+            }
+
+        // ...
+    }
+
+    // ...
+}
+</code></pre>
+<blockquote>
+<p>⚠️ <code>ReaktiveBootstrapper</code> also implements <code>DisposableScope</code>, same as <code>ReaktiveExecutor</code>. So we can use <code>subscribeScoped</code> extension functions here as well.</p>
+</blockquote>
+<p>Using <code>CoroutineBootstrapper</code> from the <code>mvikotlin-extensions-coroutines</code> module:</p>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store&lt;Intent, State, Nothing&gt; by storeFactory.create(
+            name = &quot;CounterStore&quot;,
+            initialState = State(),
+            bootstrapper = BootstrapperImpl(),
+            executorFactory = ::ExecutorImpl,
+            reducer = ReducerImpl
+        ) {
+        }
+
+    private sealed interface Action {
+        class SetValue(val value: Long): Action
+    }
+
+    // ...
+
+    private class BootstrapperImpl : CoroutineBootstrapper&lt;Action&gt;() {
+        override fun invoke() {
+            scope.launch {
+                val sum = withContext(Dispatchers.Default) { (1L..1000000.toLong()).sum() }
+                dispatch(Action.SetValue(sum))
+            }
+        }
+    }
+
+    private class ExecutorImpl : CoroutineExecutor&lt;Intent, Action, State, Msg, Nothing&gt;() {
+        override fun executeAction(action: Action, getState: () -&gt; State) =
+            when (action) {
+                is Action.SetValue -&gt; dispatch(Msg.Value(action.value))
+            }
+
+        // ...
+    }
+
+    // ...
+}
+</code></pre>
+<blockquote>
+<p>⚠️ <code>CoroutineBootstrapper</code> also provides the <code>CoroutineScope</code> property named <code>scope</code>, same as <code>CoroutineExecutor</code>. So we can use it run asynchronous tasks.</p>
+</blockquote>
+<p><a name="dsl" ></a></p>
+<h2 id="store-dsl-api">Store DSL API</h2>
+<p>The approach demonstrated above is default, but may be considered verbose. MVIKotlin provides additional Store DSL API.</p>
+<h3 id="reaktive-way">Reaktive way</h3>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store&lt;Intent, State, Nothing&gt; by storeFactory.create&lt;Intent, Action, Msg, State, Nothing&gt;(
+            name = &quot;CounterStore&quot;,
+            initialState = State(),
+            bootstrapper = reaktiveBootstrapper {
+                singleFromFunction { (1L..1000000.toLong()).sum() }
+                    .subscribeOn(computationScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeScoped { // Use the DisposableScope for scoped subscriptions
+                        dispatch(Action.SetValue(it)) // Dispatch an Action
+                    }
+            },
+            executorFactory = reaktiveExecutorFactory {
+                // Register a handler for Action.SetValue
+                onAction&lt;Action.SetValue&gt; { action -&gt;
+                    dispatch(Msg.Value(action.value)) // Read the Action and dispatch a Message
+                }
+
+                // Register a handler for Intent.Increment
+                onIntent&lt;Intent.Increment&gt; {
+                    dispatch(Msg.Value(state.value + 1)) // Read the current state and dispatch a Message
+                }
+
+                onIntent&lt;Intent.Decrement&gt; { dispatch(Msg.Value(state.value - 1)) }
+
+                onIntent&lt;Intent.Sum&gt; { intent -&gt;
+                    singleFromFunction { (1L..intent.n.toLong()).sum() }
+                        .subscribeOn(computationScheduler)
+                        .observeOn(mainScheduler)
+                        .subscribeScoped { dispatch(Msg.Value(it)) } // Use the DisposableScope for scoped subscriptions
+                }
+            },
+            reducer = { msg -&gt;
+                when (msg) {
+                    is Msg.Value -&gt; copy(value = msg.value)
+                }
+            }
+        ) {
+        }
+
+    private sealed interface Action {
+        // ...
+    }
+
+    private sealed interface Msg {
+        // ...
+    }
+}
+</code></pre>
+<h3 id="coroutines-way">Coroutines way</h3>
+<pre><code class="language-kotlin">internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
+    fun create(): CalculatorStore =
+        object : CalculatorStore, Store&lt;Intent, State, Nothing&gt; by storeFactory.create&lt;Intent, Action, Msg, State, Nothing&gt;(
+            name = &quot;CounterStore&quot;,
+            initialState = State(),
+            bootstrapper = coroutineBootstrapper {
+                launch { // Launch a coroutine
+                    val sum = withContext(Dispatchers.Default) { (1L..1000000.toLong()).sum() }
+                    dispatch(Action.SetValue(sum)) // Dispatch an Action
+                }
+            },
+            executorFactory = coroutineExecutorFactory {
+                // Register a handler for Action.SetValue
+                onAction&lt;Action.SetValue&gt; { action -&gt;
+                    dispatch(Msg.Value(action.value)) // Read the Action and dispatch a Message
+                }
+
+                // Register a handler for Intent.Increment
+                onIntent&lt;Intent.Increment&gt; {
+                    dispatch(Msg.Value(state.value + 1)) // Read the current state and dispatch a Message
+                }
+
+                onIntent&lt;Intent.Decrement&gt; { dispatch(Msg.Value(state.value - 1)) }
+
+                onIntent&lt;Intent.Sum&gt; { intent -&gt;
+                    launch { // Launch a coroutine
+                        val sum = withContext(Dispatchers.Default) { (1L..intent.n.toLong()).sum() }
+                        dispatch(Msg.Value(sum))
+                    }
+                }
+            },
+            reducer = { msg -&gt;
+                when (msg) {
+                    is Msg.Value -&gt; copy(value = msg.value)
+                }
+            }
+        ) {
+        }
+
+    private sealed interface Action {
+        // ...
+    }
+
+    private sealed interface Msg {
+        // ...
+    }
+}
+</code></pre>
+<h2 id="alternative-way-of-creating-a-store">Alternative way of creating a Store</h2>
+<p>If the amount of boilerplate code is still significant, there is an alternative way of creating a <code>Store</code>. Just get rid of the dedicated <code>Store</code> interface and put its content in top level.</p>
+<pre><code class="language-kotlin">internal sealed interface Intent {
+    // ...
+}
+
+internal data class State(
+    // ...
+)
+
+internal sealed interface Label {
+    // ...
+}
+
+internal fun CalculatorStore(storeFactory: StoreFactory): Store&lt;Intent, State, Label&gt; =
+    storeFactory.create&lt;Intent, Action, Msg, State, Label&gt;(
+        name = &quot;CounterStore&quot;,
+        initialState = State(),
+        bootstrapper = coroutineBootstrapper { // Or reaktiveBootstrapper
+            // ...
+        },
+        executorFactory = coroutineExecutorFactory { // Or reaktiveExecutorFactory
+            // ...
+        },
+        reducer = { msg -&gt;
+            // ...
+        }
+    )
+
+private sealed interface Action {
+    // ...
+}
+
+private sealed interface Msg {
+    // ...
+}
+</code></pre>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2020 - 2025 Arkadii Ivanov
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
