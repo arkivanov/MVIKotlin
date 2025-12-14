@@ -6,6 +6,9 @@
 
 Should you have any questions or ideas - there is [Discussions](https://github.com/arkivanov/MVIKotlin/discussions) section. Also welcome to the Kotlin Slack channel - [#mvikotlin](https://kotlinlang.slack.com/archives/C01403U1ZGW)!
 
+> [!NOTE]
+> This project is not stale; it is feature complete. I am actively keeping it up to date with necessary maintenance and updates. 
+
 ## Overview
 
 ### What is MVI
