@@ -16,6 +16,10 @@ setupAndroidApp(
 android {
     namespace = "com.arkivanov.mvikotlin.sample.coroutines.app"
 
+    defaultConfig {
+        minSdk = 21
+    }
+
     buildFeatures {
         buildConfig = true
     }

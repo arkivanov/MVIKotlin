@@ -25,8 +25,8 @@ kotlin {
             implementation(project(":mvikotlin-main"))
             implementation(project(":mvikotlin-timetravel-proto-internal"))
             implementation(project(":mvikotlin-timetravel-client:client-internal"))
-            implementation(compose.runtime)
-            implementation(compose.web.core)
+            implementation(deps.compose.runtime)
+            implementation(deps.compose.html)
             implementation(deps.reaktive.reaktive)
         }
     }

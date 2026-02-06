@@ -97,6 +97,7 @@ public final class com/arkivanov/mvikotlin/core/store/StoreEventType : java/lang
 
 public abstract interface class com/arkivanov/mvikotlin/core/store/StoreFactory {
 	public abstract fun create (Ljava/lang/String;ZLjava/lang/Object;Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;Lkotlin/jvm/functions/Function0;Lcom/arkivanov/mvikotlin/core/store/Reducer;)Lcom/arkivanov/mvikotlin/core/store/Store;
+	public static synthetic fun create$default (Lcom/arkivanov/mvikotlin/core/store/StoreFactory;Ljava/lang/String;ZLjava/lang/Object;Lcom/arkivanov/mvikotlin/core/store/Bootstrapper;Lkotlin/jvm/functions/Function0;Lcom/arkivanov/mvikotlin/core/store/Reducer;ILjava/lang/Object;)Lcom/arkivanov/mvikotlin/core/store/Store;
 }
 
 public final class com/arkivanov/mvikotlin/core/store/StoreFactory$DefaultImpls {

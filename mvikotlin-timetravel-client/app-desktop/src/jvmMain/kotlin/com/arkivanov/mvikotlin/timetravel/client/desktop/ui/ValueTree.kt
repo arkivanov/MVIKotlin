@@ -12,7 +12,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -77,7 +77,7 @@ private fun ExpandButton(
                 onClick = onClick,
                 role = Role.Button,
                 interactionSource = remember(::MutableInteractionSource),
-                indication = rememberRipple(bounded = false, radius = 12.dp)
+                indication = ripple(bounded = false, radius = 12.dp)
             )
             .size(16.dp)
     )

@@ -1,10 +1,10 @@
 package com.arkivanov.mvikotlin.sample.coroutines.app.root
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.sample.coroutines.app.OnBackPressedHandler
 import com.arkivanov.mvikotlin.sample.coroutines.app.R
 import com.arkivanov.mvikotlin.sample.coroutines.app.details.DetailsFragment
 import com.arkivanov.mvikotlin.sample.coroutines.app.main.MainFragment
@@ -15,14 +15,26 @@ class RootFragment(
     private val storeFactory: StoreFactory,
     private val database: TodoDatabase,
     private val dispatchers: TodoDispatchers,
-) : Fragment(R.layout.content), OnBackPressedHandler {
+) : Fragment(R.layout.content) {
 
     private val fragmentFactory = FragmentFactoryImpl()
+
+    private val backCallback =
+        object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                childFragmentManager.popBackStack()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         childFragmentManager.fragmentFactory = fragmentFactory
 
         super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
+        childFragmentManager.addOnBackStackChangedListener {
+            backCallback.isEnabled = childFragmentManager.backStackEntryCount > 0
+        }
 
         if (savedInstanceState == null) {
             childFragmentManager
@@ -31,14 +43,6 @@ class RootFragment(
                 .commit()
         }
     }
-
-    override fun onBackPressed(): Boolean =
-        if (childFragmentManager.backStackEntryCount > 0) {
-            childFragmentManager.popBackStack()
-            true
-        } else {
-            false
-        }
 
     private fun openDetails(itemId: String) {
         childFragmentManager

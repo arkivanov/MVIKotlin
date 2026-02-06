@@ -24,16 +24,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        supportFragmentManager.fragments.forEach {
-            if ((it as? OnBackPressedHandler)?.onBackPressed() == true) {
-                return
-            }
-        }
-
-        super.onBackPressed()
-    }
-
     private inner class FragmentFactoryImpl : FragmentFactory() {
         override fun instantiate(classLoader: ClassLoader, className: String): Fragment =
             when (loadFragmentClass(classLoader, className)) {

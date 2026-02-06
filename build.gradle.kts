@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import com.arkivanov.gradle.AndroidConfig
 import com.arkivanov.gradle.BinaryCompatibilityValidatorConfig
 import com.arkivanov.gradle.PublicationConfig
@@ -8,6 +10,7 @@ import com.arkivanov.gradle.setupDefaults
 import com.arkivanov.gradle.setupDetekt
 import com.arkivanov.gradle.tvosCompat
 import com.arkivanov.gradle.watchosCompat
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 buildscript {
     repositories {
@@ -45,8 +48,8 @@ setupDefaults(
     },
     androidConfig = AndroidConfig(
         minSdkVersion = 15,
-        compileSdkVersion = 34,
-        targetSdkVersion = 34,
+        compileSdkVersion = 36,
+        targetSdkVersion = 36,
     ),
     binaryCompatibilityValidatorConfig = BinaryCompatibilityValidatorConfig(
         nonPublicMarkers = listOf("com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi"),
