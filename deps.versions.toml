@@ -4,7 +4,8 @@ mvikotlin = "4.3.0"
 timeTravelPlugin = "3.0.1"
 timeTravelApp = "3.0.1"
 
-kotlin = "2.3.10"
+# N-1 policy: update to 2.3.x when 2.4.0 is released
+kotlin = "2.2.21"
 kotlinWrappers = "1.0.0-pre.608"
 kotlinxBinaryCompatibilityValidator = "0.18.1"
 kotlinxCoroutines = "1.10.2"
@@ -12,7 +13,7 @@ kotlinxCoroutines = "1.10.2"
 essenty = "2.5.0"
 reaktive = "2.4.0"
 
-androidGradle = "8.13.2"
+androidGradle = "8.12.0"
 detektGradlePlugin = "1.23.8"
 intellijGradlePlugin = "1.17.4"
 

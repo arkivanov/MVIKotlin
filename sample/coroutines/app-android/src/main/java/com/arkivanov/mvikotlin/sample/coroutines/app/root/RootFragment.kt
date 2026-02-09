@@ -35,6 +35,7 @@ class RootFragment(
         childFragmentManager.addOnBackStackChangedListener {
             backCallback.isEnabled = childFragmentManager.backStackEntryCount > 0
         }
+        backCallback.isEnabled = childFragmentManager.backStackEntryCount > 0
 
         if (savedInstanceState == null) {
             childFragmentManager
