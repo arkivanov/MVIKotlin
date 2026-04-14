@@ -1,11 +1,11 @@
 package com.arkivanov.mvikotlin.sample.reaktive.app.root
 
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.sample.database.TodoDatabase
+import com.arkivanov.mvikotlin.sample.reaktive.app.OnBackPressedHandler
 import com.arkivanov.mvikotlin.sample.reaktive.app.R
 import com.arkivanov.mvikotlin.sample.reaktive.app.details.DetailsFragment
 import com.arkivanov.mvikotlin.sample.reaktive.app.main.MainFragment
@@ -13,27 +13,14 @@ import com.arkivanov.mvikotlin.sample.reaktive.app.main.MainFragment
 class RootFragment(
     private val storeFactory: StoreFactory,
     private val database: TodoDatabase,
-) : Fragment(R.layout.content) {
+) : Fragment(R.layout.content), OnBackPressedHandler {
 
     private val fragmentFactory = FragmentFactoryImpl()
-
-    private val backCallback =
-        object : OnBackPressedCallback(false) {
-            override fun handleOnBackPressed() {
-                childFragmentManager.popBackStack()
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         childFragmentManager.fragmentFactory = fragmentFactory
 
         super.onCreate(savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
-        childFragmentManager.addOnBackStackChangedListener {
-            backCallback.isEnabled = childFragmentManager.backStackEntryCount > 0
-        }
-        backCallback.isEnabled = childFragmentManager.backStackEntryCount > 0
 
         if (savedInstanceState == null) {
             childFragmentManager
@@ -42,6 +29,14 @@ class RootFragment(
                 .commit()
         }
     }
+
+    override fun onBackPressed(): Boolean =
+        if (childFragmentManager.backStackEntryCount > 0) {
+            childFragmentManager.popBackStack()
+            true
+        } else {
+            false
+        }
 
     private fun openDetails(itemId: String) {
         childFragmentManager
