@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("OVERRIDE_DEPRECATION", "GestureBackNavigation")
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach {
             if ((it as? OnBackPressedHandler)?.onBackPressed() == true) {

@@ -31,10 +31,10 @@ kotlin {
             implementation(deps.reaktive.coroutinesInterop)
             implementation(deps.russhwolf.multiplatformSettings)
             implementation(compose.desktop.currentOs)
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.materialIconsExtended)
+            implementation(deps.compose.runtime)
+            implementation(deps.compose.foundation)
+            implementation(deps.compose.material)
+            implementation(deps.compose.iconsExtended)
         }
     }
 }
