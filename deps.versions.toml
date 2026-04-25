@@ -2,7 +2,7 @@
 
 mvikotlin = "4.4.0"
 timeTravelPlugin = "3.0.1"
-timeTravelApp = "3.0.1"
+timeTravelApp = "3.0.2"
 
 # N-1 policy: update to 2.3.x when 2.4.0 is released
 kotlin = "2.2.21"

@@ -27,6 +27,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: 'time-travel-client-linux'
           path: |
             mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main-release/deb
             mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main-release/rpm
@@ -53,6 +54,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: 'time-travel-client-windows'
           path: mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main-release/msi
   macos:
     name: Package and Notarize on macOS
@@ -87,4 +89,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: 'time-travel-client-macos'
           path: mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main-release/dmg
