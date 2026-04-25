@@ -51,6 +51,21 @@ compose.desktop {
             windows {
                 upgradeUuid = "B0B34196-90BE-4398-99BE-8E650EBECC78"
             }
+
+            macOS {
+                notarization {
+                    val providers = project.providers
+                    appleID = providers.environmentVariable("NOTARIZATION_APPLE_ID")
+                    password = providers.environmentVariable("NOTARIZATION_PASSWORD")
+                    teamID = providers.environmentVariable("NOTARIZATION_TEAM_ID")
+                    bundleID = "com.arkivanov.mvikotlin.timetravel"
+                }
+
+                signing {
+                    sign = true
+                    identity = "Arkadii Ivanov"
+                }
+            }
         }
     }
 }

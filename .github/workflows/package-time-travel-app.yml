@@ -23,13 +23,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build
-        run: ./gradlew :mvikotlin-timetravel-client:app-desktop:packageDeb :mvikotlin-timetravel-client:app-desktop:packageRpm
+        run: ./gradlew :mvikotlin-timetravel-client:app-desktop:packageReleaseDeb :mvikotlin-timetravel-client:app-desktop:packageReleaseRpm
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           path: |
-            mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main/deb
-            mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main/rpm
+            mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main-release/deb
+            mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main-release/rpm
   windows:
     name: Package on Windows
     runs-on: windows-latest
@@ -49,8 +49,42 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build
-        run: ./gradlew :mvikotlin-timetravel-client:app-desktop:packageMsi
+        run: ./gradlew :mvikotlin-timetravel-client:app-desktop:packageReleaseMsi
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main/msi
+          path: mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main-release/msi
+  macos:
+    name: Package and Notarize on macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 19
+      - name: Set up cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Import Code Signing Certificates
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.MACOS_SIGNING_P12_BASE64 }}
+          p12-password: ${{ secrets.MACOS_SIGNING_P12_PASSWORD }}
+          keychain-password: ${{ secrets.MACOS_SIGNING_P12_PASSWORD }}
+      - name: Build, sign and notarize DMG
+        run: ./gradlew :mvikotlin-timetravel-client:app-desktop:notarizeReleaseDmg
+        env:
+          NOTARIZATION_APPLE_ID: ${{ secrets.NOTARIZATION_APPLE_ID }}
+          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+          NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main-release/dmg
