@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: ./gradlew :mvikotlin-timetravel-client:app-desktop:packageDeb :mvikotlin-timetravel-client:app-desktop:packageRpm
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: |
             mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main/deb
@@ -49,6 +49,6 @@ jobs:
       - name: Build
         run: ./gradlew :mvikotlin-timetravel-client:app-desktop:packageMsi
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: mvikotlin-timetravel-client/app-desktop/build/compose/binaries/main/msi
