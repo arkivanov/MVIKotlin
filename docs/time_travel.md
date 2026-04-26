@@ -196,7 +196,7 @@ The time travel client communicates to the server, and provides UI to control th
 
 ### Using the IntelliJ IDEA plugin
 
-The IntelliJ IDEA plugin can be used directly from the IDE. By default it uses `adb` to connect to Android apps. However, you can switch to a TCP connection in the settings, so it could also connect to JVM and Darwin/Apple apps.
+The IntelliJ IDEA plugin can be used directly from the IDE. By default, it uses `adb` to connect to Android apps. However, you can switch to a TCP connection in the settings, so it could also connect to JVM and Darwin/Apple apps.
 
 #### How to install
 
@@ -218,7 +218,7 @@ Check out the video demonstrating the time travel IDEA plugin:
 
 ### Using the standalone client application on desktop
 
-The desktop client app provides similar functionality to the IntelliJ IDEA plugin. But it can also connect to JVM and Darwin/Apple applications.
+The desktop client app provides similar functionality to the IntelliJ IDEA plugin. It might be useful if you prefer a separate application, or if you don't have Android Studio or IntelliJ IDEA installed.
 
 > ⚠️ This client can not be used for Web (JavaScript) applications.
 
@@ -226,7 +226,7 @@ The desktop client app provides similar functionality to the IntelliJ IDEA plugi
 
 #### How to install
 
-You can download distributions for Linux and Windows from the [Releases](https://github.com/arkivanov/MVIKotlin/releases) page on GitHub. For macOS you will need to build and run it from [sources](https://github.com/arkivanov/MVIKotlin/tree/master/mvikotlin-timetravel-client/app-desktop). Please run the following command (the minimum JDK version 11 is required):
+You can download distributions for Linux, Windows and macOS from the [Releases](https://github.com/arkivanov/MVIKotlin/releases) page on GitHub. Alternatively, you can also build and run it from [sources](https://github.com/arkivanov/MVIKotlin/tree/master/mvikotlin-timetravel-client/app-desktop). Please run the following command:
 
 ```
 ./gradlew :mvikotlin-timetravel-client:app-desktop:run
