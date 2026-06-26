@@ -139,3 +139,7 @@ If you like this project you can always <a href="https://www.buymeacoffee.com/ar
 #### Debugging iOS application using MVIKotlin time travel client app
 
 [![Debugging iOS application using MVIKotlin time travel client app](https://img.youtube.com/vi/rj6GwA2ZQkk/0.jpg)](https://youtu.be/rj6GwA2ZQkk)
+
+## Powered by
+
+[![JetBrains logo.](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg)](https://jb.gg/OpenSource)
