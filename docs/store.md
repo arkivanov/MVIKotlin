@@ -336,7 +336,7 @@ internal class CalculatorStoreFactory(private val storeFactory: StoreFactory) {
 
 Here we extended the `CoroutineExecutor` class. The sum is calculated on the `Default` dispatcher and the `Message` is dispatched on the `Main` thread.
 
-> ⚠️ `CoroutineExecutor` provides the `CoroutineScope` property named `scope`, which can be used to run asynchronous tasks. The scope uses `Dispatchers.Main` dispatcher by default, which can be overriden by passing different `CoroutineContext` to the `CoroutineExecutor` constructor. The scope is automatically cancelled when the `Store` is disposed.
+> ⚠️ `CoroutineExecutor` provides the `CoroutineScope` property named `scope`, which can be used to run asynchronous tasks. The scope uses `Dispatchers.Main` dispatcher by default, which can be overridden by passing different `CoroutineContext` to the `CoroutineExecutor` constructor. The scope is automatically cancelled when the `Store` is disposed.
 
 ### Forwarding Actions
 
