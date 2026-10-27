@@ -58,15 +58,15 @@ Recommended minimum Gradle version is 5.3. Please read first the documentation a
 There are a number of modules published to Maven Central:
 
 - `mvikotlin` - core interfaces and functionality (multiplatform)
-- `mvikotlin-main` - the main module with the default `Store` implementation (mutiplatform)
-- `mvikotlin-logging` - logging functionality (mutiplatform)
-- `mvikotlin-timetravel` - time travel feature (mutiplatform)
+- `mvikotlin-main` - the main module with the default `Store` implementation (multiplatform)
+- `mvikotlin-logging` - logging functionality (multiplatform)
+- `mvikotlin-timetravel` - time travel feature (multiplatform)
 - `mvikotlin-extensions-reaktive` - extensions set for Reaktive library (multiplatform)
 - `mvikotlin-extensions-coroutines` - extensions set for coroutines (multiplatform)
 - ~~`keepers` - provides `StateKeeper` and `InstanceKeeper` API for state preservation and objects retaining~~ (deprecated, see the [documentation](https://arkivanov.github.io/MVIKotlin/state_preservation.html))
 - `rx` - a tiny module with abstractions over rx and coroutines (multiplatform)
 
-Add required modules to your module`s build.gradle file:
+Add required modules to your module's `build.gradle` file:
 ```groovy
 implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 ```
@@ -77,7 +77,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 * Does not depend on any reactive library or coroutines
 * Extensions for [Reaktive](https://github.com/badoo/Reaktive) library
 * Extensions for [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
-* Lifecycle-aware connections (bindins) between inputs and outputs
+* Lifecycle-aware connections (bindings) between inputs and outputs
 * Logging functionality with customizable logger and formatter
 * Time travel feature:
     * Multiplatform for all supported targets
@@ -92,7 +92,7 @@ implementation "com.arkivanov.mvikotlin:<module-name>:<version>"
 
 ## Sample project
 
-The sample project is a todo list with details view. There are two implementations of the same sample, one using Reaktive library and another one using coroutines. Each variant has Android, iOS and Web browser apps. This samples also demonstrates one of the possible architectures for a multiplatform project - each screen is represented by a controller class, platform applications integrate controllers and navigate between them.
+The sample project is a todo list with details view. There are two implementations of the same sample, one using Reaktive library and another one using coroutines. Each variant has Android, iOS and Web browser apps. This sample also demonstrates one of the possible architectures for a multiplatform project - each screen is represented by a controller class, platform applications integrate controllers and navigate between them.
 
 ### Structure
 
